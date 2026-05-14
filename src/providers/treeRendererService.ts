@@ -5,6 +5,7 @@ import { ProjectHealthService } from "../services/projectHealthService";
 import { ProjectHealthRenderer } from "./projectHealthRenderer";
 import { TreeIconProvider } from "./treeIconProvider";
 import { TreeTooltipProvider } from "./treeTooltipProvider";
+import { t } from "../localization";
 import { GroupNode } from "./treeNodes/groupNode";
 import { MetricsNode } from "./treeNodes/metricsNode";
 import { MetricItemNode } from "./treeNodes/metricItemNode";
@@ -16,10 +17,10 @@ import { ProjectNode } from "./treeNodes/projectNode";
 export type ShipOneTreeNode = MetricsNode | MetricItemNode | GroupNode | ProjectNode | EmptyStateNode;
 
 const GROUPS: Array<{ status: ProjectStatus; label: string; icon: string }> = [
-  { status: "active", label: "Active", icon: "play" },
-  { status: "idea", label: "Ideas", icon: "lightbulb" },
-  { status: "paused", label: "Paused", icon: "debug-pause" },
-  { status: "finished", label: "Finished", icon: "check" },
+  { status: "active", label: t("Active"), icon: "play" },
+  { status: "idea", label: t("Ideas"), icon: "lightbulb" },
+  { status: "paused", label: t("Paused"), icon: "debug-pause" },
+  { status: "finished", label: t("Finished"), icon: "check" },
 ];
 
 export class TreeRendererService {
@@ -40,7 +41,7 @@ export class TreeRendererService {
       if (!activeProject) {
         return [
           new EmptyStateNode(
-            "Sin proyecto activo",
+            t("Sin proyecto activo"),
             undefined,
             this.iconProvider,
             this.tooltipProvider
@@ -67,13 +68,13 @@ export class TreeRendererService {
     if (projects.length === 0) {
       return [
         new EmptyStateNode(
-          "Sin proyectos todavia",
-          "Crear proyecto",
+          t("Sin proyectos todavia"),
+          t("Crear proyecto"),
           this.iconProvider,
           this.tooltipProvider
         ),
         new EmptyStateNode(
-          "Usa Crear proyecto para empezar",
+          t("Usa Crear proyecto para empezar"),
           undefined,
           this.iconProvider,
           this.tooltipProvider
@@ -106,12 +107,12 @@ export class TreeRendererService {
     const projects = await this.projectStore.loadProjects();
     const summary = this.projectHealthService.getMetrics(projects);
     return [
-      new MetricItemNode("Total", summary.total, this.iconProvider),
-      new MetricItemNode("Ideas", summary.idea, this.iconProvider),
-      new MetricItemNode("Active", summary.active, this.iconProvider),
-      new MetricItemNode("Paused", summary.paused, this.iconProvider),
-      new MetricItemNode("Finished", summary.finished, this.iconProvider),
-      new MetricItemNode("Finish ratio", `${summary.finishRatio}%`, this.iconProvider),
+      new MetricItemNode(t("Total"), summary.total, this.iconProvider),
+      new MetricItemNode(t("Ideas"), summary.idea, this.iconProvider),
+      new MetricItemNode(t("Active"), summary.active, this.iconProvider),
+      new MetricItemNode(t("Paused"), summary.paused, this.iconProvider),
+      new MetricItemNode(t("Finished"), summary.finished, this.iconProvider),
+      new MetricItemNode(t("Finish ratio"), `${summary.finishRatio}%`, this.iconProvider),
     ];
   }
 
@@ -126,8 +127,8 @@ export class TreeRendererService {
     if (projects.length === 0) {
       return [
         new EmptyStateNode(
-          "Sin proyectos todavia",
-          "Crear proyecto",
+          t("Sin proyectos todavia"),
+          t("Crear proyecto"),
           this.iconProvider,
           this.tooltipProvider
         ),
@@ -174,8 +175,8 @@ export class TreeRendererService {
     if (inactivity) {
       warnings.push(
         new WarningNode(
-          "Active sin uso reciente",
-          `Ultima apertura: ${project.lastOpenedAt ?? "sin registro"}`,
+          t("Active sin uso reciente"),
+          t("Ultima apertura: {0}", project.lastOpenedAt ?? t("sin registro")),
           project.id,
           this.iconProvider,
           this.tooltipProvider
@@ -186,8 +187,8 @@ export class TreeRendererService {
     if (!project.nextAction) {
       warnings.push(
         new WarningNode(
-          "Active sin next action",
-          "Define el siguiente paso para avanzar",
+          t("Active sin next action"),
+          t("Define el siguiente paso para avanzar"),
           project.id,
           this.iconProvider,
           this.tooltipProvider

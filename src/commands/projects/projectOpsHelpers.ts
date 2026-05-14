@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { randomUUID } from "crypto";
+import { t } from "../../localization";
 import { ProjectMetadata } from "../../models/project";
 
 const STATUS_FILE_NAME = "STATUS.md";
@@ -11,7 +12,7 @@ export async function pickProject(projectStore: {
   const projects = Object.values(groupedProjects).flat();
 
   if (projects.length === 0) {
-    vscode.window.showInformationMessage("Todavia no hay proyectos.");
+    vscode.window.showInformationMessage(t("Todavia no hay proyectos."));
     return undefined;
   }
 
@@ -23,8 +24,8 @@ export async function pickProject(projectStore: {
       project,
     })),
     {
-      title: "Proyecto",
-      placeHolder: "Elige un proyecto",
+      title: t("Proyecto"),
+      placeHolder: t("Elige un proyecto"),
     }
   );
 

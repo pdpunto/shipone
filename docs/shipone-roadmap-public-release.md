@@ -107,7 +107,7 @@ Objetivo: hacer que ShipOne funcione automaticamante en el idioma configurado po
 - [x] Traducir input boxes
 - [x] Traducir onboarding
 - [x] Traducir focus mode
-- [ ] Traducir health messages
+- [x] Traducir health messages
 - [x] Traducir weekly review
 
 ### 2.4 Idiomas iniciales
