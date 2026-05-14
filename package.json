@@ -45,6 +45,10 @@
         "title": "ShipOne: Abrir STATUS.md"
       },
       {
+        "command": "shipone.toggleFavorite",
+        "title": "ShipOne: Alternar favorito"
+      },
+      {
         "command": "shipone.refreshProjects",
         "title": "ShipOne: Refrescar proyectos"
       }
@@ -70,6 +74,10 @@
         },
         {
           "command": "shipone.openStatusFile",
+          "when": "view == shipone.projectsView && viewItem == shipone.project"
+        },
+        {
+          "command": "shipone.toggleFavorite",
           "when": "view == shipone.projectsView && viewItem == shipone.project"
         }
       ]

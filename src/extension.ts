@@ -12,6 +12,7 @@ const COMMAND_CHANGE_PROJECT_STATUS = "shipone.changeProjectStatus";
 const COMMAND_EDIT_NEXT_ACTION = "shipone.editNextAction";
 const COMMAND_CLEAR_NEXT_ACTION = "shipone.clearNextAction";
 const COMMAND_OPEN_STATUS_FILE = "shipone.openStatusFile";
+const COMMAND_TOGGLE_FAVORITE = "shipone.toggleFavorite";
 const COMMAND_REFRESH_PROJECTS = "shipone.refreshProjects";
 const STATUS_FILE_NAME = "STATUS.md";
 
@@ -159,6 +160,26 @@ export async function activate(context: vscode.ExtensionContext) {
     }
   );
 
+  const toggleFavoriteCommand = vscode.commands.registerCommand(
+    COMMAND_TOGGLE_FAVORITE,
+    async () => {
+      const project = await pickProject(projectStore);
+
+      if (!project) {
+        return;
+      }
+
+      const wasFavorite = project.favorite;
+      await projectStore.toggleFavorite(project.id);
+      treeDataProvider.refresh();
+      vscode.window.showInformationMessage(
+        wasFavorite
+          ? `Quitado de favoritos: ${project.name}.`
+          : `Marcado como favorito: ${project.name}.`
+      );
+    }
+  );
+
   const refreshCommand = vscode.commands.registerCommand(COMMAND_REFRESH_PROJECTS, () => {
     treeDataProvider.refresh();
   });
@@ -172,6 +193,7 @@ export async function activate(context: vscode.ExtensionContext) {
     editNextActionCommand,
     clearNextActionCommand,
     openStatusFileCommand,
+    toggleFavoriteCommand,
     refreshCommand
   );
 }

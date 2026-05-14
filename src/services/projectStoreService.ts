@@ -102,6 +102,18 @@ export class ProjectStoreService {
     await this.saveProjects(projects);
   }
 
+  async toggleFavorite(projectId: string): Promise<void> {
+    const projects = await this.loadProjects();
+    const target = projects.find((project) => project.id === projectId);
+
+    if (!target) {
+      throw new Error("No se encontró el proyecto.");
+    }
+
+    target.favorite = !target.favorite;
+    await this.saveProjects(projects);
+  }
+
   async getProject(projectId: string): Promise<ProjectMetadata | undefined> {
     const projects = await this.loadProjects();
     return projects.find((project) => project.id === projectId);
@@ -116,7 +128,13 @@ export class ProjectStoreService {
     }
 
     for (const status of EMPTY_GROUPS) {
-      grouped[status].sort((left, right) => left.name.localeCompare(right.name));
+      grouped[status].sort((left, right) => {
+        if (left.favorite !== right.favorite) {
+          return left.favorite ? -1 : 1;
+        }
+
+        return left.name.localeCompare(right.name);
+      });
     }
 
     return grouped;

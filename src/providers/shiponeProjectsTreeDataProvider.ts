@@ -69,7 +69,7 @@ class ProjectNode extends vscode.TreeItem {
       `**${project.name}**\n\nEstado: ${project.status}\nRuta: ${project.path}`
     );
     this.contextValue = "shipone.project";
-    this.iconPath = new vscode.ThemeIcon(getStatusIcon(project.status));
+    this.iconPath = new vscode.ThemeIcon(project.favorite ? "star-full" : getStatusIcon(project.status));
     this.command = {
       command: "shipone.openProject",
       title: "Abrir proyecto",
