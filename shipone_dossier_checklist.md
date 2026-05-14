@@ -238,14 +238,14 @@ Goal: release a useful first version.
 ### Project states
 
 - [ ] Add status enum
-- [ ] Add command: change project status
-- [ ] Add command: mark as Idea
-- [ ] Add command: mark as Active
-- [ ] Add command: mark as Paused
-- [ ] Add command: mark as Finished
-- [ ] Enforce only one Active project
-- [ ] Ask user before pausing previous Active project
-- [ ] Refresh tree after status change
+- [x] Add command: change project status
+- [x] Add command: mark as Idea
+- [x] Add command: mark as Active
+- [x] Add command: mark as Paused
+- [x] Add command: mark as Finished
+- [x] Enforce only one Active project
+- [x] Ask user before pausing previous Active project
+- [x] Refresh tree after status change
 
 ### Sidebar UI
 
@@ -254,13 +254,13 @@ Goal: release a useful first version.
 - [ ] Group by Active
 - [ ] Group by Paused
 - [ ] Group by Finished
-- [ ] Show icons by status
-- [ ] Show favorite star
+- [x] Show icons by status
+- [x] Show favorite star
 - [x] Show project type
-- [ ] Show next action under project
-- [ ] Add context menu actions
-- [ ] Add refresh button
-- [ ] Add open project button
+- [x] Show next action under project
+- [x] Add context menu actions
+- [x] Add refresh button
+- [x] Add open project button
 - [x] Add open root folder button
 
 ### Next Action

@@ -170,7 +170,7 @@ class MetricItemNode extends vscode.TreeItem {
 
 class ProjectNode extends vscode.TreeItem {
   constructor(
-    project: ProjectMetadata,
+    public readonly project: ProjectMetadata,
     health: ProjectHealth,
     inactiveWarningDays: number,
     staleWarningDays: number

@@ -22,6 +22,10 @@ const COMMAND_RESUME_PROJECT = "shipone.resumeProject";
 const COMMAND_SEARCH_PROJECT = "shipone.searchProject";
 const COMMAND_OPEN_PROJECT = "shipone.openProject";
 const COMMAND_CHANGE_PROJECT_STATUS = "shipone.changeProjectStatus";
+const COMMAND_MARK_PROJECT_IDEA = "shipone.markProjectIdea";
+const COMMAND_MARK_PROJECT_ACTIVE = "shipone.markProjectActive";
+const COMMAND_MARK_PROJECT_PAUSED = "shipone.markProjectPaused";
+const COMMAND_MARK_PROJECT_FINISHED = "shipone.markProjectFinished";
 const COMMAND_EDIT_NEXT_ACTION = "shipone.editNextAction";
 const COMMAND_CLEAR_NEXT_ACTION = "shipone.clearNextAction";
 const COMMAND_OPEN_STATUS_FILE = "shipone.openStatusFile";
@@ -52,6 +56,7 @@ export async function activate(context: vscode.ExtensionContext) {
   const projectCreationService = new ProjectCreationService(projectStore);
   await projectStore.initialize();
   let focusModeEnabled = context.workspaceState.get<boolean>(FOCUS_MODE_STATE_KEY, false);
+  let selectedProjectId: string | undefined;
   await vscode.commands.executeCommand("setContext", FOCUS_MODE_CONTEXT_KEY, focusModeEnabled);
   const treeDataProvider = new ShipOneProjectsTreeDataProvider(
     projectStore,
@@ -61,6 +66,15 @@ export async function activate(context: vscode.ExtensionContext) {
 
   const treeView = vscode.window.createTreeView("shipone.projectsView", {
     treeDataProvider,
+  });
+  treeView.onDidChangeSelection((event) => {
+    const selected = event.selection[0] as unknown;
+    if (selected && typeof selected === "object" && "project" in selected) {
+      const project = (selected as { project?: ProjectMetadata }).project;
+      selectedProjectId = project?.id;
+    } else {
+      selectedProjectId = undefined;
+    }
   });
 
   const setFocusMode = async (enabled: boolean) => {
@@ -470,16 +484,15 @@ export async function activate(context: vscode.ExtensionContext) {
         return;
       }
 
-      await projectStore.setProjectStatus(choice.project.id, "active");
-      treeDataProvider.refresh();
+      await updateProjectStatus(projectStore, treeDataProvider, choice.project, "active", "Active");
       vscode.window.showInformationMessage(`Proyecto reanudado: ${choice.project.name}.`);
     }
   );
 
   const openProjectCommand = vscode.commands.registerCommand(
     COMMAND_OPEN_PROJECT,
-    async (projectId: string) => {
-      const project = await projectStore.getProject(projectId);
+    async (projectArg?: unknown) => {
+      const project = await resolveProject(projectStore, projectArg, selectedProjectId);
 
       if (!project) {
         vscode.window.showErrorMessage("No se encontro el proyecto.");
@@ -497,8 +510,8 @@ export async function activate(context: vscode.ExtensionContext) {
 
   const changeStatusCommand = vscode.commands.registerCommand(
     COMMAND_CHANGE_PROJECT_STATUS,
-    async () => {
-      const project = await pickProject(projectStore);
+    async (projectArg?: unknown) => {
+      const project = await resolveProject(projectStore, projectArg, selectedProjectId);
 
       if (!project) {
         return;
@@ -513,16 +526,48 @@ export async function activate(context: vscode.ExtensionContext) {
         return;
       }
 
-      await projectStore.setProjectStatus(project.id, statusChoice.value);
-      treeDataProvider.refresh();
-      vscode.window.showInformationMessage(`${project.name} ahora esta en ${statusChoice.label}.`);
+      await updateProjectStatus(
+        projectStore,
+        treeDataProvider,
+        project,
+        statusChoice.value,
+        statusChoice.label
+      );
+    }
+  );
+
+  const markProjectIdeaCommand = vscode.commands.registerCommand(
+    COMMAND_MARK_PROJECT_IDEA,
+    async (projectArg?: unknown) => {
+      await markProjectStatus(projectStore, treeDataProvider, "idea", projectArg, selectedProjectId);
+    }
+  );
+
+  const markProjectActiveCommand = vscode.commands.registerCommand(
+    COMMAND_MARK_PROJECT_ACTIVE,
+    async (projectArg?: unknown) => {
+      await markProjectStatus(projectStore, treeDataProvider, "active", projectArg, selectedProjectId);
+    }
+  );
+
+  const markProjectPausedCommand = vscode.commands.registerCommand(
+    COMMAND_MARK_PROJECT_PAUSED,
+    async (projectArg?: unknown) => {
+      await markProjectStatus(projectStore, treeDataProvider, "paused", projectArg, selectedProjectId);
+    }
+  );
+
+  const markProjectFinishedCommand = vscode.commands.registerCommand(
+    COMMAND_MARK_PROJECT_FINISHED,
+    async (projectArg?: unknown) => {
+      await markProjectStatus(projectStore, treeDataProvider, "finished", projectArg, selectedProjectId);
     }
   );
 
   const editNextActionCommand = vscode.commands.registerCommand(
     COMMAND_EDIT_NEXT_ACTION,
-    async () => {
-      const project = await pickProject(projectStore);
+    async (projectArg?: unknown) => {
+      const project = await resolveProject(projectStore, projectArg, selectedProjectId);
 
       if (!project) {
         return;
@@ -547,8 +592,8 @@ export async function activate(context: vscode.ExtensionContext) {
 
   const clearNextActionCommand = vscode.commands.registerCommand(
     COMMAND_CLEAR_NEXT_ACTION,
-    async () => {
-      const project = await pickProject(projectStore);
+    async (projectArg?: unknown) => {
+      const project = await resolveProject(projectStore, projectArg, selectedProjectId);
 
       if (!project) {
         return;
@@ -562,8 +607,8 @@ export async function activate(context: vscode.ExtensionContext) {
 
   const openStatusFileCommand = vscode.commands.registerCommand(
     COMMAND_OPEN_STATUS_FILE,
-    async () => {
-      const project = await pickProject(projectStore);
+    async (projectArg?: unknown) => {
+      const project = await resolveProject(projectStore, projectArg, selectedProjectId);
 
       if (!project) {
         return;
@@ -582,8 +627,8 @@ export async function activate(context: vscode.ExtensionContext) {
 
   const toggleFavoriteCommand = vscode.commands.registerCommand(
     COMMAND_TOGGLE_FAVORITE,
-    async () => {
-      const project = await pickProject(projectStore);
+    async (projectArg?: unknown) => {
+      const project = await resolveProject(projectStore, projectArg, selectedProjectId);
 
       if (!project) {
         return;
@@ -622,6 +667,10 @@ export async function activate(context: vscode.ExtensionContext) {
     createProjectCommand,
     openProjectCommand,
     changeStatusCommand,
+    markProjectIdeaCommand,
+    markProjectActiveCommand,
+    markProjectPausedCommand,
+    markProjectFinishedCommand,
     editNextActionCommand,
     clearNextActionCommand,
     openStatusFileCommand,
@@ -653,6 +702,103 @@ async function pickProject(projectStore: ProjectStoreService) {
   );
 
   return choice?.project;
+}
+
+async function markProjectStatus(
+  projectStore: ProjectStoreService,
+  treeDataProvider: ShipOneProjectsTreeDataProvider,
+  status: ProjectStatus,
+  projectArg?: unknown,
+  selectedProjectId?: string
+) {
+  const project = await resolveProject(projectStore, projectArg, selectedProjectId);
+
+  if (!project) {
+    return;
+  }
+
+  await updateProjectStatus(projectStore, treeDataProvider, project, status, status);
+}
+
+async function resolveProject(
+  projectStore: ProjectStoreService,
+  projectArg?: unknown,
+  selectedProjectId?: string
+): Promise<ProjectMetadata | undefined> {
+  if (typeof projectArg === "string") {
+    const projectById = await projectStore.getProject(projectArg);
+    if (projectById) {
+      return projectById;
+    }
+  }
+
+  const directProject = unwrapProjectArg(projectArg);
+
+  if (directProject) {
+    return directProject;
+  }
+
+  if (selectedProjectId) {
+    const selectedProject = await projectStore.getProject(selectedProjectId);
+    if (selectedProject) {
+      return selectedProject;
+    }
+  }
+
+  return pickProject(projectStore);
+}
+
+function unwrapProjectArg(projectArg?: unknown): ProjectMetadata | undefined {
+  if (!projectArg) {
+    return undefined;
+  }
+
+  if (typeof projectArg === "string") {
+    return undefined;
+  }
+
+  if (typeof projectArg !== "object") {
+    return undefined;
+  }
+
+  const candidate = projectArg as { project?: ProjectMetadata };
+
+  if (candidate.project) {
+    return candidate.project;
+  }
+
+  return undefined;
+}
+
+async function updateProjectStatus(
+  projectStore: ProjectStoreService,
+  treeDataProvider: ShipOneProjectsTreeDataProvider,
+  project: ProjectMetadata,
+  status: ProjectStatus,
+  statusLabel: string
+) {
+  if (status === "active") {
+    const projects = await projectStore.loadProjects();
+    const otherActive = projects.find(
+      (item) => item.status === "active" && item.id !== project.id
+    );
+
+    if (otherActive) {
+      const choice = await vscode.window.showWarningMessage(
+        `Ya hay un proyecto activo: ${otherActive.name}.`,
+        "Pausar y activar",
+        "Cancelar"
+      );
+
+      if (choice !== "Pausar y activar") {
+        return;
+      }
+    }
+  }
+
+  await projectStore.setProjectStatus(project.id, status);
+  treeDataProvider.refresh();
+  vscode.window.showInformationMessage(`${project.name} ahora esta en ${statusLabel}.`);
 }
 
 function filterProjectsByName(projects: ProjectMetadata[], searchTerm: string) {

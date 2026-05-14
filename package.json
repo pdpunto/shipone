@@ -23,27 +23,31 @@
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
-      { "command": "shipone.showWelcome", "title": "ShipOne: Mostrar bienvenida" },
-      { "command": "shipone.createProject", "title": "ShipOne: Crear proyecto", "icon": "$(add)" },
-      { "command": "shipone.openProjectsRoot", "title": "ShipOne: Abrir carpeta raíz", "icon": "$(folder-library)" },
-      { "command": "shipone.openProjectQuickPick", "title": "ShipOne: Abrir proyecto", "icon": "$(folder-opened)" },
-      { "command": "shipone.editMvpChecklist", "title": "ShipOne: Editar checklist MVP", "icon": "$(checklist)" },
-      { "command": "shipone.markMvpItemDone", "title": "ShipOne: Marcar tarea MVP hecha", "icon": "$(check)" },
-      { "command": "shipone.syncStatusFile", "title": "ShipOne: Sincronizar STATUS.md", "icon": "$(sync)" },
-      { "command": "shipone.detectBlockers", "title": "ShipOne: Detectar bloqueadores", "icon": "$(warning)" },
-      { "command": "shipone.focusMode", "title": "ShipOne: Focus mode", "icon": "$(eye)" },
-      { "command": "shipone.exitFocusMode", "title": "ShipOne: Salir de focus mode", "icon": "$(eye-closed)" },
-      { "command": "shipone.weeklyReview", "title": "ShipOne: Weekly review", "icon": "$(calendar)" },
-      { "command": "shipone.freezeProject", "title": "ShipOne: Congelar proyecto", "icon": "$(debug-pause)" },
-      { "command": "shipone.resumeProject", "title": "ShipOne: Reanudar proyecto", "icon": "$(play)" },
-      { "command": "shipone.toggleFavorite", "title": "ShipOne: Alternar favorito", "icon": "$(star)" },
-      { "command": "shipone.searchProject", "title": "ShipOne: Buscar proyecto", "icon": "$(search)" },
-      { "command": "shipone.openProject", "title": "ShipOne: Abrir proyecto", "icon": "$(folder-opened)" },
-      { "command": "shipone.changeProjectStatus", "title": "ShipOne: Cambiar estado" },
-      { "command": "shipone.editNextAction", "title": "ShipOne: Editar siguiente accion" },
-      { "command": "shipone.clearNextAction", "title": "ShipOne: Limpiar siguiente accion" },
-      { "command": "shipone.openStatusFile", "title": "ShipOne: Abrir STATUS.md", "icon": "$(file-code)" },
-      { "command": "shipone.refreshProjects", "title": "ShipOne: Refrescar proyectos", "icon": "$(refresh)" }
+      { "command": "shipone.showWelcome", "title": "Bienvenida", "category": "ShipOne" },
+      { "command": "shipone.createProject", "title": "Crear", "category": "ShipOne", "icon": "$(add)" },
+      { "command": "shipone.openProjectsRoot", "title": "Raíz", "category": "ShipOne", "icon": "$(folder-library)" },
+      { "command": "shipone.openProjectQuickPick", "title": "Abrir", "category": "ShipOne", "icon": "$(folder-opened)" },
+      { "command": "shipone.editMvpChecklist", "title": "Checklist MVP", "category": "ShipOne", "icon": "$(checklist)" },
+      { "command": "shipone.markMvpItemDone", "title": "Marcar MVP", "category": "ShipOne", "icon": "$(check)" },
+      { "command": "shipone.syncStatusFile", "title": "STATUS.md", "category": "ShipOne", "icon": "$(sync)" },
+      { "command": "shipone.detectBlockers", "title": "Bloqueadores", "category": "ShipOne", "icon": "$(warning)" },
+      { "command": "shipone.focusMode", "title": "Focus", "category": "ShipOne", "icon": "$(eye)" },
+      { "command": "shipone.exitFocusMode", "title": "Salir focus", "category": "ShipOne", "icon": "$(eye-closed)" },
+      { "command": "shipone.weeklyReview", "title": "Weekly review", "category": "ShipOne", "icon": "$(calendar)" },
+      { "command": "shipone.freezeProject", "title": "Congelar", "category": "ShipOne", "icon": "$(debug-pause)" },
+      { "command": "shipone.resumeProject", "title": "Reanudar", "category": "ShipOne", "icon": "$(play)" },
+      { "command": "shipone.toggleFavorite", "title": "Favorito", "category": "ShipOne", "icon": "$(star)" },
+      { "command": "shipone.searchProject", "title": "Buscar", "category": "ShipOne", "icon": "$(search)" },
+      { "command": "shipone.openProject", "title": "Abrir", "category": "ShipOne", "icon": "$(folder-opened)" },
+      { "command": "shipone.changeProjectStatus", "title": "Cambiar estado", "category": "ShipOne" },
+      { "command": "shipone.markProjectIdea", "title": "Idea", "category": "ShipOne" },
+      { "command": "shipone.markProjectActive", "title": "Active", "category": "ShipOne" },
+      { "command": "shipone.markProjectPaused", "title": "Paused", "category": "ShipOne" },
+      { "command": "shipone.markProjectFinished", "title": "Finished", "category": "ShipOne" },
+      { "command": "shipone.editNextAction", "title": "Next", "category": "ShipOne", "icon": "$(pencil)" },
+      { "command": "shipone.clearNextAction", "title": "Limpiar next", "category": "ShipOne" },
+      { "command": "shipone.openStatusFile", "title": "STATUS.md", "category": "ShipOne", "icon": "$(file-code)" },
+      { "command": "shipone.refreshProjects", "title": "Refrescar", "category": "ShipOne", "icon": "$(refresh)" }
     ],
     "menus": {
       "view/title": [
@@ -135,7 +139,29 @@
           "group": "inline"
         },
         {
-          "command": "shipone.changeProjectStatus",
+          "command": "shipone.toggleFavorite",
+          "when": "view == shipone.projectsView && viewItem == shipone.project",
+          "group": "inline"
+        },
+        {
+          "command": "shipone.editNextAction",
+          "when": "view == shipone.projectsView && viewItem == shipone.project",
+          "group": "inline"
+        },
+        {
+          "command": "shipone.markProjectIdea",
+          "when": "view == shipone.projectsView && viewItem == shipone.project"
+        },
+        {
+          "command": "shipone.markProjectActive",
+          "when": "view == shipone.projectsView && viewItem == shipone.project"
+        },
+        {
+          "command": "shipone.markProjectPaused",
+          "when": "view == shipone.projectsView && viewItem == shipone.project"
+        },
+        {
+          "command": "shipone.markProjectFinished",
           "when": "view == shipone.projectsView && viewItem == shipone.project"
         },
         {
@@ -148,10 +174,6 @@
         },
         {
           "command": "shipone.openStatusFile",
-          "when": "view == shipone.projectsView && viewItem == shipone.project"
-        },
-        {
-          "command": "shipone.toggleFavorite",
           "when": "view == shipone.projectsView && viewItem == shipone.project"
         }
       ]
