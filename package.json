@@ -1,0 +1,32 @@
+﻿{
+  "name": "shipone",
+  "displayName": "ShipOne",
+  "description": "VS Code extension created with PD Punto Dev Setup",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "shipone.helloWorld",
+        "title": "Hello World"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/vscode": "latest",
+    "typescript": "latest"
+  }
+}
