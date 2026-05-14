@@ -198,7 +198,9 @@ export async function activate(context: vscode.ExtensionContext) {
 
       if (project) {
         treeDataProvider.refresh();
-        vscode.window.showInformationMessage(`Proyecto creado: ${project.name}`);
+        vscode.window.showInformationMessage(
+          `Proyecto creado: ${project.name}. Ya lo tienes en ShipOne.`
+        );
       }
     }
   );
@@ -211,7 +213,9 @@ export async function activate(context: vscode.ExtensionContext) {
 
       if (project) {
         treeDataProvider.refresh();
-        vscode.window.showInformationMessage(`Idea creada: ${project.name}`);
+        vscode.window.showInformationMessage(
+          `Idea creada: ${project.name}. Ya la tienes en ShipOne.`
+        );
       }
     }
   );
