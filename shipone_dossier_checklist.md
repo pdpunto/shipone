@@ -327,12 +327,12 @@ Goal: release a useful first version.
 - [ ] Never delete without confirmation
 - [ ] Confirm project deletion
 - [ ] Confirm GitHub repo deletion separately
-- [ ] Do not overwrite existing folder
-- [ ] Validate project name
-- [ ] Sanitize folder names
-- [ ] Handle spaces in paths
-- [ ] Handle Windows paths
-- [ ] Handle macOS/Linux paths
+- [x] Do not overwrite existing folder
+- [x] Validate project name
+- [x] Sanitize folder names
+- [x] Handle spaces in paths
+- [x] Handle Windows paths
+- [x] Handle macOS/Linux paths
 
 ### MVP Done Criteria
 
