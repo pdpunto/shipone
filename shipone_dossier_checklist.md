@@ -425,11 +425,11 @@ Goal: make ShipOne more than a launcher.
 
 ### Focus mode
 
-- [ ] Add command: focus mode
-- [ ] Hide non-active projects
-- [ ] Show only Active project
-- [ ] Show next action prominently
-- [ ] Add command: exit focus mode
+- [x] Add command: focus mode
+- [x] Hide non-active projects
+- [x] Show only Active project
+- [x] Show next action prominently
+- [x] Add command: exit focus mode
 
 ### Project health
 

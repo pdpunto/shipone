@@ -12,6 +12,8 @@ const COMMAND_OPEN_PROJECT_QUICK_PICK = "shipone.openProjectQuickPick";
 const COMMAND_EDIT_MVP_CHECKLIST = "shipone.editMvpChecklist";
 const COMMAND_MARK_MVP_ITEM_DONE = "shipone.markMvpItemDone";
 const COMMAND_SYNC_STATUS_FILE = "shipone.syncStatusFile";
+const COMMAND_FOCUS_MODE = "shipone.focusMode";
+const COMMAND_EXIT_FOCUS_MODE = "shipone.exitFocusMode";
 const COMMAND_FREEZE_PROJECT = "shipone.freezeProject";
 const COMMAND_RESUME_PROJECT = "shipone.resumeProject";
 const COMMAND_SEARCH_PROJECT = "shipone.searchProject";
@@ -23,6 +25,8 @@ const COMMAND_OPEN_STATUS_FILE = "shipone.openStatusFile";
 const COMMAND_TOGGLE_FAVORITE = "shipone.toggleFavorite";
 const COMMAND_REFRESH_PROJECTS = "shipone.refreshProjects";
 const STATUS_FILE_NAME = "STATUS.md";
+const FOCUS_MODE_CONTEXT_KEY = "shipone.focusMode";
+const FOCUS_MODE_STATE_KEY = "shipone.focusMode";
 
 const STATUS_PICKERS: Array<{ label: string; value: ProjectStatus }> = [
   { label: "Idea", value: "idea" },
@@ -44,11 +48,24 @@ export async function activate(context: vscode.ExtensionContext) {
   const projectStore = new ProjectStoreService(context);
   const projectCreationService = new ProjectCreationService(projectStore);
   await projectStore.initialize();
-  const treeDataProvider = new ShipOneProjectsTreeDataProvider(projectStore, settingsService);
+  let focusModeEnabled = context.workspaceState.get<boolean>(FOCUS_MODE_STATE_KEY, false);
+  await vscode.commands.executeCommand("setContext", FOCUS_MODE_CONTEXT_KEY, focusModeEnabled);
+  const treeDataProvider = new ShipOneProjectsTreeDataProvider(
+    projectStore,
+    settingsService,
+    () => focusModeEnabled
+  );
 
   const treeView = vscode.window.createTreeView("shipone.projectsView", {
     treeDataProvider,
   });
+
+  const setFocusMode = async (enabled: boolean) => {
+    focusModeEnabled = enabled;
+    await context.workspaceState.update(FOCUS_MODE_STATE_KEY, enabled);
+    await vscode.commands.executeCommand("setContext", FOCUS_MODE_CONTEXT_KEY, enabled);
+    treeDataProvider.refresh();
+  };
 
   const welcomeCommand = vscode.commands.registerCommand(COMMAND_SHOW_WELCOME, () => {
     const settings = settingsService.getSettings();
@@ -241,6 +258,16 @@ export async function activate(context: vscode.ExtensionContext) {
       vscode.window.showInformationMessage(`STATUS.md sincronizado en ${project.name}.`);
     }
   );
+
+  const focusModeCommand = vscode.commands.registerCommand(COMMAND_FOCUS_MODE, async () => {
+    await setFocusMode(true);
+    vscode.window.showInformationMessage("Focus mode activado.");
+  });
+
+  const exitFocusModeCommand = vscode.commands.registerCommand(COMMAND_EXIT_FOCUS_MODE, async () => {
+    await setFocusMode(false);
+    vscode.window.showInformationMessage("Focus mode desactivado.");
+  });
 
   const freezeProjectCommand = vscode.commands.registerCommand(
     COMMAND_FREEZE_PROJECT,
@@ -463,6 +490,8 @@ export async function activate(context: vscode.ExtensionContext) {
     editMvpChecklistCommand,
     markMvpItemDoneCommand,
     syncStatusFileCommand,
+    focusModeCommand,
+    exitFocusModeCommand,
     freezeProjectCommand,
     resumeProjectCommand,
     searchProjectCommand,

@@ -30,7 +30,8 @@ export class ShipOneProjectsTreeDataProvider
 
   constructor(
     private readonly projectStore: ProjectStoreService,
-    private readonly settingsService: SettingsService
+    private readonly settingsService: SettingsService,
+    private readonly isFocusModeEnabled: () => boolean
   ) {}
 
   refresh(): void {
@@ -43,6 +44,27 @@ export class ShipOneProjectsTreeDataProvider
 
   async getChildren(element?: ShipOneTreeNode): Promise<ShipOneTreeNode[]> {
     if (!element) {
+      if (this.isFocusModeEnabled()) {
+        const projects = await this.projectStore.loadProjects();
+        const activeProject = projects.find((project) => project.status === "active");
+
+        if (!activeProject) {
+          return [new EmptyStateNode("Sin proyecto activo")];
+        }
+
+        const settings = this.settingsService.getSettings();
+        const health = await buildProjectHealth(
+          activeProject,
+          settings.inactiveWarningDays,
+          settings.staleWarningDays
+        );
+
+        return [
+          new FocusNode(activeProject, health),
+          new GroupNode("active", "Active", "play"),
+        ];
+      }
+
       return [
         new MetricsNode(),
         ...GROUPS.map((group) => new GroupNode(group.status, group.label, group.icon)),
@@ -110,6 +132,30 @@ class MetricsNode extends vscode.TreeItem {
     super("Metrics", vscode.TreeItemCollapsibleState.Collapsed);
     this.iconPath = new vscode.ThemeIcon("graph");
     this.contextValue = "shipone.metrics";
+  }
+}
+
+class FocusNode extends vscode.TreeItem {
+  constructor(project: ProjectMetadata, health: ProjectHealth) {
+    super("Focus mode", vscode.TreeItemCollapsibleState.None);
+    this.description = project.nextAction ?? "Sin next action";
+    this.iconPath = new vscode.ThemeIcon("eye");
+    this.tooltip = new vscode.MarkdownString(
+      [
+        `**${project.name}**`,
+        "",
+        `Estado: ${project.status}`,
+        `Salud: ${health.label}`,
+        `Siguiente accion: ${project.nextAction ?? "Sin next action"}`,
+        `Ruta: ${project.path}`,
+      ].join("\n")
+    );
+    this.command = {
+      command: "shipone.openProject",
+      title: "Abrir proyecto",
+      arguments: [project.id],
+    };
+    this.contextValue = "shipone.focus";
   }
 }
 
