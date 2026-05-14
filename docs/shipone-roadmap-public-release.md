@@ -71,7 +71,7 @@ Objetivo: convertir el codigo actual en una base mantenible y segura antes de es
 - [x] Revisar nombres inconsistentes
 - [ ] Añadir comentarios importantes
 - [ ] Limpiar imports muertos
-- [ ] Revisar async/await inseguros
+- [x] Revisar async/await inseguros
 
 ## Fase 2 - Internationalization
 
@@ -336,6 +336,7 @@ La prioridad profesional ahora mismo es:
 ## Nota final
 
 ShipOne ya tiene valor funcional. Lo que falta ahora es convertirlo en un producto que se pueda mantener, explicar y publicar sin miedo.
+
 
 
 

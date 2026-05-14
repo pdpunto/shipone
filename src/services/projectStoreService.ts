@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+﻿import * as vscode from "vscode";
 import { TextDecoder, TextEncoder } from "util";
 import { ProjectMetadata, ProjectStatus } from "../models/project";
 import {
@@ -47,7 +47,7 @@ export class ProjectStoreService {
     try {
       const recovered = await this.readProjectsFromUri(this.backupFileUri);
       await this.saveProjects(recovered.projects, false);
-      this.logInfo("Recuperacion completada desde backup.");
+      this.logInfo("Recuperación completada desde backup.");
       return true;
     } catch (error) {
       this.logError("No se pudo recuperar el almacenamiento desde backup.", error);
@@ -160,7 +160,7 @@ export class ProjectStoreService {
 
     const task = target.mvpTasks?.find((item) => item.id === taskId);
     if (!task) {
-      throw new Error("No se encontró la tarea.");
+      throw new Error("No se encontrÃ³ la tarea.");
     }
 
     task.done = true;
@@ -269,14 +269,14 @@ export class ProjectStoreService {
     try {
       return await this.readProjectsFromUri(this.storageFileUri);
     } catch (error) {
-      this.logError("Fallo la lectura del almacenamiento principal.", error);
+      this.logError("Falló la lectura del almacenamiento principal.", error);
       try {
         const recovered = await this.readProjectsFromUri(this.backupFileUri);
         await this.saveProjects(recovered.projects, false);
-        this.logInfo("Se recupero el almacenamiento desde el backup.");
+        this.logInfo("Se recuperó el almacenamiento desde el backup.");
         return recovered;
       } catch (backupError) {
-        this.logError("Fallo tambien la lectura del backup.", backupError);
+        this.logError("Falló también la lectura del backup.", backupError);
         return { projects: [], version: STORAGE_VERSION };
       }
     }
@@ -329,3 +329,4 @@ export class ProjectStoreService {
     this.outputChannel.appendLine(detail);
   }
 }
+
