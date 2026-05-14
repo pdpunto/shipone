@@ -6,6 +6,7 @@ import { registerProjectOpsCommands } from "./commands/projects/registerProjectO
 import { registerReviewCommands } from "./commands/projects/registerReviewCommands";
 import { ProjectCreationService } from "./services/projectCreationService";
 import { ProjectContextService } from "./services/projectContextService";
+import { ProjectHealthService } from "./services/projectHealthService";
 import { StatusFileService } from "./services/statusFileService";
 import { ShipOneProjectsTreeDataProvider } from "./providers/shiponeProjectsTreeDataProvider";
 import { ProjectStoreService } from "./services/projectStoreService";
@@ -21,6 +22,7 @@ export async function activate(context: vscode.ExtensionContext) {
   const settingsService = new SettingsService();
   const projectStore = new ProjectStoreService(context);
   const projectContextService = new ProjectContextService();
+  const projectHealthService = new ProjectHealthService();
   const statusFileService = new StatusFileService();
   const projectCreationService = new ProjectCreationService(
     projectStore,
@@ -38,6 +40,7 @@ export async function activate(context: vscode.ExtensionContext) {
   const treeDataProvider = new ShipOneProjectsTreeDataProvider(
     projectStore,
     settingsService,
+    projectHealthService,
     () => focusModeEnabled
   );
 
