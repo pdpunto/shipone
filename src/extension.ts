@@ -19,8 +19,8 @@ const FOCUS_MODE_STATE_KEY = "shipone.focusMode";
 export async function activate(context: vscode.ExtensionContext) {
   const settingsService = new SettingsService();
   const projectStore = new ProjectStoreService(context);
-  const projectCreationService = new ProjectCreationService(projectStore);
   const projectContextService = new ProjectContextService();
+  const projectCreationService = new ProjectCreationService(projectStore, projectContextService);
 
   await projectStore.initialize();
 

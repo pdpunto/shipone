@@ -34,7 +34,7 @@ Objetivo: convertir el codigo actual en una base mantenible y segura antes de es
 - [x] Eliminar logica de negocio de `extension.ts`
 - [x] Crear registradores por dominio
 - [x] Separar comandos por dominio real
-- [ ] Separar `ProjectCreationService`
+- [x] Separar `ProjectCreationService`
 - [x] Crear `TemplateService`
 - [x] Crear `ProjectContextService`
 - [x] Crear `GitService`
