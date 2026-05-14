@@ -369,9 +369,9 @@ Goal: make the MVP feel reliable.
 ### Project search
 
 - [x] Add command: search project
-- [ ] Search by name
-- [ ] Search by type
-- [ ] Search by tag
+- [x] Search by name
+- [x] Search by type
+- [x] Search by tag
 - [ ] Open selected project from QuickPick
 
 ### Favorites

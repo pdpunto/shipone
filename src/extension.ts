@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { ProjectStatus } from "./models/project";
+import { ProjectMetadata, ProjectStatus } from "./models/project";
 import { ProjectCreationService } from "./services/projectCreationService";
 import { ShipOneProjectsTreeDataProvider } from "./providers/shiponeProjectsTreeDataProvider";
 import { ProjectStoreService } from "./services/projectStoreService";
@@ -24,6 +24,14 @@ const STATUS_PICKERS: Array<{ label: string; value: ProjectStatus }> = [
   { label: "Finished", value: "finished" },
 ];
 
+const PROJECT_TYPE_PICKERS: Array<{ label: string; value: string | null }> = [
+  { label: "Todos", value: null },
+  { label: "Blank", value: "blank" },
+  { label: "React Vite", value: "react-vite" },
+  { label: "Next.js", value: "nextjs" },
+  { label: "Python", value: "python" },
+];
+
 export async function activate(context: vscode.ExtensionContext) {
   const settingsService = new SettingsService();
   const projectStore = new ProjectStoreService(context);
@@ -38,9 +46,7 @@ export async function activate(context: vscode.ExtensionContext) {
   const welcomeCommand = vscode.commands.registerCommand(COMMAND_SHOW_WELCOME, () => {
     const settings = settingsService.getSettings();
 
-    vscode.window.showInformationMessage(
-      `ShipOne listo. Ruta base: ${settings.projectsRoot}`
-    );
+    vscode.window.showInformationMessage(`ShipOne listo. Ruta base: ${settings.projectsRoot}`);
   });
 
   const searchProjectCommand = vscode.commands.registerCommand(
@@ -49,12 +55,57 @@ export async function activate(context: vscode.ExtensionContext) {
       const projects = await projectStore.loadProjects();
 
       if (projects.length === 0) {
-        vscode.window.showInformationMessage("Todavía no hay proyectos.");
+        vscode.window.showInformationMessage("Todavia no hay proyectos.");
+        return;
+      }
+
+      const searchTerm = await vscode.window.showInputBox({
+        title: "Buscar proyecto",
+        prompt: "Escribe parte del nombre",
+        placeHolder: "my-saas-app",
+      });
+
+      if (searchTerm === undefined) {
+        return;
+      }
+
+      const filteredByName = filterProjectsByName(projects, searchTerm);
+
+      const typeChoice = await vscode.window.showQuickPick(PROJECT_TYPE_PICKERS, {
+        title: "Filtrar por tipo",
+        placeHolder: "Elige un tipo o deja todo",
+      });
+
+      if (!typeChoice) {
+        return;
+      }
+
+      const filteredByType = filterProjectsByType(filteredByName, typeChoice.value);
+
+      if (filteredByType.length === 0) {
+        vscode.window.showInformationMessage("No hay proyectos con esos filtros.");
+        return;
+      }
+
+      const tagChoice = await vscode.window.showInputBox({
+        title: "Filtrar por etiqueta",
+        prompt: "Escribe una etiqueta o deja vacio",
+        placeHolder: "frontend",
+      });
+
+      if (tagChoice === undefined) {
+        return;
+      }
+
+      const filteredByTag = filterProjectsByTag(filteredByType, tagChoice);
+
+      if (filteredByTag.length === 0) {
+        vscode.window.showInformationMessage("No hay proyectos con esa etiqueta.");
         return;
       }
 
       const choice = await vscode.window.showQuickPick(
-        projects.map((project) => ({
+        filteredByTag.map((project) => ({
           label: project.favorite ? `★ ${project.name}` : project.name,
           description: `${project.status} · ${project.type}`,
           detail: buildProjectDetail(project),
@@ -62,7 +113,7 @@ export async function activate(context: vscode.ExtensionContext) {
         })),
         {
           title: "Buscar proyecto",
-          placeHolder: "Escribe nombre, tipo o etiqueta",
+          placeHolder: "Elige un proyecto",
           matchOnDescription: true,
           matchOnDetail: true,
         }
@@ -95,7 +146,7 @@ export async function activate(context: vscode.ExtensionContext) {
       const project = await projectStore.getProject(projectId);
 
       if (!project) {
-        vscode.window.showErrorMessage("No se encontró el proyecto.");
+        vscode.window.showErrorMessage("No se encontro el proyecto.");
         return;
       }
 
@@ -127,9 +178,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
       await projectStore.setProjectStatus(project.id, statusChoice.value);
       treeDataProvider.refresh();
-      vscode.window.showInformationMessage(
-        `${project.name} ahora está en ${statusChoice.label}.`
-      );
+      vscode.window.showInformationMessage(`${project.name} ahora esta en ${statusChoice.label}.`);
     }
   );
 
@@ -143,8 +192,8 @@ export async function activate(context: vscode.ExtensionContext) {
       }
 
       const nextAction = await vscode.window.showInputBox({
-        title: "Siguiente acción",
-        prompt: "Qué hay que hacer ahora",
+        title: "Siguiente accion",
+        prompt: "Que hay que hacer ahora",
         placeHolder: "Crear login",
         value: project.nextAction ?? "",
       });
@@ -155,7 +204,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
       await projectStore.setNextAction(project.id, nextAction.trim() ? nextAction.trim() : null);
       treeDataProvider.refresh();
-      vscode.window.showInformationMessage(`Siguiente acción actualizada en ${project.name}.`);
+      vscode.window.showInformationMessage(`Siguiente accion actualizada en ${project.name}.`);
     }
   );
 
@@ -170,7 +219,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
       await projectStore.setNextAction(project.id, null);
       treeDataProvider.refresh();
-      vscode.window.showInformationMessage(`Siguiente acción limpiada en ${project.name}.`);
+      vscode.window.showInformationMessage(`Siguiente accion limpiada en ${project.name}.`);
     }
   );
 
@@ -238,7 +287,7 @@ async function pickProject(projectStore: ProjectStoreService) {
   const projects = Object.values(groupedProjects).flat();
 
   if (projects.length === 0) {
-    vscode.window.showInformationMessage("Todavía no hay proyectos.");
+    vscode.window.showInformationMessage("Todavia no hay proyectos.");
     return undefined;
   }
 
@@ -256,6 +305,36 @@ async function pickProject(projectStore: ProjectStoreService) {
   );
 
   return choice?.project;
+}
+
+function filterProjectsByName(projects: ProjectMetadata[], searchTerm: string) {
+  const normalizedTerm = searchTerm.trim().toLowerCase();
+
+  if (!normalizedTerm) {
+    return projects;
+  }
+
+  return projects.filter((project) => project.name.toLowerCase().includes(normalizedTerm));
+}
+
+function filterProjectsByType(projects: ProjectMetadata[], type: string | null) {
+  if (!type) {
+    return projects;
+  }
+
+  return projects.filter((project) => project.type === type);
+}
+
+function filterProjectsByTag(projects: ProjectMetadata[], tag: string) {
+  const normalizedTag = tag.trim().toLowerCase();
+
+  if (!normalizedTag) {
+    return projects;
+  }
+
+  return projects.filter((project) =>
+    (project.tags ?? []).some((projectTag) => projectTag.toLowerCase().includes(normalizedTag))
+  );
 }
 
 function buildProjectDetail(project: {
