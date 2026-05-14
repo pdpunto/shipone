@@ -46,7 +46,7 @@ export class ProjectStoreService {
   async recoverFromBackup(): Promise<boolean> {
     try {
       const recovered = await this.readProjectsFromUri(this.backupFileUri);
-      await this.saveProjects(recovered.projects);
+      await this.saveProjects(recovered.projects, false);
       this.logInfo("Recuperacion completada desde backup.");
       return true;
     } catch (error) {
@@ -55,10 +55,10 @@ export class ProjectStoreService {
     }
   }
 
-  async saveProjects(projects: ProjectMetadata[]): Promise<void> {
+  async saveProjects(projects: ProjectMetadata[], createBackup = true): Promise<void> {
     await vscode.workspace.fs.createDirectory(this.context.globalStorageUri);
 
-    if (await this.pathExists(this.storageFileUri)) {
+    if (createBackup && (await this.pathExists(this.storageFileUri))) {
       await vscode.workspace.fs.copy(this.storageFileUri, this.backupFileUri, {
         overwrite: true,
       });
@@ -160,7 +160,7 @@ export class ProjectStoreService {
 
     const task = target.mvpTasks?.find((item) => item.id === taskId);
     if (!task) {
-      throw new Error("No se encontro la tarea.");
+      throw new Error("No se encontró la tarea.");
     }
 
     task.done = true;
@@ -259,7 +259,7 @@ export class ProjectStoreService {
     const target = projects.find((project) => project.id === projectId);
 
     if (!target) {
-      throw new Error("No se encontro el proyecto.");
+      throw new Error("No se encontró el proyecto.");
     }
 
     return target;
@@ -272,7 +272,7 @@ export class ProjectStoreService {
       this.logError("Fallo la lectura del almacenamiento principal.", error);
       try {
         const recovered = await this.readProjectsFromUri(this.backupFileUri);
-        await this.saveProjects(recovered.projects);
+        await this.saveProjects(recovered.projects, false);
         this.logInfo("Se recupero el almacenamiento desde el backup.");
         return recovered;
       } catch (backupError) {

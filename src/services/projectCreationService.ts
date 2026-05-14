@@ -300,7 +300,7 @@ export class ProjectCreationService {
       ],
       {
         title: "GitHub",
-        placeHolder: "Quieres crear un repo de GitHub?",
+        placeHolder: "¿Quieres crear un repo de GitHub?",
       }
     );
 
@@ -312,16 +312,16 @@ export class ProjectCreationService {
       defaultVisibility === "private"
         ? [
             { label: "Privado", value: "private" as const },
-            { label: "Publico", value: "public" as const },
+            { label: "Público", value: "public" as const },
           ]
         : [
-            { label: "Publico", value: "public" as const },
+            { label: "Público", value: "public" as const },
             { label: "Privado", value: "private" as const },
           ];
 
     const visibility = await vscode.window.showQuickPick(visibilityOptions, {
       title: "Visibilidad",
-      placeHolder: "Privado o publico?",
+      placeHolder: "¿Privado o público?",
     });
 
     if (!visibility) {

@@ -48,28 +48,28 @@ Objetivo: convertir el codigo actual en una base mantenible y segura antes de es
 - [x] Crear tooltip provider
 - [x] Crear health renderer
 - [x] Validar `ProjectMetadata`
-- [x] AÃ±adir type guards
-- [x] AÃ±adir migracion de versiones
-- [x] AÃ±adir compatibilidad futura de schema
+- [x] Añadir type guards
+- [x] Añadir migracion de versiones
+- [x] Añadir compatibilidad futura de schema
 
 ### 1.2 Persistencia segura
 
 - [x] Validar JSON antes de cargar
 - [x] Detectar metadata corrupta
 - [x] Restaurar automaticamente backup
-- [x] AÃ±adir logs de errores
-- [x] AÃ±adir recovery mode
-- [x] AÃ±adir versionado de metadata
-- [x] AÃ±adir migraciones automaticas
+- [x] Añadir logs de errores
+- [x] Añadir recovery mode
+- [x] Añadir versionado de metadata
+- [x] Añadir migraciones automaticas
 
 ### 1.3 Calidad de codigo
 
 - [ ] Configurar ESLint estricto
 - [ ] Configurar Prettier
 - [x] Eliminar codigo duplicado
-- [ ] Corregir encoding roto
+- [x] Corregir encoding roto
 - [ ] Revisar nombres inconsistentes
-- [ ] AÃ±adir comentarios importantes
+- [ ] Añadir comentarios importantes
 - [ ] Limpiar imports muertos
 - [ ] Revisar async/await inseguros
 
@@ -134,7 +134,7 @@ Objetivo: hacer que la extension se sienta profesional.
 - [ ] Mejorar iconografia
 - [ ] Mejorar empty states
 - [ ] Mejorar health indicators
-- [ ] AÃ±adir badges claros
+- [ ] Añadir badges claros
 
 ### 3.2 Onboarding
 
@@ -146,9 +146,9 @@ Objetivo: hacer que la extension se sienta profesional.
 ### 3.3 Descubribilidad
 
 - [ ] Mejorar nombres de comandos
-- [ ] AÃ±adir aliases utiles
-- [ ] AÃ±adir comandos rapidos
-- [ ] AÃ±adir shortcuts opcionales
+- [ ] Añadir aliases utiles
+- [ ] Añadir comandos rapidos
+- [ ] Añadir shortcuts opcionales
 
 ### 3.4 Errores
 
@@ -158,7 +158,7 @@ Objetivo: hacer que la extension se sienta profesional.
 - [ ] Detectar GH faltante
 - [ ] Detectar permisos insuficientes
 - [ ] Detectar rutas invalidas
-- [ ] AÃ±adir recovery suggestions
+- [ ] Añadir recovery suggestions
 
 ## Fase 4 - Testing and Reliability
 
@@ -233,7 +233,7 @@ Objetivo: preparar ShipOne para usuarios reales.
 ### 5.3 GitHub publico
 
 - [ ] Hacer repo publico
-- [ ] AÃ±adir `.github/`
+- [ ] Añadir `.github/`
 - [ ] Issue templates
 - [ ] Bug report template
 - [ ] Feature request template
@@ -263,10 +263,10 @@ Objetivo: preparar ShipOne para usuarios reales.
 - [ ] Verificar `package.json`
 - [ ] Verificar keywords
 - [ ] Verificar categories
-- [ ] AÃ±adir icon
-- [ ] AÃ±adir repository url
-- [ ] AÃ±adir bugs url
-- [ ] AÃ±adir homepage url
+- [ ] Añadir icon
+- [ ] Añadir repository url
+- [ ] Añadir bugs url
+- [ ] Añadir homepage url
 - [ ] Publicar beta privada
 - [ ] Recoger feedback
 - [ ] Corregir bugs criticos
@@ -330,12 +330,14 @@ La prioridad profesional ahora mismo es:
 2. corregir encoding y consistencia textual
 3. empezar localizacion
 4. separar `extension.ts`
-5. aÃ±adir tests basicos
+5. añadir tests basicos
 6. mejorar UX del flujo de creacion y revision
 
 ## Nota final
 
 ShipOne ya tiene valor funcional. Lo que falta ahora es convertirlo en un producto que se pueda mantener, explicar y publicar sin miedo.
+
+
 
 
 

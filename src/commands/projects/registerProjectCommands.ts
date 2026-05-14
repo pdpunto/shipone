@@ -41,7 +41,7 @@ export function registerProjectCommands(options: {
       const project = await resolveProject(projectStore, projectArg, getSelectedProjectId());
 
       if (!project) {
-        vscode.window.showErrorMessage("No se encontro el proyecto.");
+        vscode.window.showErrorMessage("No se encontró el proyecto.");
         return;
       }
 
