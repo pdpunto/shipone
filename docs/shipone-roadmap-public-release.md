@@ -41,7 +41,7 @@ Objetivo: convertir el codigo actual en una base mantenible y segura antes de es
 - [x] Crear `GithubService`
 - [x] Crear `StatusFileService`
 - [x] Crear `ProjectHealthService`
-- [ ] Crear `TodoScannerService`
+- [x] Crear `TodoScannerService`
 - [ ] Separar nodes de UI en archivos individuales
 - [ ] Separar renderizado del arbol
 - [ ] Crear icon provider

@@ -8,6 +8,7 @@ import { ProjectCreationService } from "./services/projectCreationService";
 import { ProjectContextService } from "./services/projectContextService";
 import { ProjectHealthService } from "./services/projectHealthService";
 import { StatusFileService } from "./services/statusFileService";
+import { TodoScannerService } from "./services/todoScannerService";
 import { ShipOneProjectsTreeDataProvider } from "./providers/shiponeProjectsTreeDataProvider";
 import { ProjectStoreService } from "./services/projectStoreService";
 import { SettingsService } from "./services/settingsService";
@@ -24,6 +25,7 @@ export async function activate(context: vscode.ExtensionContext) {
   const projectContextService = new ProjectContextService();
   const projectHealthService = new ProjectHealthService();
   const statusFileService = new StatusFileService();
+  const todoScannerService = new TodoScannerService();
   const projectCreationService = new ProjectCreationService(
     projectStore,
     statusFileService,
@@ -107,6 +109,7 @@ export async function activate(context: vscode.ExtensionContext) {
     projectStore,
     settingsService,
     projectCreationService,
+    todoScannerService,
     treeRefresh: () => treeDataProvider.refresh(),
     setFocusMode,
   });

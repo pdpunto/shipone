@@ -2,12 +2,12 @@ import * as vscode from "vscode";
 import { ProjectCreationService } from "../../services/projectCreationService";
 import { ProjectStoreService } from "../../services/projectStoreService";
 import { SettingsService } from "../../services/settingsService";
+import { TodoScannerService, type TodoTask } from "../../services/todoScannerService";
 import {
   buildWeeklyReviewSummary,
   getFinishedThisWeek,
   isStaleProject,
   pickProject,
-  scanProjectTodoTasks,
 } from "./projectOpsHelpers";
 
 const COMMAND_OPEN_PROJECT = "shipone.openProject";
@@ -22,11 +22,18 @@ export function registerReviewCommands(options: {
   projectStore: ProjectStoreService;
   settingsService: SettingsService;
   projectCreationService: ProjectCreationService;
+  todoScannerService: TodoScannerService;
   treeRefresh: () => void;
   setFocusMode: (enabled: boolean) => Promise<void>;
 }): vscode.Disposable[] {
-  const { projectStore, settingsService, projectCreationService, treeRefresh, setFocusMode } =
-    options;
+  const {
+    projectStore,
+    settingsService,
+    projectCreationService,
+    todoScannerService,
+    treeRefresh,
+    setFocusMode,
+  } = options;
 
   const scanTodosCommand = vscode.commands.registerCommand(COMMAND_SCAN_TODOS, async () => {
     const project = await pickProject(projectStore);
@@ -35,7 +42,7 @@ export function registerReviewCommands(options: {
       return;
     }
 
-    const tasks = await scanProjectTodoTasks(project.path);
+    const tasks = await todoScannerService.scanProjectTodoTasks(project.path);
 
     if (tasks.length === 0) {
       vscode.window.showInformationMessage(`No hay TODO ni FIXME en ${project.name}.`);
@@ -43,7 +50,7 @@ export function registerReviewCommands(options: {
     }
 
     const choice = await vscode.window.showQuickPick(
-      tasks.map((task) => ({
+      tasks.map((task: TodoTask) => ({
         label: `${task.kind} - ${task.fileName}`,
         description: `L${task.line}`,
         detail: task.text,
