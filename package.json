@@ -228,6 +228,11 @@
           "default": 30,
           "minimum": 1,
           "description": "Dias sin abrir antes de mostrar aviso fuerte."
+        },
+        "shipone.showFinishedProjects": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mostrar o esconder la seccion Finished en la vista."
         }
       }
     }

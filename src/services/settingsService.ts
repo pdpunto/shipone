@@ -13,6 +13,7 @@ export class SettingsService {
       openAfterCreate: config.get<boolean>("openAfterCreate", true),
       inactiveWarningDays: config.get<number>("inactiveWarningDays", 7),
       staleWarningDays: config.get<number>("staleWarningDays", 30),
+      showFinishedProjects: config.get<boolean>("showFinishedProjects", true),
     };
   }
 }

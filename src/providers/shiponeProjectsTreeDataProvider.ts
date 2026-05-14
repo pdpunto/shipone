@@ -65,9 +65,14 @@ export class ShipOneProjectsTreeDataProvider
         ];
       }
 
+      const settings = this.settingsService.getSettings();
+      const visibleGroups = settings.showFinishedProjects
+        ? GROUPS
+        : GROUPS.filter((group) => group.status !== "finished");
+
       return [
         new MetricsNode(),
-        ...GROUPS.map((group) => new GroupNode(group.status, group.label, group.icon)),
+        ...visibleGroups.map((group) => new GroupNode(group.status, group.label, group.icon)),
       ];
     }
 

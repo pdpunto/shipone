@@ -222,7 +222,7 @@ Goal: release a useful first version.
 - [ ] Add setting: create GitHub repo by default
 - [ ] Add setting: GitHub repo visibility
 - [ ] Add setting: enforce one active project
-- [ ] Add setting: show finished projects
+- [x] Add setting: show finished projects
 
 ### Metadata storage
 

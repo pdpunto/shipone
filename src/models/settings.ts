@@ -4,4 +4,5 @@ export interface ShipOneSettings {
   openAfterCreate: boolean;
   inactiveWarningDays: number;
   staleWarningDays: number;
+  showFinishedProjects: boolean;
 }

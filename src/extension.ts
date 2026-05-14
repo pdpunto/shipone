@@ -76,6 +76,11 @@ export async function activate(context: vscode.ExtensionContext) {
       selectedProjectId = undefined;
     }
   });
+  const configurationWatcher = vscode.workspace.onDidChangeConfiguration((event) => {
+    if (event.affectsConfiguration("shipone")) {
+      treeDataProvider.refresh();
+    }
+  });
 
   const setFocusMode = async (enabled: boolean) => {
     focusModeEnabled = enabled;
@@ -651,6 +656,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     treeView,
+    configurationWatcher,
     welcomeCommand,
     openProjectsRootCommand,
     openProjectQuickPickCommand,
