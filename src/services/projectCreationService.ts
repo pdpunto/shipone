@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { randomUUID } from "crypto";
 import { execFile } from "child_process";
-import { dirname } from "path";
+import { dirname, relative } from "path";
 import { promisify } from "util";
 import { ProjectMetadata, ProjectStatus } from "../models/project";
 import { ShipOneSettings } from "../models/settings";
@@ -357,7 +357,14 @@ export class ProjectCreationService {
     if (settings.createStatusFileByDefault) {
       await this.writeStatusFile(folderUri, name, description);
     }
-    await this.createSelectedTemplate(folderUri, name, description, type, packageManager);
+    await this.createSelectedTemplate(
+      folderUri,
+      name,
+      description,
+      type,
+      packageManager,
+      settings.customTemplateFolder
+    );
 
     let gitInitialized = false;
     if (gitChoice.value) {
@@ -430,7 +437,14 @@ export class ProjectCreationService {
     if (settings.createStatusFileByDefault) {
       await this.writeStatusFile(folderUri, name, description);
     }
-    await this.createSelectedTemplate(folderUri, name, description, type, packageManager);
+    await this.createSelectedTemplate(
+      folderUri,
+      name,
+      description,
+      type,
+      packageManager,
+      settings.customTemplateFolder
+    );
 
     const project: ProjectMetadata = {
       id: randomUUID(),
@@ -624,9 +638,13 @@ export class ProjectCreationService {
     projectName: string,
     description: string,
     type: ShipOneSettings["defaultProjectType"],
-    packageManager: ShipOneSettings["defaultPackageManager"]
+    packageManager: ShipOneSettings["defaultPackageManager"],
+    customTemplateFolder: string
   ): Promise<void> {
-    const templates = this.getTemplateFiles(folderUri, projectName, description, type, packageManager);
+    const templates = [
+      ...(await this.getCustomTemplateFiles(folderUri, customTemplateFolder, type)),
+      ...this.getTemplateFiles(folderUri, projectName, description, type, packageManager),
+    ];
 
     for (const file of templates) {
       await this.writeFileIfMissing(file.uri, file.content);
@@ -656,6 +674,64 @@ export class ProjectCreationService {
       packageManager,
       gitignore,
     });
+  }
+
+  private async getCustomTemplateFiles(
+    destinationRootUri: vscode.Uri,
+    customTemplateFolder: string,
+    type: ShipOneSettings["defaultProjectType"]
+  ): Promise<Array<{ uri: vscode.Uri; content: string }>> {
+    if (!customTemplateFolder.trim()) {
+      return [];
+    }
+
+    const rootUri = vscode.Uri.file(customTemplateFolder);
+    if (!(await this.pathExists(rootUri))) {
+      return [];
+    }
+
+    const typeUri = vscode.Uri.joinPath(rootUri, type);
+    const sourceUri = (await this.pathExists(typeUri)) ? typeUri : rootUri;
+
+    return this.collectTemplateFiles(sourceUri, destinationRootUri, sourceUri);
+  }
+
+  private async collectTemplateFiles(
+    sourceRootUri: vscode.Uri,
+    destinationRootUri: vscode.Uri,
+    currentUri: vscode.Uri
+  ): Promise<Array<{ uri: vscode.Uri; content: string }>> {
+    const entries = await vscode.workspace.fs.readDirectory(currentUri);
+    const files: Array<{ uri: vscode.Uri; content: string }> = [];
+
+    for (const [name, type] of entries) {
+      if (name === ".git" || name === "node_modules" || name === "out" || name === "dist") {
+        continue;
+      }
+
+      const entryUri = vscode.Uri.joinPath(currentUri, name);
+      if (type === vscode.FileType.Directory) {
+        files.push(...(await this.collectTemplateFiles(sourceRootUri, destinationRootUri, entryUri)));
+        continue;
+      }
+
+      if (type !== vscode.FileType.File) {
+        continue;
+      }
+
+      const content = new TextDecoder().decode(await vscode.workspace.fs.readFile(entryUri));
+      const targetRelativePath = relative(sourceRootUri.fsPath, entryUri.fsPath);
+
+      files.push({
+        uri: vscode.Uri.joinPath(
+          destinationRootUri,
+          ...targetRelativePath.split(/[\\/]+/).filter(Boolean)
+        ),
+        content,
+      });
+    }
+
+    return files;
   }
 
   private async writeFileIfMissing(uri: vscode.Uri, content: string): Promise<void> {

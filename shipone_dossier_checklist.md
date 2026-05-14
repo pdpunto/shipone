@@ -470,7 +470,7 @@ Goal: improve project creation.
 
 - [x] Move templates into configurable system
 - [x] Add template metadata
-- [ ] Add custom template folder
+- [x] Add custom template folder
 - [ ] Let user add templates
 - [ ] Let user duplicate template
 - [ ] Let user remove template

@@ -19,6 +19,7 @@ export class SettingsService {
       enforceOneActiveProject: config.get<boolean>("enforceOneActiveProject", true),
       createStatusFileByDefault: config.get<boolean>("createStatusFileByDefault", true),
       defaultPackageManager: config.get<"npm" | "pnpm" | "yarn">("defaultPackageManager", "npm"),
+      customTemplateFolder: config.get<string>("customTemplateFolder", ""),
       openAfterCreate: config.get<boolean>("openAfterCreate", true),
       inactiveWarningDays: config.get<number>("inactiveWarningDays", 7),
       staleWarningDays: config.get<number>("staleWarningDays", 30),

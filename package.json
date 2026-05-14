@@ -390,6 +390,11 @@
           "default": "npm",
           "description": "Package manager por defecto para proyectos nuevos."
         },
+        "shipone.customTemplateFolder": {
+          "type": "string",
+          "default": "",
+          "description": "Carpeta opcional con plantillas personalizadas."
+        },
         "shipone.openAfterCreate": {
           "type": "boolean",
           "default": true,

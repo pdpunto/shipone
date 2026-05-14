@@ -7,6 +7,7 @@ export interface ShipOneSettings {
   enforceOneActiveProject: boolean;
   createStatusFileByDefault: boolean;
   defaultPackageManager: "npm" | "pnpm" | "yarn";
+  customTemplateFolder: string;
   openAfterCreate: boolean;
   inactiveWarningDays: number;
   staleWarningDays: number;
