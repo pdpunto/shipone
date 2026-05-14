@@ -451,12 +451,12 @@ Goal: make ShipOne more than a launcher.
 
 ### Weekly review
 
-- [ ] Add command: weekly review
-- [ ] Show active project
-- [ ] Show projects finished this week
-- [ ] Show paused projects
-- [ ] Ask next action for active project
-- [ ] Ask whether to finish/pause stale projects
+- [x] Add command: weekly review
+- [x] Show active project
+- [x] Show projects finished this week
+- [x] Show paused projects
+- [x] Ask next action for active project
+- [x] Ask whether to finish/pause stale projects
 
 ---
 

@@ -31,6 +31,7 @@
       { "command": "shipone.syncStatusFile", "title": "ShipOne: Sincronizar STATUS.md", "icon": "$(sync)" },
       { "command": "shipone.focusMode", "title": "ShipOne: Focus mode", "icon": "$(eye)" },
       { "command": "shipone.exitFocusMode", "title": "ShipOne: Salir de focus mode", "icon": "$(eye-closed)" },
+      { "command": "shipone.weeklyReview", "title": "ShipOne: Weekly review", "icon": "$(calendar)" },
       { "command": "shipone.freezeProject", "title": "ShipOne: Congelar proyecto", "icon": "$(debug-pause)" },
       { "command": "shipone.resumeProject", "title": "ShipOne: Reanudar proyecto", "icon": "$(play)" },
       { "command": "shipone.toggleFavorite", "title": "ShipOne: Alternar favorito", "icon": "$(star)" },
@@ -82,6 +83,11 @@
         {
           "command": "shipone.exitFocusMode",
           "when": "view == shipone.projectsView && shipone.focusMode",
+          "group": "navigation"
+        },
+        {
+          "command": "shipone.weeklyReview",
+          "when": "view == shipone.projectsView",
           "group": "navigation"
         },
         {

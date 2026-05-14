@@ -14,6 +14,7 @@ const COMMAND_MARK_MVP_ITEM_DONE = "shipone.markMvpItemDone";
 const COMMAND_SYNC_STATUS_FILE = "shipone.syncStatusFile";
 const COMMAND_FOCUS_MODE = "shipone.focusMode";
 const COMMAND_EXIT_FOCUS_MODE = "shipone.exitFocusMode";
+const COMMAND_WEEKLY_REVIEW = "shipone.weeklyReview";
 const COMMAND_FREEZE_PROJECT = "shipone.freezeProject";
 const COMMAND_RESUME_PROJECT = "shipone.resumeProject";
 const COMMAND_SEARCH_PROJECT = "shipone.searchProject";
@@ -269,6 +270,90 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.window.showInformationMessage("Focus mode desactivado.");
   });
 
+  const weeklyReviewCommand = vscode.commands.registerCommand(
+    COMMAND_WEEKLY_REVIEW,
+    async () => {
+      const projects = await projectStore.loadProjects();
+      const summary = buildWeeklyReviewSummary(projects);
+
+      const activeProject = projects.find((project) => project.status === "active");
+      const pausedProjects = projects.filter((project) => project.status === "paused");
+      const finishedThisWeek = getFinishedThisWeek(projects);
+
+      const summaryLines = [
+        `Activo: ${summary.active ? summary.active.name : "ninguno"}`,
+        `Pausados: ${pausedProjects.length}`,
+        `Terminados esta semana: ${finishedThisWeek.length}`,
+      ];
+
+      if (activeProject) {
+        const actions = ["Ver activo", "Salir"];
+        const choice = await vscode.window.showInformationMessage(
+          summaryLines.join(" | "),
+          ...actions
+        );
+
+        if (choice === "Salir") {
+          return;
+        }
+
+        await vscode.commands.executeCommand(COMMAND_OPEN_PROJECT, activeProject.id);
+      } else {
+        vscode.window.showInformationMessage(summaryLines.join(" | "));
+      }
+
+      if (activeProject && !activeProject.nextAction) {
+        const nextAction = await vscode.window.showInputBox({
+          title: "Weekly review",
+          prompt: "Siguiente accion para el proyecto activo",
+          placeHolder: "Terminar login",
+        });
+
+        if (nextAction !== undefined) {
+          await projectStore.setNextAction(
+            activeProject.id,
+            nextAction.trim() ? nextAction.trim() : null
+          );
+          treeDataProvider.refresh();
+        }
+      }
+
+      if (activeProject && isStaleProject(activeProject)) {
+        const choice = await vscode.window.showQuickPick(
+          [
+            { label: "Mantener activo", value: "keep" },
+            { label: "Pasar a pausado", value: "pause" },
+            { label: "Marcar terminado", value: "finish" },
+          ],
+          {
+            title: "Proyecto activo viejo",
+            placeHolder: "Que hacemos con este proyecto",
+          }
+        );
+
+        if (choice?.value === "pause") {
+          await projectStore.setProjectStatus(activeProject.id, "paused");
+          treeDataProvider.refresh();
+        } else if (choice?.value === "finish") {
+          await projectStore.setProjectStatus(activeProject.id, "finished");
+          treeDataProvider.refresh();
+        }
+      }
+
+      if (pausedProjects.length > 0) {
+        vscode.window.showInformationMessage(
+          `Pausados: ${pausedProjects.map((project) => project.name).join(", ")}`
+        );
+      }
+
+      if (finishedThisWeek.length > 0) {
+        vscode.window.showInformationMessage(
+          `Terminados esta semana: ${finishedThisWeek.map((project) => project.name).join(", ")}`
+        );
+      }
+    }
+  );
+
   const freezeProjectCommand = vscode.commands.registerCommand(
     COMMAND_FREEZE_PROJECT,
     async () => {
@@ -492,6 +577,7 @@ export async function activate(context: vscode.ExtensionContext) {
     syncStatusFileCommand,
     focusModeCommand,
     exitFocusModeCommand,
+    weeklyReviewCommand,
     freezeProjectCommand,
     resumeProjectCommand,
     searchProjectCommand,
@@ -627,6 +713,42 @@ function buildProjectDetail(project: {
   }
 
   return parts.join(" · ");
+}
+
+function buildWeeklyReviewSummary(projects: ProjectMetadata[]) {
+  return {
+    active: projects.find((project) => project.status === "active") ?? null,
+  };
+}
+
+function getFinishedThisWeek(projects: ProjectMetadata[]): ProjectMetadata[] {
+  const cutoff = Date.now() - 7 * 86_400_000;
+
+  return projects.filter((project) => {
+    if (!project.finishedAt) {
+      return false;
+    }
+
+    const finishedAt = new Date(project.finishedAt).getTime();
+    return Number.isFinite(finishedAt) && finishedAt >= cutoff;
+  });
+}
+
+function isStaleProject(project: ProjectMetadata): boolean {
+  if (project.status !== "active") {
+    return false;
+  }
+
+  if (!project.lastOpenedAt) {
+    return false;
+  }
+
+  const openedAt = new Date(project.lastOpenedAt).getTime();
+  if (!Number.isFinite(openedAt)) {
+    return false;
+  }
+
+  return Date.now() - openedAt >= 14 * 86_400_000;
 }
 
 export function deactivate() {}
