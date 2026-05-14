@@ -189,10 +189,12 @@ class ProjectNode extends vscode.TreeItem {
     );
     const mvpProgress = getMvpProgress(project.mvpTasks);
     const projectType = formatProjectType(project.type);
+    const nextActionWarning = project.status === "active" && !project.nextAction ? "no next" : null;
 
     this.description = [
       projectType,
       project.nextAction ? `next: ${project.nextAction}` : undefined,
+      nextActionWarning,
       health.label,
       project.pauseReason ? `pause: ${project.pauseReason}` : undefined,
       warning ?? undefined,
@@ -210,6 +212,7 @@ class ProjectNode extends vscode.TreeItem {
         `Salud: ${health.label}`,
         `Ruta: ${project.path}`,
         `Ultima apertura: ${project.lastOpenedAt ?? "sin registro"}`,
+        project.status === "active" && !project.nextAction ? "Aviso: falta next action" : "",
         project.pauseReason ? `Pausa: ${project.pauseReason}` : "",
         project.pauseNote ? `Nota: ${project.pauseNote}` : "",
         health.issues.length > 0 ? `Problemas: ${health.issues.join(", ")}` : "",

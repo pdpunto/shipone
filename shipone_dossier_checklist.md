@@ -226,14 +226,14 @@ Goal: release a useful first version.
 
 ### Metadata storage
 
-- [ ] Create metadata file if missing
-- [ ] Store metadata in global VS Code storage or root config file
-- [ ] Add read metadata function
-- [ ] Add write metadata function
-- [ ] Add update project function
-- [ ] Add migration-safe structure
-- [ ] Handle corrupted metadata gracefully
-- [ ] Add backup before writing metadata
+- [x] Create metadata file if missing
+- [x] Store metadata in global VS Code storage or root config file
+- [x] Add read metadata function
+- [x] Add write metadata function
+- [x] Add update project function
+- [x] Add migration-safe structure
+- [x] Handle corrupted metadata gracefully
+- [x] Add backup before writing metadata
 
 ### Project states
 
@@ -270,7 +270,7 @@ Goal: release a useful first version.
 - [x] Add command: clear next action
 - [ ] Prompt user with input box
 - [x] Show next action in sidebar
-- [ ] Warn if Active project has no next action
+- [x] Warn if Active project has no next action
 
 ### Project creation
 
@@ -317,10 +317,10 @@ Goal: release a useful first version.
 - [x] Check if `gh` CLI is installed
 - [x] Check if user is authenticated
 - [x] Handle missing `gh` gracefully
-- [ ] Run `gh repo create`
-- [ ] Support public/private visibility
-- [ ] Save repo URL in metadata
-- [ ] Do not fail whole project if GitHub creation fails
+- [x] Run `gh repo create`
+- [x] Support public/private visibility
+- [x] Save repo URL in metadata
+- [x] Do not fail whole project if GitHub creation fails
 
 ### Safety
 

@@ -3,6 +3,7 @@ import { TextDecoder, TextEncoder } from "util";
 import { MvpTask, ProjectMetadata, ProjectStatus } from "../models/project";
 
 const STORAGE_FILE_NAME = "projects.json";
+const STORAGE_BACKUP_FILE_NAME = "projects.json.bak";
 const EMPTY_GROUPS: ProjectStatus[] = ["idea", "active", "paused", "finished"];
 
 export class ProjectStoreService {
@@ -35,6 +36,12 @@ export class ProjectStoreService {
 
   async saveProjects(projects: ProjectMetadata[]): Promise<void> {
     await vscode.workspace.fs.createDirectory(this.context.globalStorageUri);
+
+    if (await this.pathExists(this.storageFileUri)) {
+      await vscode.workspace.fs.copy(this.storageFileUri, this.backupFileUri, {
+        overwrite: true,
+      });
+    }
 
     const payload = new TextEncoder().encode(JSON.stringify(projects, null, 2));
     await vscode.workspace.fs.writeFile(this.storageFileUri, payload);
@@ -213,6 +220,10 @@ export class ProjectStoreService {
 
   private get storageFileUri(): vscode.Uri {
     return vscode.Uri.joinPath(this.context.globalStorageUri, STORAGE_FILE_NAME);
+  }
+
+  private get backupFileUri(): vscode.Uri {
+    return vscode.Uri.joinPath(this.context.globalStorageUri, STORAGE_BACKUP_FILE_NAME);
   }
 
   private createEmptyGroups(): Record<ProjectStatus, ProjectMetadata[]> {
