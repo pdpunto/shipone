@@ -1,10 +1,10 @@
 import { ProjectMetadata, ProjectStatus } from "../models/project";
 import { SettingsService } from "../services/settingsService";
 import { ProjectStoreService } from "../services/projectStoreService";
-import {
-  ProjectHealthService,
-  type ProjectHealth,
-} from "../services/projectHealthService";
+import { ProjectHealthService } from "../services/projectHealthService";
+import { ProjectHealthRenderer } from "./projectHealthRenderer";
+import { TreeIconProvider } from "./treeIconProvider";
+import { TreeTooltipProvider } from "./treeTooltipProvider";
 import { GroupNode } from "./treeNodes/groupNode";
 import { MetricsNode } from "./treeNodes/metricsNode";
 import { MetricItemNode } from "./treeNodes/metricItemNode";
@@ -26,7 +26,10 @@ export class TreeRendererService {
   constructor(
     private readonly projectStore: ProjectStoreService,
     private readonly settingsService: SettingsService,
-    private readonly projectHealthService: ProjectHealthService
+    private readonly projectHealthService: ProjectHealthService,
+    private readonly iconProvider: TreeIconProvider,
+    private readonly tooltipProvider: TreeTooltipProvider,
+    private readonly healthRenderer: ProjectHealthRenderer
   ) {}
 
   async getRootNodes(isFocusModeEnabled: boolean): Promise<ShipOneTreeNode[]> {
@@ -35,7 +38,14 @@ export class TreeRendererService {
       const activeProject = projects.find((project) => project.status === "active");
 
       if (!activeProject) {
-        return [new EmptyStateNode("Sin proyecto activo")];
+        return [
+          new EmptyStateNode(
+            "Sin proyecto activo",
+            undefined,
+            this.iconProvider,
+            this.tooltipProvider
+          ),
+        ];
       }
 
       const settings = this.settingsService.getSettings();
@@ -45,7 +55,10 @@ export class TreeRendererService {
         settings.staleWarningDays
       );
 
-      return [new FocusNode(activeProject, health), new GroupNode("active", "Active", "play")];
+      return [
+        new FocusNode(activeProject, health, this.iconProvider, this.tooltipProvider),
+        new GroupNode("active", "Active", this.iconProvider, this.tooltipProvider),
+      ];
     }
 
     const settings = this.settingsService.getSettings();
@@ -53,8 +66,18 @@ export class TreeRendererService {
 
     if (projects.length === 0) {
       return [
-        new EmptyStateNode("Sin proyectos todavia", "Crear proyecto", "add"),
-        new EmptyStateNode("Usa Crear proyecto para empezar"),
+        new EmptyStateNode(
+          "Sin proyectos todavia",
+          "Crear proyecto",
+          this.iconProvider,
+          this.tooltipProvider
+        ),
+        new EmptyStateNode(
+          "Usa Crear proyecto para empezar",
+          undefined,
+          this.iconProvider,
+          this.tooltipProvider
+        ),
       ];
     }
 
@@ -71,9 +94,11 @@ export class TreeRendererService {
       : [];
 
     return [
-      new MetricsNode(),
+      new MetricsNode(this.iconProvider),
       ...activeWarnings,
-      ...visibleGroups.map((group) => new GroupNode(group.status, group.label, group.icon)),
+      ...visibleGroups.map((group) =>
+        new GroupNode(group.status, group.label, this.iconProvider, this.tooltipProvider)
+      ),
     ];
   }
 
@@ -81,12 +106,12 @@ export class TreeRendererService {
     const projects = await this.projectStore.loadProjects();
     const summary = this.projectHealthService.getMetrics(projects);
     return [
-      new MetricItemNode("Total", summary.total, "graph"),
-      new MetricItemNode("Ideas", summary.idea, "lightbulb"),
-      new MetricItemNode("Active", summary.active, "play"),
-      new MetricItemNode("Paused", summary.paused, "debug-pause"),
-      new MetricItemNode("Finished", summary.finished, "check"),
-      new MetricItemNode("Finish ratio", `${summary.finishRatio}%`, "pie-chart"),
+      new MetricItemNode("Total", summary.total, this.iconProvider),
+      new MetricItemNode("Ideas", summary.idea, this.iconProvider),
+      new MetricItemNode("Active", summary.active, this.iconProvider),
+      new MetricItemNode("Paused", summary.paused, this.iconProvider),
+      new MetricItemNode("Finished", summary.finished, this.iconProvider),
+      new MetricItemNode("Finish ratio", `${summary.finishRatio}%`, this.iconProvider),
     ];
   }
 
@@ -99,7 +124,14 @@ export class TreeRendererService {
     const settings = this.settingsService.getSettings();
 
     if (projects.length === 0) {
-      return [new EmptyStateNode("Sin proyectos todavia", "Crear proyecto", "add")];
+      return [
+        new EmptyStateNode(
+          "Sin proyectos todavia",
+          "Crear proyecto",
+          this.iconProvider,
+          this.tooltipProvider
+        ),
+      ];
     }
 
     return Promise.all(
@@ -115,7 +147,14 @@ export class TreeRendererService {
           settings.staleWarningDays
         );
 
-        return new ProjectNode(project, health, warning);
+        return new ProjectNode(
+          project,
+          health,
+          warning,
+          this.iconProvider,
+          this.tooltipProvider,
+          this.healthRenderer
+        );
       })
     );
   }
@@ -137,14 +176,22 @@ export class TreeRendererService {
         new WarningNode(
           "Active sin uso reciente",
           `Ultima apertura: ${project.lastOpenedAt ?? "sin registro"}`,
-          project.id
+          project.id,
+          this.iconProvider,
+          this.tooltipProvider
         )
       );
     }
 
     if (!project.nextAction) {
       warnings.push(
-        new WarningNode("Active sin next action", "Define el siguiente paso para avanzar", project.id)
+        new WarningNode(
+          "Active sin next action",
+          "Define el siguiente paso para avanzar",
+          project.id,
+          this.iconProvider,
+          this.tooltipProvider
+        )
       );
     }
 

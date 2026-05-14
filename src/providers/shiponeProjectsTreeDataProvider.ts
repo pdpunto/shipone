@@ -4,6 +4,9 @@ import { ProjectStoreService } from "../services/projectStoreService";
 import { ProjectHealthService } from "../services/projectHealthService";
 import { ProjectStatus } from "../models/project";
 import { TreeRendererService, type ShipOneTreeNode } from "./treeRendererService";
+import { ProjectHealthRenderer } from "./projectHealthRenderer";
+import { TreeIconProvider } from "./treeIconProvider";
+import { TreeTooltipProvider } from "./treeTooltipProvider";
 import { MetricsNode } from "./treeNodes/metricsNode";
 import { GroupNode } from "./treeNodes/groupNode";
 
@@ -18,6 +21,9 @@ export class ShipOneProjectsTreeDataProvider
     private readonly projectStore: ProjectStoreService,
     private readonly settingsService: SettingsService,
     private readonly projectHealthService: ProjectHealthService,
+    private readonly iconProvider: TreeIconProvider,
+    private readonly tooltipProvider: TreeTooltipProvider,
+    private readonly healthRenderer: ProjectHealthRenderer,
     private readonly isFocusModeEnabled: () => boolean
   ) {}
 
@@ -33,7 +39,10 @@ export class ShipOneProjectsTreeDataProvider
     const renderer = new TreeRendererService(
       this.projectStore,
       this.settingsService,
-      this.projectHealthService
+      this.projectHealthService,
+      this.iconProvider,
+      this.tooltipProvider,
+      this.healthRenderer
     );
 
     if (!element) {

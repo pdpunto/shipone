@@ -1,22 +1,20 @@
 import * as vscode from "vscode";
 import { ProjectMetadata } from "../../models/project";
 import { ProjectHealth } from "../../services/projectHealthService";
+import { TreeIconProvider } from "../treeIconProvider";
+import { TreeTooltipProvider } from "../treeTooltipProvider";
 
 export class FocusNode extends vscode.TreeItem {
-  constructor(project: ProjectMetadata, health: ProjectHealth) {
+  constructor(
+    project: ProjectMetadata,
+    health: ProjectHealth,
+    iconProvider: TreeIconProvider,
+    tooltipProvider: TreeTooltipProvider
+  ) {
     super("Focus mode", vscode.TreeItemCollapsibleState.None);
     this.description = project.nextAction ?? "Sin next action";
-    this.iconPath = new vscode.ThemeIcon("eye");
-    this.tooltip = new vscode.MarkdownString(
-      [
-        `**${project.name}**`,
-        "",
-        `Estado: ${project.status}`,
-        `Salud: ${health.label}`,
-        `Siguiente accion: ${project.nextAction ?? "Sin next action"}`,
-        `Ruta: ${project.path}`,
-      ].join("\n")
-    );
+    this.iconPath = new vscode.ThemeIcon(iconProvider.getFocusIcon());
+    this.tooltip = tooltipProvider.buildFocusTooltip(project, health);
     this.command = {
       command: "shipone.openProject",
       title: "Abrir proyecto",

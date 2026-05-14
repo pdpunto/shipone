@@ -10,6 +10,9 @@ import { ProjectHealthService } from "./services/projectHealthService";
 import { StatusFileService } from "./services/statusFileService";
 import { TodoScannerService } from "./services/todoScannerService";
 import { ShipOneProjectsTreeDataProvider } from "./providers/shiponeProjectsTreeDataProvider";
+import { ProjectHealthRenderer } from "./providers/projectHealthRenderer";
+import { TreeIconProvider } from "./providers/treeIconProvider";
+import { TreeTooltipProvider } from "./providers/treeTooltipProvider";
 import { ProjectStoreService } from "./services/projectStoreService";
 import { SettingsService } from "./services/settingsService";
 import { showFirstRunOnboarding } from "./onboarding/showFirstRunOnboarding";
@@ -24,6 +27,9 @@ export async function activate(context: vscode.ExtensionContext) {
   const projectStore = new ProjectStoreService(context);
   const projectContextService = new ProjectContextService();
   const projectHealthService = new ProjectHealthService();
+  const treeIconProvider = new TreeIconProvider();
+  const treeTooltipProvider = new TreeTooltipProvider();
+  const healthRenderer = new ProjectHealthRenderer();
   const statusFileService = new StatusFileService();
   const todoScannerService = new TodoScannerService();
   const projectCreationService = new ProjectCreationService(
@@ -43,6 +49,9 @@ export async function activate(context: vscode.ExtensionContext) {
     projectStore,
     settingsService,
     projectHealthService,
+    treeIconProvider,
+    treeTooltipProvider,
+    healthRenderer,
     () => focusModeEnabled
   );
 

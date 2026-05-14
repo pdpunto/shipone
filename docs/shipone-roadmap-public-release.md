@@ -44,9 +44,9 @@ Objetivo: convertir el codigo actual en una base mantenible y segura antes de es
 - [x] Crear `TodoScannerService`
 - [x] Separar nodes de UI en archivos individuales
 - [x] Separar renderizado del arbol
-- [ ] Crear icon provider
-- [ ] Crear tooltip provider
-- [ ] Crear health renderer
+- [x] Crear icon provider
+- [x] Crear tooltip provider
+- [x] Crear health renderer
 - [ ] Validar `ProjectMetadata`
 - [ ] Añadir type guards
 - [ ] Añadir migracion de versiones
