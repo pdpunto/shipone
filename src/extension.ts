@@ -11,7 +11,9 @@ const COMMAND_OPEN_PROJECT = "shipone.openProject";
 const COMMAND_CHANGE_PROJECT_STATUS = "shipone.changeProjectStatus";
 const COMMAND_EDIT_NEXT_ACTION = "shipone.editNextAction";
 const COMMAND_CLEAR_NEXT_ACTION = "shipone.clearNextAction";
+const COMMAND_OPEN_STATUS_FILE = "shipone.openStatusFile";
 const COMMAND_REFRESH_PROJECTS = "shipone.refreshProjects";
+const STATUS_FILE_NAME = "STATUS.md";
 
 const STATUS_PICKERS: Array<{ label: string; value: ProjectStatus }> = [
   { label: "Idea", value: "idea" },
@@ -62,35 +64,20 @@ export async function activate(context: vscode.ExtensionContext) {
         return;
       }
 
-      await vscode.commands.executeCommand("vscode.openFolder", vscode.Uri.file(project.path), false);
+      await vscode.commands.executeCommand(
+        "vscode.openFolder",
+        vscode.Uri.file(project.path),
+        false
+      );
     }
   );
 
   const changeStatusCommand = vscode.commands.registerCommand(
     COMMAND_CHANGE_PROJECT_STATUS,
     async () => {
-      const groupedProjects = await projectStore.getProjectsByStatus();
-      const projects = Object.values(groupedProjects).flat();
+      const project = await pickProject(projectStore);
 
-      if (projects.length === 0) {
-        vscode.window.showInformationMessage("Todavía no hay proyectos.");
-        return;
-      }
-
-      const projectChoice = await vscode.window.showQuickPick(
-        projects.map((project) => ({
-          label: project.name,
-          description: project.status,
-          detail: project.path,
-          project,
-        })),
-        {
-          title: "Proyecto",
-          placeHolder: "Elige un proyecto",
-        }
-      );
-
-      if (!projectChoice) {
+      if (!project) {
         return;
       }
 
@@ -103,10 +90,10 @@ export async function activate(context: vscode.ExtensionContext) {
         return;
       }
 
-      await projectStore.setProjectStatus(projectChoice.project.id, statusChoice.value);
+      await projectStore.setProjectStatus(project.id, statusChoice.value);
       treeDataProvider.refresh();
       vscode.window.showInformationMessage(
-        `${projectChoice.project.name} ahora está en ${statusChoice.label}.`
+        `${project.name} ahora está en ${statusChoice.label}.`
       );
     }
   );
@@ -152,6 +139,26 @@ export async function activate(context: vscode.ExtensionContext) {
     }
   );
 
+  const openStatusFileCommand = vscode.commands.registerCommand(
+    COMMAND_OPEN_STATUS_FILE,
+    async () => {
+      const project = await pickProject(projectStore);
+
+      if (!project) {
+        return;
+      }
+
+      const statusFileUri = vscode.Uri.joinPath(vscode.Uri.file(project.path), STATUS_FILE_NAME);
+
+      try {
+        const document = await vscode.workspace.openTextDocument(statusFileUri);
+        await vscode.window.showTextDocument(document, { preview: false });
+      } catch {
+        vscode.window.showErrorMessage("No se pudo abrir STATUS.md.");
+      }
+    }
+  );
+
   const refreshCommand = vscode.commands.registerCommand(COMMAND_REFRESH_PROJECTS, () => {
     treeDataProvider.refresh();
   });
@@ -164,6 +171,7 @@ export async function activate(context: vscode.ExtensionContext) {
     changeStatusCommand,
     editNextActionCommand,
     clearNextActionCommand,
+    openStatusFileCommand,
     refreshCommand
   );
 }

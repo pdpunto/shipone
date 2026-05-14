@@ -10,6 +10,7 @@ const PROJECT_TYPES = [
   { label: "Next.js", value: "nextjs" },
   { label: "Python", value: "python" },
 ] as const;
+const STATUS_FILE_NAME = "STATUS.md";
 
 export class ProjectCreationService {
   constructor(private readonly projectStore: ProjectStoreService) {}
@@ -45,6 +46,7 @@ export class ProjectCreationService {
     }
 
     await this.projectStore.createProjectFolder(folderUri);
+    await this.writeStatusFile(folderUri, name, description);
 
     const project: ProjectMetadata = {
       id: randomUUID(),
@@ -86,6 +88,41 @@ export class ProjectCreationService {
     } catch {
       return false;
     }
+  }
+
+  private async writeStatusFile(
+    folderUri: vscode.Uri,
+    projectName: string,
+    description: string
+  ): Promise<void> {
+    const content = [
+      "# Estado actual",
+      "",
+      "## Objetivo",
+      description || "Describe el objetivo principal aquí.",
+      "",
+      "## MVP",
+      "- [ ]",
+      "- [ ]",
+      "- [ ]",
+      "",
+      "## Próximo paso",
+      "Define el siguiente paso aquí.",
+      "",
+      "## Bloqueos",
+      "- Ninguno por ahora",
+      "",
+      "## Proyecto",
+      projectName,
+      "",
+      `## Actualizado`,
+      new Date().toISOString().slice(0, 10),
+      "",
+    ].join("\n");
+
+    const statusFileUri = vscode.Uri.joinPath(folderUri, STATUS_FILE_NAME);
+    const bytes = new TextEncoder().encode(content);
+    await vscode.workspace.fs.writeFile(statusFileUri, bytes);
   }
 }
 

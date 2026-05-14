@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "shipone",
   "displayName": "ShipOne",
   "description": "ShipOne ayuda a crear y seguir proyectos desde VS Code",
@@ -41,6 +41,10 @@
         "title": "ShipOne: Limpiar siguiente acción"
       },
       {
+        "command": "shipone.openStatusFile",
+        "title": "ShipOne: Abrir STATUS.md"
+      },
+      {
         "command": "shipone.refreshProjects",
         "title": "ShipOne: Refrescar proyectos"
       }
@@ -62,6 +66,10 @@
         },
         {
           "command": "shipone.clearNextAction",
+          "when": "view == shipone.projectsView && viewItem == shipone.project"
+        },
+        {
+          "command": "shipone.openStatusFile",
           "when": "view == shipone.projectsView && viewItem == shipone.project"
         }
       ]
