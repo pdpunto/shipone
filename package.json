@@ -44,6 +44,10 @@
         "title": "ShipOne: Marcar tarea MVP hecha"
       },
       {
+        "command": "shipone.syncStatusFile",
+        "title": "ShipOne: Sincronizar STATUS.md"
+      },
+      {
         "command": "shipone.toggleFavorite",
         "title": "ShipOne: Alternar favorito"
       },
@@ -100,6 +104,11 @@
         },
         {
           "command": "shipone.markMvpItemDone",
+          "when": "view == shipone.projectsView",
+          "group": "navigation"
+        },
+        {
+          "command": "shipone.syncStatusFile",
           "when": "view == shipone.projectsView",
           "group": "navigation"
         },

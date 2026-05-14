@@ -417,11 +417,11 @@ Goal: make ShipOne more than a launcher.
 ### MVP checklist
 
 - [x] Add MVP tasks field
-- [ ] Add command: edit MVP checklist
-- [ ] Add command: mark MVP item done
-- [ ] Show MVP progress
-- [ ] Show percentage completed
-- [ ] Add STATUS.md sync option
+- [x] Add command: edit MVP checklist
+- [x] Add command: mark MVP item done
+- [x] Show MVP progress
+- [x] Show percentage completed
+- [x] Add STATUS.md sync option
 
 ### Focus mode
 

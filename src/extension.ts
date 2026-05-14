@@ -11,6 +11,7 @@ const COMMAND_CREATE_PROJECT = "shipone.createProject";
 const COMMAND_OPEN_PROJECT_QUICK_PICK = "shipone.openProjectQuickPick";
 const COMMAND_EDIT_MVP_CHECKLIST = "shipone.editMvpChecklist";
 const COMMAND_MARK_MVP_ITEM_DONE = "shipone.markMvpItemDone";
+const COMMAND_SYNC_STATUS_FILE = "shipone.syncStatusFile";
 const COMMAND_SEARCH_PROJECT = "shipone.searchProject";
 const COMMAND_OPEN_PROJECT = "shipone.openProject";
 const COMMAND_CHANGE_PROJECT_STATUS = "shipone.changeProjectStatus";
@@ -223,6 +224,22 @@ export async function activate(context: vscode.ExtensionContext) {
     }
   );
 
+  const syncStatusFileCommand = vscode.commands.registerCommand(
+    COMMAND_SYNC_STATUS_FILE,
+    async () => {
+      const project = await pickProject(projectStore);
+
+      if (!project) {
+        return;
+      }
+
+      const statusFileUri = vscode.Uri.joinPath(vscode.Uri.file(project.path), STATUS_FILE_NAME);
+      const content = buildStatusFileContent(project);
+      await vscode.workspace.fs.writeFile(statusFileUri, new TextEncoder().encode(content));
+      vscode.window.showInformationMessage(`STATUS.md sincronizado en ${project.name}.`);
+    }
+  );
+
   const openProjectCommand = vscode.commands.registerCommand(
     COMMAND_OPEN_PROJECT,
     async (projectId: string) => {
@@ -357,6 +374,7 @@ export async function activate(context: vscode.ExtensionContext) {
     openProjectQuickPickCommand,
     editMvpChecklistCommand,
     markMvpItemDoneCommand,
+    syncStatusFileCommand,
     searchProjectCommand,
     createProjectCommand,
     openProjectCommand,
@@ -442,6 +460,36 @@ function parseMvpTasks(rawValue: string, currentTasks: NonNullable<ProjectMetada
         done: existing?.done ?? false,
       };
     });
+}
+
+function buildStatusFileContent(project: ProjectMetadata): string {
+  const tasks = project.mvpTasks ?? [];
+  const mvpLines = tasks.length
+    ? tasks.map((task) => `- [${task.done ? "x" : " "}] ${task.text}`)
+    : ["- [ ]", "- [ ]", "- [ ]"];
+
+  return [
+    "# Estado actual",
+    "",
+    "## Objetivo",
+    project.description || "Describe el objetivo principal aqui.",
+    "",
+    "## MVP",
+    ...mvpLines,
+    "",
+    "## Proximo paso",
+    project.nextAction || "Define el siguiente paso aqui.",
+    "",
+    "## Bloqueos",
+    "- Ninguno por ahora",
+    "",
+    "## Proyecto",
+    project.name,
+    "",
+    "## Actualizado",
+    new Date().toISOString().slice(0, 10),
+    "",
+  ].join("\n");
 }
 
 function buildProjectDetail(project: {
