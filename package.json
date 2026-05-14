@@ -234,6 +234,11 @@
           "default": true,
           "description": "Preseleccionar Git como opcion por defecto al crear proyectos."
         },
+        "shipone.createGitHubRepoByDefault": {
+          "type": "boolean",
+          "default": true,
+          "description": "Preseleccionar la creacion de repo GitHub al crear proyectos."
+        },
         "shipone.openAfterCreate": {
           "type": "boolean",
           "default": true,

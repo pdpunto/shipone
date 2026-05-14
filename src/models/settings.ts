@@ -3,6 +3,7 @@ export interface ShipOneSettings {
   defaultVisibility: "private" | "public";
   defaultProjectType: "blank" | "react-vite" | "nextjs" | "python";
   createGitRepoByDefault: boolean;
+  createGitHubRepoByDefault: boolean;
   openAfterCreate: boolean;
   inactiveWarningDays: number;
   staleWarningDays: number;

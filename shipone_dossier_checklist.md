@@ -219,8 +219,8 @@ Goal: release a useful first version.
 - [x] Add setting: projects root
 - [x] Add setting: default project type
 - [x] Add setting: create Git repo by default
-- [ ] Add setting: create GitHub repo by default
-- [ ] Add setting: GitHub repo visibility
+- [x] Add setting: create GitHub repo by default
+- [x] Add setting: GitHub repo visibility
 - [ ] Add setting: enforce one active project
 - [x] Add setting: show finished projects
 

@@ -15,6 +15,7 @@ export class SettingsService {
         "blank"
       ),
       createGitRepoByDefault: config.get<boolean>("createGitRepoByDefault", true),
+      createGitHubRepoByDefault: config.get<boolean>("createGitHubRepoByDefault", true),
       openAfterCreate: config.get<boolean>("openAfterCreate", true),
       inactiveWarningDays: config.get<number>("inactiveWarningDays", 7),
       staleWarningDays: config.get<number>("staleWarningDays", 30),

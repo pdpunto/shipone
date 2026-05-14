@@ -80,7 +80,10 @@ export class ProjectCreationService {
       const githubReady = await this.isGithubAuthenticated();
 
       if (githubReady) {
-        githubChoice = await this.pickGithubChoice(settings.defaultVisibility);
+        githubChoice = await this.pickGithubChoice(
+          settings.createGitHubRepoByDefault,
+          settings.defaultVisibility
+        );
 
         if (githubChoice === undefined) {
           return undefined;
@@ -217,6 +220,7 @@ export class ProjectCreationService {
   }
 
   private async pickGithubChoice(
+    defaultCreateGithubRepoByDefault: boolean,
     defaultVisibility: "private" | "public"
   ): Promise<GithubChoice | undefined> {
     const createChoice = await vscode.window.showQuickPick(
