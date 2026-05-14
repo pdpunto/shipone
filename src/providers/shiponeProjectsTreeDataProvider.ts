@@ -187,9 +187,9 @@ class ProjectNode extends vscode.TreeItem {
 
     this.description = [
       projectType,
+      project.nextAction ? `next: ${project.nextAction}` : undefined,
       health.label,
       project.pauseReason ? `pause: ${project.pauseReason}` : undefined,
-      project.nextAction ?? undefined,
       warning ?? undefined,
       mvpProgress ?? undefined,
     ]

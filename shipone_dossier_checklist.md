@@ -266,10 +266,10 @@ Goal: release a useful first version.
 ### Next Action
 
 - [ ] Add `nextAction` field
-- [ ] Add command: edit next action
-- [ ] Add command: clear next action
+- [x] Add command: edit next action
+- [x] Add command: clear next action
 - [ ] Prompt user with input box
-- [ ] Show next action in sidebar
+- [x] Show next action in sidebar
 - [ ] Warn if Active project has no next action
 
 ### Project creation
