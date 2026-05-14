@@ -16,11 +16,32 @@ const PROJECT_TYPES = [
 const STATUS_FILE_NAME = "STATUS.md";
 const execFileAsync = promisify(execFile);
 
-type GitChoice = { label: string; value: boolean };
+type GitChoice = { label: string; value: boolean; picked?: boolean };
 type GithubChoice = { create: boolean; visibility: "private" | "public" };
 
 export class ProjectCreationService {
   constructor(private readonly projectStore: ProjectStoreService) {}
+
+  async connectGithub(): Promise<void> {
+    const ghInstalled = await this.isGithubCliInstalled();
+
+    if (!ghInstalled) {
+      vscode.window.showErrorMessage("GitHub CLI no esta instalado.");
+      return;
+    }
+
+    const githubReady = await this.isGithubAuthenticated();
+
+    if (githubReady) {
+      vscode.window.showInformationMessage("GitHub ya esta conectado.");
+      return;
+    }
+
+    const terminal = vscode.window.createTerminal("ShipOne GitHub");
+    terminal.show(true);
+    terminal.sendText("gh auth login -h github.com");
+    vscode.window.showInformationMessage("Abre la terminal para conectar GitHub.");
+  }
 
   async createProject(settings: ShipOneSettings): Promise<ProjectMetadata | undefined> {
     const name = await vscode.window.showInputBox({
@@ -33,7 +54,7 @@ export class ProjectCreationService {
       return undefined;
     }
 
-    const type = await this.pickProjectType();
+    const type = await this.pickProjectType(settings.defaultProjectType);
     if (!type) {
       return undefined;
     }
@@ -44,7 +65,7 @@ export class ProjectCreationService {
         placeHolder: "Proyecto simple para ShipOne",
       })) ?? "";
 
-    const gitChoice = await this.pickGitChoice();
+    const gitChoice = await this.pickGitChoiceWithDefault(settings.createGitRepoByDefault);
     if (!gitChoice) {
       return undefined;
     }
@@ -135,13 +156,33 @@ export class ProjectCreationService {
     return project;
   }
 
-  private async pickProjectType(): Promise<string | undefined> {
-    const choice = await vscode.window.showQuickPick(PROJECT_TYPES, {
+  private async pickProjectType(defaultProjectType: ShipOneSettings["defaultProjectType"]): Promise<string | undefined> {
+    const choices = PROJECT_TYPES.map((item) => ({
+      ...item,
+      picked: item.value === defaultProjectType,
+    }));
+
+    const choice = await vscode.window.showQuickPick(choices, {
       title: "Tipo de proyecto",
       placeHolder: "Elige un starter",
     });
 
     return choice?.value;
+  }
+
+  private async pickGitChoiceWithDefault(
+    defaultGitRepoByDefault: boolean
+  ): Promise<GitChoice | undefined> {
+    return vscode.window.showQuickPick<GitChoice>(
+      [
+        { label: "SÃ­", value: true, picked: defaultGitRepoByDefault },
+        { label: "No", value: false, picked: !defaultGitRepoByDefault },
+      ],
+      {
+        title: "Git local",
+        placeHolder: "Â¿Quieres inicializar Git en este proyecto?",
+      }
+    );
   }
 
   private async pickGitChoice(): Promise<GitChoice | undefined> {
@@ -302,6 +343,15 @@ export class ProjectCreationService {
   private async isGithubAuthenticated(): Promise<boolean> {
     try {
       await execFileAsync("gh", ["auth", "status", "-h", "github.com"]);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  private async isGithubCliInstalled(): Promise<boolean> {
+    try {
+      await execFileAsync("gh", ["--version"]);
       return true;
     } catch {
       return false;

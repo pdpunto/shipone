@@ -30,6 +30,7 @@
       { "command": "shipone.editMvpChecklist", "title": "Checklist MVP", "category": "ShipOne", "icon": "$(checklist)" },
       { "command": "shipone.markMvpItemDone", "title": "Marcar MVP", "category": "ShipOne", "icon": "$(check)" },
       { "command": "shipone.syncStatusFile", "title": "STATUS.md", "category": "ShipOne", "icon": "$(sync)" },
+      { "command": "shipone.connectGithub", "title": "Conectar GitHub", "category": "ShipOne", "icon": "$(account)" },
       { "command": "shipone.detectBlockers", "title": "Bloqueadores", "category": "ShipOne", "icon": "$(warning)" },
       { "command": "shipone.focusMode", "title": "Focus", "category": "ShipOne", "icon": "$(eye)" },
       { "command": "shipone.exitFocusMode", "title": "Salir focus", "category": "ShipOne", "icon": "$(eye-closed)" },
@@ -83,6 +84,11 @@
         },
         {
           "command": "shipone.syncStatusFile",
+          "when": "view == shipone.projectsView",
+          "group": "navigation"
+        },
+        {
+          "command": "shipone.connectGithub",
           "when": "view == shipone.projectsView",
           "group": "navigation"
         },
@@ -211,6 +217,22 @@
           ],
           "default": "private",
           "description": "Visibilidad por defecto para nuevos repositorios GitHub."
+        },
+        "shipone.defaultProjectType": {
+          "type": "string",
+          "enum": [
+            "blank",
+            "react-vite",
+            "nextjs",
+            "python"
+          ],
+          "default": "blank",
+          "description": "Tipo por defecto para nuevos proyectos."
+        },
+        "shipone.createGitRepoByDefault": {
+          "type": "boolean",
+          "default": true,
+          "description": "Preseleccionar Git como opcion por defecto al crear proyectos."
         },
         "shipone.openAfterCreate": {
           "type": "boolean",

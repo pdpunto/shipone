@@ -13,6 +13,7 @@ const COMMAND_OPEN_PROJECT_QUICK_PICK = "shipone.openProjectQuickPick";
 const COMMAND_EDIT_MVP_CHECKLIST = "shipone.editMvpChecklist";
 const COMMAND_MARK_MVP_ITEM_DONE = "shipone.markMvpItemDone";
 const COMMAND_SYNC_STATUS_FILE = "shipone.syncStatusFile";
+const COMMAND_CONNECT_GITHUB = "shipone.connectGithub";
 const COMMAND_DETECT_BLOCKERS = "shipone.detectBlockers";
 const COMMAND_FOCUS_MODE = "shipone.focusMode";
 const COMMAND_EXIT_FOCUS_MODE = "shipone.exitFocusMode";
@@ -290,6 +291,13 @@ export async function activate(context: vscode.ExtensionContext) {
       const content = buildStatusFileContent(project);
       await vscode.workspace.fs.writeFile(statusFileUri, new TextEncoder().encode(content));
       vscode.window.showInformationMessage(`STATUS.md sincronizado en ${project.name}.`);
+    }
+  );
+
+  const connectGithubCommand = vscode.commands.registerCommand(
+    COMMAND_CONNECT_GITHUB,
+    async () => {
+      await projectCreationService.connectGithub();
     }
   );
 
@@ -663,6 +671,7 @@ export async function activate(context: vscode.ExtensionContext) {
     editMvpChecklistCommand,
     markMvpItemDoneCommand,
     syncStatusFileCommand,
+    connectGithubCommand,
     detectBlockersCommand,
     focusModeCommand,
     exitFocusModeCommand,

@@ -216,9 +216,9 @@ Goal: release a useful first version.
 
 ### Settings
 
-- [ ] Add setting: projects root
-- [ ] Add setting: default project type
-- [ ] Add setting: create Git repo by default
+- [x] Add setting: projects root
+- [x] Add setting: default project type
+- [x] Add setting: create Git repo by default
 - [ ] Add setting: create GitHub repo by default
 - [ ] Add setting: GitHub repo visibility
 - [ ] Add setting: enforce one active project
@@ -314,9 +314,9 @@ Goal: release a useful first version.
 
 ### GitHub integration
 
-- [ ] Check if `gh` CLI is installed
-- [ ] Check if user is authenticated
-- [ ] Handle missing `gh` gracefully
+- [x] Check if `gh` CLI is installed
+- [x] Check if user is authenticated
+- [x] Handle missing `gh` gracefully
 - [ ] Run `gh repo create`
 - [ ] Support public/private visibility
 - [ ] Save repo URL in metadata
