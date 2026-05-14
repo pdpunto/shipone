@@ -13,6 +13,7 @@ const COMMAND_EDIT_MVP_CHECKLIST = "shipone.editMvpChecklist";
 const COMMAND_MARK_MVP_ITEM_DONE = "shipone.markMvpItemDone";
 const COMMAND_SYNC_STATUS_FILE = "shipone.syncStatusFile";
 const COMMAND_FREEZE_PROJECT = "shipone.freezeProject";
+const COMMAND_RESUME_PROJECT = "shipone.resumeProject";
 const COMMAND_SEARCH_PROJECT = "shipone.searchProject";
 const COMMAND_OPEN_PROJECT = "shipone.openProject";
 const COMMAND_CHANGE_PROJECT_STATUS = "shipone.changeProjectStatus";
@@ -293,6 +294,40 @@ export async function activate(context: vscode.ExtensionContext) {
     }
   );
 
+  const resumeProjectCommand = vscode.commands.registerCommand(
+    COMMAND_RESUME_PROJECT,
+    async () => {
+      const projects = await projectStore.loadProjects();
+      const pausedProjects = projects.filter((project) => project.status === "paused");
+
+      if (pausedProjects.length === 0) {
+        vscode.window.showInformationMessage("No hay proyectos pausados.");
+        return;
+      }
+
+      const choice = await vscode.window.showQuickPick(
+        pausedProjects.map((project) => ({
+          label: project.name,
+          description: project.pauseReason ?? project.nextAction ?? "Pausado",
+          detail: project.pauseNote ?? project.path,
+          project,
+        })),
+        {
+          title: "Reanudar proyecto",
+          placeHolder: "Elige un proyecto pausado",
+        }
+      );
+
+      if (!choice) {
+        return;
+      }
+
+      await projectStore.setProjectStatus(choice.project.id, "active");
+      treeDataProvider.refresh();
+      vscode.window.showInformationMessage(`Proyecto reanudado: ${choice.project.name}.`);
+    }
+  );
+
   const openProjectCommand = vscode.commands.registerCommand(
     COMMAND_OPEN_PROJECT,
     async (projectId: string) => {
@@ -429,6 +464,7 @@ export async function activate(context: vscode.ExtensionContext) {
     markMvpItemDoneCommand,
     syncStatusFileCommand,
     freezeProjectCommand,
+    resumeProjectCommand,
     searchProjectCommand,
     createProjectCommand,
     openProjectCommand,

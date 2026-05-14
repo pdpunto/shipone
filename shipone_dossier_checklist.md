@@ -446,7 +446,7 @@ Goal: make ShipOne more than a launcher.
 - [x] Ask for reason when pausing
 - [x] Ask for next action before pausing
 - [x] Save pause note
-- [ ] Add command: resume paused project
+- [x] Add command: resume paused project
 - [x] Show pause reason
 
 ### Weekly review

@@ -23,66 +23,22 @@
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
-      {
-        "command": "shipone.showWelcome",
-        "title": "ShipOne: Mostrar bienvenida"
-      },
-      {
-        "command": "shipone.createProject",
-        "title": "ShipOne: Crear proyecto"
-      },
-      {
-        "command": "shipone.openProjectQuickPick",
-        "title": "ShipOne: Abrir proyecto"
-      },
-      {
-        "command": "shipone.editMvpChecklist",
-        "title": "ShipOne: Editar checklist MVP"
-      },
-      {
-        "command": "shipone.markMvpItemDone",
-        "title": "ShipOne: Marcar tarea MVP hecha"
-      },
-      {
-        "command": "shipone.syncStatusFile",
-        "title": "ShipOne: Sincronizar STATUS.md"
-      },
-      {
-        "command": "shipone.freezeProject",
-        "title": "ShipOne: Congelar proyecto"
-      },
-      {
-        "command": "shipone.toggleFavorite",
-        "title": "ShipOne: Alternar favorito"
-      },
-      {
-        "command": "shipone.searchProject",
-        "title": "ShipOne: Buscar proyecto"
-      },
-      {
-        "command": "shipone.openProject",
-        "title": "ShipOne: Abrir proyecto"
-      },
-      {
-        "command": "shipone.changeProjectStatus",
-        "title": "ShipOne: Cambiar estado"
-      },
-      {
-        "command": "shipone.editNextAction",
-        "title": "ShipOne: Editar siguiente accion"
-      },
-      {
-        "command": "shipone.clearNextAction",
-        "title": "ShipOne: Limpiar siguiente accion"
-      },
-      {
-        "command": "shipone.openStatusFile",
-        "title": "ShipOne: Abrir STATUS.md"
-      },
-      {
-        "command": "shipone.refreshProjects",
-        "title": "ShipOne: Refrescar proyectos"
-      }
+      { "command": "shipone.showWelcome", "title": "ShipOne: Mostrar bienvenida" },
+      { "command": "shipone.createProject", "title": "ShipOne: Crear proyecto", "icon": "$(add)" },
+      { "command": "shipone.openProjectQuickPick", "title": "ShipOne: Abrir proyecto", "icon": "$(folder-opened)" },
+      { "command": "shipone.editMvpChecklist", "title": "ShipOne: Editar checklist MVP", "icon": "$(checklist)" },
+      { "command": "shipone.markMvpItemDone", "title": "ShipOne: Marcar tarea MVP hecha", "icon": "$(check)" },
+      { "command": "shipone.syncStatusFile", "title": "ShipOne: Sincronizar STATUS.md", "icon": "$(sync)" },
+      { "command": "shipone.freezeProject", "title": "ShipOne: Congelar proyecto", "icon": "$(debug-pause)" },
+      { "command": "shipone.resumeProject", "title": "ShipOne: Reanudar proyecto", "icon": "$(play)" },
+      { "command": "shipone.toggleFavorite", "title": "ShipOne: Alternar favorito", "icon": "$(star)" },
+      { "command": "shipone.searchProject", "title": "ShipOne: Buscar proyecto", "icon": "$(search)" },
+      { "command": "shipone.openProject", "title": "ShipOne: Abrir proyecto", "icon": "$(folder-opened)" },
+      { "command": "shipone.changeProjectStatus", "title": "ShipOne: Cambiar estado" },
+      { "command": "shipone.editNextAction", "title": "ShipOne: Editar siguiente accion" },
+      { "command": "shipone.clearNextAction", "title": "ShipOne: Limpiar siguiente accion" },
+      { "command": "shipone.openStatusFile", "title": "ShipOne: Abrir STATUS.md", "icon": "$(file-code)" },
+      { "command": "shipone.refreshProjects", "title": "ShipOne: Refrescar proyectos", "icon": "$(refresh)" }
     ],
     "menus": {
       "view/title": [
@@ -122,7 +78,17 @@
           "group": "navigation"
         },
         {
+          "command": "shipone.resumeProject",
+          "when": "view == shipone.projectsView",
+          "group": "navigation"
+        },
+        {
           "command": "shipone.toggleFavorite",
+          "when": "view == shipone.projectsView",
+          "group": "navigation"
+        },
+        {
+          "command": "shipone.openStatusFile",
           "when": "view == shipone.projectsView",
           "group": "navigation"
         },

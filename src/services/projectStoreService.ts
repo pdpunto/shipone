@@ -77,6 +77,11 @@ export class ProjectStoreService {
     }
 
     target.status = status;
+    if (status !== "paused") {
+      target.pauseReason = null;
+      target.pauseNote = null;
+    }
+
     if (status === "finished") {
       target.finishedAt = new Date().toISOString();
     } else {
