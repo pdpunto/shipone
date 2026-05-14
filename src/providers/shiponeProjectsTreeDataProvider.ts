@@ -70,7 +70,7 @@ export class ShipOneProjectsTreeDataProvider
 
       if (projects.length === 0) {
         return [
-          new EmptyStateNode("Sin proyectos todavia", "Crear proyecto"),
+          new EmptyStateNode("Sin proyectos todavia", "Crear proyecto", "add"),
           new EmptyStateNode("Usa Crear proyecto para empezar"),
         ];
       }
@@ -113,7 +113,7 @@ export class ShipOneProjectsTreeDataProvider
       const settings = this.settingsService.getSettings();
 
       if (projects.length === 0) {
-        return [new EmptyStateNode("Sin proyectos todavia", "Crear proyecto")];
+        return [new EmptyStateNode("Sin proyectos todavia", "Crear proyecto", "add")];
       }
 
       return Promise.all(
@@ -202,7 +202,7 @@ class WarningNode extends vscode.TreeItem {
   constructor(label: string, detail: string, projectId: string) {
     super(label, vscode.TreeItemCollapsibleState.None);
     this.description = detail;
-    this.iconPath = new vscode.ThemeIcon("warning");
+    this.iconPath = new vscode.ThemeIcon("alert");
     this.tooltip = new vscode.MarkdownString(`**${label}**\n\n${detail}`);
     this.command = {
       command: "shipone.openProject",
@@ -274,10 +274,10 @@ class ProjectNode extends vscode.TreeItem {
 }
 
 class EmptyStateNode extends vscode.TreeItem {
-  constructor(label: string, actionLabel?: string) {
+  constructor(label: string, actionLabel?: string, iconName = "info") {
     super(label, vscode.TreeItemCollapsibleState.None);
     this.contextValue = "shipone.emptyState";
-    this.iconPath = new vscode.ThemeIcon("info");
+    this.iconPath = new vscode.ThemeIcon(iconName);
     this.tooltip = new vscode.MarkdownString(
       actionLabel
         ? `**${label}**\n\nUsa ${actionLabel} para empezar.`
