@@ -358,7 +358,7 @@ Goal: make the MVP feel reliable.
 
 - [x] Add empty states
 - [x] Add helpful messages
-- [ ] Add command palette names
+- [x] Add command palette names
 - [ ] Add icons
 - [x] Add tooltips
 - [ ] Improve error messages

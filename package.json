@@ -23,32 +23,155 @@
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
-      { "command": "shipone.showWelcome", "title": "Bienvenida", "category": "ShipOne" },
-      { "command": "shipone.createProject", "title": "Crear", "category": "ShipOne", "icon": "$(add)" },
-      { "command": "shipone.openProjectsRoot", "title": "Raíz", "category": "ShipOne", "icon": "$(folder-library)" },
-      { "command": "shipone.openProjectQuickPick", "title": "Abrir", "category": "ShipOne", "icon": "$(folder-opened)" },
-      { "command": "shipone.editMvpChecklist", "title": "Checklist MVP", "category": "ShipOne", "icon": "$(checklist)" },
-      { "command": "shipone.markMvpItemDone", "title": "Marcar MVP", "category": "ShipOne", "icon": "$(check)" },
-      { "command": "shipone.syncStatusFile", "title": "STATUS.md", "category": "ShipOne", "icon": "$(sync)" },
-      { "command": "shipone.connectGithub", "title": "Conectar GitHub", "category": "ShipOne", "icon": "$(account)" },
-      { "command": "shipone.detectBlockers", "title": "Bloqueadores", "category": "ShipOne", "icon": "$(warning)" },
-      { "command": "shipone.focusMode", "title": "Focus", "category": "ShipOne", "icon": "$(eye)" },
-      { "command": "shipone.exitFocusMode", "title": "Salir focus", "category": "ShipOne", "icon": "$(eye-closed)" },
-      { "command": "shipone.weeklyReview", "title": "Weekly review", "category": "ShipOne", "icon": "$(calendar)" },
-      { "command": "shipone.freezeProject", "title": "Congelar", "category": "ShipOne", "icon": "$(debug-pause)" },
-      { "command": "shipone.resumeProject", "title": "Reanudar", "category": "ShipOne", "icon": "$(play)" },
-      { "command": "shipone.toggleFavorite", "title": "Favorito", "category": "ShipOne", "icon": "$(star)" },
-      { "command": "shipone.searchProject", "title": "Buscar", "category": "ShipOne", "icon": "$(search)" },
-      { "command": "shipone.openProject", "title": "Abrir", "category": "ShipOne", "icon": "$(folder-opened)" },
-      { "command": "shipone.changeProjectStatus", "title": "Cambiar estado", "category": "ShipOne" },
-      { "command": "shipone.markProjectIdea", "title": "Idea", "category": "ShipOne" },
-      { "command": "shipone.markProjectActive", "title": "Active", "category": "ShipOne" },
-      { "command": "shipone.markProjectPaused", "title": "Paused", "category": "ShipOne" },
-      { "command": "shipone.markProjectFinished", "title": "Finished", "category": "ShipOne" },
-      { "command": "shipone.editNextAction", "title": "Next", "category": "ShipOne", "icon": "$(pencil)" },
-      { "command": "shipone.clearNextAction", "title": "Limpiar next", "category": "ShipOne" },
-      { "command": "shipone.openStatusFile", "title": "STATUS.md", "category": "ShipOne", "icon": "$(file-code)" },
-      { "command": "shipone.refreshProjects", "title": "Refrescar", "category": "ShipOne", "icon": "$(refresh)" }
+      {
+        "command": "shipone.showWelcome",
+        "title": "ShipOne: Bienvenida",
+        "category": "ShipOne"
+      },
+      {
+        "command": "shipone.createProject",
+        "title": "ShipOne: Crear proyecto",
+        "category": "ShipOne",
+        "icon": "$(add)"
+      },
+      {
+        "command": "shipone.openProjectsRoot",
+        "title": "ShipOne: Abrir carpeta raiz",
+        "category": "ShipOne",
+        "icon": "$(folder-library)"
+      },
+      {
+        "command": "shipone.openProjectQuickPick",
+        "title": "ShipOne: Abrir proyecto",
+        "category": "ShipOne",
+        "icon": "$(folder-opened)"
+      },
+      {
+        "command": "shipone.editMvpChecklist",
+        "title": "ShipOne: Editar checklist MVP",
+        "category": "ShipOne",
+        "icon": "$(checklist)"
+      },
+      {
+        "command": "shipone.markMvpItemDone",
+        "title": "ShipOne: Marcar tarea MVP",
+        "category": "ShipOne",
+        "icon": "$(check)"
+      },
+      {
+        "command": "shipone.syncStatusFile",
+        "title": "ShipOne: Sincronizar STATUS.md",
+        "category": "ShipOne",
+        "icon": "$(sync)"
+      },
+      {
+        "command": "shipone.connectGithub",
+        "title": "ShipOne: Conectar GitHub",
+        "category": "ShipOne",
+        "icon": "$(account)"
+      },
+      {
+        "command": "shipone.detectBlockers",
+        "title": "ShipOne: Detectar bloqueadores",
+        "category": "ShipOne",
+        "icon": "$(warning)"
+      },
+      {
+        "command": "shipone.focusMode",
+        "title": "ShipOne: Focus mode",
+        "category": "ShipOne",
+        "icon": "$(eye)"
+      },
+      {
+        "command": "shipone.exitFocusMode",
+        "title": "ShipOne: Salir de focus",
+        "category": "ShipOne",
+        "icon": "$(eye-closed)"
+      },
+      {
+        "command": "shipone.weeklyReview",
+        "title": "ShipOne: Weekly review",
+        "category": "ShipOne",
+        "icon": "$(calendar)"
+      },
+      {
+        "command": "shipone.freezeProject",
+        "title": "ShipOne: Congelar proyecto",
+        "category": "ShipOne",
+        "icon": "$(debug-pause)"
+      },
+      {
+        "command": "shipone.resumeProject",
+        "title": "ShipOne: Reanudar proyecto",
+        "category": "ShipOne",
+        "icon": "$(play)"
+      },
+      {
+        "command": "shipone.toggleFavorite",
+        "title": "ShipOne: Alternar favorito",
+        "category": "ShipOne",
+        "icon": "$(star)"
+      },
+      {
+        "command": "shipone.searchProject",
+        "title": "ShipOne: Buscar proyecto",
+        "category": "ShipOne",
+        "icon": "$(search)"
+      },
+      {
+        "command": "shipone.openProject",
+        "title": "ShipOne: Abrir proyecto",
+        "category": "ShipOne",
+        "icon": "$(folder-opened)"
+      },
+      {
+        "command": "shipone.changeProjectStatus",
+        "title": "ShipOne: Cambiar estado",
+        "category": "ShipOne"
+      },
+      {
+        "command": "shipone.markProjectIdea",
+        "title": "ShipOne: Marcar como idea",
+        "category": "ShipOne"
+      },
+      {
+        "command": "shipone.markProjectActive",
+        "title": "ShipOne: Marcar como active",
+        "category": "ShipOne"
+      },
+      {
+        "command": "shipone.markProjectPaused",
+        "title": "ShipOne: Marcar como paused",
+        "category": "ShipOne"
+      },
+      {
+        "command": "shipone.markProjectFinished",
+        "title": "ShipOne: Marcar como finished",
+        "category": "ShipOne"
+      },
+      {
+        "command": "shipone.editNextAction",
+        "title": "ShipOne: Editar next action",
+        "category": "ShipOne",
+        "icon": "$(pencil)"
+      },
+      {
+        "command": "shipone.clearNextAction",
+        "title": "ShipOne: Limpiar next action",
+        "category": "ShipOne"
+      },
+      {
+        "command": "shipone.openStatusFile",
+        "title": "ShipOne: Abrir STATUS.md",
+        "category": "ShipOne",
+        "icon": "$(file-code)"
+      },
+      {
+        "command": "shipone.refreshProjects",
+        "title": "ShipOne: Refrescar",
+        "category": "ShipOne",
+        "icon": "$(refresh)"
+      }
     ],
     "menus": {
       "view/title": [
