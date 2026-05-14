@@ -63,6 +63,7 @@ export class ProjectStoreService {
     projects: ProjectMetadata[],
     createBackup = true
   ): Promise<void> {
+    // Mantener un backup antes de sobrescribir evita perder metadata si algo falla a mitad de guardado.
     await vscode.workspace.fs.createDirectory(this.context.globalStorageUri);
 
     if (createBackup && (await this.pathExists(this.storageFileUri))) {
@@ -227,6 +228,7 @@ export class ProjectStoreService {
     const projects = await this.loadProjects();
     const grouped = this.createEmptyGroups();
 
+    // Agrupamos primero por estado para que la vista pueda renderizar secciones estables y predecibles.
     for (const project of projects) {
       grouped[project.status].push(project);
     }

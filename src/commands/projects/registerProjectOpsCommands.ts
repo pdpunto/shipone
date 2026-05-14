@@ -27,6 +27,7 @@ export function registerProjectOpsCommands(options: {
     projectStore,
     statusFileService,
     projectContextService,
+    projectCreationService,
     treeRefresh,
   } = options;
 

@@ -69,7 +69,7 @@ Objetivo: convertir el codigo actual en una base mantenible y segura antes de es
 - [x] Eliminar codigo duplicado
 - [x] Corregir encoding roto
 - [x] Revisar nombres inconsistentes
-- [ ] Añadir comentarios importantes
+- [x] Añadir comentarios importantes
 - [ ] Limpiar imports muertos
 - [x] Revisar async/await inseguros
 

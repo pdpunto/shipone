@@ -37,6 +37,7 @@ export class ProjectCreationService {
   async createProject(
     settings: ShipOneSettings
   ): Promise<ProjectMetadata | undefined> {
+    // Primero recogemos la forma minima del proyecto; lo demas depende de esas elecciones.
     const name = await vscode.window.showInputBox({
       prompt: t("Nombre del proyecto"),
       placeHolder: t("my-saas-app"),
@@ -80,6 +81,7 @@ export class ProjectCreationService {
     }
 
     let githubChoice: GithubChoice | undefined;
+    // GitHub solo tiene sentido si Git local va a existir y el usuario ya esta autenticado.
     if (gitChoice.value) {
       const githubReady = await this.githubService.isGithubAuthenticated();
 
@@ -114,6 +116,7 @@ export class ProjectCreationService {
 
     await this.projectStore.createProjectFolder(folderUri);
 
+    // Guardamos la metadata antes de tocar servicios externos para que el proyecto ya exista en ShipOne.
     const project: ProjectMetadata = {
       id: randomUUID(),
       name,
@@ -215,6 +218,7 @@ export class ProjectCreationService {
 
     await this.projectStore.createProjectFolder(folderUri);
 
+    // La idea de ejemplo usa la misma forma que un proyecto real para que el resto del flujo no cambie.
     const project: ProjectMetadata = {
       id: randomUUID(),
       name,

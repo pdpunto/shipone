@@ -36,6 +36,7 @@ export class ShipOneProjectsTreeDataProvider implements vscode.TreeDataProvider<
   }
 
   async getChildren(element?: ShipOneTreeNode): Promise<ShipOneTreeNode[]> {
+    // Construimos el renderer por llamada para mantener el provider fino y sin estado propio extra.
     const renderer = new TreeRendererService(
       this.projectStore,
       this.settingsService,
