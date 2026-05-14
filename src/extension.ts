@@ -193,8 +193,17 @@ export async function activate(context: vscode.ExtensionContext) {
   const createProjectCommand = vscode.commands.registerCommand(
     COMMAND_CREATE_PROJECT,
     async () => {
-      const settings = settingsService.getSettings();
-      const project = await projectCreationService.createProject(settings);
+      const project = await vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Notification,
+          title: "ShipOne: creando proyecto",
+          cancellable: false,
+        },
+        async () => {
+          const settings = settingsService.getSettings();
+          return projectCreationService.createProject(settings);
+        }
+      );
 
       if (project) {
         treeDataProvider.refresh();
@@ -208,8 +217,17 @@ export async function activate(context: vscode.ExtensionContext) {
   const createSampleIdeaCommand = vscode.commands.registerCommand(
     COMMAND_CREATE_SAMPLE_IDEA,
     async () => {
-      const settings = settingsService.getSettings();
-      const project = await projectCreationService.createSampleIdea(settings);
+      const project = await vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Notification,
+          title: "ShipOne: creando idea de ejemplo",
+          cancellable: false,
+        },
+        async () => {
+          const settings = settingsService.getSettings();
+          return projectCreationService.createSampleIdea(settings);
+        }
+      );
 
       if (project) {
         treeDataProvider.refresh();
