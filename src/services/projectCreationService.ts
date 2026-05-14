@@ -1,5 +1,7 @@
 import * as vscode from "vscode";
 import { randomUUID } from "crypto";
+import { execFile } from "child_process";
+import { promisify } from "util";
 import { ProjectMetadata, ProjectStatus } from "../models/project";
 import { ShipOneSettings } from "../models/settings";
 import { ProjectStoreService } from "./projectStoreService";
@@ -10,7 +12,11 @@ const PROJECT_TYPES = [
   { label: "Next.js", value: "nextjs" },
   { label: "Python", value: "python" },
 ] as const;
+
 const STATUS_FILE_NAME = "STATUS.md";
+const execFileAsync = promisify(execFile);
+
+type GitChoice = { label: string; value: boolean };
 
 export class ProjectCreationService {
   constructor(private readonly projectStore: ProjectStoreService) {}
@@ -31,10 +37,16 @@ export class ProjectCreationService {
       return undefined;
     }
 
-    const description = (await vscode.window.showInputBox({
-      prompt: "Descripción",
-      placeHolder: "Proyecto simple para ShipOne",
-    })) ?? "";
+    const description =
+      (await vscode.window.showInputBox({
+        prompt: "Descripcion",
+        placeHolder: "Proyecto simple para ShipOne",
+      })) ?? "";
+
+    const gitChoice = await this.pickGitChoice();
+    if (!gitChoice) {
+      return undefined;
+    }
 
     const folderName = sanitizeFolderName(name);
     const folderUri = vscode.Uri.joinPath(vscode.Uri.file(settings.projectsRoot), folderName);
@@ -48,6 +60,12 @@ export class ProjectCreationService {
     await this.projectStore.createProjectFolder(folderUri);
     await this.writeStatusFile(folderUri, name, description);
 
+    const gitInitialized = gitChoice.value ? await this.tryInitializeGit(folderUri) : false;
+
+    if (gitChoice.value && !gitInitialized) {
+      vscode.window.showWarningMessage("No se pudo inicializar Git, pero el proyecto fue creado.");
+    }
+
     const project: ProjectMetadata = {
       id: randomUUID(),
       name,
@@ -55,6 +73,7 @@ export class ProjectCreationService {
       type,
       status: "active" as ProjectStatus,
       path: folderUri.fsPath,
+      repoUrl: null,
       createdAt: new Date().toISOString(),
       lastOpenedAt: new Date().toISOString(),
       finishedAt: null,
@@ -81,6 +100,19 @@ export class ProjectCreationService {
     return choice?.value;
   }
 
+  private async pickGitChoice(): Promise<GitChoice | undefined> {
+    return vscode.window.showQuickPick<GitChoice>(
+      [
+        { label: "Si", value: true },
+        { label: "No", value: false },
+      ],
+      {
+        title: "Git local",
+        placeHolder: "Quieres inicializar Git en este proyecto?",
+      }
+    );
+  }
+
   private async pathExists(uri: vscode.Uri): Promise<boolean> {
     try {
       await vscode.workspace.fs.stat(uri);
@@ -99,15 +131,15 @@ export class ProjectCreationService {
       "# Estado actual",
       "",
       "## Objetivo",
-      description || "Describe el objetivo principal aquí.",
+      description || "Describe el objetivo principal aqui.",
       "",
       "## MVP",
       "- [ ]",
       "- [ ]",
       "- [ ]",
       "",
-      "## Próximo paso",
-      "Define el siguiente paso aquí.",
+      "## Proximo paso",
+      "Define el siguiente paso aqui.",
       "",
       "## Bloqueos",
       "- Ninguno por ahora",
@@ -115,7 +147,7 @@ export class ProjectCreationService {
       "## Proyecto",
       projectName,
       "",
-      `## Actualizado`,
+      "## Actualizado",
       new Date().toISOString().slice(0, 10),
       "",
     ].join("\n");
@@ -123,6 +155,15 @@ export class ProjectCreationService {
     const statusFileUri = vscode.Uri.joinPath(folderUri, STATUS_FILE_NAME);
     const bytes = new TextEncoder().encode(content);
     await vscode.workspace.fs.writeFile(statusFileUri, bytes);
+  }
+
+  private async tryInitializeGit(folderUri: vscode.Uri): Promise<boolean> {
+    try {
+      await execFileAsync("git", ["init"], { cwd: folderUri.fsPath });
+      return true;
+    } catch {
+      return false;
+    }
   }
 }
 
@@ -132,7 +173,7 @@ function validateProjectName(value: string): string | undefined {
   }
 
   if (!/^[a-zA-Z0-9 _.-]+$/.test(value)) {
-    return "Usa solo letras, números, espacios, guiones o puntos.";
+    return "Usa solo letras, numeros, espacios, guiones o puntos.";
   }
 
   return undefined;

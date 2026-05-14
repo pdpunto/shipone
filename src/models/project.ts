@@ -7,7 +7,7 @@ export interface ProjectMetadata {
   type: string;
   status: ProjectStatus;
   path: string;
-  repoUrl?: string;
+  repoUrl?: string | null;
   createdAt: string;
   lastOpenedAt?: string;
   finishedAt?: string | null;
