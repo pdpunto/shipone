@@ -522,11 +522,11 @@ Goal: add AI support without making AI required.
 
 ### TODO/FIXME detection
 
-- [ ] Scan project files for TODO
-- [ ] Scan project files for FIXME
-- [ ] Ignore node_modules
-- [ ] Ignore .git
-- [ ] Show detected tasks
+- [x] Scan project files for TODO
+- [x] Scan project files for FIXME
+- [x] Ignore node_modules
+- [x] Ignore .git
+- [x] Show detected tasks
 - [ ] Convert TODO to next action optionally
 
 ### Agent instructions

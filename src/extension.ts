@@ -18,6 +18,7 @@ const COMMAND_MARK_MVP_ITEM_DONE = "shipone.markMvpItemDone";
 const COMMAND_SYNC_STATUS_FILE = "shipone.syncStatusFile";
 const COMMAND_CONNECT_GITHUB = "shipone.connectGithub";
 const COMMAND_DETECT_BLOCKERS = "shipone.detectBlockers";
+const COMMAND_SCAN_TODOS = "shipone.scanTodos";
 const COMMAND_FOCUS_MODE = "shipone.focusMode";
 const COMMAND_EXIT_FOCUS_MODE = "shipone.exitFocusMode";
 const COMMAND_WEEKLY_REVIEW = "shipone.weeklyReview";
@@ -386,6 +387,50 @@ export async function activate(context: vscode.ExtensionContext) {
       vscode.window.showWarningMessage(
         `${project.name}: ${blockers.join(" | ")}`
       );
+    }
+  );
+
+  const scanTodosCommand = vscode.commands.registerCommand(
+    COMMAND_SCAN_TODOS,
+    async () => {
+      const project = await pickProject(projectStore);
+
+      if (!project) {
+        return;
+      }
+
+      const tasks = await scanProjectTodoTasks(project.path);
+
+      if (tasks.length === 0) {
+        vscode.window.showInformationMessage(`No hay TODO ni FIXME en ${project.name}.`);
+        return;
+      }
+
+      const choice = await vscode.window.showQuickPick(
+        tasks.map((task) => ({
+          label: `${task.kind} · ${task.fileName}`,
+          description: `L${task.line}`,
+          detail: task.text,
+          task,
+        })),
+        {
+          title: `TODOs en ${project.name}`,
+          placeHolder: "Elige un hallazgo",
+          matchOnDescription: true,
+          matchOnDetail: true,
+        }
+      );
+
+      if (!choice) {
+        return;
+      }
+
+      const document = await vscode.workspace.openTextDocument(choice.task.uri);
+      const editor = await vscode.window.showTextDocument(document, { preview: true });
+      const line = Math.max(choice.task.line - 1, 0);
+      const range = new vscode.Range(line, 0, line, 0);
+      editor.selection = new vscode.Selection(line, 0, line, 0);
+      editor.revealRange(range, vscode.TextEditorRevealType.InCenter);
     }
   );
 
@@ -782,6 +827,7 @@ export async function activate(context: vscode.ExtensionContext) {
     syncStatusFileCommand,
     connectGithubCommand,
     detectBlockersCommand,
+    scanTodosCommand,
     focusModeCommand,
     exitFocusModeCommand,
     weeklyReviewCommand,
@@ -1073,6 +1119,143 @@ async function readStatusBlockers(projectPath: string): Promise<string[]> {
   } catch {
     return [];
   }
+}
+
+async function scanProjectTodoTasks(projectPath: string): Promise<
+  Array<{
+    kind: "TODO" | "FIXME";
+    fileName: string;
+    text: string;
+    line: number;
+    uri: vscode.Uri;
+  }>
+> {
+  const rootUri = vscode.Uri.file(projectPath);
+  const tasks: Array<{
+    kind: "TODO" | "FIXME";
+    fileName: string;
+    text: string;
+    line: number;
+    uri: vscode.Uri;
+  }> = [];
+
+  await walkTodoFiles(rootUri, tasks);
+  return tasks;
+}
+
+async function walkTodoFiles(
+  dirUri: vscode.Uri,
+  tasks: Array<{
+    kind: "TODO" | "FIXME";
+    fileName: string;
+    text: string;
+    line: number;
+    uri: vscode.Uri;
+  }>
+): Promise<void> {
+  const entries = await vscode.workspace.fs.readDirectory(dirUri);
+
+  for (const [name, type] of entries) {
+    if (name === ".git" || name === "node_modules" || name === "out" || name === "dist") {
+      continue;
+    }
+
+    const childUri = vscode.Uri.joinPath(dirUri, name);
+
+    if (type === vscode.FileType.Directory) {
+      await walkTodoFiles(childUri, tasks);
+      continue;
+    }
+
+    if (type !== vscode.FileType.File || !isLikelyTodoTextFile(name)) {
+      continue;
+    }
+
+    const fileTasks = await readTodoTasksFromFile(childUri);
+    tasks.push(...fileTasks);
+  }
+}
+
+async function readTodoTasksFromFile(
+  uri: vscode.Uri
+): Promise<
+  Array<{
+    kind: "TODO" | "FIXME";
+    fileName: string;
+    text: string;
+    line: number;
+    uri: vscode.Uri;
+  }>
+> {
+  try {
+    const raw = await vscode.workspace.fs.readFile(uri);
+    const text = new TextDecoder().decode(raw);
+    const lines = text.split(/\r?\n/);
+    const tasks: Array<{
+      kind: "TODO" | "FIXME";
+      fileName: string;
+      text: string;
+      line: number;
+      uri: vscode.Uri;
+    }> = [];
+
+    lines.forEach((line, index) => {
+      const match = line.match(/\b(TODO|FIXME)\b[:\s-]?(.*)/i);
+      if (!match) {
+        return;
+      }
+
+      const kind = match[1].toUpperCase() as "TODO" | "FIXME";
+      const text = match[2].trim() || line.trim();
+
+      tasks.push({
+        kind,
+        fileName: vscode.workspace.asRelativePath(uri, false),
+        text,
+        line: index + 1,
+        uri,
+      });
+    });
+
+    return tasks;
+  } catch {
+    return [];
+  }
+}
+
+function isLikelyTodoTextFile(fileName: string): boolean {
+  const lower = fileName.toLowerCase();
+
+  if (
+    lower === "readme" ||
+    lower === "readme.md" ||
+    lower === "license" ||
+    lower === "license.md" ||
+    lower === ".gitignore"
+  ) {
+    return true;
+  }
+
+  return [
+    ".ts",
+    ".tsx",
+    ".js",
+    ".jsx",
+    ".mjs",
+    ".cjs",
+    ".json",
+    ".md",
+    ".py",
+    ".css",
+    ".html",
+    ".htm",
+    ".yaml",
+    ".yml",
+    ".txt",
+    ".toml",
+    ".ini",
+    ".sh",
+  ].some((extension) => lower.endsWith(extension));
 }
 
 function getFinishedThisWeek(projects: ProjectMetadata[]): ProjectMetadata[] {

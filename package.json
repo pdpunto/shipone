@@ -18,7 +18,8 @@
   "activationEvents": [
     "onView:shipone.projectsView",
     "onCommand:shipone.showWelcome",
-    "onCommand:shipone.searchProject"
+    "onCommand:shipone.searchProject",
+    "onCommand:shipone.scanTodos"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -75,6 +76,12 @@
         "title": "ShipOne: Detectar bloqueadores",
         "category": "ShipOne",
         "icon": "$(warning)"
+      },
+      {
+        "command": "shipone.scanTodos",
+        "title": "ShipOne: Detectar TODOs",
+        "category": "ShipOne",
+        "icon": "$(checklist)"
       },
       {
         "command": "shipone.focusMode",
