@@ -361,7 +361,7 @@ Goal: make the MVP feel reliable.
 - [x] Add command palette names
 - [ ] Add icons
 - [x] Add tooltips
-- [ ] Improve error messages
+- [x] Improve error messages
 - [x] Add loading states
 - [x] Add success notifications
 - [x] Add warning for inactive active project

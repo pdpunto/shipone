@@ -27,7 +27,7 @@ export class ProjectCreationService {
     const ghInstalled = await this.isGithubCliInstalled();
 
     if (!ghInstalled) {
-      vscode.window.showErrorMessage("GitHub CLI no esta instalado.");
+      vscode.window.showErrorMessage("GitHub CLI no esta instalado. Instala 'gh' y prueba otra vez.");
       return;
     }
 
@@ -106,7 +106,7 @@ export class ProjectCreationService {
     const projectExists = await this.pathExists(folderUri);
 
     if (projectExists) {
-      vscode.window.showErrorMessage("Ya existe una carpeta con ese nombre.");
+      vscode.window.showErrorMessage("Ya existe una carpeta con ese nombre. Prueba otro nombre o elige otra carpeta.");
       return undefined;
     }
 
@@ -122,7 +122,7 @@ export class ProjectCreationService {
 
       if (!gitInitialized) {
         vscode.window.showWarningMessage(
-          "No se pudo inicializar Git, pero el proyecto fue creado."
+          "No se pudo inicializar Git, pero el proyecto fue creado. Puedes hacerlo luego."
         );
       } else {
         const committed = await this.tryCreateInitialCommit(folderUri);
