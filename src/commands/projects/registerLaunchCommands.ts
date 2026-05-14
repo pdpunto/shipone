@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { t } from "../../localization";
 import { ProjectCreationService } from "../../services/projectCreationService";
 import { ProjectStoreService } from "../../services/projectStoreService";
 import { SettingsService } from "../../services/settingsService";
@@ -18,11 +19,11 @@ const COMMAND_SEARCH_PROJECT = "shipone.searchProject";
 const COMMAND_OPEN_PROJECT = "shipone.openProject";
 
 const PROJECT_TYPE_PICKERS: Array<{ label: string; value: string | null }> = [
-  { label: "Todos", value: null },
-  { label: "Blank", value: "blank" },
-  { label: "React Vite", value: "react-vite" },
-  { label: "Next.js", value: "nextjs" },
-  { label: "Python", value: "python" },
+  { label: t("Todos"), value: null },
+  { label: t("Blank"), value: "blank" },
+  { label: t("React Vite"), value: "react-vite" },
+  { label: t("Next.js"), value: "nextjs" },
+  { label: t("Python"), value: "python" },
 ];
 
 export function registerLaunchCommands(options: {
@@ -43,8 +44,8 @@ export function registerLaunchCommands(options: {
         canSelectFiles: false,
         canSelectMany: false,
         defaultUri: vscode.Uri.file(settings.projectsRoot),
-        title: "Elegir carpeta base",
-        openLabel: "Usar carpeta",
+        title: t("Elegir carpeta base"),
+        openLabel: t("Usar carpeta"),
       });
 
       const folder = picked?.[0];
@@ -56,7 +57,9 @@ export function registerLaunchCommands(options: {
         .getConfiguration("shipone")
         .update("projectsRoot", folder.fsPath, vscode.ConfigurationTarget.Global);
       treeRefresh();
-      vscode.window.showInformationMessage(`Carpeta base actualizada: ${folder.fsPath}`);
+      vscode.window.showInformationMessage(
+        t("Carpeta base actualizada: {0}", folder.fsPath)
+      );
     }
   );
 
@@ -78,14 +81,14 @@ export function registerLaunchCommands(options: {
       const projects = await projectStore.loadProjects();
 
       if (projects.length === 0) {
-        vscode.window.showInformationMessage("Todavia no hay proyectos.");
+        vscode.window.showInformationMessage(t("Todavia no hay proyectos."));
         return;
       }
 
       const searchTerm = await vscode.window.showInputBox({
-        title: "Buscar proyecto",
-        prompt: "Escribe parte del nombre",
-        placeHolder: "my-saas-app",
+        title: t("Buscar proyecto"),
+        prompt: t("Escribe parte del nombre"),
+        placeHolder: t("my-saas-app"),
       });
 
       if (searchTerm === undefined) {
@@ -95,8 +98,8 @@ export function registerLaunchCommands(options: {
       const filteredByName = filterProjectsByName(projects, searchTerm);
 
       const typeChoice = await vscode.window.showQuickPick(PROJECT_TYPE_PICKERS, {
-        title: "Filtrar por tipo",
-        placeHolder: "Elige un tipo o deja todo",
+        title: t("Filtrar por tipo"),
+        placeHolder: t("Elige un tipo o deja todo"),
       });
 
       if (!typeChoice) {
@@ -106,14 +109,14 @@ export function registerLaunchCommands(options: {
       const filteredByType = filterProjectsByType(filteredByName, typeChoice.value);
 
       if (filteredByType.length === 0) {
-        vscode.window.showInformationMessage("No hay proyectos con esos filtros.");
+        vscode.window.showInformationMessage(t("No hay proyectos con esos filtros."));
         return;
       }
 
       const tagChoice = await vscode.window.showInputBox({
-        title: "Filtrar por etiqueta",
-        prompt: "Escribe una etiqueta o deja vacio",
-        placeHolder: "frontend",
+        title: t("Filtrar por etiqueta"),
+        prompt: t("Escribe una etiqueta o deja vacio"),
+        placeHolder: t("frontend"),
       });
 
       if (tagChoice === undefined) {
@@ -123,20 +126,20 @@ export function registerLaunchCommands(options: {
       const filteredByTag = filterProjectsByTag(filteredByType, tagChoice);
 
       if (filteredByTag.length === 0) {
-        vscode.window.showInformationMessage("No hay proyectos con esa etiqueta.");
+        vscode.window.showInformationMessage(t("No hay proyectos con esa etiqueta."));
         return;
       }
 
       const choice = await vscode.window.showQuickPick(
         filteredByTag.map((project) => ({
           label: project.favorite ? `★ ${project.name}` : project.name,
-          description: `${project.status} · ${project.type}`,
+          description: t("{0} · {1}", project.status, project.type),
           detail: buildProjectDetail(project),
           project,
         })),
         {
-          title: "Buscar proyecto",
-          placeHolder: "Elige un proyecto",
+          title: t("Buscar proyecto"),
+          placeHolder: t("Elige un proyecto"),
           matchOnDescription: true,
           matchOnDetail: true,
         }
@@ -156,7 +159,7 @@ export function registerLaunchCommands(options: {
       const project = await vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: "ShipOne: creando proyecto",
+          title: t("ShipOne: creando proyecto"),
           cancellable: false,
         },
         async () => {
@@ -167,7 +170,9 @@ export function registerLaunchCommands(options: {
 
       if (project) {
         treeRefresh();
-        vscode.window.showInformationMessage(`Proyecto creado: ${project.name}. Ya lo tienes en ShipOne.`);
+        vscode.window.showInformationMessage(
+          t("Proyecto creado: {0}. Ya lo tienes en ShipOne.", project.name)
+        );
       }
     }
   );
@@ -178,7 +183,7 @@ export function registerLaunchCommands(options: {
       const project = await vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: "ShipOne: creando idea de ejemplo",
+          title: t("ShipOne: creando idea de ejemplo"),
           cancellable: false,
         },
         async () => {
@@ -189,7 +194,9 @@ export function registerLaunchCommands(options: {
 
       if (project) {
         treeRefresh();
-        vscode.window.showInformationMessage(`Idea creada: ${project.name}. Ya la tienes en ShipOne.`);
+        vscode.window.showInformationMessage(
+          t("Idea creada: {0}. Ya la tienes en ShipOne.", project.name)
+        );
       }
     }
   );
@@ -200,7 +207,7 @@ export function registerLaunchCommands(options: {
       const projects = await projectStore.loadProjects();
 
       if (projects.length === 0) {
-        vscode.window.showInformationMessage("Todavia no hay proyectos.");
+        vscode.window.showInformationMessage(t("Todavia no hay proyectos."));
         return;
       }
 
@@ -212,8 +219,8 @@ export function registerLaunchCommands(options: {
           project,
         })),
         {
-          title: "Abrir proyecto",
-          placeHolder: "Elige un proyecto",
+          title: t("Abrir proyecto"),
+          placeHolder: t("Elige un proyecto"),
           matchOnDescription: true,
           matchOnDetail: true,
         }
