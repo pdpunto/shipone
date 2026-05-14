@@ -43,7 +43,7 @@ Objetivo: convertir el codigo actual en una base mantenible y segura antes de es
 - [x] Crear `ProjectHealthService`
 - [x] Crear `TodoScannerService`
 - [x] Separar nodes de UI en archivos individuales
-- [ ] Separar renderizado del arbol
+- [x] Separar renderizado del arbol
 - [ ] Crear icon provider
 - [ ] Crear tooltip provider
 - [ ] Crear health renderer
