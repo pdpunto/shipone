@@ -101,11 +101,7 @@ export class ProjectStoreService {
     enforceOneActiveProject = true
   ): Promise<void> {
     const projects = await this.loadProjects();
-    const target = projects.find((project) => project.id === projectId);
-
-    if (!target) {
-      throw new Error("No se encontro el proyecto.");
-    }
+    const target = this.getRequiredProject(projects, projectId);
 
     if (status === "active" && enforceOneActiveProject) {
       for (const project of projects) {
@@ -136,11 +132,7 @@ export class ProjectStoreService {
 
   async setNextAction(projectId: string, nextAction: string | null): Promise<void> {
     const projects = await this.loadProjects();
-    const target = projects.find((project) => project.id === projectId);
-
-    if (!target) {
-      throw new Error("No se encontro el proyecto.");
-    }
+    const target = this.getRequiredProject(projects, projectId);
 
     target.nextAction = nextAction;
     await this.saveProjects(projects);
@@ -148,11 +140,7 @@ export class ProjectStoreService {
 
   async toggleFavorite(projectId: string): Promise<void> {
     const projects = await this.loadProjects();
-    const target = projects.find((project) => project.id === projectId);
-
-    if (!target) {
-      throw new Error("No se encontro el proyecto.");
-    }
+    const target = this.getRequiredProject(projects, projectId);
 
     target.favorite = !target.favorite;
     await this.saveProjects(projects);
@@ -160,11 +148,7 @@ export class ProjectStoreService {
 
   async setMvpTasks(projectId: string, tasks: ProjectMetadata["mvpTasks"]): Promise<void> {
     const projects = await this.loadProjects();
-    const target = projects.find((project) => project.id === projectId);
-
-    if (!target) {
-      throw new Error("No se encontro el proyecto.");
-    }
+    const target = this.getRequiredProject(projects, projectId);
 
     target.mvpTasks = tasks ?? [];
     await this.saveProjects(projects);
@@ -172,11 +156,7 @@ export class ProjectStoreService {
 
   async markMvpTaskDone(projectId: string, taskId: string): Promise<void> {
     const projects = await this.loadProjects();
-    const target = projects.find((project) => project.id === projectId);
-
-    if (!target) {
-      throw new Error("No se encontro el proyecto.");
-    }
+    const target = this.getRequiredProject(projects, projectId);
 
     const task = target.mvpTasks?.find((item) => item.id === taskId);
     if (!task) {
@@ -194,11 +174,7 @@ export class ProjectStoreService {
     note: string
   ): Promise<void> {
     const projects = await this.loadProjects();
-    const target = projects.find((project) => project.id === projectId);
-
-    if (!target) {
-      throw new Error("No se encontro el proyecto.");
-    }
+    const target = this.getRequiredProject(projects, projectId);
 
     target.status = "paused";
     target.pauseReason = reason;
@@ -210,11 +186,7 @@ export class ProjectStoreService {
 
   async markProjectOpened(projectId: string): Promise<void> {
     const projects = await this.loadProjects();
-    const target = projects.find((project) => project.id === projectId);
-
-    if (!target) {
-      throw new Error("No se encontro el proyecto.");
-    }
+    const target = this.getRequiredProject(projects, projectId);
 
     target.lastOpenedAt = new Date().toISOString();
     await this.saveProjects(projects);
@@ -281,6 +253,16 @@ export class ProjectStoreService {
     }
 
     return project;
+  }
+
+  private getRequiredProject(projects: ProjectMetadata[], projectId: string): ProjectMetadata {
+    const target = projects.find((project) => project.id === projectId);
+
+    if (!target) {
+      throw new Error("No se encontro el proyecto.");
+    }
+
+    return target;
   }
 
   private async readProjectsWithRecovery(): Promise<{ projects: ProjectMetadata[]; version: number }> {

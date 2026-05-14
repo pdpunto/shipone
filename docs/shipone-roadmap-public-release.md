@@ -66,7 +66,7 @@ Objetivo: convertir el codigo actual en una base mantenible y segura antes de es
 
 - [ ] Configurar ESLint estricto
 - [ ] Configurar Prettier
-- [ ] Eliminar codigo duplicado
+- [x] Eliminar codigo duplicado
 - [ ] Corregir encoding roto
 - [ ] Revisar nombres inconsistentes
 - [ ] AÃ±adir comentarios importantes
@@ -336,5 +336,6 @@ La prioridad profesional ahora mismo es:
 ## Nota final
 
 ShipOne ya tiene valor funcional. Lo que falta ahora es convertirlo en un producto que se pueda mantener, explicar y publicar sin miedo.
+
 
 
