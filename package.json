@@ -21,10 +21,51 @@
         "title": "ShipOne: Mostrar bienvenida"
       },
       {
+        "command": "shipone.createProject",
+        "title": "ShipOne: Crear proyecto"
+      },
+      {
+        "command": "shipone.openProject",
+        "title": "ShipOne: Abrir proyecto"
+      },
+      {
+        "command": "shipone.changeProjectStatus",
+        "title": "ShipOne: Cambiar estado"
+      },
+      {
+        "command": "shipone.editNextAction",
+        "title": "ShipOne: Editar siguiente acción"
+      },
+      {
+        "command": "shipone.clearNextAction",
+        "title": "ShipOne: Limpiar siguiente acción"
+      },
+      {
         "command": "shipone.refreshProjects",
         "title": "ShipOne: Refrescar proyectos"
       }
     ],
+    "menus": {
+      "view/item/context": [
+        {
+          "command": "shipone.openProject",
+          "when": "view == shipone.projectsView && viewItem == shipone.project",
+          "group": "inline"
+        },
+        {
+          "command": "shipone.changeProjectStatus",
+          "when": "view == shipone.projectsView && viewItem == shipone.project"
+        },
+        {
+          "command": "shipone.editNextAction",
+          "when": "view == shipone.projectsView && viewItem == shipone.project"
+        },
+        {
+          "command": "shipone.clearNextAction",
+          "when": "view == shipone.projectsView && viewItem == shipone.project"
+        }
+      ]
+    },
     "views": {
       "explorer": [
         {

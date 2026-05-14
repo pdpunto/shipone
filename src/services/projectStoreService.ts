@@ -40,6 +40,73 @@ export class ProjectStoreService {
     await vscode.workspace.fs.writeFile(this.storageFileUri, payload);
   }
 
+  async upsertProject(project: ProjectMetadata): Promise<void> {
+    const projects = await this.loadProjects();
+    const index = projects.findIndex((existing) => existing.id === project.id);
+
+    if (index >= 0) {
+      projects[index] = project;
+    } else {
+      projects.push(project);
+    }
+
+    await this.saveProjects(projects);
+  }
+
+  async createProject(project: ProjectMetadata): Promise<void> {
+    const projects = await this.loadProjects();
+    const normalized = await this.normalizeActiveProject(projects, project);
+    projects.push(normalized);
+    await this.saveProjects(projects);
+  }
+
+  async setProjectStatus(projectId: string, status: ProjectStatus): Promise<void> {
+    const projects = await this.loadProjects();
+    const target = projects.find((project) => project.id === projectId);
+
+    if (!target) {
+      throw new Error("No se encontró el proyecto.");
+    }
+
+    if (status === "active") {
+      for (const project of projects) {
+        if (project.id !== projectId && project.status === "active") {
+          project.status = "paused";
+        }
+      }
+    }
+
+    target.status = status;
+    if (status === "finished") {
+      target.finishedAt = new Date().toISOString();
+    } else {
+      target.finishedAt = null;
+    }
+
+    if (status === "active") {
+      target.lastOpenedAt = new Date().toISOString();
+    }
+
+    await this.saveProjects(projects);
+  }
+
+  async setNextAction(projectId: string, nextAction: string | null): Promise<void> {
+    const projects = await this.loadProjects();
+    const target = projects.find((project) => project.id === projectId);
+
+    if (!target) {
+      throw new Error("No se encontró el proyecto.");
+    }
+
+    target.nextAction = nextAction;
+    await this.saveProjects(projects);
+  }
+
+  async getProject(projectId: string): Promise<ProjectMetadata | undefined> {
+    const projects = await this.loadProjects();
+    return projects.find((project) => project.id === projectId);
+  }
+
   async getProjectsByStatus(): Promise<Record<ProjectStatus, ProjectMetadata[]>> {
     const projects = await this.loadProjects();
     const grouped = this.createEmptyGroups();
@@ -53,6 +120,10 @@ export class ProjectStoreService {
     }
 
     return grouped;
+  }
+
+  async createProjectFolder(folderUri: vscode.Uri): Promise<void> {
+    await vscode.workspace.fs.createDirectory(folderUri);
   }
 
   private get storageFileUri(): vscode.Uri {
@@ -74,6 +145,21 @@ export class ProjectStoreService {
     }
 
     return value.filter(isProjectMetadata);
+  }
+
+  private async normalizeActiveProject(
+    projects: ProjectMetadata[],
+    project: ProjectMetadata
+  ): Promise<ProjectMetadata> {
+    if (project.status === "active") {
+      for (const existing of projects) {
+        if (existing.status === "active") {
+          existing.status = "paused";
+        }
+      }
+    }
+
+    return project;
   }
 
   private async pathExists(uri: vscode.Uri): Promise<boolean> {
