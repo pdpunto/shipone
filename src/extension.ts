@@ -8,6 +8,7 @@ import { SettingsService } from "./services/settingsService";
 
 const COMMAND_SHOW_WELCOME = "shipone.showWelcome";
 const COMMAND_CREATE_PROJECT = "shipone.createProject";
+const COMMAND_OPEN_PROJECTS_ROOT = "shipone.openProjectsRoot";
 const COMMAND_OPEN_PROJECT_QUICK_PICK = "shipone.openProjectQuickPick";
 const COMMAND_EDIT_MVP_CHECKLIST = "shipone.editMvpChecklist";
 const COMMAND_MARK_MVP_ITEM_DONE = "shipone.markMvpItemDone";
@@ -73,6 +74,18 @@ export async function activate(context: vscode.ExtensionContext) {
 
     vscode.window.showInformationMessage(`ShipOne listo. Ruta base: ${settings.projectsRoot}`);
   });
+
+  const openProjectsRootCommand = vscode.commands.registerCommand(
+    COMMAND_OPEN_PROJECTS_ROOT,
+    async () => {
+      const settings = settingsService.getSettings();
+      await vscode.commands.executeCommand(
+        "vscode.openFolder",
+        vscode.Uri.file(settings.projectsRoot),
+        false
+      );
+    }
+  );
 
   const searchProjectCommand = vscode.commands.registerCommand(
     COMMAND_SEARCH_PROJECT,
@@ -571,6 +584,7 @@ export async function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     treeView,
     welcomeCommand,
+    openProjectsRootCommand,
     openProjectQuickPickCommand,
     editMvpChecklistCommand,
     markMvpItemDoneCommand,

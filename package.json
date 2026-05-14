@@ -25,6 +25,7 @@
     "commands": [
       { "command": "shipone.showWelcome", "title": "ShipOne: Mostrar bienvenida" },
       { "command": "shipone.createProject", "title": "ShipOne: Crear proyecto", "icon": "$(add)" },
+      { "command": "shipone.openProjectsRoot", "title": "ShipOne: Abrir carpeta raíz", "icon": "$(folder-library)" },
       { "command": "shipone.openProjectQuickPick", "title": "ShipOne: Abrir proyecto", "icon": "$(folder-opened)" },
       { "command": "shipone.editMvpChecklist", "title": "ShipOne: Editar checklist MVP", "icon": "$(checklist)" },
       { "command": "shipone.markMvpItemDone", "title": "ShipOne: Marcar tarea MVP hecha", "icon": "$(check)" },
@@ -47,6 +48,11 @@
       "view/title": [
         {
           "command": "shipone.createProject",
+          "when": "view == shipone.projectsView",
+          "group": "navigation"
+        },
+        {
+          "command": "shipone.openProjectsRoot",
           "when": "view == shipone.projectsView",
           "group": "navigation"
         },

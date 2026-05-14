@@ -261,7 +261,7 @@ Goal: release a useful first version.
 - [ ] Add context menu actions
 - [ ] Add refresh button
 - [ ] Add open project button
-- [ ] Add open root folder button
+- [x] Add open root folder button
 
 ### Next Action
 
