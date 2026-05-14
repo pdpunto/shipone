@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { t } from "../../localization";
 import { ProjectCreationService } from "../../services/projectCreationService";
 import { ProjectStoreService } from "../../services/projectStoreService";
 import { SettingsService } from "../../services/settingsService";
@@ -45,7 +46,9 @@ export function registerReviewCommands(options: {
     const tasks = await todoScannerService.scanProjectTodoTasks(project.path);
 
     if (tasks.length === 0) {
-      vscode.window.showInformationMessage(`No hay TODO ni FIXME en ${project.name}.`);
+      vscode.window.showInformationMessage(
+        t("No hay TODO ni FIXME en {0}.", project.name)
+      );
       return;
     }
 
@@ -57,8 +60,8 @@ export function registerReviewCommands(options: {
         task,
       })),
       {
-        title: `TODOs en ${project.name}`,
-        placeHolder: "Elige un hallazgo",
+        title: t("TODOs en {0}", project.name),
+        placeHolder: t("Elige un hallazgo"),
         matchOnDescription: true,
         matchOnDetail: true,
       }
@@ -78,14 +81,14 @@ export function registerReviewCommands(options: {
 
   const focusModeCommand = vscode.commands.registerCommand(COMMAND_FOCUS_MODE, async () => {
     await setFocusMode(true);
-    vscode.window.showInformationMessage("Focus mode activado.");
+    vscode.window.showInformationMessage(t("Focus mode activado."));
   });
 
   const exitFocusModeCommand = vscode.commands.registerCommand(
     COMMAND_EXIT_FOCUS_MODE,
     async () => {
       await setFocusMode(false);
-      vscode.window.showInformationMessage("Focus mode desactivado.");
+      vscode.window.showInformationMessage(t("Focus mode desactivado."));
     }
   );
 
@@ -100,19 +103,19 @@ export function registerReviewCommands(options: {
       const finishedThisWeek = getFinishedThisWeek(projects);
 
       const summaryLines = [
-        `Activo: ${summary.active ? summary.active.name : "ninguno"}`,
-        `Pausados: ${pausedProjects.length}`,
-        `Terminados esta semana: ${finishedThisWeek.length}`,
+        t("Activo: {0}", summary.active ? summary.active.name : t("ninguno")),
+        t("Pausados: {0}", pausedProjects.length),
+        t("Terminados esta semana: {0}", finishedThisWeek.length),
       ];
 
       if (activeProject) {
-        const actions = ["Ver activo", "Salir"];
+        const actions = [t("Ver activo"), t("Salir")];
         const choice = await vscode.window.showInformationMessage(
           summaryLines.join(" | "),
           ...actions
         );
 
-        if (choice === "Salir") {
+        if (choice === t("Salir")) {
           return;
         }
 
@@ -123,9 +126,9 @@ export function registerReviewCommands(options: {
 
       if (activeProject && !activeProject.nextAction) {
         const nextAction = await vscode.window.showInputBox({
-          title: "Weekly review",
-          prompt: "Siguiente accion para el proyecto activo",
-          placeHolder: "Terminar login",
+          title: t("Weekly review"),
+          prompt: t("Siguiente accion para el proyecto activo"),
+          placeHolder: t("Terminar login"),
         });
 
         if (nextAction !== undefined) {
@@ -140,13 +143,13 @@ export function registerReviewCommands(options: {
       if (activeProject && isStaleProject(activeProject)) {
         const choice = await vscode.window.showQuickPick(
           [
-            { label: "Mantener activo", value: "keep" },
-            { label: "Pasar a pausado", value: "pause" },
-            { label: "Marcar terminado", value: "finish" },
+            { label: t("Mantener activo"), value: "keep" },
+            { label: t("Pasar a pausado"), value: "pause" },
+            { label: t("Marcar terminado"), value: "finish" },
           ],
           {
-            title: "Proyecto activo viejo",
-            placeHolder: "Que hacemos con este proyecto",
+            title: t("Proyecto activo viejo"),
+            placeHolder: t("Que hacemos con este proyecto"),
           }
         );
 
@@ -161,13 +164,16 @@ export function registerReviewCommands(options: {
 
       if (pausedProjects.length > 0) {
         vscode.window.showInformationMessage(
-          `Pausados: ${pausedProjects.map((project) => project.name).join(", ")}`
+          t("Pausados: {0}", pausedProjects.map((project) => project.name).join(", "))
         );
       }
 
       if (finishedThisWeek.length > 0) {
         vscode.window.showInformationMessage(
-          `Terminados esta semana: ${finishedThisWeek.map((project) => project.name).join(", ")}`
+          t(
+            "Terminados esta semana: {0}",
+            finishedThisWeek.map((project) => project.name).join(", ")
+          )
         );
       }
     }
@@ -183,9 +189,9 @@ export function registerReviewCommands(options: {
       }
 
       const reason = await vscode.window.showInputBox({
-        title: "Congelar proyecto",
-        prompt: "Motivo de la pausa",
-        placeHolder: "Esperando feedback",
+        title: t("Congelar proyecto"),
+        prompt: t("Motivo de la pausa"),
+        placeHolder: t("Esperando feedback"),
       });
 
       if (reason === undefined || !reason.trim()) {
@@ -193,9 +199,9 @@ export function registerReviewCommands(options: {
       }
 
       const nextAction = await vscode.window.showInputBox({
-        title: "Siguiente accion",
-        prompt: "Que haras al volver",
-        placeHolder: "Revisar login",
+        title: t("Siguiente accion"),
+        prompt: t("Que haras al volver"),
+        placeHolder: t("Revisar login"),
         value: project.nextAction ?? "",
       });
 
@@ -204,9 +210,9 @@ export function registerReviewCommands(options: {
       }
 
       const note = await vscode.window.showInputBox({
-        title: "Nota de pausa",
-        prompt: "Nota corta para recordar contexto",
-        placeHolder: "Bloqueado por dependencias externas",
+        title: t("Nota de pausa"),
+        prompt: t("Nota corta para recordar contexto"),
+        placeHolder: t("Bloqueado por dependencias externas"),
         value: project.pauseNote ?? "",
       });
 
@@ -221,7 +227,7 @@ export function registerReviewCommands(options: {
         note.trim()
       );
       treeRefresh();
-      vscode.window.showInformationMessage(`Proyecto congelado: ${project.name}.`);
+      vscode.window.showInformationMessage(t("Proyecto congelado: {0}.", project.name));
     }
   );
 
@@ -233,20 +239,20 @@ export function registerReviewCommands(options: {
       const pausedProjects = projects.filter((project) => project.status === "paused");
 
       if (pausedProjects.length === 0) {
-        vscode.window.showInformationMessage("No hay proyectos pausados.");
+        vscode.window.showInformationMessage(t("No hay proyectos pausados."));
         return;
       }
 
       const choice = await vscode.window.showQuickPick(
         pausedProjects.map((project) => ({
           label: project.name,
-          description: project.pauseReason ?? project.nextAction ?? "Pausado",
+          description: project.pauseReason ?? project.nextAction ?? t("Pausado"),
           detail: project.pauseNote ?? project.path,
           project,
         })),
         {
-          title: "Reanudar proyecto",
-          placeHolder: "Elige un proyecto pausado",
+          title: t("Reanudar proyecto"),
+          placeHolder: t("Elige un proyecto pausado"),
         }
       );
 
@@ -257,7 +263,9 @@ export function registerReviewCommands(options: {
       if (!settings.enforceOneActiveProject) {
         await projectStore.setProjectStatus(choice.project.id, "active", false);
         treeRefresh();
-        vscode.window.showInformationMessage(`Proyecto reanudado: ${choice.project.name}.`);
+        vscode.window.showInformationMessage(
+          t("Proyecto reanudado: {0}.", choice.project.name)
+        );
         return;
       }
 
@@ -268,19 +276,21 @@ export function registerReviewCommands(options: {
 
       if (otherActive) {
         const confirmation = await vscode.window.showWarningMessage(
-          `Ya hay un proyecto activo: ${otherActive.name}.`,
-          "Pausar y activar",
-          "Cancelar"
+          t("Ya hay un proyecto activo: {0}.", otherActive.name),
+          t("Pausar y activar"),
+          t("Cancelar")
         );
 
-        if (confirmation !== "Pausar y activar") {
+        if (confirmation !== t("Pausar y activar")) {
           return;
         }
       }
 
       await projectStore.setProjectStatus(choice.project.id, "active", true);
       treeRefresh();
-      vscode.window.showInformationMessage(`Proyecto reanudado: ${choice.project.name}.`);
+      vscode.window.showInformationMessage(
+        t("Proyecto reanudado: {0}.", choice.project.name)
+      );
     }
   );
 

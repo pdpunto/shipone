@@ -99,16 +99,16 @@ Objetivo: hacer que ShipOne funcione automaticamante en el idioma configurado po
 
 ### 2.3 UI completa
 
-- [ ] Traducir warnings
+- [x] Traducir warnings
 - [ ] Traducir errors
 - [ ] Traducir success messages
-- [ ] Traducir quick picks
-- [ ] Traducir placeholders
-- [ ] Traducir input boxes
+- [x] Traducir quick picks
+- [x] Traducir placeholders
+- [x] Traducir input boxes
 - [ ] Traducir onboarding
-- [ ] Traducir focus mode
+- [x] Traducir focus mode
 - [ ] Traducir health messages
-- [ ] Traducir weekly review
+- [x] Traducir weekly review
 
 ### 2.4 Idiomas iniciales
 
