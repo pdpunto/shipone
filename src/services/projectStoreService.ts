@@ -1,10 +1,20 @@
 import * as vscode from "vscode";
 import { TextDecoder, TextEncoder } from "util";
-import { MvpTask, ProjectMetadata, ProjectStatus } from "../models/project";
+import { ProjectMetadata, ProjectStatus } from "../models/project";
+import {
+  normalizeProjectList,
+  normalizeProjectMetadata,
+} from "../models/projectValidation";
 
 const STORAGE_FILE_NAME = "projects.json";
 const STORAGE_BACKUP_FILE_NAME = "projects.json.bak";
+const STORAGE_VERSION = 2;
 const EMPTY_GROUPS: ProjectStatus[] = ["idea", "active", "paused", "finished"];
+
+type ProjectStoreSnapshot = {
+  version: number;
+  projects: ProjectMetadata[];
+};
 
 export class ProjectStoreService {
   constructor(private readonly context: vscode.ExtensionContext) {}
@@ -15,23 +25,20 @@ export class ProjectStoreService {
     const exists = await this.pathExists(this.storageFileUri);
     if (!exists) {
       await this.saveProjects([]);
+      return;
+    }
+
+    const { projects, version } = await this.readProjectsWithRecovery();
+    if (version < STORAGE_VERSION) {
+      await this.saveProjects(projects);
     }
   }
 
   async loadProjects(): Promise<ProjectMetadata[]> {
     await this.initialize();
 
-    try {
-      const raw = await vscode.workspace.fs.readFile(this.storageFileUri);
-      if (raw.length === 0) {
-        return [];
-      }
-
-      const parsed = JSON.parse(new TextDecoder().decode(raw)) as unknown;
-      return this.coerceProjects(parsed);
-    } catch {
-      return [];
-    }
+    const { projects } = await this.readProjectsWithRecovery();
+    return projects;
   }
 
   async saveProjects(projects: ProjectMetadata[]): Promise<void> {
@@ -43,7 +50,14 @@ export class ProjectStoreService {
       });
     }
 
-    const payload = new TextEncoder().encode(JSON.stringify(projects, null, 2));
+    const normalized = projects
+      .map((project) => normalizeProjectMetadata(project))
+      .filter((project): project is ProjectMetadata => Boolean(project));
+
+    const payload = new TextEncoder().encode(
+      JSON.stringify({ version: STORAGE_VERSION, projects: normalized }, null, 2)
+    );
+
     await vscode.workspace.fs.writeFile(this.storageFileUri, payload);
   }
 
@@ -62,7 +76,7 @@ export class ProjectStoreService {
 
   async createProject(project: ProjectMetadata, enforceOneActiveProject = true): Promise<void> {
     const projects = await this.loadProjects();
-    const normalized = await this.normalizeActiveProject(projects, project, enforceOneActiveProject);
+    const normalized = this.normalizeActiveProject(projects, project, enforceOneActiveProject);
     projects.push(normalized);
     await this.saveProjects(projects);
   }
@@ -76,7 +90,7 @@ export class ProjectStoreService {
     const target = projects.find((project) => project.id === projectId);
 
     if (!target) {
-      throw new Error("No se encontró el proyecto.");
+      throw new Error("No se encontro el proyecto.");
     }
 
     if (status === "active" && enforceOneActiveProject) {
@@ -111,7 +125,7 @@ export class ProjectStoreService {
     const target = projects.find((project) => project.id === projectId);
 
     if (!target) {
-      throw new Error("No se encontró el proyecto.");
+      throw new Error("No se encontro el proyecto.");
     }
 
     target.nextAction = nextAction;
@@ -123,22 +137,22 @@ export class ProjectStoreService {
     const target = projects.find((project) => project.id === projectId);
 
     if (!target) {
-      throw new Error("No se encontró el proyecto.");
+      throw new Error("No se encontro el proyecto.");
     }
 
     target.favorite = !target.favorite;
     await this.saveProjects(projects);
   }
 
-  async setMvpTasks(projectId: string, tasks: MvpTask[]): Promise<void> {
+  async setMvpTasks(projectId: string, tasks: ProjectMetadata["mvpTasks"]): Promise<void> {
     const projects = await this.loadProjects();
     const target = projects.find((project) => project.id === projectId);
 
     if (!target) {
-      throw new Error("No se encontrÃ³ el proyecto.");
+      throw new Error("No se encontro el proyecto.");
     }
 
-    target.mvpTasks = tasks;
+    target.mvpTasks = tasks ?? [];
     await this.saveProjects(projects);
   }
 
@@ -147,12 +161,12 @@ export class ProjectStoreService {
     const target = projects.find((project) => project.id === projectId);
 
     if (!target) {
-      throw new Error("No se encontrÃ³ el proyecto.");
+      throw new Error("No se encontro el proyecto.");
     }
 
     const task = target.mvpTasks?.find((item) => item.id === taskId);
     if (!task) {
-      throw new Error("No se encontrÃ³ la tarea.");
+      throw new Error("No se encontro la tarea.");
     }
 
     task.done = true;
@@ -169,7 +183,7 @@ export class ProjectStoreService {
     const target = projects.find((project) => project.id === projectId);
 
     if (!target) {
-      throw new Error("No se encontrÃ³ el proyecto.");
+      throw new Error("No se encontro el proyecto.");
     }
 
     target.status = "paused";
@@ -185,7 +199,7 @@ export class ProjectStoreService {
     const target = projects.find((project) => project.id === projectId);
 
     if (!target) {
-      throw new Error("No se encontrÃ³ el proyecto.");
+      throw new Error("No se encontro el proyecto.");
     }
 
     target.lastOpenedAt = new Date().toISOString();
@@ -239,19 +253,11 @@ export class ProjectStoreService {
     };
   }
 
-  private coerceProjects(value: unknown): ProjectMetadata[] {
-    if (!Array.isArray(value)) {
-      return [];
-    }
-
-    return value.filter(isProjectMetadata);
-  }
-
-  private async normalizeActiveProject(
+  private normalizeActiveProject(
     projects: ProjectMetadata[],
     project: ProjectMetadata,
     enforceOneActiveProject: boolean
-  ): Promise<ProjectMetadata> {
+  ): ProjectMetadata {
     if (project.status === "active" && enforceOneActiveProject) {
       for (const existing of projects) {
         if (existing.status === "active") {
@@ -263,6 +269,48 @@ export class ProjectStoreService {
     return project;
   }
 
+  private async readProjectsWithRecovery(): Promise<{ projects: ProjectMetadata[]; version: number }> {
+    try {
+      return await this.readProjectsFromUri(this.storageFileUri);
+    } catch {
+      try {
+        const recovered = await this.readProjectsFromUri(this.backupFileUri);
+        await this.saveProjects(recovered.projects);
+        return recovered;
+      } catch {
+        return { projects: [], version: STORAGE_VERSION };
+      }
+    }
+  }
+
+  private async readProjectsFromUri(
+    uri: vscode.Uri
+  ): Promise<{ projects: ProjectMetadata[]; version: number }> {
+    const raw = await vscode.workspace.fs.readFile(uri);
+    if (raw.length === 0) {
+      return { projects: [], version: STORAGE_VERSION };
+    }
+
+    const parsed = JSON.parse(new TextDecoder().decode(raw)) as unknown;
+
+    if (Array.isArray(parsed)) {
+      return { projects: normalizeProjectList(parsed), version: 1 };
+    }
+
+    if (typeof parsed === "object" && parsed !== null) {
+      const snapshot = parsed as Partial<ProjectStoreSnapshot> & {
+        projects?: unknown;
+      };
+      const version = typeof snapshot.version === "number" ? snapshot.version : 1;
+      return {
+        projects: normalizeProjectList(snapshot.projects),
+        version,
+      };
+    }
+
+    return { projects: [], version: STORAGE_VERSION };
+  }
+
   private async pathExists(uri: vscode.Uri): Promise<boolean> {
     try {
       await vscode.workspace.fs.stat(uri);
@@ -271,25 +319,4 @@ export class ProjectStoreService {
       return false;
     }
   }
-}
-
-  function isProjectMetadata(value: unknown): value is ProjectMetadata {
-  if (typeof value !== "object" || value === null) {
-    return false;
-  }
-
-  const project = value as Record<string, unknown>;
-  return (
-    typeof project.id === "string" &&
-    typeof project.name === "string" &&
-    typeof project.description === "string" &&
-    typeof project.type === "string" &&
-    isProjectStatus(project.status) &&
-    typeof project.path === "string" &&
-    typeof project.createdAt === "string"
-  );
-}
-
-function isProjectStatus(value: unknown): value is ProjectStatus {
-  return value === "idea" || value === "active" || value === "paused" || value === "finished";
 }

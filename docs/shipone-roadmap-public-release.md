@@ -1,4 +1,4 @@
-# ShipOne - Roadmap Realista para Public Release
+﻿# ShipOne - Roadmap Realista para Public Release
 
 Fecha base: 2026-05-14
 
@@ -47,20 +47,20 @@ Objetivo: convertir el codigo actual en una base mantenible y segura antes de es
 - [x] Crear icon provider
 - [x] Crear tooltip provider
 - [x] Crear health renderer
-- [ ] Validar `ProjectMetadata`
-- [ ] Añadir type guards
-- [ ] Añadir migracion de versiones
-- [ ] Añadir compatibilidad futura de schema
+- [x] Validar `ProjectMetadata`
+- [x] AÃ±adir type guards
+- [x] AÃ±adir migracion de versiones
+- [x] AÃ±adir compatibilidad futura de schema
 
 ### 1.2 Persistencia segura
 
-- [ ] Validar JSON antes de cargar
-- [ ] Detectar metadata corrupta
-- [ ] Restaurar automaticamente backup
-- [ ] Añadir logs de errores
-- [ ] Añadir recovery mode
-- [ ] Añadir versionado de metadata
-- [ ] Añadir migraciones automaticas
+- [x] Validar JSON antes de cargar
+- [x] Detectar metadata corrupta
+- [x] Restaurar automaticamente backup
+- [ ] AÃ±adir logs de errores
+- [ ] AÃ±adir recovery mode
+- [x] AÃ±adir versionado de metadata
+- [x] AÃ±adir migraciones automaticas
 
 ### 1.3 Calidad de codigo
 
@@ -69,7 +69,7 @@ Objetivo: convertir el codigo actual en una base mantenible y segura antes de es
 - [ ] Eliminar codigo duplicado
 - [ ] Corregir encoding roto
 - [ ] Revisar nombres inconsistentes
-- [ ] Añadir comentarios importantes
+- [ ] AÃ±adir comentarios importantes
 - [ ] Limpiar imports muertos
 - [ ] Revisar async/await inseguros
 
@@ -134,7 +134,7 @@ Objetivo: hacer que la extension se sienta profesional.
 - [ ] Mejorar iconografia
 - [ ] Mejorar empty states
 - [ ] Mejorar health indicators
-- [ ] Añadir badges claros
+- [ ] AÃ±adir badges claros
 
 ### 3.2 Onboarding
 
@@ -146,9 +146,9 @@ Objetivo: hacer que la extension se sienta profesional.
 ### 3.3 Descubribilidad
 
 - [ ] Mejorar nombres de comandos
-- [ ] Añadir aliases utiles
-- [ ] Añadir comandos rapidos
-- [ ] Añadir shortcuts opcionales
+- [ ] AÃ±adir aliases utiles
+- [ ] AÃ±adir comandos rapidos
+- [ ] AÃ±adir shortcuts opcionales
 
 ### 3.4 Errores
 
@@ -158,7 +158,7 @@ Objetivo: hacer que la extension se sienta profesional.
 - [ ] Detectar GH faltante
 - [ ] Detectar permisos insuficientes
 - [ ] Detectar rutas invalidas
-- [ ] Añadir recovery suggestions
+- [ ] AÃ±adir recovery suggestions
 
 ## Fase 4 - Testing and Reliability
 
@@ -233,7 +233,7 @@ Objetivo: preparar ShipOne para usuarios reales.
 ### 5.3 GitHub publico
 
 - [ ] Hacer repo publico
-- [ ] Añadir `.github/`
+- [ ] AÃ±adir `.github/`
 - [ ] Issue templates
 - [ ] Bug report template
 - [ ] Feature request template
@@ -263,10 +263,10 @@ Objetivo: preparar ShipOne para usuarios reales.
 - [ ] Verificar `package.json`
 - [ ] Verificar keywords
 - [ ] Verificar categories
-- [ ] Añadir icon
-- [ ] Añadir repository url
-- [ ] Añadir bugs url
-- [ ] Añadir homepage url
+- [ ] AÃ±adir icon
+- [ ] AÃ±adir repository url
+- [ ] AÃ±adir bugs url
+- [ ] AÃ±adir homepage url
 - [ ] Publicar beta privada
 - [ ] Recoger feedback
 - [ ] Corregir bugs criticos
@@ -330,9 +330,10 @@ La prioridad profesional ahora mismo es:
 2. corregir encoding y consistencia textual
 3. empezar localizacion
 4. separar `extension.ts`
-5. añadir tests basicos
+5. aÃ±adir tests basicos
 6. mejorar UX del flujo de creacion y revision
 
 ## Nota final
 
 ShipOne ya tiene valor funcional. Lo que falta ahora es convertirlo en un producto que se pueda mantener, explicar y publicar sin miedo.
+
