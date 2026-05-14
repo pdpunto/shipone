@@ -364,7 +364,7 @@ Goal: make the MVP feel reliable.
 - [ ] Improve error messages
 - [ ] Add loading states
 - [x] Add success notifications
-- [ ] Add warning for inactive active project
+- [x] Add warning for inactive active project
 
 ### Project search
 

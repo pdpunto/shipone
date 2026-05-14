@@ -78,9 +78,18 @@ export class ShipOneProjectsTreeDataProvider
       const visibleGroups = settings.showFinishedProjects
         ? GROUPS
         : GROUPS.filter((group) => group.status !== "finished");
+      const activeProject = projects.find((project) => project.status === "active");
+      const activeWarnings = activeProject
+        ? buildActiveWarnings(
+            activeProject,
+            settings.inactiveWarningDays,
+            settings.staleWarningDays
+          )
+        : [];
 
       return [
         new MetricsNode(),
+        ...activeWarnings,
         ...visibleGroups.map((group) => new GroupNode(group.status, group.label, group.icon)),
       ];
     }
@@ -186,6 +195,21 @@ class MetricItemNode extends vscode.TreeItem {
     this.description = String(value);
     this.iconPath = new vscode.ThemeIcon(iconName);
     this.contextValue = "shipone.metric";
+  }
+}
+
+class WarningNode extends vscode.TreeItem {
+  constructor(label: string, detail: string, projectId: string) {
+    super(label, vscode.TreeItemCollapsibleState.None);
+    this.description = detail;
+    this.iconPath = new vscode.ThemeIcon("warning");
+    this.tooltip = new vscode.MarkdownString(`**${label}**\n\n${detail}`);
+    this.command = {
+      command: "shipone.openProject",
+      title: "Abrir proyecto",
+      arguments: [projectId],
+    };
+    this.contextValue = "shipone.warning";
   }
 }
 
@@ -333,6 +357,37 @@ function buildMetrics(projects: ProjectMetadata[]) {
     finished,
     finishRatio,
   };
+}
+
+function buildActiveWarnings(
+  project: ProjectMetadata,
+  inactiveWarningDays: number,
+  staleWarningDays: number
+): WarningNode[] {
+  const warnings: WarningNode[] = [];
+  const inactivity = getInactivityWarning(
+    project.lastOpenedAt,
+    inactiveWarningDays,
+    staleWarningDays
+  );
+
+  if (inactivity) {
+    warnings.push(
+      new WarningNode(
+        "Active sin uso reciente",
+        `Ultima apertura: ${project.lastOpenedAt ?? "sin registro"}`,
+        project.id
+      )
+    );
+  }
+
+  if (!project.nextAction) {
+    warnings.push(
+      new WarningNode("Active sin next action", "Define el siguiente paso para avanzar", project.id)
+    );
+  }
+
+  return warnings;
 }
 
 function formatProjectType(type: string): string {
