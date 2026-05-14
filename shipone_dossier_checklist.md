@@ -256,7 +256,7 @@ Goal: release a useful first version.
 - [ ] Group by Finished
 - [ ] Show icons by status
 - [ ] Show favorite star
-- [ ] Show project type
+- [x] Show project type
 - [ ] Show next action under project
 - [ ] Add context menu actions
 - [ ] Add refresh button

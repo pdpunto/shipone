@@ -183,8 +183,10 @@ class ProjectNode extends vscode.TreeItem {
       staleWarningDays
     );
     const mvpProgress = getMvpProgress(project.mvpTasks);
+    const projectType = formatProjectType(project.type);
 
     this.description = [
+      projectType,
       health.label,
       project.pauseReason ? `pause: ${project.pauseReason}` : undefined,
       project.nextAction ?? undefined,
@@ -198,6 +200,7 @@ class ProjectNode extends vscode.TreeItem {
       [
         `**${project.name}**`,
         "",
+        `Tipo: ${projectType}`,
         `Estado: ${project.status}`,
         `Salud: ${health.label}`,
         `Ruta: ${project.path}`,
@@ -295,6 +298,21 @@ function buildMetrics(projects: ProjectMetadata[]) {
     finished,
     finishRatio,
   };
+}
+
+function formatProjectType(type: string): string {
+  switch (type) {
+    case "blank":
+      return "Blank";
+    case "react-vite":
+      return "React Vite";
+    case "nextjs":
+      return "Next.js";
+    case "python":
+      return "Python";
+    default:
+      return type;
+  }
 }
 
 async function buildProjectHealth(
