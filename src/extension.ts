@@ -126,7 +126,6 @@ export async function activate(context: vscode.ExtensionContext) {
 
   const projectOpsCommands = registerProjectOpsCommands({
     projectStore,
-    settingsService,
     projectCreationService,
     statusFileService,
     projectContextService,

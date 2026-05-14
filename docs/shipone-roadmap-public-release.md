@@ -70,7 +70,7 @@ Objetivo: convertir el codigo actual en una base mantenible y segura antes de es
 - [x] Corregir encoding roto
 - [x] Revisar nombres inconsistentes
 - [x] Añadir comentarios importantes
-- [ ] Limpiar imports muertos
+- [x] Limpiar imports muertos
 - [x] Revisar async/await inseguros
 
 ## Fase 2 - Internationalization

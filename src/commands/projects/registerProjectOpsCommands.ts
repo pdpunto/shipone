@@ -3,7 +3,6 @@ import { t } from "../../localization";
 import { ProjectCreationService } from "../../services/projectCreationService";
 import { ProjectContextService } from "../../services/projectContextService";
 import { ProjectStoreService } from "../../services/projectStoreService";
-import { SettingsService } from "../../services/settingsService";
 import { StatusFileService } from "../../services/statusFileService";
 import { parseMvpTasks, pickProject } from "./projectOpsHelpers";
 
@@ -17,7 +16,6 @@ const COMMAND_GENERATE_AI_CONTEXT = "shipone.generateAiContext";
 
 export function registerProjectOpsCommands(options: {
   projectStore: ProjectStoreService;
-  settingsService: SettingsService;
   projectCreationService: ProjectCreationService;
   statusFileService: StatusFileService;
   projectContextService: ProjectContextService;
