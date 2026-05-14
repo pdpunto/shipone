@@ -1,4 +1,4 @@
-﻿# ShipOne - Roadmap Realista para Public Release
+# ShipOne - Roadmap Realista para Public Release
 
 Fecha base: 2026-05-14
 
