@@ -3,6 +3,7 @@ import { ProjectCreationService } from "../../services/projectCreationService";
 import { ProjectContextService } from "../../services/projectContextService";
 import { ProjectStoreService } from "../../services/projectStoreService";
 import { SettingsService } from "../../services/settingsService";
+import { StatusFileService } from "../../services/statusFileService";
 import {
   parseMvpTasks,
   pickProject,
@@ -20,11 +21,18 @@ export function registerProjectOpsCommands(options: {
   projectStore: ProjectStoreService;
   settingsService: SettingsService;
   projectCreationService: ProjectCreationService;
+  statusFileService: StatusFileService;
   projectContextService: ProjectContextService;
   treeRefresh: () => void;
 }): vscode.Disposable[] {
-  const { projectStore, settingsService, projectCreationService, projectContextService, treeRefresh } =
-    options;
+  const {
+    projectStore,
+    settingsService,
+    projectCreationService,
+    statusFileService,
+    projectContextService,
+    treeRefresh,
+  } = options;
 
   const editMvpChecklistCommand = vscode.commands.registerCommand(
     COMMAND_EDIT_MVP_CHECKLIST,
@@ -101,7 +109,7 @@ export function registerProjectOpsCommands(options: {
         return;
       }
 
-      await projectContextService.syncStatusFile(project);
+      await statusFileService.syncStatusFile(project);
       vscode.window.showInformationMessage(`STATUS.md sincronizado en ${project.name}.`);
     }
   );

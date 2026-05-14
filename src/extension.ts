@@ -6,6 +6,7 @@ import { registerProjectOpsCommands } from "./commands/projects/registerProjectO
 import { registerReviewCommands } from "./commands/projects/registerReviewCommands";
 import { ProjectCreationService } from "./services/projectCreationService";
 import { ProjectContextService } from "./services/projectContextService";
+import { StatusFileService } from "./services/statusFileService";
 import { ShipOneProjectsTreeDataProvider } from "./providers/shiponeProjectsTreeDataProvider";
 import { ProjectStoreService } from "./services/projectStoreService";
 import { SettingsService } from "./services/settingsService";
@@ -20,7 +21,12 @@ export async function activate(context: vscode.ExtensionContext) {
   const settingsService = new SettingsService();
   const projectStore = new ProjectStoreService(context);
   const projectContextService = new ProjectContextService();
-  const projectCreationService = new ProjectCreationService(projectStore, projectContextService);
+  const statusFileService = new StatusFileService();
+  const projectCreationService = new ProjectCreationService(
+    projectStore,
+    statusFileService,
+    projectContextService
+  );
 
   await projectStore.initialize();
 
@@ -89,6 +95,7 @@ export async function activate(context: vscode.ExtensionContext) {
     projectStore,
     settingsService,
     projectCreationService,
+    statusFileService,
     projectContextService,
     treeRefresh: () => treeDataProvider.refresh(),
   });

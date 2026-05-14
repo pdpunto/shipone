@@ -7,6 +7,7 @@ import { GitService } from "./gitService";
 import { GithubService } from "./githubService";
 import { TemplateService } from "./templateService";
 import { ProjectContextService } from "./projectContextService";
+import { StatusFileService } from "./statusFileService";
 
 const PROJECT_TYPES = [
   { label: "Blank", value: "blank" },
@@ -21,6 +22,7 @@ type GithubChoice = { create: boolean; visibility: "private" | "public" };
 export class ProjectCreationService {
   constructor(
     private readonly projectStore: ProjectStoreService,
+    private readonly statusFileService: StatusFileService,
     private readonly projectContextService: ProjectContextService,
     private readonly templateService = new TemplateService(),
     private readonly gitService = new GitService(),
@@ -121,7 +123,7 @@ export class ProjectCreationService {
     };
 
     if (settings.createStatusFileByDefault) {
-      await this.projectContextService.syncStatusFile(project);
+      await this.statusFileService.syncStatusFile(project);
     }
 
     await this.templateService.createSelectedTemplate(
@@ -206,7 +208,7 @@ export class ProjectCreationService {
     };
 
     if (settings.createStatusFileByDefault) {
-      await this.projectContextService.syncStatusFile(project);
+      await this.statusFileService.syncStatusFile(project);
     }
 
     await this.templateService.createSelectedTemplate(

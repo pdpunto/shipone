@@ -39,7 +39,7 @@ Objetivo: convertir el codigo actual en una base mantenible y segura antes de es
 - [x] Crear `ProjectContextService`
 - [x] Crear `GitService`
 - [x] Crear `GithubService`
-- [ ] Crear `StatusFileService`
+- [x] Crear `StatusFileService`
 - [ ] Crear `ProjectHealthService`
 - [ ] Crear `TodoScannerService`
 - [ ] Separar nodes de UI en archivos individuales
