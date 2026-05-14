@@ -7,6 +7,7 @@ import { SettingsService } from "./services/settingsService";
 
 const COMMAND_SHOW_WELCOME = "shipone.showWelcome";
 const COMMAND_CREATE_PROJECT = "shipone.createProject";
+const COMMAND_SEARCH_PROJECT = "shipone.searchProject";
 const COMMAND_OPEN_PROJECT = "shipone.openProject";
 const COMMAND_CHANGE_PROJECT_STATUS = "shipone.changeProjectStatus";
 const COMMAND_EDIT_NEXT_ACTION = "shipone.editNextAction";
@@ -41,6 +42,39 @@ export async function activate(context: vscode.ExtensionContext) {
       `ShipOne listo. Ruta base: ${settings.projectsRoot}`
     );
   });
+
+  const searchProjectCommand = vscode.commands.registerCommand(
+    COMMAND_SEARCH_PROJECT,
+    async () => {
+      const projects = await projectStore.loadProjects();
+
+      if (projects.length === 0) {
+        vscode.window.showInformationMessage("Todavía no hay proyectos.");
+        return;
+      }
+
+      const choice = await vscode.window.showQuickPick(
+        projects.map((project) => ({
+          label: project.favorite ? `★ ${project.name}` : project.name,
+          description: `${project.status} · ${project.type}`,
+          detail: buildProjectDetail(project),
+          project,
+        })),
+        {
+          title: "Buscar proyecto",
+          placeHolder: "Escribe nombre, tipo o etiqueta",
+          matchOnDescription: true,
+          matchOnDetail: true,
+        }
+      );
+
+      if (!choice) {
+        return;
+      }
+
+      await vscode.commands.executeCommand(COMMAND_OPEN_PROJECT, choice.project.id);
+    }
+  );
 
   const createProjectCommand = vscode.commands.registerCommand(
     COMMAND_CREATE_PROJECT,
@@ -187,6 +221,7 @@ export async function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     treeView,
     welcomeCommand,
+    searchProjectCommand,
     createProjectCommand,
     openProjectCommand,
     changeStatusCommand,
@@ -221,6 +256,24 @@ async function pickProject(projectStore: ProjectStoreService) {
   );
 
   return choice?.project;
+}
+
+function buildProjectDetail(project: {
+  path: string;
+  tags?: string[];
+  nextAction?: string | null;
+}): string {
+  const parts = [project.path];
+
+  if (project.tags && project.tags.length > 0) {
+    parts.push(`Etiquetas: ${project.tags.join(", ")}`);
+  }
+
+  if (project.nextAction) {
+    parts.push(`Siguiente: ${project.nextAction}`);
+  }
+
+  return parts.join(" · ");
 }
 
 export function deactivate() {}

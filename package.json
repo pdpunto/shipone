@@ -2,6 +2,12 @@
   "name": "shipone",
   "displayName": "ShipOne",
   "description": "ShipOne ayuda a crear y seguir proyectos desde VS Code",
+  "icon": "media/branding/icon-128.png",
+  "galleryBanner": {
+    "color": "#0f172a",
+    "theme": "dark",
+    "image": "media/branding/banner.png"
+  },
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.90.0"
@@ -11,7 +17,8 @@
   ],
   "activationEvents": [
     "onView:shipone.projectsView",
-    "onCommand:shipone.showWelcome"
+    "onCommand:shipone.showWelcome",
+    "onCommand:shipone.searchProject"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -23,6 +30,10 @@
       {
         "command": "shipone.createProject",
         "title": "ShipOne: Crear proyecto"
+      },
+      {
+        "command": "shipone.searchProject",
+        "title": "ShipOne: Buscar proyecto"
       },
       {
         "command": "shipone.openProject",
