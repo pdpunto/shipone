@@ -17,6 +17,7 @@ const STATUS_FILE_NAME = "STATUS.md";
 const execFileAsync = promisify(execFile);
 
 type GitChoice = { label: string; value: boolean };
+type GithubChoice = { create: boolean; visibility: "private" | "public" };
 
 export class ProjectCreationService {
   constructor(private readonly projectStore: ProjectStoreService) {}
@@ -48,6 +49,23 @@ export class ProjectCreationService {
       return undefined;
     }
 
+    let githubChoice: GithubChoice | undefined;
+    if (gitChoice.value) {
+      const githubReady = await this.isGithubAuthenticated();
+
+      if (githubReady) {
+        githubChoice = await this.pickGithubChoice(settings.defaultVisibility);
+
+        if (githubChoice === undefined) {
+          return undefined;
+        }
+      } else {
+        vscode.window.showWarningMessage(
+          "GitHub no está autenticado. Se omitirá la creación del repo."
+        );
+      }
+    }
+
     const folderName = sanitizeFolderName(name);
     const folderUri = vscode.Uri.joinPath(vscode.Uri.file(settings.projectsRoot), folderName);
     const projectExists = await this.pathExists(folderUri);
@@ -60,10 +78,33 @@ export class ProjectCreationService {
     await this.projectStore.createProjectFolder(folderUri);
     await this.writeStatusFile(folderUri, name, description);
 
-    const gitInitialized = gitChoice.value ? await this.tryInitializeGit(folderUri) : false;
+    let gitInitialized = false;
+    if (gitChoice.value) {
+      gitInitialized = await this.tryInitializeGit(folderUri);
 
-    if (gitChoice.value && !gitInitialized) {
-      vscode.window.showWarningMessage("No se pudo inicializar Git, pero el proyecto fue creado.");
+      if (!gitInitialized) {
+        vscode.window.showWarningMessage(
+          "No se pudo inicializar Git, pero el proyecto fue creado."
+        );
+      } else {
+        const committed = await this.tryCreateInitialCommit(folderUri);
+        if (!committed) {
+          vscode.window.showWarningMessage(
+            "Git se inicializó, pero no se pudo crear el commit inicial."
+          );
+        }
+      }
+    }
+
+    let repoUrl: string | null = null;
+    if (gitInitialized && githubChoice?.create) {
+      repoUrl = await this.tryCreateGithubRepo(folderUri, folderName, githubChoice.visibility);
+
+      if (!repoUrl) {
+        vscode.window.showWarningMessage(
+          "No se pudo crear el repo de GitHub, pero el proyecto local sí fue creado."
+        );
+      }
     }
 
     const project: ProjectMetadata = {
@@ -73,7 +114,7 @@ export class ProjectCreationService {
       type,
       status: "active" as ProjectStatus,
       path: folderUri.fsPath,
-      repoUrl: null,
+      repoUrl,
       createdAt: new Date().toISOString(),
       lastOpenedAt: new Date().toISOString(),
       finishedAt: null,
@@ -103,14 +144,55 @@ export class ProjectCreationService {
   private async pickGitChoice(): Promise<GitChoice | undefined> {
     return vscode.window.showQuickPick<GitChoice>(
       [
-        { label: "Si", value: true },
+        { label: "Sí", value: true },
         { label: "No", value: false },
       ],
       {
         title: "Git local",
-        placeHolder: "Quieres inicializar Git en este proyecto?",
+        placeHolder: "¿Quieres inicializar Git en este proyecto?",
       }
     );
+  }
+
+  private async pickGithubChoice(
+    defaultVisibility: "private" | "public"
+  ): Promise<GithubChoice | undefined> {
+    const createChoice = await vscode.window.showQuickPick(
+      [
+        { label: "Sí", value: true },
+        { label: "No", value: false },
+      ],
+      {
+        title: "GitHub",
+        placeHolder: "¿Quieres crear un repo de GitHub?",
+      }
+    );
+
+    if (!createChoice?.value) {
+      return { create: false, visibility: "private" };
+    }
+
+    const visibilityOptions =
+      defaultVisibility === "private"
+        ? [
+            { label: "Privado", value: "private" as const },
+            { label: "Público", value: "public" as const },
+          ]
+        : [
+            { label: "Público", value: "public" as const },
+            { label: "Privado", value: "private" as const },
+          ];
+
+    const visibility = await vscode.window.showQuickPick(visibilityOptions, {
+      title: "Visibilidad",
+      placeHolder: "¿Privado o público?",
+    });
+
+    if (!visibility) {
+      return undefined;
+    }
+
+    return { create: true, visibility: visibility.value };
   }
 
   private async pathExists(uri: vscode.Uri): Promise<boolean> {
@@ -160,6 +242,63 @@ export class ProjectCreationService {
   private async tryInitializeGit(folderUri: vscode.Uri): Promise<boolean> {
     try {
       await execFileAsync("git", ["init"], { cwd: folderUri.fsPath });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  private async tryCreateInitialCommit(folderUri: vscode.Uri): Promise<boolean> {
+    try {
+      await execFileAsync("git", ["add", "."], { cwd: folderUri.fsPath });
+      await execFileAsync("git", ["commit", "-m", "chore: initial commit"], {
+        cwd: folderUri.fsPath,
+      });
+      await execFileAsync("git", ["branch", "-M", "main"], { cwd: folderUri.fsPath });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  private async tryCreateGithubRepo(
+    folderUri: vscode.Uri,
+    repoName: string,
+    visibility: "private" | "public"
+  ): Promise<string | null> {
+    try {
+      await execFileAsync(
+        "gh",
+        [
+          "repo",
+          "create",
+          repoName,
+          visibility === "private" ? "--private" : "--public",
+          "--source",
+          ".",
+          "--remote",
+          "origin",
+          "--push",
+          "--confirm",
+        ],
+        { cwd: folderUri.fsPath }
+      );
+
+      const { stdout } = await execFileAsync(
+        "gh",
+        ["repo", "view", "--json", "url", "--jq", ".url"],
+        { cwd: folderUri.fsPath }
+      );
+
+      return stdout.trim() || null;
+    } catch {
+      return null;
+    }
+  }
+
+  private async isGithubAuthenticated(): Promise<boolean> {
+    try {
+      await execFileAsync("gh", ["auth", "status", "-h", "github.com"]);
       return true;
     } catch {
       return false;
