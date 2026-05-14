@@ -10,7 +10,7 @@ export class SettingsService {
     return {
       projectsRoot: config.get<string>("projectsRoot", "C:\\dev\\proyectos"),
       defaultVisibility: config.get<"private" | "public">("defaultVisibility", "private"),
-      defaultProjectType: config.get<"blank" | "react-vite" | "nextjs" | "python">(
+      defaultProjectType: config.get<"blank" | "react-vite" | "nextjs" | "python" | "node-api">(
         "defaultProjectType",
         "blank"
       ),

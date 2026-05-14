@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { randomUUID } from "crypto";
 import { execFile } from "child_process";
+import { dirname } from "path";
 import { promisify } from "util";
 import { ProjectMetadata, ProjectStatus } from "../models/project";
 import { ShipOneSettings } from "../models/settings";
@@ -106,6 +107,7 @@ export class ProjectCreationService {
 
     await this.projectStore.createProjectFolder(folderUri);
     await this.writeStatusFile(folderUri, name, description);
+    await this.createSelectedTemplate(folderUri, name, description, type);
 
     let gitInitialized = false;
     if (gitChoice.value) {
@@ -164,7 +166,9 @@ export class ProjectCreationService {
     return project;
   }
 
-  private async pickProjectType(defaultProjectType: ShipOneSettings["defaultProjectType"]): Promise<string | undefined> {
+  private async pickProjectType(
+    defaultProjectType: ShipOneSettings["defaultProjectType"]
+  ): Promise<ShipOneSettings["defaultProjectType"] | undefined> {
     const choices = PROJECT_TYPES.map((item) => ({
       ...item,
       picked: item.value === defaultProjectType,
@@ -175,7 +179,7 @@ export class ProjectCreationService {
       placeHolder: "Elige un starter",
     });
 
-    return choice?.value;
+    return choice?.value as ShipOneSettings["defaultProjectType"] | undefined;
   }
 
   private async pickGitChoiceWithDefault(
@@ -225,8 +229,8 @@ export class ProjectCreationService {
   ): Promise<GithubChoice | undefined> {
     const createChoice = await vscode.window.showQuickPick(
       [
-        { label: "Sí", value: true },
-        { label: "No", value: false },
+        { label: "Sí", value: true, picked: defaultCreateGithubRepoByDefault },
+        { label: "No", value: false, picked: !defaultCreateGithubRepoByDefault },
       ],
       {
         title: "GitHub",
@@ -242,16 +246,16 @@ export class ProjectCreationService {
       defaultVisibility === "private"
         ? [
             { label: "Privado", value: "private" as const },
-            { label: "Público", value: "public" as const },
+            { label: "P?blico", value: "public" as const },
           ]
         : [
-            { label: "Público", value: "public" as const },
+            { label: "P?blico", value: "public" as const },
             { label: "Privado", value: "private" as const },
           ];
 
     const visibility = await vscode.window.showQuickPick(visibilityOptions, {
       title: "Visibilidad",
-      placeHolder: "¿Privado o público?",
+      placeHolder: "?Privado o p?blico?",
     });
 
     if (!visibility) {
@@ -303,6 +307,324 @@ export class ProjectCreationService {
     const statusFileUri = vscode.Uri.joinPath(folderUri, STATUS_FILE_NAME);
     const bytes = new TextEncoder().encode(content);
     await vscode.workspace.fs.writeFile(statusFileUri, bytes);
+  }
+
+  private async createSelectedTemplate(
+    folderUri: vscode.Uri,
+    projectName: string,
+    description: string,
+    type: ShipOneSettings["defaultProjectType"]
+  ): Promise<void> {
+    const templates = this.getTemplateFiles(folderUri, projectName, description, type);
+
+    for (const file of templates) {
+      await this.writeFileIfMissing(file.uri, file.content);
+    }
+  }
+
+  private getTemplateFiles(
+    folderUri: vscode.Uri,
+    projectName: string,
+    description: string,
+    type: ShipOneSettings["defaultProjectType"]
+  ): Array<{ uri: vscode.Uri; content: string }> {
+    const gitignore = [
+      "node_modules/",
+      ".venv/",
+      "__pycache__/",
+      ".DS_Store",
+      ".env",
+      "",
+    ].join("\n");
+
+    if (type === "react-vite") {
+      return [
+        {
+          uri: vscode.Uri.joinPath(folderUri, "package.json"),
+          content: this.buildReactVitePackageJson(projectName),
+        },
+        {
+          uri: vscode.Uri.joinPath(folderUri, "index.html"),
+          content: this.buildReactViteIndexHtml(projectName),
+        },
+        {
+          uri: vscode.Uri.joinPath(folderUri, "src", "main.tsx"),
+          content: this.buildReactViteMainTsx(projectName),
+        },
+        {
+          uri: vscode.Uri.joinPath(folderUri, "src", "style.css"),
+          content: this.buildReactViteStyleCss(),
+        },
+        { uri: vscode.Uri.joinPath(folderUri, ".gitignore"), content: gitignore },
+      ];
+    }
+
+    if (type === "python") {
+      return [
+        {
+          uri: vscode.Uri.joinPath(folderUri, "main.py"),
+          content: this.buildPythonMainPy(projectName, description),
+        },
+        {
+          uri: vscode.Uri.joinPath(folderUri, "requirements.txt"),
+          content: "# Requisitos del proyecto\n",
+        },
+        { uri: vscode.Uri.joinPath(folderUri, ".gitignore"), content: gitignore },
+      ];
+    }
+
+    if (type === "nextjs") {
+      return [
+        {
+          uri: vscode.Uri.joinPath(folderUri, "package.json"),
+          content: this.buildNextJsPackageJson(projectName),
+        },
+        {
+          uri: vscode.Uri.joinPath(folderUri, "app", "layout.tsx"),
+          content: this.buildNextJsLayoutTsx(projectName, description),
+        },
+        {
+          uri: vscode.Uri.joinPath(folderUri, "app", "page.tsx"),
+          content: this.buildNextJsPageTsx(projectName, description),
+        },
+        { uri: vscode.Uri.joinPath(folderUri, ".gitignore"), content: gitignore },
+      ];
+    }
+
+    if (type === "node-api") {
+      return [
+        {
+          uri: vscode.Uri.joinPath(folderUri, "package.json"),
+          content: this.buildNodeApiPackageJson(projectName),
+        },
+        {
+          uri: vscode.Uri.joinPath(folderUri, "src", "index.ts"),
+          content: this.buildNodeApiIndexTs(projectName),
+        },
+        {
+          uri: vscode.Uri.joinPath(folderUri, "tsconfig.json"),
+          content: this.buildNodeApiTsconfig(),
+        },
+        { uri: vscode.Uri.joinPath(folderUri, ".gitignore"), content: gitignore },
+      ];
+    }
+
+    if (type === "blank") {
+      return [
+        {
+          uri: vscode.Uri.joinPath(folderUri, "README.md"),
+          content: this.buildBlankReadme(projectName, description),
+        },
+        { uri: vscode.Uri.joinPath(folderUri, ".gitignore"), content: gitignore },
+      ];
+    }
+
+    return [
+      {
+        uri: vscode.Uri.joinPath(folderUri, "README.md"),
+        content: this.buildBlankReadme(projectName, description),
+      },
+      { uri: vscode.Uri.joinPath(folderUri, ".gitignore"), content: gitignore },
+    ];
+  }
+
+  private async writeFileIfMissing(uri: vscode.Uri, content: string): Promise<void> {
+    if (await this.pathExists(uri)) {
+      return;
+    }
+
+    await vscode.workspace.fs.createDirectory(vscode.Uri.file(dirname(uri.fsPath)));
+    await vscode.workspace.fs.writeFile(uri, new TextEncoder().encode(content));
+  }
+
+  private buildBlankReadme(projectName: string, description: string): string {
+    return [
+      `# ${projectName}`,
+      "",
+      description || "Proyecto creado con ShipOne.",
+      "",
+      "## Proximo paso",
+      "- Define el primer objetivo.",
+      "",
+    ].join("\n");
+  }
+
+  private buildReactVitePackageJson(projectName: string): string {
+    return JSON.stringify(
+      {
+        name: sanitizePackageName(projectName),
+        private: true,
+        version: "0.0.0",
+        scripts: {
+          dev: "vite",
+          build: "vite build",
+          preview: "vite preview",
+        },
+      },
+      null,
+      2
+    );
+  }
+
+  private buildReactViteIndexHtml(projectName: string): string {
+    return `<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>${projectName}</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+`;
+  }
+
+  private buildReactViteMainTsx(projectName: string): string {
+    return `import "./style.css";
+
+const root = document.getElementById("root");
+
+if (root) {
+  root.innerHTML = \`
+    <main class="app">
+      <h1>${projectName}</h1>
+      <p>Proyecto creado con ShipOne.</p>
+    </main>
+  \`;
+}
+`;
+  }
+
+  private buildReactViteStyleCss(): string {
+    return `body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+}
+
+.app {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+`;
+  }
+
+  private buildNextJsPackageJson(projectName: string): string {
+    return JSON.stringify(
+      {
+        name: sanitizePackageName(projectName),
+        private: true,
+        version: "0.0.0",
+        scripts: {
+          dev: "next dev",
+          build: "next build",
+          start: "next start",
+        },
+      },
+      null,
+      2
+    );
+  }
+
+  private buildNextJsLayoutTsx(projectName: string, description: string): string {
+    return `export const metadata = {
+  title: "${projectName}",
+  description: "${escapeForTsx(description || "Proyecto creado con ShipOne.")}",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="es">
+      <body>{children}</body>
+    </html>
+  );
+}
+`;
+  }
+
+  private buildNextJsPageTsx(projectName: string, description: string): string {
+    return `export default function Page() {
+  return (
+    <main>
+      <h1>${projectName}</h1>
+      <p>${escapeForTsx(description || "Proyecto creado con ShipOne.")}</p>
+    </main>
+  );
+}
+`;
+  }
+
+  private buildPythonMainPy(projectName: string, description: string): string {
+    return [
+      '"""',
+      projectName,
+      description || "Proyecto creado con ShipOne.",
+      '"""',
+      "",
+      'def main() -> None:',
+      `    print("${escapeForPython(projectName)}")`,
+      "",
+      "",
+      'if __name__ == "__main__":',
+      "    main()",
+      "",
+    ].join("\n");
+  }
+
+  private buildNodeApiPackageJson(projectName: string): string {
+    return JSON.stringify(
+      {
+        name: sanitizePackageName(projectName),
+        private: true,
+        version: "0.0.0",
+        scripts: {
+          dev: "node --watch src/index.ts",
+          start: "node src/index.ts",
+        },
+      },
+      null,
+      2
+    );
+  }
+
+  private buildNodeApiIndexTs(projectName: string): string {
+    return `import http from "http";
+
+const server = http.createServer((_, res) => {
+  res.writeHead(200, { "Content-Type": "application/json" });
+  res.end(JSON.stringify({ project: "${escapeForTsx(projectName)}", status: "ok" }));
+});
+
+server.listen(3000, () => {
+  console.log("ShipOne API running on http://localhost:3000");
+});
+`;
+  }
+
+  private buildNodeApiTsconfig(): string {
+    return JSON.stringify(
+      {
+        compilerOptions: {
+          target: "ES2022",
+          module: "NodeNext",
+          moduleResolution: "NodeNext",
+          strict: true,
+          outDir: "dist",
+          rootDir: "src",
+        },
+        include: ["src"],
+      },
+      null,
+      2
+    );
   }
 
   private async tryInitializeGit(folderUri: vscode.Uri): Promise<boolean> {
@@ -395,4 +717,21 @@ function validateProjectName(value: string): string | undefined {
 
 function sanitizeFolderName(value: string): string {
   return value.trim().replace(/[^a-zA-Z0-9 _.-]/g, "-").replace(/\s+/g, "-");
+}
+
+function sanitizePackageName(value: string): string {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9-]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "") || "shipone-project";
+}
+
+function escapeForTsx(value: string): string {
+  return value.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\r?\n/g, " ");
+}
+
+function escapeForPython(value: string): string {
+  return value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 }

@@ -224,7 +224,8 @@
             "blank",
             "react-vite",
             "nextjs",
-            "python"
+            "python",
+            "node-api"
           ],
           "default": "blank",
           "description": "Tipo por defecto para nuevos proyectos."

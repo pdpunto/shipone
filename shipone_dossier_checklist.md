@@ -282,7 +282,7 @@ Goal: release a useful first version.
 - [x] Ask GitHub repo yes/no
 - [x] Ask repo visibility if GitHub yes
 - [x] Create folder
-- [ ] Generate selected template
+- [x] Generate selected template
 - [x] Initialize Git if selected
 - [x] Create first commit if Git selected
 - [x] Create GitHub repo if selected
@@ -291,15 +291,15 @@ Goal: release a useful first version.
 
 ### Templates
 
-- [ ] Add Blank template
-- [ ] Add React Vite template
-- [ ] Add Next.js template
-- [ ] Add Python template
-- [ ] Add Node API template
-- [ ] Keep templates minimal
-- [ ] Avoid personal files by default
-- [ ] Optional: create README
-- [ ] Optional: create STATUS.md
+- [x] Add Blank template
+- [x] Add React Vite template
+- [x] Add Next.js template
+- [x] Add Python template
+- [x] Add Node API template
+- [x] Keep templates minimal
+- [x] Avoid personal files by default
+- [x] Optional: create README
+- [x] Optional: create STATUS.md
 
 ### STATUS.md
 
