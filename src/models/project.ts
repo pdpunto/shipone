@@ -21,4 +21,6 @@ export interface ProjectMetadata {
   favorite?: boolean;
   tags?: string[];
   mvpTasks?: MvpTask[];
+  pauseReason?: string | null;
+  pauseNote?: string | null;
 }

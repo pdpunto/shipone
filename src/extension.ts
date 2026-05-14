@@ -12,6 +12,7 @@ const COMMAND_OPEN_PROJECT_QUICK_PICK = "shipone.openProjectQuickPick";
 const COMMAND_EDIT_MVP_CHECKLIST = "shipone.editMvpChecklist";
 const COMMAND_MARK_MVP_ITEM_DONE = "shipone.markMvpItemDone";
 const COMMAND_SYNC_STATUS_FILE = "shipone.syncStatusFile";
+const COMMAND_FREEZE_PROJECT = "shipone.freezeProject";
 const COMMAND_SEARCH_PROJECT = "shipone.searchProject";
 const COMMAND_OPEN_PROJECT = "shipone.openProject";
 const COMMAND_CHANGE_PROJECT_STATUS = "shipone.changeProjectStatus";
@@ -240,6 +241,58 @@ export async function activate(context: vscode.ExtensionContext) {
     }
   );
 
+  const freezeProjectCommand = vscode.commands.registerCommand(
+    COMMAND_FREEZE_PROJECT,
+    async () => {
+      const project = await pickProject(projectStore);
+
+      if (!project) {
+        return;
+      }
+
+      const reason = await vscode.window.showInputBox({
+        title: "Congelar proyecto",
+        prompt: "Motivo de la pausa",
+        placeHolder: "Esperando feedback",
+      });
+
+      if (reason === undefined || !reason.trim()) {
+        return;
+      }
+
+      const nextAction = await vscode.window.showInputBox({
+        title: "Siguiente accion",
+        prompt: "Que haras al volver",
+        placeHolder: "Revisar login",
+        value: project.nextAction ?? "",
+      });
+
+      if (nextAction === undefined) {
+        return;
+      }
+
+      const note = await vscode.window.showInputBox({
+        title: "Nota de pausa",
+        prompt: "Nota corta para recordar contexto",
+        placeHolder: "Bloqueado por dependencias externas",
+        value: project.pauseNote ?? "",
+      });
+
+      if (note === undefined) {
+        return;
+      }
+
+      await projectStore.freezeProject(
+        project.id,
+        reason.trim(),
+        nextAction.trim() ? nextAction.trim() : null,
+        note.trim()
+      );
+      treeDataProvider.refresh();
+      vscode.window.showInformationMessage(`Proyecto congelado: ${project.name}.`);
+    }
+  );
+
   const openProjectCommand = vscode.commands.registerCommand(
     COMMAND_OPEN_PROJECT,
     async (projectId: string) => {
@@ -375,6 +428,7 @@ export async function activate(context: vscode.ExtensionContext) {
     editMvpChecklistCommand,
     markMvpItemDoneCommand,
     syncStatusFileCommand,
+    freezeProjectCommand,
     searchProjectCommand,
     createProjectCommand,
     openProjectCommand,

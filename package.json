@@ -48,6 +48,10 @@
         "title": "ShipOne: Sincronizar STATUS.md"
       },
       {
+        "command": "shipone.freezeProject",
+        "title": "ShipOne: Congelar proyecto"
+      },
+      {
         "command": "shipone.toggleFavorite",
         "title": "ShipOne: Alternar favorito"
       },
@@ -109,6 +113,11 @@
         },
         {
           "command": "shipone.syncStatusFile",
+          "when": "view == shipone.projectsView",
+          "group": "navigation"
+        },
+        {
+          "command": "shipone.freezeProject",
           "when": "view == shipone.projectsView",
           "group": "navigation"
         },

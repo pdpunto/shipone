@@ -9,7 +9,6 @@ type ShipOneTreeNode = MetricsNode | MetricItemNode | GroupNode | ProjectNode | 
 
 type ProjectHealth = {
   label: string;
-  icon: string;
   issues: string[];
 };
 
@@ -80,7 +79,12 @@ export class ShipOneProjectsTreeDataProvider
             settings.staleWarningDays
           );
 
-          return new ProjectNode(project, health, settings.inactiveWarningDays, settings.staleWarningDays);
+          return new ProjectNode(
+            project,
+            health,
+            settings.inactiveWarningDays,
+            settings.staleWarningDays
+          );
         })
       );
     }
@@ -134,9 +138,16 @@ class ProjectNode extends vscode.TreeItem {
     );
     const mvpProgress = getMvpProgress(project.mvpTasks);
 
-    this.description = [health.label, project.nextAction ?? undefined, warning ?? undefined, mvpProgress ?? undefined]
+    this.description = [
+      health.label,
+      project.pauseReason ? `pause: ${project.pauseReason}` : undefined,
+      project.nextAction ?? undefined,
+      warning ?? undefined,
+      mvpProgress ?? undefined,
+    ]
       .filter(Boolean)
       .join(" · ");
+
     this.tooltip = new vscode.MarkdownString(
       [
         `**${project.name}**`,
@@ -145,6 +156,8 @@ class ProjectNode extends vscode.TreeItem {
         `Salud: ${health.label}`,
         `Ruta: ${project.path}`,
         `Ultima apertura: ${project.lastOpenedAt ?? "sin registro"}`,
+        project.pauseReason ? `Pausa: ${project.pauseReason}` : "",
+        project.pauseNote ? `Nota: ${project.pauseNote}` : "",
         health.issues.length > 0 ? `Problemas: ${health.issues.join(", ")}` : "",
         mvpProgress ? `MVP: ${mvpProgress}` : "",
         warning ? `Aviso: ${warning}` : "",
@@ -152,6 +165,7 @@ class ProjectNode extends vscode.TreeItem {
         .filter(Boolean)
         .join("\n")
     );
+
     this.contextValue = "shipone.project";
     this.iconPath = new vscode.ThemeIcon(project.favorite ? "star-full" : getStatusIcon(project.status));
     this.command = {
@@ -264,14 +278,14 @@ async function buildProjectHealth(
   }
 
   if (issues.length === 0) {
-    return { label: "healthy", icon: "check", issues };
+    return { label: "healthy", issues };
   }
 
   if (issues.length <= 2) {
-    return { label: "warning", icon: "warning", issues };
+    return { label: "warning", issues };
   }
 
-  return { label: "bad", icon: "error", issues };
+  return { label: "bad", issues };
 }
 
 async function hasRecentGitCommit(projectPath: string): Promise<boolean> {

@@ -442,12 +442,12 @@ Goal: make ShipOne more than a launcher.
 
 ### Anti-abandonment
 
-- [ ] Add command: freeze project
-- [ ] Ask for reason when pausing
-- [ ] Ask for next action before pausing
-- [ ] Save pause note
+- [x] Add command: freeze project
+- [x] Ask for reason when pausing
+- [x] Ask for next action before pausing
+- [x] Save pause note
 - [ ] Add command: resume paused project
-- [ ] Show pause reason
+- [x] Show pause reason
 
 ### Weekly review
 

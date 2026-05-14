@@ -143,6 +143,27 @@ export class ProjectStoreService {
     await this.saveProjects(projects);
   }
 
+  async freezeProject(
+    projectId: string,
+    reason: string,
+    nextAction: string | null,
+    note: string
+  ): Promise<void> {
+    const projects = await this.loadProjects();
+    const target = projects.find((project) => project.id === projectId);
+
+    if (!target) {
+      throw new Error("No se encontrÃ³ el proyecto.");
+    }
+
+    target.status = "paused";
+    target.pauseReason = reason;
+    target.pauseNote = note;
+    target.nextAction = nextAction;
+    target.finishedAt = null;
+    await this.saveProjects(projects);
+  }
+
   async markProjectOpened(projectId: string): Promise<void> {
     const projects = await this.loadProjects();
     const target = projects.find((project) => project.id === projectId);
@@ -231,7 +252,7 @@ export class ProjectStoreService {
   }
 }
 
-function isProjectMetadata(value: unknown): value is ProjectMetadata {
+  function isProjectMetadata(value: unknown): value is ProjectMetadata {
   if (typeof value !== "object" || value === null) {
     return false;
   }
