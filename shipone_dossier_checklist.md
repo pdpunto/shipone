@@ -356,11 +356,11 @@ Goal: make the MVP feel reliable.
 
 ### UX polish
 
-- [ ] Add empty states
-- [ ] Add helpful messages
+- [x] Add empty states
+- [x] Add helpful messages
 - [ ] Add command palette names
 - [ ] Add icons
-- [ ] Add tooltips
+- [x] Add tooltips
 - [ ] Improve error messages
 - [ ] Add loading states
 - [ ] Add success notifications

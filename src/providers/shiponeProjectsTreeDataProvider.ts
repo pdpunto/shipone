@@ -66,6 +66,15 @@ export class ShipOneProjectsTreeDataProvider
       }
 
       const settings = this.settingsService.getSettings();
+      const projects = await this.projectStore.loadProjects();
+
+      if (projects.length === 0) {
+        return [
+          new EmptyStateNode("Sin proyectos todavia", "Crear proyecto"),
+          new EmptyStateNode("Usa Crear proyecto para empezar"),
+        ];
+      }
+
       const visibleGroups = settings.showFinishedProjects
         ? GROUPS
         : GROUPS.filter((group) => group.status !== "finished");
@@ -95,7 +104,7 @@ export class ShipOneProjectsTreeDataProvider
       const settings = this.settingsService.getSettings();
 
       if (projects.length === 0) {
-        return [new EmptyStateNode("Sin proyectos todavia")];
+        return [new EmptyStateNode("Sin proyectos todavia", "Crear proyecto")];
       }
 
       return Promise.all(
@@ -129,6 +138,13 @@ class GroupNode extends vscode.TreeItem {
     super(label, vscode.TreeItemCollapsibleState.Collapsed);
     this.iconPath = new vscode.ThemeIcon(iconName);
     this.contextValue = "shipone.group";
+    this.tooltip = new vscode.MarkdownString(
+      [
+        `**${label}**`,
+        "",
+        `Abre el grupo de proyectos ${label.toLowerCase()}.`,
+      ].join("\n")
+    );
   }
 }
 
@@ -234,10 +250,21 @@ class ProjectNode extends vscode.TreeItem {
 }
 
 class EmptyStateNode extends vscode.TreeItem {
-  constructor(label: string) {
+  constructor(label: string, actionLabel?: string) {
     super(label, vscode.TreeItemCollapsibleState.None);
     this.contextValue = "shipone.emptyState";
     this.iconPath = new vscode.ThemeIcon("info");
+    this.tooltip = new vscode.MarkdownString(
+      actionLabel
+        ? `**${label}**\n\nUsa ${actionLabel} para empezar.`
+        : `**${label}**`
+    );
+    if (actionLabel) {
+      this.command = {
+        command: "shipone.createProject",
+        title: actionLabel,
+      };
+    }
   }
 }
 
