@@ -92,8 +92,8 @@ Objetivo: hacer que ShipOne funcione automaticamante en el idioma configurado po
 - [x] Traducir `displayName`
 - [x] Traducir `description`
 - [x] Traducir comandos
-- [ ] Traducir settings
-- [ ] Traducir descriptions
+- [x] Traducir settings
+- [x] Traducir descriptions
 - [ ] Traducir titles
 - [ ] Traducir menues contextuales
 

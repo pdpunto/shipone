@@ -351,17 +351,17 @@
       "shipone": [
         {
           "id": "shipone.projectsView",
-          "name": "ShipOne"
+          "name": "%view.projects.name%"
         }
       ]
     },
     "configuration": {
-      "title": "ShipOne",
+      "title": "%configuration.title%",
       "properties": {
         "shipone.projectsRoot": {
           "type": "string",
           "default": "C:\\dev\\proyectos",
-          "description": "Ruta base donde ShipOne crea y busca proyectos."
+          "description": "%configuration.projectsRoot.description%"
         },
         "shipone.defaultVisibility": {
           "type": "string",
@@ -370,7 +370,7 @@
             "public"
           ],
           "default": "private",
-          "description": "Visibilidad por defecto para nuevos repositorios GitHub."
+          "description": "%configuration.defaultVisibility.description%"
         },
         "shipone.defaultProjectType": {
           "type": "string",
@@ -382,27 +382,27 @@
             "node-api"
           ],
           "default": "blank",
-          "description": "Tipo por defecto para nuevos proyectos."
+          "description": "%configuration.defaultProjectType.description%"
         },
         "shipone.createGitRepoByDefault": {
           "type": "boolean",
           "default": true,
-          "description": "Preseleccionar Git como opcion por defecto al crear proyectos."
+          "description": "%configuration.createGitRepoByDefault.description%"
         },
         "shipone.createGitHubRepoByDefault": {
           "type": "boolean",
           "default": true,
-          "description": "Preseleccionar la creacion de repo GitHub al crear proyectos."
+          "description": "%configuration.createGitHubRepoByDefault.description%"
         },
         "shipone.enforceOneActiveProject": {
           "type": "boolean",
           "default": true,
-          "description": "Mantener solo un proyecto Active a la vez."
+          "description": "%configuration.enforceOneActiveProject.description%"
         },
         "shipone.createStatusFileByDefault": {
           "type": "boolean",
           "default": true,
-          "description": "Crear STATUS.md al crear un proyecto por defecto."
+          "description": "%configuration.createStatusFileByDefault.description%"
         },
         "shipone.defaultPackageManager": {
           "type": "string",
@@ -412,34 +412,34 @@
             "yarn"
           ],
           "default": "npm",
-          "description": "Package manager por defecto para proyectos nuevos."
+          "description": "%configuration.defaultPackageManager.description%"
         },
         "shipone.customTemplateFolder": {
           "type": "string",
           "default": "",
-          "description": "Carpeta opcional con plantillas personalizadas."
+          "description": "%configuration.customTemplateFolder.description%"
         },
         "shipone.openAfterCreate": {
           "type": "boolean",
           "default": true,
-          "description": "Abrir el proyecto recien creado al terminar."
+          "description": "%configuration.openAfterCreate.description%"
         },
         "shipone.inactiveWarningDays": {
           "type": "number",
           "default": 7,
           "minimum": 1,
-          "description": "Dias sin abrir antes de mostrar aviso de inactividad."
+          "description": "%configuration.inactiveWarningDays.description%"
         },
         "shipone.staleWarningDays": {
           "type": "number",
           "default": 30,
           "minimum": 1,
-          "description": "Dias sin abrir antes de mostrar aviso fuerte."
+          "description": "%configuration.staleWarningDays.description%"
         },
         "shipone.showFinishedProjects": {
           "type": "boolean",
           "default": true,
-          "description": "Mostrar o esconder la seccion Finished en la vista."
+          "description": "%configuration.showFinishedProjects.description%"
         }
       }
     }

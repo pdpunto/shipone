@@ -29,5 +29,20 @@
   "command.editNextAction.title": "ShipOne: Editar next action",
   "command.clearNextAction.title": "ShipOne: Limpiar next action",
   "command.openStatusFile.title": "ShipOne: Abrir STATUS.md",
-  "command.refreshProjects.title": "ShipOne: Refrescar"
+  "command.refreshProjects.title": "ShipOne: Refrescar",
+  "view.projects.name": "ShipOne",
+  "configuration.title": "ShipOne",
+  "configuration.projectsRoot.description": "Carpeta base donde ShipOne crea y busca proyectos.",
+  "configuration.defaultVisibility.description": "Visibilidad por defecto para nuevos repositorios GitHub.",
+  "configuration.defaultProjectType.description": "Tipo por defecto para nuevos proyectos.",
+  "configuration.createGitRepoByDefault.description": "Preseleccionar Git como opcion por defecto al crear proyectos.",
+  "configuration.createGitHubRepoByDefault.description": "Preseleccionar la creacion de repo GitHub al crear proyectos.",
+  "configuration.enforceOneActiveProject.description": "Mantener solo un proyecto Active a la vez.",
+  "configuration.createStatusFileByDefault.description": "Crear STATUS.md por defecto al crear un proyecto.",
+  "configuration.defaultPackageManager.description": "Package manager por defecto para proyectos nuevos.",
+  "configuration.customTemplateFolder.description": "Carpeta opcional con plantillas personalizadas.",
+  "configuration.openAfterCreate.description": "Abrir el proyecto recien creado al terminar.",
+  "configuration.inactiveWarningDays.description": "Dias sin abrir antes de mostrar aviso de inactividad.",
+  "configuration.staleWarningDays.description": "Dias sin abrir antes de mostrar aviso fuerte.",
+  "configuration.showFinishedProjects.description": "Mostrar o esconder la seccion Finished en la vista."
 }

@@ -29,5 +29,20 @@
   "command.editNextAction.title": "ShipOne: Edit next action",
   "command.clearNextAction.title": "ShipOne: Clear next action",
   "command.openStatusFile.title": "ShipOne: Open STATUS.md",
-  "command.refreshProjects.title": "ShipOne: Refresh"
+  "command.refreshProjects.title": "ShipOne: Refresh",
+  "view.projects.name": "ShipOne",
+  "configuration.title": "ShipOne",
+  "configuration.projectsRoot.description": "Base folder where ShipOne creates and finds projects.",
+  "configuration.defaultVisibility.description": "Default visibility for new GitHub repositories.",
+  "configuration.defaultProjectType.description": "Default type for new projects.",
+  "configuration.createGitRepoByDefault.description": "Preselect Git as the default choice when creating projects.",
+  "configuration.createGitHubRepoByDefault.description": "Preselect GitHub repository creation when creating projects.",
+  "configuration.enforceOneActiveProject.description": "Keep only one Active project at a time.",
+  "configuration.createStatusFileByDefault.description": "Create STATUS.md by default when creating a project.",
+  "configuration.defaultPackageManager.description": "Default package manager for new projects.",
+  "configuration.customTemplateFolder.description": "Optional folder with custom templates.",
+  "configuration.openAfterCreate.description": "Open the newly created project when finished.",
+  "configuration.inactiveWarningDays.description": "Days since last open before showing an inactivity warning.",
+  "configuration.staleWarningDays.description": "Days since last open before showing a strong warning.",
+  "configuration.showFinishedProjects.description": "Show or hide the Finished section in the view."
 }
