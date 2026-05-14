@@ -1,7 +1,7 @@
 ﻿{
   "name": "shipone",
   "displayName": "ShipOne",
-  "description": "VS Code extension created with PD Punto Dev Setup",
+  "description": "ShipOne ayuda a crear y seguir proyectos desde VS Code",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.90.0"
@@ -9,15 +9,54 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onView:shipone.projectsView",
+    "onCommand:shipone.showWelcome"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "shipone.helloWorld",
-        "title": "Hello World"
+        "command": "shipone.showWelcome",
+        "title": "ShipOne: Mostrar bienvenida"
+      },
+      {
+        "command": "shipone.refreshProjects",
+        "title": "ShipOne: Refrescar proyectos"
       }
-    ]
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "shipone.projectsView",
+          "name": "ShipOne"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "ShipOne",
+      "properties": {
+        "shipone.projectsRoot": {
+          "type": "string",
+          "default": "C:\\dev\\proyectos",
+          "description": "Ruta base donde ShipOne crea y busca proyectos."
+        },
+        "shipone.defaultVisibility": {
+          "type": "string",
+          "enum": [
+            "private",
+            "public"
+          ],
+          "default": "private",
+          "description": "Visibilidad por defecto para nuevos repositorios GitHub."
+        },
+        "shipone.openAfterCreate": {
+          "type": "boolean",
+          "default": true,
+          "description": "Abrir el proyecto recién creado al terminar."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

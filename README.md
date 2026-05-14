@@ -1,20 +1,23 @@
-﻿# ShipOne
+# ShipOne
 
-Extensión de VS Code creada con PD Punto Dev Setup.
+ShipOne es una extensión de VS Code para crear, organizar y seguir proyectos.
 
 ## Desarrollo
 
+```powershell
 npm install
 npm run compile
 npm run watch
+```
 
-Para probar:
-- abrir en VS Code
-- presionar F5
-- ejecutar comando Hello World
+## Probar
 
-## Estructura
+1. Abrir el proyecto en VS Code.
+2. Pulsar `F5`.
+3. Ejecutar el comando `ShipOne: Mostrar bienvenida`.
 
-src/extension.ts
-.vscode/launch.json
-.vscode/tasks.json
+## Configuración
+
+- `shipone.projectsRoot`
+- `shipone.defaultVisibility`
+- `shipone.openAfterCreate`

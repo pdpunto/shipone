@@ -1,11 +1,34 @@
-﻿import * as vscode from "vscode";
+import * as vscode from "vscode";
+import { ShipOneProjectsTreeDataProvider } from "./providers/shiponeProjectsTreeDataProvider";
+import { ProjectStoreService } from "./services/projectStoreService";
+import { SettingsService } from "./services/settingsService";
 
-export function activate(context: vscode.ExtensionContext) {
-  const disposable = vscode.commands.registerCommand("shipone.helloWorld", () => {
-    vscode.window.showInformationMessage("Hello from ShipOne!");
+const COMMAND_SHOW_WELCOME = "shipone.showWelcome";
+const COMMAND_REFRESH_PROJECTS = "shipone.refreshProjects";
+
+export async function activate(context: vscode.ExtensionContext) {
+  const settingsService = new SettingsService();
+  const projectStore = new ProjectStoreService(context);
+  await projectStore.initialize();
+  const treeDataProvider = new ShipOneProjectsTreeDataProvider(projectStore);
+
+  const treeView = vscode.window.createTreeView("shipone.projectsView", {
+    treeDataProvider,
   });
 
-  context.subscriptions.push(disposable);
+  const welcomeCommand = vscode.commands.registerCommand(COMMAND_SHOW_WELCOME, () => {
+    const settings = settingsService.getSettings();
+
+    vscode.window.showInformationMessage(
+      `ShipOne listo. Ruta base: ${settings.projectsRoot}`
+    );
+  });
+
+  const refreshCommand = vscode.commands.registerCommand(COMMAND_REFRESH_PROJECTS, () => {
+    treeDataProvider.refresh();
+  });
+
+  context.subscriptions.push(treeView, welcomeCommand, refreshCommand);
 }
 
 export function deactivate() {}
