@@ -160,7 +160,7 @@ export class ProjectStoreService {
 
     const task = target.mvpTasks?.find((item) => item.id === taskId);
     if (!task) {
-      throw new Error("No se encontrÃ³ la tarea.");
+      throw new Error("No se encontró la tarea.");
     }
 
     task.done = true;
