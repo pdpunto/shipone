@@ -513,7 +513,7 @@ Goal: add AI support without making AI required.
 
 ### AI preparation
 
-- [ ] Add optional AI context file
+- [x] Add optional AI context file
 - [ ] Add command: generate project summary
 - [ ] Add command: generate next action suggestions
 - [ ] Add command: generate MVP checklist

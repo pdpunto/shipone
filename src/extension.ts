@@ -18,6 +18,7 @@ const COMMAND_MARK_MVP_ITEM_DONE = "shipone.markMvpItemDone";
 const COMMAND_SYNC_STATUS_FILE = "shipone.syncStatusFile";
 const COMMAND_CONNECT_GITHUB = "shipone.connectGithub";
 const COMMAND_DETECT_BLOCKERS = "shipone.detectBlockers";
+const COMMAND_GENERATE_AI_CONTEXT = "shipone.generateAiContext";
 const COMMAND_SCAN_TODOS = "shipone.scanTodos";
 const COMMAND_FOCUS_MODE = "shipone.focusMode";
 const COMMAND_EXIT_FOCUS_MODE = "shipone.exitFocusMode";
@@ -387,6 +388,24 @@ export async function activate(context: vscode.ExtensionContext) {
       vscode.window.showWarningMessage(
         `${project.name}: ${blockers.join(" | ")}`
       );
+    }
+  );
+
+  const generateAiContextCommand = vscode.commands.registerCommand(
+    COMMAND_GENERATE_AI_CONTEXT,
+    async () => {
+      const project = await pickProject(projectStore);
+
+      if (!project) {
+        return;
+      }
+
+      const blockers = await readStatusBlockers(project.path);
+      const contextFileUri = vscode.Uri.joinPath(vscode.Uri.file(project.path), "AI_CONTEXT.md");
+      const content = buildAiContextContent(project, blockers);
+
+      await vscode.workspace.fs.writeFile(contextFileUri, new TextEncoder().encode(content));
+      vscode.window.showInformationMessage(`AI_CONTEXT.md generado en ${project.name}.`);
     }
   );
 
@@ -827,6 +846,7 @@ export async function activate(context: vscode.ExtensionContext) {
     syncStatusFileCommand,
     connectGithubCommand,
     detectBlockersCommand,
+    generateAiContextCommand,
     scanTodosCommand,
     focusModeCommand,
     exitFocusModeCommand,
@@ -1057,6 +1077,41 @@ function buildStatusFileContent(project: ProjectMetadata): string {
     "",
     "## Actualizado",
     new Date().toISOString().slice(0, 10),
+    "",
+  ].join("\n");
+}
+
+function buildAiContextContent(project: ProjectMetadata, blockers: string[]): string {
+  const mvpTasks = project.mvpTasks ?? [];
+  const doneTasks = mvpTasks.filter((task) => task.done).length;
+  const mvpProgress = mvpTasks.length > 0 ? `${doneTasks}/${mvpTasks.length}` : "sin tareas";
+
+  return [
+    "# ShipOne AI Context",
+    "",
+    `## Proyecto`,
+    `- Nombre: ${project.name}`,
+    `- Estado: ${project.status}`,
+    `- Tipo: ${project.type}`,
+    `- Ruta: ${project.path}`,
+    `- Favorito: ${project.favorite ? "si" : "no"}`,
+    "",
+    "## Objetivo",
+    project.description || "Sin descripcion",
+    "",
+    "## Next action",
+    project.nextAction || "Sin next action",
+    "",
+    "## MVP",
+    `- Progreso: ${mvpProgress}`,
+    ...mvpTasks.map((task) => `- [${task.done ? "x" : " "}] ${task.text}`),
+    "",
+    "## Bloqueos",
+    ...(blockers.length > 0 ? blockers.map((blocker) => `- ${blocker}`) : ["- Ninguno"]),
+    "",
+    "## Notas",
+    "- Generado por ShipOne para ayudar a una IA a entender el proyecto.",
+    "- Mantener simple.",
     "",
   ].join("\n");
 }

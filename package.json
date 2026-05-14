@@ -19,7 +19,8 @@
     "onView:shipone.projectsView",
     "onCommand:shipone.showWelcome",
     "onCommand:shipone.searchProject",
-    "onCommand:shipone.scanTodos"
+    "onCommand:shipone.scanTodos",
+    "onCommand:shipone.generateAiContext"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -76,6 +77,12 @@
         "title": "ShipOne: Detectar bloqueadores",
         "category": "ShipOne",
         "icon": "$(warning)"
+      },
+      {
+        "command": "shipone.generateAiContext",
+        "title": "ShipOne: Generar AI context",
+        "category": "ShipOne",
+        "icon": "$(file-code)"
       },
       {
         "command": "shipone.scanTodos",
@@ -224,6 +231,11 @@
         },
         {
           "command": "shipone.detectBlockers",
+          "when": "view == shipone.projectsView",
+          "group": "navigation"
+        },
+        {
+          "command": "shipone.generateAiContext",
           "when": "view == shipone.projectsView",
           "group": "navigation"
         },
