@@ -376,10 +376,10 @@ Goal: make the MVP feel reliable.
 
 ### Favorites
 
-- [ ] Add favorite field
-- [ ] Add command: toggle favorite
-- [ ] Show favorites at top
-- [ ] Show star in sidebar
+- [x] Add favorite field
+- [x] Add command: toggle favorite
+- [x] Show favorites at top
+- [x] Show star in sidebar
 
 ### Inactivity detection
 

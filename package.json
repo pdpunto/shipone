@@ -36,6 +36,10 @@
         "title": "ShipOne: Abrir proyecto"
       },
       {
+        "command": "shipone.toggleFavorite",
+        "title": "ShipOne: Alternar favorito"
+      },
+      {
         "command": "shipone.searchProject",
         "title": "ShipOne: Buscar proyecto"
       },
@@ -82,6 +86,11 @@
         },
         {
           "command": "shipone.searchProject",
+          "when": "view == shipone.projectsView",
+          "group": "navigation"
+        },
+        {
+          "command": "shipone.toggleFavorite",
           "when": "view == shipone.projectsView",
           "group": "navigation"
         },
