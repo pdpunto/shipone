@@ -14,7 +14,12 @@ import { WarningNode } from "./treeNodes/warningNode";
 import { FocusNode } from "./treeNodes/focusNode";
 import { ProjectNode } from "./treeNodes/projectNode";
 
-export type ShipOneTreeNode = MetricsNode | MetricItemNode | GroupNode | ProjectNode | EmptyStateNode;
+export type ShipOneTreeNode =
+  | MetricsNode
+  | MetricItemNode
+  | GroupNode
+  | ProjectNode
+  | EmptyStateNode;
 
 const GROUPS: Array<{ status: ProjectStatus; label: string; icon: string }> = [
   { status: "active", label: t("Active"), icon: "play" },
@@ -36,7 +41,9 @@ export class TreeRendererService {
   async getRootNodes(isFocusModeEnabled: boolean): Promise<ShipOneTreeNode[]> {
     if (isFocusModeEnabled) {
       const projects = await this.projectStore.loadProjects();
-      const activeProject = projects.find((project) => project.status === "active");
+      const activeProject = projects.find(
+        (project) => project.status === "active"
+      );
 
       if (!activeProject) {
         return [
@@ -57,8 +64,18 @@ export class TreeRendererService {
       );
 
       return [
-        new FocusNode(activeProject, health, this.iconProvider, this.tooltipProvider),
-        new GroupNode("active", "Active", this.iconProvider, this.tooltipProvider),
+        new FocusNode(
+          activeProject,
+          health,
+          this.iconProvider,
+          this.tooltipProvider
+        ),
+        new GroupNode(
+          "active",
+          "Active",
+          this.iconProvider,
+          this.tooltipProvider
+        ),
       ];
     }
 
@@ -85,7 +102,9 @@ export class TreeRendererService {
     const visibleGroups = settings.showFinishedProjects
       ? GROUPS
       : GROUPS.filter((group) => group.status !== "finished");
-    const activeProject = projects.find((project) => project.status === "active");
+    const activeProject = projects.find(
+      (project) => project.status === "active"
+    );
     const activeWarnings = activeProject
       ? this.buildActiveWarnings(
           activeProject,
@@ -97,8 +116,14 @@ export class TreeRendererService {
     return [
       new MetricsNode(this.iconProvider),
       ...activeWarnings,
-      ...visibleGroups.map((group) =>
-        new GroupNode(group.status, group.label, this.iconProvider, this.tooltipProvider)
+      ...visibleGroups.map(
+        (group) =>
+          new GroupNode(
+            group.status,
+            group.label,
+            this.iconProvider,
+            this.tooltipProvider
+          )
       ),
     ];
   }
@@ -112,7 +137,11 @@ export class TreeRendererService {
       new MetricItemNode(t("Active"), summary.active, this.iconProvider),
       new MetricItemNode(t("Paused"), summary.paused, this.iconProvider),
       new MetricItemNode(t("Finished"), summary.finished, this.iconProvider),
-      new MetricItemNode(t("Finish ratio"), `${summary.finishRatio}%`, this.iconProvider),
+      new MetricItemNode(
+        t("Finish ratio"),
+        `${summary.finishRatio}%`,
+        this.iconProvider
+      ),
     ];
   }
 

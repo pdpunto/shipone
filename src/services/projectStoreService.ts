@@ -17,7 +17,8 @@ type ProjectStoreSnapshot = {
 };
 
 export class ProjectStoreService {
-  private readonly outputChannel = vscode.window.createOutputChannel("ShipOne Storage");
+  private readonly outputChannel =
+    vscode.window.createOutputChannel("ShipOne Storage");
 
   constructor(private readonly context: vscode.ExtensionContext) {}
 
@@ -50,12 +51,18 @@ export class ProjectStoreService {
       this.logInfo("Recuperación completada desde backup.");
       return true;
     } catch (error) {
-      this.logError("No se pudo recuperar el almacenamiento desde backup.", error);
+      this.logError(
+        "No se pudo recuperar el almacenamiento desde backup.",
+        error
+      );
       return false;
     }
   }
 
-  async saveProjects(projects: ProjectMetadata[], createBackup = true): Promise<void> {
+  async saveProjects(
+    projects: ProjectMetadata[],
+    createBackup = true
+  ): Promise<void> {
     await vscode.workspace.fs.createDirectory(this.context.globalStorageUri);
 
     if (createBackup && (await this.pathExists(this.storageFileUri))) {
@@ -69,7 +76,11 @@ export class ProjectStoreService {
       .filter((project): project is ProjectMetadata => Boolean(project));
 
     const payload = new TextEncoder().encode(
-      JSON.stringify({ version: STORAGE_VERSION, projects: normalized }, null, 2)
+      JSON.stringify(
+        { version: STORAGE_VERSION, projects: normalized },
+        null,
+        2
+      )
     );
 
     await vscode.workspace.fs.writeFile(this.storageFileUri, payload);
@@ -88,9 +99,16 @@ export class ProjectStoreService {
     await this.saveProjects(projects);
   }
 
-  async createProject(project: ProjectMetadata, enforceOneActiveProject = true): Promise<void> {
+  async createProject(
+    project: ProjectMetadata,
+    enforceOneActiveProject = true
+  ): Promise<void> {
     const projects = await this.loadProjects();
-    const normalized = this.normalizeActiveProject(projects, project, enforceOneActiveProject);
+    const normalized = this.normalizeActiveProject(
+      projects,
+      project,
+      enforceOneActiveProject
+    );
     projects.push(normalized);
     await this.saveProjects(projects);
   }
@@ -130,7 +148,10 @@ export class ProjectStoreService {
     await this.saveProjects(projects);
   }
 
-  async setNextAction(projectId: string, nextAction: string | null): Promise<void> {
+  async setNextAction(
+    projectId: string,
+    nextAction: string | null
+  ): Promise<void> {
     const projects = await this.loadProjects();
     const target = this.getRequiredProject(projects, projectId);
 
@@ -146,7 +167,10 @@ export class ProjectStoreService {
     await this.saveProjects(projects);
   }
 
-  async setMvpTasks(projectId: string, tasks: ProjectMetadata["mvpTasks"]): Promise<void> {
+  async setMvpTasks(
+    projectId: string,
+    tasks: ProjectMetadata["mvpTasks"]
+  ): Promise<void> {
     const projects = await this.loadProjects();
     const target = this.getRequiredProject(projects, projectId);
 
@@ -197,7 +221,9 @@ export class ProjectStoreService {
     return projects.find((project) => project.id === projectId);
   }
 
-  async getProjectsByStatus(): Promise<Record<ProjectStatus, ProjectMetadata[]>> {
+  async getProjectsByStatus(): Promise<
+    Record<ProjectStatus, ProjectMetadata[]>
+  > {
     const projects = await this.loadProjects();
     const grouped = this.createEmptyGroups();
 
@@ -223,11 +249,17 @@ export class ProjectStoreService {
   }
 
   private get storageFileUri(): vscode.Uri {
-    return vscode.Uri.joinPath(this.context.globalStorageUri, STORAGE_FILE_NAME);
+    return vscode.Uri.joinPath(
+      this.context.globalStorageUri,
+      STORAGE_FILE_NAME
+    );
   }
 
   private get backupFileUri(): vscode.Uri {
-    return vscode.Uri.joinPath(this.context.globalStorageUri, STORAGE_BACKUP_FILE_NAME);
+    return vscode.Uri.joinPath(
+      this.context.globalStorageUri,
+      STORAGE_BACKUP_FILE_NAME
+    );
   }
 
   private createEmptyGroups(): Record<ProjectStatus, ProjectMetadata[]> {
@@ -255,7 +287,10 @@ export class ProjectStoreService {
     return project;
   }
 
-  private getRequiredProject(projects: ProjectMetadata[], projectId: string): ProjectMetadata {
+  private getRequiredProject(
+    projects: ProjectMetadata[],
+    projectId: string
+  ): ProjectMetadata {
     const target = projects.find((project) => project.id === projectId);
 
     if (!target) {
@@ -265,7 +300,10 @@ export class ProjectStoreService {
     return target;
   }
 
-  private async readProjectsWithRecovery(): Promise<{ projects: ProjectMetadata[]; version: number }> {
+  private async readProjectsWithRecovery(): Promise<{
+    projects: ProjectMetadata[];
+    version: number;
+  }> {
     try {
       return await this.readProjectsFromUri(this.storageFileUri);
     } catch (error) {
@@ -300,7 +338,8 @@ export class ProjectStoreService {
       const snapshot = parsed as Partial<ProjectStoreSnapshot> & {
         projects?: unknown;
       };
-      const version = typeof snapshot.version === "number" ? snapshot.version : 1;
+      const version =
+        typeof snapshot.version === "number" ? snapshot.version : 1;
       return {
         projects: normalizeProjectList(snapshot.projects),
         version,
@@ -329,4 +368,3 @@ export class ProjectStoreService {
     this.outputChannel.appendLine(detail);
   }
 }
-

@@ -34,7 +34,10 @@ const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
           "",
         ].join("\n"),
       },
-      { uri: vscode.Uri.joinPath(context.folderUri, ".gitignore"), content: context.gitignore },
+      {
+        uri: vscode.Uri.joinPath(context.folderUri, ".gitignore"),
+        content: context.gitignore,
+      },
     ],
   },
   {
@@ -105,7 +108,10 @@ if (root) {
 }
 `,
       },
-      { uri: vscode.Uri.joinPath(context.folderUri, ".gitignore"), content: context.gitignore },
+      {
+        uri: vscode.Uri.joinPath(context.folderUri, ".gitignore"),
+        content: context.gitignore,
+      },
     ],
   },
   {
@@ -161,7 +167,10 @@ export default function RootLayout({
 }
 `,
       },
-      { uri: vscode.Uri.joinPath(context.folderUri, ".gitignore"), content: context.gitignore },
+      {
+        uri: vscode.Uri.joinPath(context.folderUri, ".gitignore"),
+        content: context.gitignore,
+      },
     ],
   },
   {
@@ -188,7 +197,10 @@ export default function RootLayout({
         uri: vscode.Uri.joinPath(context.folderUri, "requirements.txt"),
         content: "# Requisitos del proyecto\n",
       },
-      { uri: vscode.Uri.joinPath(context.folderUri, ".gitignore"), content: context.gitignore },
+      {
+        uri: vscode.Uri.joinPath(context.folderUri, ".gitignore"),
+        content: context.gitignore,
+      },
     ],
   },
   {
@@ -244,7 +256,10 @@ server.listen(port, () => {
           2
         ),
       },
-      { uri: vscode.Uri.joinPath(context.folderUri, ".gitignore"), content: context.gitignore },
+      {
+        uri: vscode.Uri.joinPath(context.folderUri, ".gitignore"),
+        content: context.gitignore,
+      },
     ],
   },
 ];
@@ -259,8 +274,18 @@ export class TemplateService {
     customTemplateFolder: string
   ): Promise<void> {
     const templates = [
-      ...(await this.getCustomTemplateFiles(folderUri, customTemplateFolder, type)),
-      ...this.getTemplateFiles(folderUri, projectName, description, type, packageManager),
+      ...(await this.getCustomTemplateFiles(
+        folderUri,
+        customTemplateFolder,
+        type
+      )),
+      ...this.getTemplateFiles(
+        folderUri,
+        projectName,
+        description,
+        type,
+        packageManager
+      ),
     ];
 
     for (const file of templates) {
@@ -275,10 +300,17 @@ export class TemplateService {
     type: ShipOneSettings["defaultProjectType"],
     packageManager: ShipOneSettings["defaultPackageManager"]
   ): TemplateFile[] {
-    const gitignore = ["node_modules/", ".venv/", "__pycache__/", ".DS_Store", ".env", ""].join(
-      "\n"
-    );
-    const definition = TEMPLATE_DEFINITIONS.find((item) => item.type === type) ?? TEMPLATE_DEFINITIONS[0];
+    const gitignore = [
+      "node_modules/",
+      ".venv/",
+      "__pycache__/",
+      ".DS_Store",
+      ".env",
+      "",
+    ].join("\n");
+    const definition =
+      TEMPLATE_DEFINITIONS.find((item) => item.type === type) ??
+      TEMPLATE_DEFINITIONS[0];
     return definition.buildFiles({
       folderUri,
       projectName,
@@ -317,13 +349,24 @@ export class TemplateService {
     const files: TemplateFile[] = [];
 
     for (const [name, type] of entries) {
-      if (name === ".git" || name === "node_modules" || name === "out" || name === "dist") {
+      if (
+        name === ".git" ||
+        name === "node_modules" ||
+        name === "out" ||
+        name === "dist"
+      ) {
         continue;
       }
 
       const entryUri = vscode.Uri.joinPath(currentUri, name);
       if (type === vscode.FileType.Directory) {
-        files.push(...(await this.collectTemplateFiles(sourceRootUri, destinationRootUri, entryUri)));
+        files.push(
+          ...(await this.collectTemplateFiles(
+            sourceRootUri,
+            destinationRootUri,
+            entryUri
+          ))
+        );
         continue;
       }
 
@@ -331,8 +374,13 @@ export class TemplateService {
         continue;
       }
 
-      const content = new TextDecoder().decode(await vscode.workspace.fs.readFile(entryUri));
-      const targetRelativePath = relative(sourceRootUri.fsPath, entryUri.fsPath);
+      const content = new TextDecoder().decode(
+        await vscode.workspace.fs.readFile(entryUri)
+      );
+      const targetRelativePath = relative(
+        sourceRootUri.fsPath,
+        entryUri.fsPath
+      );
 
       files.push({
         uri: vscode.Uri.joinPath(
@@ -346,12 +394,17 @@ export class TemplateService {
     return files;
   }
 
-  private async writeFileIfMissing(uri: vscode.Uri, content: string): Promise<void> {
+  private async writeFileIfMissing(
+    uri: vscode.Uri,
+    content: string
+  ): Promise<void> {
     if (await this.pathExists(uri)) {
       return;
     }
 
-    await vscode.workspace.fs.createDirectory(vscode.Uri.file(dirname(uri.fsPath)));
+    await vscode.workspace.fs.createDirectory(
+      vscode.Uri.file(dirname(uri.fsPath))
+    );
     await vscode.workspace.fs.writeFile(uri, new TextEncoder().encode(content));
   }
 
@@ -382,7 +435,9 @@ function escapeForPython(value: string): string {
   return value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 }
 
-function formatPackageManager(value: ShipOneSettings["defaultPackageManager"]): string {
+function formatPackageManager(
+  value: ShipOneSettings["defaultPackageManager"]
+): string {
   switch (value) {
     case "pnpm":
       return "pnpm@latest";

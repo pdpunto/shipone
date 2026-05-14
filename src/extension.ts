@@ -41,10 +41,17 @@ export async function activate(context: vscode.ExtensionContext) {
 
   await projectStore.initialize();
 
-  let focusModeEnabled = context.workspaceState.get<boolean>(FOCUS_MODE_STATE_KEY, false);
+  let focusModeEnabled = context.workspaceState.get<boolean>(
+    FOCUS_MODE_STATE_KEY,
+    false
+  );
   let selectedProjectId: string | undefined;
 
-  await vscode.commands.executeCommand("setContext", FOCUS_MODE_CONTEXT_KEY, focusModeEnabled);
+  await vscode.commands.executeCommand(
+    "setContext",
+    FOCUS_MODE_CONTEXT_KEY,
+    focusModeEnabled
+  );
 
   const treeDataProvider = new ShipOneProjectsTreeDataProvider(
     projectStore,
@@ -70,25 +77,36 @@ export async function activate(context: vscode.ExtensionContext) {
     }
   });
 
-  const configurationWatcher = vscode.workspace.onDidChangeConfiguration((event) => {
-    if (event.affectsConfiguration("shipone")) {
-      treeDataProvider.refresh();
+  const configurationWatcher = vscode.workspace.onDidChangeConfiguration(
+    (event) => {
+      if (event.affectsConfiguration("shipone")) {
+        treeDataProvider.refresh();
+      }
     }
-  });
+  );
 
   void showFirstRunOnboarding(context, settingsService);
 
   const setFocusMode = async (enabled: boolean) => {
     focusModeEnabled = enabled;
     await context.workspaceState.update(FOCUS_MODE_STATE_KEY, enabled);
-    await vscode.commands.executeCommand("setContext", FOCUS_MODE_CONTEXT_KEY, enabled);
+    await vscode.commands.executeCommand(
+      "setContext",
+      FOCUS_MODE_CONTEXT_KEY,
+      enabled
+    );
     treeDataProvider.refresh();
   };
 
-  const welcomeCommand = vscode.commands.registerCommand(COMMAND_SHOW_WELCOME, () => {
-    const settings = settingsService.getSettings();
-    vscode.window.showInformationMessage(t("ShipOne listo. Ruta base: {0}", settings.projectsRoot));
-  });
+  const welcomeCommand = vscode.commands.registerCommand(
+    COMMAND_SHOW_WELCOME,
+    () => {
+      const settings = settingsService.getSettings();
+      vscode.window.showInformationMessage(
+        t("ShipOne listo. Ruta base: {0}", settings.projectsRoot)
+      );
+    }
+  );
 
   const projectCommands = registerProjectCommands({
     context,
@@ -124,9 +142,12 @@ export async function activate(context: vscode.ExtensionContext) {
     setFocusMode,
   });
 
-  const refreshCommand = vscode.commands.registerCommand(COMMAND_REFRESH_PROJECTS, () => {
-    treeDataProvider.refresh();
-  });
+  const refreshCommand = vscode.commands.registerCommand(
+    COMMAND_REFRESH_PROJECTS,
+    () => {
+      treeDataProvider.refresh();
+    }
+  );
 
   context.subscriptions.push(
     treeView,

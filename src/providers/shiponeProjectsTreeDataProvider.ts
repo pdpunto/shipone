@@ -2,17 +2,17 @@ import * as vscode from "vscode";
 import { SettingsService } from "../services/settingsService";
 import { ProjectStoreService } from "../services/projectStoreService";
 import { ProjectHealthService } from "../services/projectHealthService";
-import { ProjectStatus } from "../models/project";
-import { TreeRendererService, type ShipOneTreeNode } from "./treeRendererService";
+import {
+  TreeRendererService,
+  type ShipOneTreeNode,
+} from "./treeRendererService";
 import { ProjectHealthRenderer } from "./projectHealthRenderer";
 import { TreeIconProvider } from "./treeIconProvider";
 import { TreeTooltipProvider } from "./treeTooltipProvider";
 import { MetricsNode } from "./treeNodes/metricsNode";
 import { GroupNode } from "./treeNodes/groupNode";
 
-export class ShipOneProjectsTreeDataProvider
-  implements vscode.TreeDataProvider<ShipOneTreeNode>
-{
+export class ShipOneProjectsTreeDataProvider implements vscode.TreeDataProvider<ShipOneTreeNode> {
   private readonly onDidChangeTreeDataEmitter = new vscode.EventEmitter<void>();
 
   readonly onDidChangeTreeData = this.onDidChangeTreeDataEmitter.event;

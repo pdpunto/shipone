@@ -1,16 +1,24 @@
 import { ProjectMetadata } from "../models/project";
 
-export function filterProjectsByName(projects: ProjectMetadata[], searchTerm: string) {
+export function filterProjectsByName(
+  projects: ProjectMetadata[],
+  searchTerm: string
+) {
   const normalizedTerm = searchTerm.trim().toLowerCase();
 
   if (!normalizedTerm) {
     return projects;
   }
 
-  return projects.filter((project) => project.name.toLowerCase().includes(normalizedTerm));
+  return projects.filter((project) =>
+    project.name.toLowerCase().includes(normalizedTerm)
+  );
 }
 
-export function filterProjectsByType(projects: ProjectMetadata[], type: string | null) {
+export function filterProjectsByType(
+  projects: ProjectMetadata[],
+  type: string | null
+) {
   if (!type) {
     return projects;
   }
@@ -26,7 +34,9 @@ export function filterProjectsByTag(projects: ProjectMetadata[], tag: string) {
   }
 
   return projects.filter((project) =>
-    (project.tags ?? []).some((projectTag) => projectTag.toLowerCase().includes(normalizedTag))
+    (project.tags ?? []).some((projectTag) =>
+      projectTag.toLowerCase().includes(normalizedTag)
+    )
   );
 }
 

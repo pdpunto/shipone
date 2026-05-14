@@ -20,7 +20,9 @@ export class GitService {
       await execFileAsync("git", ["commit", "-m", "chore: initial commit"], {
         cwd: folderUri.fsPath,
       });
-      await execFileAsync("git", ["branch", "-M", "main"], { cwd: folderUri.fsPath });
+      await execFileAsync("git", ["branch", "-M", "main"], {
+        cwd: folderUri.fsPath,
+      });
       return true;
     } catch {
       return false;

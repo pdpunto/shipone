@@ -3,7 +3,10 @@ import { t } from "../../localization";
 import { ProjectCreationService } from "../../services/projectCreationService";
 import { ProjectStoreService } from "../../services/projectStoreService";
 import { SettingsService } from "../../services/settingsService";
-import { TodoScannerService, type TodoTask } from "../../services/todoScannerService";
+import {
+  TodoScannerService,
+  type TodoTask,
+} from "../../services/todoScannerService";
 import {
   buildWeeklyReviewSummary,
   getFinishedThisWeek,
@@ -30,59 +33,66 @@ export function registerReviewCommands(options: {
   const {
     projectStore,
     settingsService,
-    projectCreationService,
     todoScannerService,
     treeRefresh,
     setFocusMode,
   } = options;
 
-  const scanTodosCommand = vscode.commands.registerCommand(COMMAND_SCAN_TODOS, async () => {
-    const project = await pickProject(projectStore);
+  const scanTodosCommand = vscode.commands.registerCommand(
+    COMMAND_SCAN_TODOS,
+    async () => {
+      const project = await pickProject(projectStore);
 
-    if (!project) {
-      return;
-    }
-
-    const tasks = await todoScannerService.scanProjectTodoTasks(project.path);
-
-    if (tasks.length === 0) {
-      vscode.window.showInformationMessage(
-        t("No hay TODO ni FIXME en {0}.", project.name)
-      );
-      return;
-    }
-
-    const choice = await vscode.window.showQuickPick(
-      tasks.map((task: TodoTask) => ({
-        label: `${task.kind} - ${task.fileName}`,
-        description: `L${task.line}`,
-        detail: task.text,
-        task,
-      })),
-      {
-        title: t("TODOs en {0}", project.name),
-        placeHolder: t("Elige un hallazgo"),
-        matchOnDescription: true,
-        matchOnDetail: true,
+      if (!project) {
+        return;
       }
-    );
 
-    if (!choice) {
-      return;
+      const tasks = await todoScannerService.scanProjectTodoTasks(project.path);
+
+      if (tasks.length === 0) {
+        vscode.window.showInformationMessage(
+          t("No hay TODO ni FIXME en {0}.", project.name)
+        );
+        return;
+      }
+
+      const choice = await vscode.window.showQuickPick(
+        tasks.map((task: TodoTask) => ({
+          label: `${task.kind} - ${task.fileName}`,
+          description: `L${task.line}`,
+          detail: task.text,
+          task,
+        })),
+        {
+          title: t("TODOs en {0}", project.name),
+          placeHolder: t("Elige un hallazgo"),
+          matchOnDescription: true,
+          matchOnDetail: true,
+        }
+      );
+
+      if (!choice) {
+        return;
+      }
+
+      const document = await vscode.workspace.openTextDocument(choice.task.uri);
+      const editor = await vscode.window.showTextDocument(document, {
+        preview: true,
+      });
+      const line = Math.max(choice.task.line - 1, 0);
+      const range = new vscode.Range(line, 0, line, 0);
+      editor.selection = new vscode.Selection(line, 0, line, 0);
+      editor.revealRange(range, vscode.TextEditorRevealType.InCenter);
     }
+  );
 
-    const document = await vscode.workspace.openTextDocument(choice.task.uri);
-    const editor = await vscode.window.showTextDocument(document, { preview: true });
-    const line = Math.max(choice.task.line - 1, 0);
-    const range = new vscode.Range(line, 0, line, 0);
-    editor.selection = new vscode.Selection(line, 0, line, 0);
-    editor.revealRange(range, vscode.TextEditorRevealType.InCenter);
-  });
-
-  const focusModeCommand = vscode.commands.registerCommand(COMMAND_FOCUS_MODE, async () => {
-    await setFocusMode(true);
-    vscode.window.showInformationMessage(t("Focus mode activado."));
-  });
+  const focusModeCommand = vscode.commands.registerCommand(
+    COMMAND_FOCUS_MODE,
+    async () => {
+      await setFocusMode(true);
+      vscode.window.showInformationMessage(t("Focus mode activado."));
+    }
+  );
 
   const exitFocusModeCommand = vscode.commands.registerCommand(
     COMMAND_EXIT_FOCUS_MODE,
@@ -98,8 +108,12 @@ export function registerReviewCommands(options: {
       const projects = await projectStore.loadProjects();
       const summary = buildWeeklyReviewSummary(projects);
 
-      const activeProject = projects.find((project) => project.status === "active");
-      const pausedProjects = projects.filter((project) => project.status === "paused");
+      const activeProject = projects.find(
+        (project) => project.status === "active"
+      );
+      const pausedProjects = projects.filter(
+        (project) => project.status === "paused"
+      );
       const finishedThisWeek = getFinishedThisWeek(projects);
 
       const summaryLines = [
@@ -119,7 +133,10 @@ export function registerReviewCommands(options: {
           return;
         }
 
-        await vscode.commands.executeCommand(COMMAND_OPEN_PROJECT, activeProject.id);
+        await vscode.commands.executeCommand(
+          COMMAND_OPEN_PROJECT,
+          activeProject.id
+        );
       } else {
         vscode.window.showInformationMessage(summaryLines.join(" | "));
       }
@@ -164,7 +181,10 @@ export function registerReviewCommands(options: {
 
       if (pausedProjects.length > 0) {
         vscode.window.showInformationMessage(
-          t("Pausados: {0}", pausedProjects.map((project) => project.name).join(", "))
+          t(
+            "Pausados: {0}",
+            pausedProjects.map((project) => project.name).join(", ")
+          )
         );
       }
 
@@ -227,7 +247,9 @@ export function registerReviewCommands(options: {
         note.trim()
       );
       treeRefresh();
-      vscode.window.showInformationMessage(t("Proyecto congelado: {0}.", project.name));
+      vscode.window.showInformationMessage(
+        t("Proyecto congelado: {0}.", project.name)
+      );
     }
   );
 
@@ -236,7 +258,9 @@ export function registerReviewCommands(options: {
     async () => {
       const settings = settingsService.getSettings();
       const projects = await projectStore.loadProjects();
-      const pausedProjects = projects.filter((project) => project.status === "paused");
+      const pausedProjects = projects.filter(
+        (project) => project.status === "paused"
+      );
 
       if (pausedProjects.length === 0) {
         vscode.window.showInformationMessage(t("No hay proyectos pausados."));
@@ -246,7 +270,8 @@ export function registerReviewCommands(options: {
       const choice = await vscode.window.showQuickPick(
         pausedProjects.map((project) => ({
           label: project.name,
-          description: project.pauseReason ?? project.nextAction ?? t("Pausado"),
+          description:
+            project.pauseReason ?? project.nextAction ?? t("Pausado"),
           detail: project.pauseNote ?? project.path,
           project,
         })),

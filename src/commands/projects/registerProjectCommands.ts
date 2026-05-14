@@ -33,13 +33,22 @@ export function registerProjectCommands(options: {
   treeDataProvider: ShipOneProjectsTreeDataProvider;
   getSelectedProjectId: () => string | undefined;
 }): vscode.Disposable[] {
-  const { context, projectStore, settingsService, treeDataProvider, getSelectedProjectId } =
-    options;
+  const {
+    context,
+    projectStore,
+    settingsService,
+    treeDataProvider,
+    getSelectedProjectId,
+  } = options;
 
   const openProjectCommand = vscode.commands.registerCommand(
     COMMAND_OPEN_PROJECT,
     async (projectArg?: unknown) => {
-      const project = await resolveProject(projectStore, projectArg, getSelectedProjectId());
+      const project = await resolveProject(
+        projectStore,
+        projectArg,
+        getSelectedProjectId()
+      );
 
       if (!project) {
         vscode.window.showErrorMessage(t("No se encontró el proyecto."));
@@ -59,7 +68,11 @@ export function registerProjectCommands(options: {
     COMMAND_CHANGE_PROJECT_STATUS,
     async (projectArg?: unknown) => {
       const settings = settingsService.getSettings();
-      const project = await resolveProject(projectStore, projectArg, getSelectedProjectId());
+      const project = await resolveProject(
+        projectStore,
+        projectArg,
+        getSelectedProjectId()
+      );
 
       if (!project) {
         return;
@@ -148,7 +161,11 @@ export function registerProjectCommands(options: {
   const editNextActionCommand = vscode.commands.registerCommand(
     COMMAND_EDIT_NEXT_ACTION,
     async (projectArg?: unknown) => {
-      const project = await resolveProject(projectStore, projectArg, getSelectedProjectId());
+      const project = await resolveProject(
+        projectStore,
+        projectArg,
+        getSelectedProjectId()
+      );
 
       if (!project) {
         return;
@@ -165,7 +182,10 @@ export function registerProjectCommands(options: {
         return;
       }
 
-      await projectStore.setNextAction(project.id, nextAction.trim() ? nextAction.trim() : null);
+      await projectStore.setNextAction(
+        project.id,
+        nextAction.trim() ? nextAction.trim() : null
+      );
       treeDataProvider.refresh();
       vscode.window.showInformationMessage(
         t("Siguiente accion actualizada en {0}.", project.name)
@@ -176,7 +196,11 @@ export function registerProjectCommands(options: {
   const clearNextActionCommand = vscode.commands.registerCommand(
     COMMAND_CLEAR_NEXT_ACTION,
     async (projectArg?: unknown) => {
-      const project = await resolveProject(projectStore, projectArg, getSelectedProjectId());
+      const project = await resolveProject(
+        projectStore,
+        projectArg,
+        getSelectedProjectId()
+      );
 
       if (!project) {
         return;
@@ -184,20 +208,29 @@ export function registerProjectCommands(options: {
 
       await projectStore.setNextAction(project.id, null);
       treeDataProvider.refresh();
-      vscode.window.showInformationMessage(t("Siguiente accion limpiada en {0}.", project.name));
+      vscode.window.showInformationMessage(
+        t("Siguiente accion limpiada en {0}.", project.name)
+      );
     }
   );
 
   const openStatusFileCommand = vscode.commands.registerCommand(
     COMMAND_OPEN_STATUS_FILE,
     async (projectArg?: unknown) => {
-      const project = await resolveProject(projectStore, projectArg, getSelectedProjectId());
+      const project = await resolveProject(
+        projectStore,
+        projectArg,
+        getSelectedProjectId()
+      );
 
       if (!project) {
         return;
       }
 
-      const statusFileUri = vscode.Uri.joinPath(vscode.Uri.file(project.path), STATUS_FILE_NAME);
+      const statusFileUri = vscode.Uri.joinPath(
+        vscode.Uri.file(project.path),
+        STATUS_FILE_NAME
+      );
 
       try {
         const document = await vscode.workspace.openTextDocument(statusFileUri);
@@ -211,7 +244,11 @@ export function registerProjectCommands(options: {
   const toggleFavoriteCommand = vscode.commands.registerCommand(
     COMMAND_TOGGLE_FAVORITE,
     async (projectArg?: unknown) => {
-      const project = await resolveProject(projectStore, projectArg, getSelectedProjectId());
+      const project = await resolveProject(
+        projectStore,
+        projectArg,
+        getSelectedProjectId()
+      );
 
       if (!project) {
         return;
@@ -263,7 +300,11 @@ async function markProjectStatus(
   projectArg?: unknown,
   selectedProjectId?: string
 ) {
-  const project = await resolveProject(projectStore, projectArg, selectedProjectId);
+  const project = await resolveProject(
+    projectStore,
+    projectArg,
+    selectedProjectId
+  );
 
   if (!project) {
     return;
@@ -348,7 +389,9 @@ async function updateProjectStatus(
     }
 
     const projects = await projectStore.loadProjects();
-    const otherActive = projects.find((item) => item.status === "active" && item.id !== project.id);
+    const otherActive = projects.find(
+      (item) => item.status === "active" && item.id !== project.id
+    );
 
     if (otherActive) {
       const choice = await vscode.window.showWarningMessage(
@@ -363,7 +406,13 @@ async function updateProjectStatus(
     }
   }
 
-  await projectStore.setProjectStatus(project.id, status, settings.enforceOneActiveProject);
+  await projectStore.setProjectStatus(
+    project.id,
+    status,
+    settings.enforceOneActiveProject
+  );
   treeDataProvider.refresh();
-  vscode.window.showInformationMessage(t("{0} ahora esta en {1}.", project.name, statusLabel));
+  vscode.window.showInformationMessage(
+    t("{0} ahora esta en {1}.", project.name, statusLabel)
+  );
 }

@@ -13,7 +13,9 @@ export function getStatusIcon(status: ProjectStatus): string {
   }
 }
 
-export function getMvpProgress(tasks: ProjectMetadata["mvpTasks"]): string | null {
+export function getMvpProgress(
+  tasks: ProjectMetadata["mvpTasks"]
+): string | null {
   if (!tasks || tasks.length === 0) {
     return null;
   }

@@ -3,7 +3,12 @@ import { MvpTask, ProjectMetadata, ProjectStatus } from "./project";
 type ProjectMetadataInput = Record<string, unknown>;
 
 export function isProjectStatus(value: unknown): value is ProjectStatus {
-  return value === "idea" || value === "active" || value === "paused" || value === "finished";
+  return (
+    value === "idea" ||
+    value === "active" ||
+    value === "paused" ||
+    value === "finished"
+  );
 }
 
 export function isMvpTask(value: unknown): value is MvpTask {
@@ -12,7 +17,11 @@ export function isMvpTask(value: unknown): value is MvpTask {
   }
 
   const task = value as Record<string, unknown>;
-  return typeof task.id === "string" && typeof task.text === "string" && typeof task.done === "boolean";
+  return (
+    typeof task.id === "string" &&
+    typeof task.text === "string" &&
+    typeof task.done === "boolean"
+  );
 }
 
 export function isProjectMetadata(value: unknown): value is ProjectMetadata {
@@ -32,7 +41,9 @@ export function isProjectMetadata(value: unknown): value is ProjectMetadata {
   );
 }
 
-export function normalizeProjectMetadata(value: unknown): ProjectMetadata | undefined {
+export function normalizeProjectMetadata(
+  value: unknown
+): ProjectMetadata | undefined {
   if (!isProjectMetadata(value)) {
     return undefined;
   }

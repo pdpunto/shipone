@@ -6,13 +6,18 @@ import { ProjectHealth } from "../services/projectHealthService";
 export class TreeTooltipProvider {
   buildGroupTooltip(label: string): vscode.MarkdownString {
     return new vscode.MarkdownString(
-      [t("**{0}**", label), "", t("Abre el grupo de proyectos {0}.", label.toLowerCase())].join(
-        "\n"
-      )
+      [
+        t("**{0}**", label),
+        "",
+        t("Abre el grupo de proyectos {0}.", label.toLowerCase()),
+      ].join("\n")
     );
   }
 
-  buildFocusTooltip(project: ProjectMetadata, health: ProjectHealth): vscode.MarkdownString {
+  buildFocusTooltip(
+    project: ProjectMetadata,
+    health: ProjectHealth
+  ): vscode.MarkdownString {
     return new vscode.MarkdownString(
       [
         t("**{0}**", project.name),
@@ -25,9 +30,14 @@ export class TreeTooltipProvider {
     );
   }
 
-  buildEmptyStateTooltip(label: string, actionLabel?: string): vscode.MarkdownString {
+  buildEmptyStateTooltip(
+    label: string,
+    actionLabel?: string
+  ): vscode.MarkdownString {
     return new vscode.MarkdownString(
-      actionLabel ? t("**{0}**\n\nUsa {1} para empezar.", label, actionLabel) : t("**{0}**", label)
+      actionLabel
+        ? t("**{0}**\n\nUsa {1} para empezar.", label, actionLabel)
+        : t("**{0}**", label)
     );
   }
 
@@ -51,10 +61,14 @@ export class TreeTooltipProvider {
         t("Salud: {0}", renderHealthLabel(health.label)),
         t("Ruta: {0}", project.path),
         t("Ultima apertura: {0}", project.lastOpenedAt ?? t("sin registro")),
-        project.status === "active" && !project.nextAction ? t("Aviso: falta next action") : "",
+        project.status === "active" && !project.nextAction
+          ? t("Aviso: falta next action")
+          : "",
         project.pauseReason ? t("Pausa: {0}", project.pauseReason) : "",
         project.pauseNote ? t("Nota: {0}", project.pauseNote) : "",
-        health.issues.length > 0 ? t("Problemas: {0}", health.issues.map(renderIssueLabel).join(", ")) : "",
+        health.issues.length > 0
+          ? t("Problemas: {0}", health.issues.map(renderIssueLabel).join(", "))
+          : "",
         mvpProgress ? t("MVP: {0}", mvpProgress) : "",
         warning ? t("Aviso: {0}", warning) : "",
       ]

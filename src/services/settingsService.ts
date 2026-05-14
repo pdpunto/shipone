@@ -9,16 +9,33 @@ export class SettingsService {
 
     return {
       projectsRoot: config.get<string>("projectsRoot", "C:\\dev\\proyectos"),
-      defaultVisibility: config.get<"private" | "public">("defaultVisibility", "private"),
-      defaultProjectType: config.get<"blank" | "react-vite" | "nextjs" | "python" | "node-api">(
-        "defaultProjectType",
-        "blank"
+      defaultVisibility: config.get<"private" | "public">(
+        "defaultVisibility",
+        "private"
       ),
-      createGitRepoByDefault: config.get<boolean>("createGitRepoByDefault", true),
-      createGitHubRepoByDefault: config.get<boolean>("createGitHubRepoByDefault", true),
-      enforceOneActiveProject: config.get<boolean>("enforceOneActiveProject", true),
-      createStatusFileByDefault: config.get<boolean>("createStatusFileByDefault", true),
-      defaultPackageManager: config.get<"npm" | "pnpm" | "yarn">("defaultPackageManager", "npm"),
+      defaultProjectType: config.get<
+        "blank" | "react-vite" | "nextjs" | "python" | "node-api"
+      >("defaultProjectType", "blank"),
+      createGitRepoByDefault: config.get<boolean>(
+        "createGitRepoByDefault",
+        true
+      ),
+      createGitHubRepoByDefault: config.get<boolean>(
+        "createGitHubRepoByDefault",
+        true
+      ),
+      enforceOneActiveProject: config.get<boolean>(
+        "enforceOneActiveProject",
+        true
+      ),
+      createStatusFileByDefault: config.get<boolean>(
+        "createStatusFileByDefault",
+        true
+      ),
+      defaultPackageManager: config.get<"npm" | "pnpm" | "yarn">(
+        "defaultPackageManager",
+        "npm"
+      ),
       customTemplateFolder: config.get<string>("customTemplateFolder", ""),
       openAfterCreate: config.get<boolean>("openAfterCreate", true),
       inactiveWarningDays: config.get<number>("inactiveWarningDays", 7),

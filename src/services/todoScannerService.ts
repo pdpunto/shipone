@@ -17,11 +17,19 @@ export class TodoScannerService {
     return tasks;
   }
 
-  private async walkTodoFiles(dirUri: vscode.Uri, tasks: TodoTask[]): Promise<void> {
+  private async walkTodoFiles(
+    dirUri: vscode.Uri,
+    tasks: TodoTask[]
+  ): Promise<void> {
     const entries = await vscode.workspace.fs.readDirectory(dirUri);
 
     for (const [name, type] of entries) {
-      if (name === ".git" || name === "node_modules" || name === "out" || name === "dist") {
+      if (
+        name === ".git" ||
+        name === "node_modules" ||
+        name === "out" ||
+        name === "dist"
+      ) {
         continue;
       }
 

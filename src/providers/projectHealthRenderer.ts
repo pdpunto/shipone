@@ -12,7 +12,9 @@ export class ProjectHealthRenderer {
     const mvpProgress = getMvpProgress(project.mvpTasks);
     const projectType = formatProjectType(project.type);
     const nextActionWarning =
-      project.status === "active" && !project.nextAction ? t("Sin next action") : null;
+      project.status === "active" && !project.nextAction
+        ? t("Sin next action")
+        : null;
 
     return [
       projectType,

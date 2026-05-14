@@ -34,7 +34,9 @@ export class ProjectCreationService {
     await this.githubService.connectGithub();
   }
 
-  async createProject(settings: ShipOneSettings): Promise<ProjectMetadata | undefined> {
+  async createProject(
+    settings: ShipOneSettings
+  ): Promise<ProjectMetadata | undefined> {
     const name = await vscode.window.showInputBox({
       prompt: t("Nombre del proyecto"),
       placeHolder: t("my-saas-app"),
@@ -56,17 +58,23 @@ export class ProjectCreationService {
         placeHolder: t("Proyecto simple para ShipOne"),
       })) ?? "";
 
-    const destinationFolder = await this.pickDestinationFolder(settings.projectsRoot);
+    const destinationFolder = await this.pickDestinationFolder(
+      settings.projectsRoot
+    );
     if (!destinationFolder) {
       return undefined;
     }
 
-    const packageManager = await this.pickPackageManager(settings.defaultPackageManager);
+    const packageManager = await this.pickPackageManager(
+      settings.defaultPackageManager
+    );
     if (!packageManager) {
       return undefined;
     }
 
-    const gitChoice = await this.pickGitChoiceWithDefault(settings.createGitRepoByDefault);
+    const gitChoice = await this.pickGitChoiceWithDefault(
+      settings.createGitRepoByDefault
+    );
     if (!gitChoice) {
       return undefined;
     }
@@ -144,7 +152,9 @@ export class ProjectCreationService {
 
       if (!gitInitialized) {
         vscode.window.showWarningMessage(
-          t("No se pudo inicializar Git, pero el proyecto fue creado. Puedes hacerlo luego.")
+          t(
+            "No se pudo inicializar Git, pero el proyecto fue creado. Puedes hacerlo luego."
+          )
         );
       } else {
         const committed = await this.gitService.createInitialCommit(folderUri);
@@ -165,21 +175,32 @@ export class ProjectCreationService {
 
       if (!project.repoUrl) {
         vscode.window.showWarningMessage(
-          t("No se pudo crear el repo de GitHub, pero el proyecto local si fue creado.")
+          t(
+            "No se pudo crear el repo de GitHub, pero el proyecto local si fue creado."
+          )
         );
       }
     }
 
-    await this.projectStore.createProject(project, settings.enforceOneActiveProject);
+    await this.projectStore.createProject(
+      project,
+      settings.enforceOneActiveProject
+    );
 
     if (settings.openAfterCreate) {
-      await vscode.commands.executeCommand("vscode.openFolder", folderUri, false);
+      await vscode.commands.executeCommand(
+        "vscode.openFolder",
+        folderUri,
+        false
+      );
     }
 
     return project;
   }
 
-  async createSampleIdea(settings: ShipOneSettings): Promise<ProjectMetadata | undefined> {
+  async createSampleIdea(
+    settings: ShipOneSettings
+  ): Promise<ProjectMetadata | undefined> {
     const name = t("Mi primera idea");
     const description = t("Describe la idea principal aqui.");
     const type: ShipOneSettings["defaultProjectType"] = "blank";
@@ -187,7 +208,10 @@ export class ProjectCreationService {
 
     const destinationFolder = vscode.Uri.file(settings.projectsRoot);
     const baseFolderName = sanitizeFolderName(name);
-    const folderUri = await this.findAvailableFolderUri(destinationFolder, baseFolderName);
+    const folderUri = await this.findAvailableFolderUri(
+      destinationFolder,
+      baseFolderName
+    );
 
     await this.projectStore.createProjectFolder(folderUri);
 
@@ -223,7 +247,10 @@ export class ProjectCreationService {
       settings.customTemplateFolder
     );
 
-    await this.projectStore.createProject(project, settings.enforceOneActiveProject);
+    await this.projectStore.createProject(
+      project,
+      settings.enforceOneActiveProject
+    );
     return project;
   }
 
@@ -258,7 +285,9 @@ export class ProjectCreationService {
     );
   }
 
-  private async pickDestinationFolder(projectsRoot: string): Promise<vscode.Uri | undefined> {
+  private async pickDestinationFolder(
+    projectsRoot: string
+  ): Promise<vscode.Uri | undefined> {
     const picked = await vscode.window.showOpenDialog({
       canSelectFolders: true,
       canSelectFiles: false,
@@ -279,9 +308,21 @@ export class ProjectCreationService {
       value: ShipOneSettings["defaultPackageManager"];
       picked?: boolean;
     }> = [
-      { label: t("npm"), value: "npm", picked: defaultPackageManager === "npm" },
-      { label: t("pnpm"), value: "pnpm", picked: defaultPackageManager === "pnpm" },
-      { label: t("yarn"), value: "yarn", picked: defaultPackageManager === "yarn" },
+      {
+        label: t("npm"),
+        value: "npm",
+        picked: defaultPackageManager === "npm",
+      },
+      {
+        label: t("pnpm"),
+        value: "pnpm",
+        picked: defaultPackageManager === "pnpm",
+      },
+      {
+        label: t("yarn"),
+        value: "yarn",
+        picked: defaultPackageManager === "yarn",
+      },
     ];
 
     const choice = await vscode.window.showQuickPick(choices, {
@@ -298,8 +339,16 @@ export class ProjectCreationService {
   ): Promise<GithubChoice | undefined> {
     const createChoice = await vscode.window.showQuickPick(
       [
-        { label: t("Si"), value: true, picked: defaultCreateGithubRepoByDefault },
-        { label: t("No"), value: false, picked: !defaultCreateGithubRepoByDefault },
+        {
+          label: t("Si"),
+          value: true,
+          picked: defaultCreateGithubRepoByDefault,
+        },
+        {
+          label: t("No"),
+          value: false,
+          picked: !defaultCreateGithubRepoByDefault,
+        },
       ],
       {
         title: t("GitHub"),
@@ -343,7 +392,10 @@ export class ProjectCreationService {
     }
   }
 
-  private async findAvailableFolderUri(baseFolder: vscode.Uri, folderName: string): Promise<vscode.Uri> {
+  private async findAvailableFolderUri(
+    baseFolder: vscode.Uri,
+    folderName: string
+  ): Promise<vscode.Uri> {
     let candidate = vscode.Uri.joinPath(baseFolder, folderName);
     let suffix = 2;
 
@@ -369,5 +421,8 @@ function validateProjectName(value: string): string | undefined {
 }
 
 function sanitizeFolderName(value: string): string {
-  return value.trim().replace(/[^a-zA-Z0-9 _.-]/g, "-").replace(/\s+/g, "-");
+  return value
+    .trim()
+    .replace(/[^a-zA-Z0-9 _.-]/g, "-")
+    .replace(/\s+/g, "-");
 }

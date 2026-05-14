@@ -32,7 +32,10 @@ export async function pickProject(projectStore: {
   return choice?.project;
 }
 
-export function parseMvpTasks(rawValue: string, currentTasks: NonNullable<ProjectMetadata["mvpTasks"]>) {
+export function parseMvpTasks(
+  rawValue: string,
+  currentTasks: NonNullable<ProjectMetadata["mvpTasks"]>
+) {
   const existingByText = new Map(
     currentTasks.map((task) => [task.text.trim().toLowerCase(), task])
   );
@@ -82,10 +85,14 @@ export function buildStatusFileContent(project: ProjectMetadata): string {
   ].join("\n");
 }
 
-export function buildAiContextContent(project: ProjectMetadata, blockers: string[]): string {
+export function buildAiContextContent(
+  project: ProjectMetadata,
+  blockers: string[]
+): string {
   const mvpTasks = project.mvpTasks ?? [];
   const doneTasks = mvpTasks.filter((task) => task.done).length;
-  const mvpProgress = mvpTasks.length > 0 ? `${doneTasks}/${mvpTasks.length}` : t("sin tareas");
+  const mvpProgress =
+    mvpTasks.length > 0 ? `${doneTasks}/${mvpTasks.length}` : t("sin tareas");
 
   return [
     t("# ShipOne AI Context"),
@@ -108,7 +115,9 @@ export function buildAiContextContent(project: ProjectMetadata, blockers: string
     ...mvpTasks.map((task) => `- [${task.done ? "x" : " "}] ${task.text}`),
     "",
     t("## Bloqueos"),
-    ...(blockers.length > 0 ? blockers.map((blocker) => t("- {0}", blocker)) : [t("- Ninguno")]),
+    ...(blockers.length > 0
+      ? blockers.map((blocker) => t("- {0}", blocker))
+      : [t("- Ninguno")]),
     "",
     t("## Notas"),
     t("- Generado por ShipOne para ayudar a una IA a entender el proyecto."),
@@ -123,9 +132,14 @@ export function buildWeeklyReviewSummary(projects: ProjectMetadata[]) {
   };
 }
 
-export async function readStatusBlockers(projectPath: string): Promise<string[]> {
+export async function readStatusBlockers(
+  projectPath: string
+): Promise<string[]> {
   try {
-    const statusFileUri = vscode.Uri.joinPath(vscode.Uri.file(projectPath), STATUS_FILE_NAME);
+    const statusFileUri = vscode.Uri.joinPath(
+      vscode.Uri.file(projectPath),
+      STATUS_FILE_NAME
+    );
     const raw = await vscode.workspace.fs.readFile(statusFileUri);
     const text = new TextDecoder().decode(raw);
     const lines = text.split(/\r?\n/);
@@ -159,7 +173,9 @@ export async function readStatusBlockers(projectPath: string): Promise<string[]>
   }
 }
 
-export function getFinishedThisWeek(projects: ProjectMetadata[]): ProjectMetadata[] {
+export function getFinishedThisWeek(
+  projects: ProjectMetadata[]
+): ProjectMetadata[] {
   const cutoff = Date.now() - 7 * 86_400_000;
 
   return projects.filter((project) => {

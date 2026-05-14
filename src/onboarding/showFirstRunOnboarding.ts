@@ -15,7 +15,10 @@ export async function showFirstRunOnboarding(
 
   const settings = settingsService.getSettings();
   const choice = await vscode.window.showInformationMessage(
-    t("ShipOne listo. Ruta base: {0}. Solo un proyecto Active a la vez.", settings.projectsRoot),
+    t(
+      "ShipOne listo. Ruta base: {0}. Solo un proyecto Active a la vez.",
+      settings.projectsRoot
+    ),
     t("Crear proyecto"),
     t("Crear idea de ejemplo"),
     t("Elegir carpeta base"),
@@ -45,6 +48,9 @@ export async function showFirstRunOnboarding(
   }
 
   if (choice === t("Abrir ajustes")) {
-    await vscode.commands.executeCommand("workbench.action.openSettings", "ShipOne");
+    await vscode.commands.executeCommand(
+      "workbench.action.openSettings",
+      "ShipOne"
+    );
   }
 }

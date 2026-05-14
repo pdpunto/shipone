@@ -23,9 +23,15 @@ export class ProjectHealthService {
   getMetrics(projects: ProjectMetadata[]): ProjectMetrics {
     const total = projects.length;
     const idea = projects.filter((project) => project.status === "idea").length;
-    const active = projects.filter((project) => project.status === "active").length;
-    const paused = projects.filter((project) => project.status === "paused").length;
-    const finished = projects.filter((project) => project.status === "finished").length;
+    const active = projects.filter(
+      (project) => project.status === "active"
+    ).length;
+    const paused = projects.filter(
+      (project) => project.status === "paused"
+    ).length;
+    const finished = projects.filter(
+      (project) => project.status === "finished"
+    ).length;
     const finishRatio = total === 0 ? 0 : Math.round((finished / total) * 100);
 
     return {
@@ -85,7 +91,9 @@ export class ProjectHealthService {
       issues.push("inactive-active");
     }
 
-    const hasReadme = await pathExists(vscode.Uri.joinPath(vscode.Uri.file(project.path), "README.md"));
+    const hasReadme = await pathExists(
+      vscode.Uri.joinPath(vscode.Uri.file(project.path), "README.md")
+    );
     if (!hasReadme) {
       issues.push("no-readme");
     }
@@ -108,9 +116,13 @@ export class ProjectHealthService {
 
   private async hasRecentGitCommit(projectPath: string): Promise<boolean> {
     try {
-      const { stdout } = await execFileAsync("git", ["log", "-1", "--format=%ct"], {
-        cwd: projectPath,
-      });
+      const { stdout } = await execFileAsync(
+        "git",
+        ["log", "-1", "--format=%ct"],
+        {
+          cwd: projectPath,
+        }
+      );
 
       const timestamp = Number(stdout.trim());
       if (!Number.isFinite(timestamp) || timestamp <= 0) {

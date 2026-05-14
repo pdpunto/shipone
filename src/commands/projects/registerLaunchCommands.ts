@@ -33,7 +33,8 @@ export function registerLaunchCommands(options: {
   projectCreationService: ProjectCreationService;
   treeRefresh: () => void;
 }): vscode.Disposable[] {
-  const { settingsService, projectStore, projectCreationService, treeRefresh } = options;
+  const { settingsService, projectStore, projectCreationService, treeRefresh } =
+    options;
 
   const setProjectsRootCommand = vscode.commands.registerCommand(
     COMMAND_SET_PROJECTS_ROOT,
@@ -55,7 +56,11 @@ export function registerLaunchCommands(options: {
 
       await vscode.workspace
         .getConfiguration("shipone")
-        .update("projectsRoot", folder.fsPath, vscode.ConfigurationTarget.Global);
+        .update(
+          "projectsRoot",
+          folder.fsPath,
+          vscode.ConfigurationTarget.Global
+        );
       treeRefresh();
       vscode.window.showInformationMessage(
         t("Carpeta base actualizada: {0}", folder.fsPath)
@@ -97,19 +102,27 @@ export function registerLaunchCommands(options: {
 
       const filteredByName = filterProjectsByName(projects, searchTerm);
 
-      const typeChoice = await vscode.window.showQuickPick(PROJECT_TYPE_PICKERS, {
-        title: t("Filtrar por tipo"),
-        placeHolder: t("Elige un tipo o deja todo"),
-      });
+      const typeChoice = await vscode.window.showQuickPick(
+        PROJECT_TYPE_PICKERS,
+        {
+          title: t("Filtrar por tipo"),
+          placeHolder: t("Elige un tipo o deja todo"),
+        }
+      );
 
       if (!typeChoice) {
         return;
       }
 
-      const filteredByType = filterProjectsByType(filteredByName, typeChoice.value);
+      const filteredByType = filterProjectsByType(
+        filteredByName,
+        typeChoice.value
+      );
 
       if (filteredByType.length === 0) {
-        vscode.window.showInformationMessage(t("No hay proyectos con esos filtros."));
+        vscode.window.showInformationMessage(
+          t("No hay proyectos con esos filtros.")
+        );
         return;
       }
 
@@ -126,7 +139,9 @@ export function registerLaunchCommands(options: {
       const filteredByTag = filterProjectsByTag(filteredByType, tagChoice);
 
       if (filteredByTag.length === 0) {
-        vscode.window.showInformationMessage(t("No hay proyectos con esa etiqueta."));
+        vscode.window.showInformationMessage(
+          t("No hay proyectos con esa etiqueta.")
+        );
         return;
       }
 
@@ -149,7 +164,10 @@ export function registerLaunchCommands(options: {
         return;
       }
 
-      await vscode.commands.executeCommand(COMMAND_OPEN_PROJECT, choice.project.id);
+      await vscode.commands.executeCommand(
+        COMMAND_OPEN_PROJECT,
+        choice.project.id
+      );
     }
   );
 
@@ -230,7 +248,10 @@ export function registerLaunchCommands(options: {
         return;
       }
 
-      await vscode.commands.executeCommand(COMMAND_OPEN_PROJECT, choice.project.id);
+      await vscode.commands.executeCommand(
+        COMMAND_OPEN_PROJECT,
+        choice.project.id
+      );
     }
   );
 
