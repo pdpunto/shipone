@@ -433,12 +433,12 @@ Goal: make ShipOne more than a launcher.
 
 ### Project health
 
-- [ ] Detect missing next action
-- [ ] Detect inactive active project
-- [ ] Detect no README
-- [ ] Detect no recent Git commits
-- [ ] Show health indicator
-- [ ] Keep health logic simple
+- [x] Detect missing next action
+- [x] Detect inactive active project
+- [x] Detect no README
+- [x] Detect no recent Git commits
+- [x] Show health indicator
+- [x] Keep health logic simple
 
 ### Anti-abandonment
 

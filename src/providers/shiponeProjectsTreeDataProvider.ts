@@ -1,9 +1,19 @@
 import * as vscode from "vscode";
+import { execFile } from "child_process";
+import { promisify } from "util";
 import { ProjectMetadata, ProjectStatus } from "../models/project";
 import { SettingsService } from "../services/settingsService";
 import { ProjectStoreService } from "../services/projectStoreService";
 
 type ShipOneTreeNode = MetricsNode | MetricItemNode | GroupNode | ProjectNode | EmptyStateNode;
+
+type ProjectHealth = {
+  label: string;
+  icon: string;
+  issues: string[];
+};
+
+const execFileAsync = promisify(execFile);
 
 const GROUPS: Array<{ status: ProjectStatus; label: string; icon: string }> = [
   { status: "active", label: "Active", icon: "play" },
@@ -62,9 +72,16 @@ export class ShipOneProjectsTreeDataProvider
         return [new EmptyStateNode("Sin proyectos todavia")];
       }
 
-      return projects.map(
-        (project) =>
-          new ProjectNode(project, settings.inactiveWarningDays, settings.staleWarningDays)
+      return Promise.all(
+        projects.map(async (project) => {
+          const health = await buildProjectHealth(
+            project,
+            settings.inactiveWarningDays,
+            settings.staleWarningDays
+          );
+
+          return new ProjectNode(project, health, settings.inactiveWarningDays, settings.staleWarningDays);
+        })
       );
     }
 
@@ -104,6 +121,7 @@ class MetricItemNode extends vscode.TreeItem {
 class ProjectNode extends vscode.TreeItem {
   constructor(
     project: ProjectMetadata,
+    health: ProjectHealth,
     inactiveWarningDays: number,
     staleWarningDays: number
   ) {
@@ -116,7 +134,7 @@ class ProjectNode extends vscode.TreeItem {
     );
     const mvpProgress = getMvpProgress(project.mvpTasks);
 
-    this.description = [project.nextAction ?? undefined, warning ?? undefined, mvpProgress ?? undefined]
+    this.description = [health.label, project.nextAction ?? undefined, warning ?? undefined, mvpProgress ?? undefined]
       .filter(Boolean)
       .join(" · ");
     this.tooltip = new vscode.MarkdownString(
@@ -124,8 +142,10 @@ class ProjectNode extends vscode.TreeItem {
         `**${project.name}**`,
         "",
         `Estado: ${project.status}`,
+        `Salud: ${health.label}`,
         `Ruta: ${project.path}`,
         `Ultima apertura: ${project.lastOpenedAt ?? "sin registro"}`,
+        health.issues.length > 0 ? `Problemas: ${health.issues.join(", ")}` : "",
         mvpProgress ? `MVP: ${mvpProgress}` : "",
         warning ? `Aviso: ${warning}` : "",
       ]
@@ -215,4 +235,68 @@ function buildMetrics(projects: ProjectMetadata[]) {
     finished,
     finishRatio,
   };
+}
+
+async function buildProjectHealth(
+  project: ProjectMetadata,
+  inactiveWarningDays: number,
+  staleWarningDays: number
+): Promise<ProjectHealth> {
+  const issues: string[] = [];
+  const warning = getInactivityWarning(project.lastOpenedAt, inactiveWarningDays, staleWarningDays);
+
+  if (!project.nextAction) {
+    issues.push("missing-next-action");
+  }
+
+  if (project.status === "active" && warning) {
+    issues.push("inactive-active");
+  }
+
+  const hasReadme = await pathExists(vscode.Uri.joinPath(vscode.Uri.file(project.path), "README.md"));
+  if (!hasReadme) {
+    issues.push("no-readme");
+  }
+
+  const hasRecentCommits = await hasRecentGitCommit(project.path);
+  if (!hasRecentCommits) {
+    issues.push("no-recent-commits");
+  }
+
+  if (issues.length === 0) {
+    return { label: "healthy", icon: "check", issues };
+  }
+
+  if (issues.length <= 2) {
+    return { label: "warning", icon: "warning", issues };
+  }
+
+  return { label: "bad", icon: "error", issues };
+}
+
+async function hasRecentGitCommit(projectPath: string): Promise<boolean> {
+  try {
+    const { stdout } = await execFileAsync("git", ["log", "-1", "--format=%ct"], {
+      cwd: projectPath,
+    });
+
+    const timestamp = Number(stdout.trim());
+    if (!Number.isFinite(timestamp) || timestamp <= 0) {
+      return false;
+    }
+
+    const ageDays = Math.floor((Date.now() - timestamp * 1000) / 86_400_000);
+    return ageDays <= 30;
+  } catch {
+    return false;
+  }
+}
+
+async function pathExists(uri: vscode.Uri): Promise<boolean> {
+  try {
+    await vscode.workspace.fs.stat(uri);
+    return true;
+  } catch {
+    return false;
+  }
 }
