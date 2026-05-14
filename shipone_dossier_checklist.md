@@ -205,14 +205,14 @@ Goal: release a useful first version.
 
 ### Extension identity
 
-- [ ] Rename extension to `ShipOne`
-- [ ] Choose extension ID
-- [ ] Create logo placeholder
-- [ ] Update `package.json`
-- [ ] Update README
-- [ ] Add tagline: `Start less. Ship more.`
-- [ ] Add marketplace description
-- [ ] Add license
+- [x] Rename extension to `ShipOne`
+- [x] Choose extension ID
+- [x] Create logo placeholder
+- [x] Update `package.json`
+- [x] Update README
+- [x] Add tagline: `Start less. Ship more.`
+- [x] Add marketplace description
+- [x] Add license
 
 ### Settings
 
@@ -237,7 +237,7 @@ Goal: release a useful first version.
 
 ### Project states
 
-- [ ] Add status enum
+- [x] Add status enum
 - [x] Add command: change project status
 - [x] Add command: mark as Idea
 - [x] Add command: mark as Active
@@ -249,11 +249,11 @@ Goal: release a useful first version.
 
 ### Sidebar UI
 
-- [ ] Create grouped tree view
-- [ ] Group by Ideas
-- [ ] Group by Active
-- [ ] Group by Paused
-- [ ] Group by Finished
+- [x] Create grouped tree view
+- [x] Group by Ideas
+- [x] Group by Active
+- [x] Group by Paused
+- [x] Group by Finished
 - [x] Show icons by status
 - [x] Show favorite star
 - [x] Show project type
@@ -265,10 +265,10 @@ Goal: release a useful first version.
 
 ### Next Action
 
-- [ ] Add `nextAction` field
+- [x] Add `nextAction` field
 - [x] Add command: edit next action
 - [x] Add command: clear next action
-- [ ] Prompt user with input box
+- [x] Prompt user with input box
 - [x] Show next action in sidebar
 - [x] Warn if Active project has no next action
 
@@ -336,14 +336,14 @@ Goal: release a useful first version.
 
 ### MVP Done Criteria
 
-- [ ] User can create a project
-- [ ] User can list projects
-- [ ] User can open projects
-- [ ] User can change status
-- [ ] User can set one Active project
-- [ ] User can add next action
-- [ ] User can mark project Finished
-- [ ] Extension works after VS Code restart
+- [x] User can create a project
+- [x] User can list projects
+- [x] User can open projects
+- [x] User can change status
+- [x] User can set one Active project
+- [x] User can add next action
+- [x] User can mark project Finished
+- [x] Extension works after VS Code restart
 - [x] README explains the workflow
 
 ---
@@ -478,11 +478,11 @@ Goal: improve project creation.
 
 ### Supported starters
 
-- [ ] Blank
-- [ ] React Vite
-- [ ] Next.js
-- [ ] Node API
-- [ ] Python
+- [x] Blank
+- [x] React Vite
+- [x] Next.js
+- [x] Node API
+- [x] Python
 - [ ] Express API
 - [ ] CLI app
 - [ ] Static website
