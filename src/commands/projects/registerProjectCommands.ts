@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { t } from "../../localization";
 import { ProjectMetadata, ProjectStatus } from "../../models/project";
 import { ShipOneSettings } from "../../models/settings";
 import { ProjectStoreService } from "../../services/projectStoreService";
@@ -19,10 +20,10 @@ const COMMAND_OPEN_STATUS_FILE = "shipone.openStatusFile";
 const COMMAND_TOGGLE_FAVORITE = "shipone.toggleFavorite";
 
 const STATUS_PICKERS: Array<{ label: string; value: ProjectStatus }> = [
-  { label: "Idea", value: "idea" },
-  { label: "Active", value: "active" },
-  { label: "Paused", value: "paused" },
-  { label: "Finished", value: "finished" },
+  { label: t("Idea"), value: "idea" },
+  { label: t("Active"), value: "active" },
+  { label: t("Paused"), value: "paused" },
+  { label: t("Finished"), value: "finished" },
 ];
 
 export function registerProjectCommands(options: {
@@ -41,7 +42,7 @@ export function registerProjectCommands(options: {
       const project = await resolveProject(projectStore, projectArg, getSelectedProjectId());
 
       if (!project) {
-        vscode.window.showErrorMessage("No se encontró el proyecto.");
+        vscode.window.showErrorMessage(t("No se encontró el proyecto."));
         return;
       }
 
@@ -65,8 +66,8 @@ export function registerProjectCommands(options: {
       }
 
       const statusChoice = await vscode.window.showQuickPick(STATUS_PICKERS, {
-        title: "Estado",
-        placeHolder: "Elige el nuevo estado",
+        title: t("Estado"),
+        placeHolder: t("Elige el nuevo estado"),
       });
 
       if (!statusChoice) {
@@ -154,9 +155,9 @@ export function registerProjectCommands(options: {
       }
 
       const nextAction = await vscode.window.showInputBox({
-        title: "Siguiente accion",
-        prompt: "Que hay que hacer ahora",
-        placeHolder: "Crear login",
+        title: t("Siguiente accion"),
+        prompt: t("Que hay que hacer ahora"),
+        placeHolder: t("Crear login"),
         value: project.nextAction ?? "",
       });
 
@@ -166,7 +167,9 @@ export function registerProjectCommands(options: {
 
       await projectStore.setNextAction(project.id, nextAction.trim() ? nextAction.trim() : null);
       treeDataProvider.refresh();
-      vscode.window.showInformationMessage(`Siguiente accion actualizada en ${project.name}.`);
+      vscode.window.showInformationMessage(
+        t("Siguiente accion actualizada en {0}.", project.name)
+      );
     }
   );
 
@@ -181,7 +184,7 @@ export function registerProjectCommands(options: {
 
       await projectStore.setNextAction(project.id, null);
       treeDataProvider.refresh();
-      vscode.window.showInformationMessage(`Siguiente accion limpiada en ${project.name}.`);
+      vscode.window.showInformationMessage(t("Siguiente accion limpiada en {0}.", project.name));
     }
   );
 
@@ -200,7 +203,7 @@ export function registerProjectCommands(options: {
         const document = await vscode.workspace.openTextDocument(statusFileUri);
         await vscode.window.showTextDocument(document, { preview: false });
       } catch {
-        vscode.window.showErrorMessage("No se pudo abrir STATUS.md.");
+        vscode.window.showErrorMessage(t("No se pudo abrir STATUS.md."));
       }
     }
   );
@@ -219,8 +222,8 @@ export function registerProjectCommands(options: {
       treeDataProvider.refresh();
       vscode.window.showInformationMessage(
         wasFavorite
-          ? `Quitado de favoritos: ${project.name}.`
-          : `Marcado como favorito: ${project.name}.`
+          ? t("Quitado de favoritos: {0}.", project.name)
+          : t("Marcado como favorito: {0}.", project.name)
       );
     }
   );
@@ -338,7 +341,9 @@ async function updateProjectStatus(
     if (!settings.enforceOneActiveProject) {
       await projectStore.setProjectStatus(project.id, status, false);
       treeDataProvider.refresh();
-      vscode.window.showInformationMessage(`${project.name} ahora esta en ${statusLabel}.`);
+      vscode.window.showInformationMessage(
+        t("{0} ahora esta en {1}.", project.name, statusLabel)
+      );
       return;
     }
 
@@ -347,12 +352,12 @@ async function updateProjectStatus(
 
     if (otherActive) {
       const choice = await vscode.window.showWarningMessage(
-        `Ya hay un proyecto activo: ${otherActive.name}.`,
-        "Pausar y activar",
-        "Cancelar"
+        t("Ya hay un proyecto activo: {0}.", otherActive.name),
+        t("Pausar y activar"),
+        t("Cancelar")
       );
 
-      if (choice !== "Pausar y activar") {
+      if (choice !== t("Pausar y activar")) {
         return;
       }
     }
@@ -360,5 +365,5 @@ async function updateProjectStatus(
 
   await projectStore.setProjectStatus(project.id, status, settings.enforceOneActiveProject);
   treeDataProvider.refresh();
-  vscode.window.showInformationMessage(`${project.name} ahora esta en ${statusLabel}.`);
+  vscode.window.showInformationMessage(t("{0} ahora esta en {1}.", project.name, statusLabel));
 }
