@@ -57,8 +57,8 @@ Objetivo: convertir el codigo actual en una base mantenible y segura antes de es
 - [x] Validar JSON antes de cargar
 - [x] Detectar metadata corrupta
 - [x] Restaurar automaticamente backup
-- [ ] AÃ±adir logs de errores
-- [ ] AÃ±adir recovery mode
+- [x] AÃ±adir logs de errores
+- [x] AÃ±adir recovery mode
 - [x] AÃ±adir versionado de metadata
 - [x] AÃ±adir migraciones automaticas
 
@@ -336,4 +336,5 @@ La prioridad profesional ahora mismo es:
 ## Nota final
 
 ShipOne ya tiene valor funcional. Lo que falta ahora es convertirlo en un producto que se pueda mantener, explicar y publicar sin miedo.
+
 

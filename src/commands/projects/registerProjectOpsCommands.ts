@@ -13,6 +13,7 @@ const COMMAND_OPEN_PROJECT = "shipone.openProject";
 const COMMAND_EDIT_MVP_CHECKLIST = "shipone.editMvpChecklist";
 const COMMAND_MARK_MVP_ITEM_DONE = "shipone.markMvpItemDone";
 const COMMAND_SYNC_STATUS_FILE = "shipone.syncStatusFile";
+const COMMAND_RECOVER_STORAGE = "shipone.recoverStorage";
 const COMMAND_CONNECT_GITHUB = "shipone.connectGithub";
 const COMMAND_DETECT_BLOCKERS = "shipone.detectBlockers";
 const COMMAND_GENERATE_AI_CONTEXT = "shipone.generateAiContext";
@@ -114,6 +115,20 @@ export function registerProjectOpsCommands(options: {
     }
   );
 
+  const recoverStorageCommand = vscode.commands.registerCommand(
+    COMMAND_RECOVER_STORAGE,
+    async () => {
+      const restored = await projectStore.recoverFromBackup();
+
+      if (restored) {
+        treeRefresh();
+        vscode.window.showInformationMessage("ShipOne recupero el almacenamiento desde el backup.");
+      } else {
+        vscode.window.showErrorMessage("No se pudo recuperar el almacenamiento de ShipOne.");
+      }
+    }
+  );
+
   const connectGithubCommand = vscode.commands.registerCommand(COMMAND_CONNECT_GITHUB, async () => {
     await projectCreationService.connectGithub();
   });
@@ -156,6 +171,7 @@ export function registerProjectOpsCommands(options: {
     editMvpChecklistCommand,
     markMvpItemDoneCommand,
     syncStatusFileCommand,
+    recoverStorageCommand,
     connectGithubCommand,
     detectBlockersCommand,
     generateAiContextCommand,

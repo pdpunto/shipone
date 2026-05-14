@@ -17,6 +17,8 @@ type ProjectStoreSnapshot = {
 };
 
 export class ProjectStoreService {
+  private readonly outputChannel = vscode.window.createOutputChannel("ShipOne Storage");
+
   constructor(private readonly context: vscode.ExtensionContext) {}
 
   async initialize(): Promise<void> {
@@ -39,6 +41,18 @@ export class ProjectStoreService {
 
     const { projects } = await this.readProjectsWithRecovery();
     return projects;
+  }
+
+  async recoverFromBackup(): Promise<boolean> {
+    try {
+      const recovered = await this.readProjectsFromUri(this.backupFileUri);
+      await this.saveProjects(recovered.projects);
+      this.logInfo("Recuperacion completada desde backup.");
+      return true;
+    } catch (error) {
+      this.logError("No se pudo recuperar el almacenamiento desde backup.", error);
+      return false;
+    }
   }
 
   async saveProjects(projects: ProjectMetadata[]): Promise<void> {
@@ -272,12 +286,15 @@ export class ProjectStoreService {
   private async readProjectsWithRecovery(): Promise<{ projects: ProjectMetadata[]; version: number }> {
     try {
       return await this.readProjectsFromUri(this.storageFileUri);
-    } catch {
+    } catch (error) {
+      this.logError("Fallo la lectura del almacenamiento principal.", error);
       try {
         const recovered = await this.readProjectsFromUri(this.backupFileUri);
         await this.saveProjects(recovered.projects);
+        this.logInfo("Se recupero el almacenamiento desde el backup.");
         return recovered;
-      } catch {
+      } catch (backupError) {
+        this.logError("Fallo tambien la lectura del backup.", backupError);
         return { projects: [], version: STORAGE_VERSION };
       }
     }
@@ -318,5 +335,15 @@ export class ProjectStoreService {
     } catch {
       return false;
     }
+  }
+
+  private logInfo(message: string): void {
+    this.outputChannel.appendLine(`[info] ${message}`);
+  }
+
+  private logError(message: string, error: unknown): void {
+    const detail = error instanceof Error ? error.message : String(error);
+    this.outputChannel.appendLine(`[error] ${message}`);
+    this.outputChannel.appendLine(detail);
   }
 }
