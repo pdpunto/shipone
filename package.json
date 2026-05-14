@@ -65,6 +65,23 @@
       }
     ],
     "menus": {
+      "view/title": [
+        {
+          "command": "shipone.createProject",
+          "when": "view == shipone.projectsView",
+          "group": "navigation"
+        },
+        {
+          "command": "shipone.searchProject",
+          "when": "view == shipone.projectsView",
+          "group": "navigation"
+        },
+        {
+          "command": "shipone.refreshProjects",
+          "when": "view == shipone.projectsView",
+          "group": "navigation"
+        }
+      ],
       "view/item/context": [
         {
           "command": "shipone.openProject",
@@ -93,8 +110,17 @@
         }
       ]
     },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "shipone",
+          "title": "ShipOne",
+          "icon": "media/branding/icon-128.png"
+        }
+      ]
+    },
     "views": {
-      "explorer": [
+      "shipone": [
         {
           "id": "shipone.projectsView",
           "name": "ShipOne"
