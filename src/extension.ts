@@ -10,6 +10,7 @@ import { SettingsService } from "./services/settingsService";
 const COMMAND_SHOW_WELCOME = "shipone.showWelcome";
 const COMMAND_CREATE_PROJECT = "shipone.createProject";
 const COMMAND_CREATE_SAMPLE_IDEA = "shipone.createSampleIdea";
+const COMMAND_SET_PROJECTS_ROOT = "shipone.setProjectsRoot";
 const COMMAND_OPEN_PROJECTS_ROOT = "shipone.openProjectsRoot";
 const COMMAND_OPEN_PROJECT_QUICK_PICK = "shipone.openProjectQuickPick";
 const COMMAND_EDIT_MVP_CHECKLIST = "shipone.editMvpChecklist";
@@ -99,6 +100,32 @@ export async function activate(context: vscode.ExtensionContext) {
 
     vscode.window.showInformationMessage(`ShipOne listo. Ruta base: ${settings.projectsRoot}`);
   });
+
+  const setProjectsRootCommand = vscode.commands.registerCommand(
+    COMMAND_SET_PROJECTS_ROOT,
+    async () => {
+      const settings = settingsService.getSettings();
+      const picked = await vscode.window.showOpenDialog({
+        canSelectFolders: true,
+        canSelectFiles: false,
+        canSelectMany: false,
+        defaultUri: vscode.Uri.file(settings.projectsRoot),
+        title: "Elegir carpeta base",
+        openLabel: "Usar carpeta",
+      });
+
+      const folder = picked?.[0];
+      if (!folder) {
+        return;
+      }
+
+      await vscode.workspace
+        .getConfiguration("shipone")
+        .update("projectsRoot", folder.fsPath, vscode.ConfigurationTarget.Global);
+      treeDataProvider.refresh();
+      vscode.window.showInformationMessage(`Carpeta base actualizada: ${folder.fsPath}`);
+    }
+  );
 
   const openProjectsRootCommand = vscode.commands.registerCommand(
     COMMAND_OPEN_PROJECTS_ROOT,
@@ -747,6 +774,7 @@ export async function activate(context: vscode.ExtensionContext) {
     treeView,
     configurationWatcher,
     welcomeCommand,
+    setProjectsRootCommand,
     openProjectsRootCommand,
     openProjectQuickPickCommand,
     editMvpChecklistCommand,
@@ -1093,6 +1121,7 @@ async function showFirstRunOnboarding(
     `ShipOne listo. Ruta base: ${settings.projectsRoot}. Solo un proyecto Active a la vez.`,
     "Crear proyecto",
     "Crear idea de ejemplo",
+    "Elegir carpeta base",
     "Conectar GitHub",
     "Abrir ajustes",
     "Entendido"
@@ -1105,6 +1134,11 @@ async function showFirstRunOnboarding(
 
   if (choice === "Crear idea de ejemplo") {
     await vscode.commands.executeCommand(COMMAND_CREATE_SAMPLE_IDEA);
+    return;
+  }
+
+  if (choice === "Elegir carpeta base") {
+    await vscode.commands.executeCommand(COMMAND_SET_PROJECTS_ROOT);
     return;
   }
 

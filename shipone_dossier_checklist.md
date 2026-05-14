@@ -497,7 +497,7 @@ Goal: improve project creation.
 
 ### First-run onboarding
 
-- [ ] Ask projects root
+- [x] Ask projects root
 - [x] Ask GitHub preference
 - [x] Ask package manager
 - [x] Create sample idea
