@@ -390,13 +390,13 @@ Goal: make the MVP feel reliable.
 
 ### Metrics
 
-- [ ] Count total projects
-- [ ] Count Ideas
-- [ ] Count Active
-- [ ] Count Paused
-- [ ] Count Finished
-- [ ] Calculate finish ratio
-- [ ] Show simple metrics view
+- [x] Count total projects
+- [x] Count Ideas
+- [x] Count Active
+- [x] Count Paused
+- [x] Count Finished
+- [x] Calculate finish ratio
+- [x] Show simple metrics view
 
 ---
 

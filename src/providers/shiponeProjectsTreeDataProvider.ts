@@ -3,7 +3,7 @@ import { ProjectMetadata, ProjectStatus } from "../models/project";
 import { SettingsService } from "../services/settingsService";
 import { ProjectStoreService } from "../services/projectStoreService";
 
-type ShipOneTreeNode = GroupNode | ProjectNode | EmptyStateNode;
+type ShipOneTreeNode = MetricsNode | MetricItemNode | GroupNode | ProjectNode | EmptyStateNode;
 
 const GROUPS: Array<{ status: ProjectStatus; label: string; icon: string }> = [
   { status: "active", label: "Active", icon: "play" },
@@ -34,7 +34,23 @@ export class ShipOneProjectsTreeDataProvider
 
   async getChildren(element?: ShipOneTreeNode): Promise<ShipOneTreeNode[]> {
     if (!element) {
-      return GROUPS.map((group) => new GroupNode(group.status, group.label, group.icon));
+      return [
+        new MetricsNode(),
+        ...GROUPS.map((group) => new GroupNode(group.status, group.label, group.icon)),
+      ];
+    }
+
+    if (element instanceof MetricsNode) {
+      const projects = await this.projectStore.loadProjects();
+      const summary = buildMetrics(projects);
+      return [
+        new MetricItemNode("Total", summary.total, "graph"),
+        new MetricItemNode("Ideas", summary.idea, "lightbulb"),
+        new MetricItemNode("Active", summary.active, "play"),
+        new MetricItemNode("Paused", summary.paused, "debug-pause"),
+        new MetricItemNode("Finished", summary.finished, "check"),
+        new MetricItemNode("Finish ratio", `${summary.finishRatio}%`, "pie-chart"),
+      ];
     }
 
     if (element instanceof GroupNode) {
@@ -65,6 +81,23 @@ class GroupNode extends vscode.TreeItem {
     super(label, vscode.TreeItemCollapsibleState.Collapsed);
     this.iconPath = new vscode.ThemeIcon(iconName);
     this.contextValue = "shipone.group";
+  }
+}
+
+class MetricsNode extends vscode.TreeItem {
+  constructor() {
+    super("Metrics", vscode.TreeItemCollapsibleState.Collapsed);
+    this.iconPath = new vscode.ThemeIcon("graph");
+    this.contextValue = "shipone.metrics";
+  }
+}
+
+class MetricItemNode extends vscode.TreeItem {
+  constructor(label: string, value: string | number, iconName: string) {
+    super(label, vscode.TreeItemCollapsibleState.None);
+    this.description = String(value);
+    this.iconPath = new vscode.ThemeIcon(iconName);
+    this.contextValue = "shipone.metric";
   }
 }
 
@@ -153,4 +186,22 @@ function getInactivityWarning(
   }
 
   return null;
+}
+
+function buildMetrics(projects: ProjectMetadata[]) {
+  const total = projects.length;
+  const idea = projects.filter((project) => project.status === "idea").length;
+  const active = projects.filter((project) => project.status === "active").length;
+  const paused = projects.filter((project) => project.status === "paused").length;
+  const finished = projects.filter((project) => project.status === "finished").length;
+  const finishRatio = total === 0 ? 0 : Math.round((finished / total) * 100);
+
+  return {
+    total,
+    idea,
+    active,
+    paused,
+    finished,
+    finishRatio,
+  };
 }
