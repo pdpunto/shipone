@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+﻿import * as vscode from "vscode";
 import { t } from "../../localization";
 import { ProjectMetadata, ProjectStatus } from "../../models/project";
 import { ShipOneSettings } from "../../models/settings";

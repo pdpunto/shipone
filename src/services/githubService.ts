@@ -1,6 +1,7 @@
 import { execFile } from "child_process";
 import { promisify } from "util";
 import * as vscode from "vscode";
+import { t } from "../localization";
 
 const execFileAsync = promisify(execFile);
 
@@ -9,21 +10,23 @@ export class GithubService {
     const ghInstalled = await this.isGithubCliInstalled();
 
     if (!ghInstalled) {
-      vscode.window.showErrorMessage("GitHub CLI no esta instalado. Instala 'gh' y prueba otra vez.");
+      vscode.window.showErrorMessage(
+        t("GitHub CLI no esta instalado. Instala 'gh' y prueba otra vez.")
+      );
       return;
     }
 
     const githubReady = await this.isGithubAuthenticated();
 
     if (githubReady) {
-      vscode.window.showInformationMessage("GitHub ya esta conectado.");
+      vscode.window.showInformationMessage(t("GitHub ya esta conectado."));
       return;
     }
 
     const terminal = vscode.window.createTerminal("ShipOne GitHub");
     terminal.show(true);
     terminal.sendText("gh auth login -h github.com");
-    vscode.window.showInformationMessage("Abre la terminal para conectar GitHub.");
+    vscode.window.showInformationMessage(t("Abre la terminal para conectar GitHub."));
   }
 
   async isGithubAuthenticated(): Promise<boolean> {

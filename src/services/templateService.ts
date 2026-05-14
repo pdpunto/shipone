@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { t } from "../localization";
 import { dirname, relative } from "path";
 import { ShipOneSettings } from "../models/settings";
 
@@ -26,10 +27,10 @@ const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
         content: [
           `# ${context.projectName}`,
           "",
-          context.description || "Proyecto creado con ShipOne.",
+          context.description || t("Proyecto creado con ShipOne."),
           "",
-          "## Proximo paso",
-          "- Define el primer objetivo.",
+          t("## Proximo paso"),
+          t("- Define el primer objetivo."),
           "",
         ].join("\n"),
       },
@@ -83,7 +84,7 @@ if (root) {
   root.innerHTML = \`
     <main class="app">
       <h1>${context.projectName}</h1>
-      <p>Proyecto creado con ShipOne.</p>
+      <p>${t("Proyecto creado con ShipOne.")}</p>
     </main>
   \`;
 }
@@ -132,7 +133,7 @@ if (root) {
         uri: vscode.Uri.joinPath(context.folderUri, "app", "layout.tsx"),
         content: `export const metadata = {
   title: "${context.projectName}",
-  description: "${escapeForTsx(context.description || "Proyecto creado con ShipOne.")}",
+  description: "${escapeForTsx(context.description || t("Proyecto creado con ShipOne."))}",
 };
 
 export default function RootLayout({
@@ -154,7 +155,7 @@ export default function RootLayout({
   return (
     <main>
       <h1>${context.projectName}</h1>
-      <p>${escapeForTsx(context.description || "Proyecto creado con ShipOne.")}</p>
+      <p>${escapeForTsx(context.description || t("Proyecto creado con ShipOne."))}</p>
     </main>
   );
 }
@@ -171,7 +172,7 @@ export default function RootLayout({
         content: [
           '"""',
           context.projectName,
-          context.description || "Proyecto creado con ShipOne.",
+          context.description || t("Proyecto creado con ShipOne."),
           '"""',
           "",
           "def main() -> None:",

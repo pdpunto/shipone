@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { t } from "../../localization";
 import { TreeIconProvider } from "../treeIconProvider";
 import { TreeTooltipProvider } from "../treeTooltipProvider";
 
@@ -16,7 +17,7 @@ export class WarningNode extends vscode.TreeItem {
     this.tooltip = tooltipProvider.buildWarningTooltip(label, detail);
     this.command = {
       command: "shipone.openProject",
-      title: "Abrir proyecto",
+      title: t("Abrir proyecto"),
       arguments: [projectId],
     };
     this.contextValue = "shipone.warning";

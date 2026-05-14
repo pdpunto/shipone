@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { t } from "../../localization";
 import { ProjectMetadata } from "../../models/project";
 import { ProjectHealth } from "../../services/projectHealthService";
 import { ProjectHealthRenderer } from "../projectHealthRenderer";
@@ -32,7 +33,7 @@ export class ProjectNode extends vscode.TreeItem {
     this.iconPath = new vscode.ThemeIcon(iconProvider.getProjectIcon(project));
     this.command = {
       command: "shipone.openProject",
-      title: "Abrir proyecto",
+      title: t("Abrir proyecto"),
       arguments: [project.id],
     };
   }

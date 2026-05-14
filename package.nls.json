@@ -1,4 +1,4 @@
-{
+﻿{
   "displayName": "ShipOne",
   "description": "ShipOne helps you create and track projects from VS Code",
   "command.showWelcome.title": "ShipOne: Welcome",
@@ -101,7 +101,7 @@
   "Escribe una etiqueta o deja vacio": "Type a tag or leave it empty",
   "frontend": "frontend",
   "No hay proyectos con esa etiqueta.": "No projects with that tag.",
-  "{0} · {1}": "{0} · {1}",
+  "{0} Â· {1}": "{0} Â· {1}",
   "Elige un proyecto": "Choose a project",
   "ShipOne: creando proyecto": "ShipOne: creating project",
   "Proyecto creado: {0}. Ya lo tienes en ShipOne.": "Project created: {0}. It is now in ShipOne.",
@@ -112,7 +112,7 @@
   "Active": "Active",
   "Paused": "Paused",
   "Finished": "Finished",
-  "No se encontró el proyecto.": "Project not found.",
+  "No se encontró el proyecto.": "Project not found."
   "Estado": "Status",
   "Elige el nuevo estado": "Choose the new status",
   "Siguiente accion": "Next action",
@@ -126,9 +126,9 @@
   "{0} ahora esta en {1}.": "{0} is now {1}.",
   "Pausar y activar": "Pause and activate",
   "Cancelar": "Cancel",
-  "No se encontró el proyecto.": "Project not found.",
+  "No se encontró el proyecto.": "Project not found."
   "Proyecto": "Project",
-  "{0} · {1}": "{0} · {1}",
+  "{0} Â· {1}": "{0} Â· {1}",
   "Nombre del proyecto": "Project name",
   "Descripcion": "Description",
   "Proyecto simple para ShipOne": "Simple project for ShipOne",
@@ -151,9 +151,9 @@
   "Elige una opcion": "Choose an option",
   "Quieres crear un repo de GitHub?": "Do you want to create a GitHub repo?",
   "Privado": "Private",
-  "Público": "Public",
+  "PÃºblico": "Public",
   "Visibilidad": "Visibility",
-  "Privado o público?": "Private or public?",
+  "Privado o pÃºblico?": "Private or public?",
   "Escribe un nombre.": "Type a name.",
   "Usa solo letras, numeros, espacios, guiones o puntos.": "Use only letters, numbers, spaces, hyphens or dots.",
   "Checklist MVP": "MVP checklist",
@@ -215,5 +215,11 @@
   "Abre el grupo de proyectos {0}.": "Open the {0} projects group.",
   "**{0}**": "**{0}**",
   "**{0}**\n\nUsa {1} para empezar.": "**{0}**\n\nUse {1} to get started.",
-  "**{0}**\n\n{1}": "**{0}**\n\n{1}"
+  "**{0}**\n\n{1}": "**{0}**\n\n{1}",
+  "GitHub CLI no esta instalado. Instala 'gh' y prueba otra vez.": "GitHub CLI is not installed. Install 'gh' and try again.",
+  "GitHub ya esta conectado.": "GitHub is already connected.",
+  "Abre la terminal para conectar GitHub.": "Open the terminal to connect GitHub.",
+  "Proyecto creado con ShipOne.": "Project created with ShipOne.",
+  "## Proximo paso": "## Next step",
+  "- Define el primer objetivo.": "- Define the first goal."
 }
