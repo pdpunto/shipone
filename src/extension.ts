@@ -16,6 +16,7 @@ import { TreeTooltipProvider } from "./providers/treeTooltipProvider";
 import { ProjectStoreService } from "./services/projectStoreService";
 import { SettingsService } from "./services/settingsService";
 import { showFirstRunOnboarding } from "./onboarding/showFirstRunOnboarding";
+import { t } from "./localization";
 
 const COMMAND_SHOW_WELCOME = "shipone.showWelcome";
 const COMMAND_REFRESH_PROJECTS = "shipone.refreshProjects";
@@ -86,7 +87,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
   const welcomeCommand = vscode.commands.registerCommand(COMMAND_SHOW_WELCOME, () => {
     const settings = settingsService.getSettings();
-    vscode.window.showInformationMessage(`ShipOne listo. Ruta base: ${settings.projectsRoot}`);
+    vscode.window.showInformationMessage(t("ShipOne listo. Ruta base: {0}", settings.projectsRoot));
   });
 
   const projectCommands = registerProjectCommands({

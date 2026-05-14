@@ -79,18 +79,18 @@ Objetivo: hacer que ShipOne funcione automaticamante en el idioma configurado po
 
 ### 2.1 Sistema de localizacion
 
-- [ ] Crear sistema `t()`
+- [x] Crear sistema `t()`
 - [ ] Evitar textos hardcodeados
-- [ ] Crear carpeta `src/localization/`
-- [ ] Crear `package.nls.json`
-- [ ] Crear `package.nls.es.json`
+- [x] Crear carpeta `src/localization/`
+- [x] Crear `package.nls.json`
+- [x] Crear `package.nls.es.json`
 - [ ] Crear `package.nls.fr.json`
 - [ ] Crear `package.nls.de.json`
 
 ### 2.2 Internacionalizacion de `package.json`
 
-- [ ] Traducir `displayName`
-- [ ] Traducir `description`
+- [x] Traducir `displayName`
+- [x] Traducir `description`
 - [ ] Traducir comandos
 - [ ] Traducir settings
 - [ ] Traducir descriptions
@@ -336,6 +336,7 @@ La prioridad profesional ahora mismo es:
 ## Nota final
 
 ShipOne ya tiene valor funcional. Lo que falta ahora es convertirlo en un producto que se pueda mantener, explicar y publicar sin miedo.
+
 
 
 

@@ -1,7 +1,7 @@
 {
   "name": "shipone",
-  "displayName": "ShipOne",
-  "description": "ShipOne ayuda a crear y seguir proyectos desde VS Code",
+  "displayName": "%displayName%",
+  "description": "%description%",
   "icon": "media/branding/icon-128.png",
   "galleryBanner": {
     "color": "#0f172a",
