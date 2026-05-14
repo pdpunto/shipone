@@ -71,6 +71,11 @@ export class ProjectCreationService {
       return undefined;
     }
 
+    const packageManager = await this.pickPackageManager(settings.defaultPackageManager);
+    if (!packageManager) {
+      return undefined;
+    }
+
     const gitChoice = await this.pickGitChoiceWithDefault(settings.createGitRepoByDefault);
     if (!gitChoice) {
       return undefined;
@@ -106,8 +111,10 @@ export class ProjectCreationService {
     }
 
     await this.projectStore.createProjectFolder(folderUri);
-    await this.writeStatusFile(folderUri, name, description);
-    await this.createSelectedTemplate(folderUri, name, description, type);
+    if (settings.createStatusFileByDefault) {
+      await this.writeStatusFile(folderUri, name, description);
+    }
+    await this.createSelectedTemplate(folderUri, name, description, type, packageManager);
 
     let gitInitialized = false;
     if (gitChoice.value) {
@@ -223,6 +230,27 @@ export class ProjectCreationService {
     );
   }
 
+  private async pickPackageManager(
+    defaultPackageManager: ShipOneSettings["defaultPackageManager"]
+  ): Promise<ShipOneSettings["defaultPackageManager"] | undefined> {
+    const choices: Array<{
+      label: string;
+      value: ShipOneSettings["defaultPackageManager"];
+      picked?: boolean;
+    }> = [
+      { label: "npm", value: "npm", picked: defaultPackageManager === "npm" },
+      { label: "pnpm", value: "pnpm", picked: defaultPackageManager === "pnpm" },
+      { label: "yarn", value: "yarn", picked: defaultPackageManager === "yarn" },
+    ];
+
+    const choice = await vscode.window.showQuickPick(choices, {
+      title: "Package manager",
+      placeHolder: "Elige una opcion",
+    });
+
+    return choice?.value;
+  }
+
   private async pickGithubChoice(
     defaultCreateGithubRepoByDefault: boolean,
     defaultVisibility: "private" | "public"
@@ -313,9 +341,10 @@ export class ProjectCreationService {
     folderUri: vscode.Uri,
     projectName: string,
     description: string,
-    type: ShipOneSettings["defaultProjectType"]
+    type: ShipOneSettings["defaultProjectType"],
+    packageManager: ShipOneSettings["defaultPackageManager"]
   ): Promise<void> {
-    const templates = this.getTemplateFiles(folderUri, projectName, description, type);
+    const templates = this.getTemplateFiles(folderUri, projectName, description, type, packageManager);
 
     for (const file of templates) {
       await this.writeFileIfMissing(file.uri, file.content);
@@ -326,7 +355,8 @@ export class ProjectCreationService {
     folderUri: vscode.Uri,
     projectName: string,
     description: string,
-    type: ShipOneSettings["defaultProjectType"]
+    type: ShipOneSettings["defaultProjectType"],
+    packageManager: ShipOneSettings["defaultPackageManager"]
   ): Array<{ uri: vscode.Uri; content: string }> {
     const gitignore = [
       "node_modules/",
@@ -341,7 +371,7 @@ export class ProjectCreationService {
       return [
         {
           uri: vscode.Uri.joinPath(folderUri, "package.json"),
-          content: this.buildReactVitePackageJson(projectName),
+          content: this.buildReactVitePackageJson(projectName, packageManager),
         },
         {
           uri: vscode.Uri.joinPath(folderUri, "index.html"),
@@ -377,7 +407,7 @@ export class ProjectCreationService {
       return [
         {
           uri: vscode.Uri.joinPath(folderUri, "package.json"),
-          content: this.buildNextJsPackageJson(projectName),
+          content: this.buildNextJsPackageJson(projectName, packageManager),
         },
         {
           uri: vscode.Uri.joinPath(folderUri, "app", "layout.tsx"),
@@ -395,7 +425,7 @@ export class ProjectCreationService {
       return [
         {
           uri: vscode.Uri.joinPath(folderUri, "package.json"),
-          content: this.buildNodeApiPackageJson(projectName),
+          content: this.buildNodeApiPackageJson(projectName, packageManager),
         },
         {
           uri: vscode.Uri.joinPath(folderUri, "src", "index.ts"),
@@ -449,12 +479,16 @@ export class ProjectCreationService {
     ].join("\n");
   }
 
-  private buildReactVitePackageJson(projectName: string): string {
+  private buildReactVitePackageJson(
+    projectName: string,
+    packageManager: ShipOneSettings["defaultPackageManager"]
+  ): string {
     return JSON.stringify(
       {
         name: sanitizePackageName(projectName),
         private: true,
         version: "0.0.0",
+        packageManager: formatPackageManager(packageManager),
         scripts: {
           dev: "vite",
           build: "vite build",
@@ -513,12 +547,16 @@ if (root) {
 `;
   }
 
-  private buildNextJsPackageJson(projectName: string): string {
+  private buildNextJsPackageJson(
+    projectName: string,
+    packageManager: ShipOneSettings["defaultPackageManager"]
+  ): string {
     return JSON.stringify(
       {
         name: sanitizePackageName(projectName),
         private: true,
         version: "0.0.0",
+        packageManager: formatPackageManager(packageManager),
         scripts: {
           dev: "next dev",
           build: "next build",
@@ -579,12 +617,16 @@ export default function RootLayout({
     ].join("\n");
   }
 
-  private buildNodeApiPackageJson(projectName: string): string {
+  private buildNodeApiPackageJson(
+    projectName: string,
+    packageManager: ShipOneSettings["defaultPackageManager"]
+  ): string {
     return JSON.stringify(
       {
         name: sanitizePackageName(projectName),
         private: true,
         version: "0.0.0",
+        packageManager: formatPackageManager(packageManager),
         scripts: {
           dev: "node --watch src/index.ts",
           start: "node src/index.ts",
@@ -734,4 +776,8 @@ function escapeForTsx(value: string): string {
 
 function escapeForPython(value: string): string {
   return value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+}
+
+function formatPackageManager(value: "npm" | "pnpm" | "yarn"): string {
+  return `${value}@latest`;
 }

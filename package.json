@@ -245,6 +245,21 @@
           "default": true,
           "description": "Mantener solo un proyecto Active a la vez."
         },
+        "shipone.createStatusFileByDefault": {
+          "type": "boolean",
+          "default": true,
+          "description": "Crear STATUS.md al crear un proyecto por defecto."
+        },
+        "shipone.defaultPackageManager": {
+          "type": "string",
+          "enum": [
+            "npm",
+            "pnpm",
+            "yarn"
+          ],
+          "default": "npm",
+          "description": "Package manager por defecto para proyectos nuevos."
+        },
         "shipone.openAfterCreate": {
           "type": "boolean",
           "default": true,

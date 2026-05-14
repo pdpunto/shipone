@@ -303,14 +303,14 @@ Goal: release a useful first version.
 
 ### STATUS.md
 
-- [ ] Add optional STATUS.md creation
-- [ ] Add command: open STATUS.md
-- [ ] Add default template
-- [ ] Include Objective section
-- [ ] Include MVP section
-- [ ] Include Next Action section
-- [ ] Include Blockers section
-- [ ] Include Done section
+- [x] Add optional STATUS.md creation
+- [x] Add command: open STATUS.md
+- [x] Add default template
+- [x] Include Objective section
+- [x] Include MVP section
+- [x] Include Next Action section
+- [x] Include Blockers section
+- [x] Include Done section
 
 ### GitHub integration
 
@@ -474,7 +474,7 @@ Goal: improve project creation.
 - [ ] Let user add templates
 - [ ] Let user duplicate template
 - [ ] Let user remove template
-- [ ] Let user choose package manager
+- [x] Let user choose package manager
 
 ### Supported starters
 
@@ -499,7 +499,7 @@ Goal: improve project creation.
 
 - [ ] Ask projects root
 - [ ] Ask GitHub preference
-- [ ] Ask package manager
+- [x] Ask package manager
 - [ ] Create sample idea
 - [ ] Explain one-active-project rule
 

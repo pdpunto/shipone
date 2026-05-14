@@ -5,6 +5,8 @@ export interface ShipOneSettings {
   createGitRepoByDefault: boolean;
   createGitHubRepoByDefault: boolean;
   enforceOneActiveProject: boolean;
+  createStatusFileByDefault: boolean;
+  defaultPackageManager: "npm" | "pnpm" | "yarn";
   openAfterCreate: boolean;
   inactiveWarningDays: number;
   staleWarningDays: number;

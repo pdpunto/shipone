@@ -17,6 +17,8 @@ export class SettingsService {
       createGitRepoByDefault: config.get<boolean>("createGitRepoByDefault", true),
       createGitHubRepoByDefault: config.get<boolean>("createGitHubRepoByDefault", true),
       enforceOneActiveProject: config.get<boolean>("enforceOneActiveProject", true),
+      createStatusFileByDefault: config.get<boolean>("createStatusFileByDefault", true),
+      defaultPackageManager: config.get<"npm" | "pnpm" | "yarn">("defaultPackageManager", "npm"),
       openAfterCreate: config.get<boolean>("openAfterCreate", true),
       inactiveWarningDays: config.get<number>("inactiveWarningDays", 7),
       staleWarningDays: config.get<number>("staleWarningDays", 30),
