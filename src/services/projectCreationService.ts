@@ -65,6 +65,11 @@ export class ProjectCreationService {
         placeHolder: "Proyecto simple para ShipOne",
       })) ?? "";
 
+    const destinationFolder = await this.pickDestinationFolder(settings.projectsRoot);
+    if (!destinationFolder) {
+      return undefined;
+    }
+
     const gitChoice = await this.pickGitChoiceWithDefault(settings.createGitRepoByDefault);
     if (!gitChoice) {
       return undefined;
@@ -88,7 +93,7 @@ export class ProjectCreationService {
     }
 
     const folderName = sanitizeFolderName(name);
-    const folderUri = vscode.Uri.joinPath(vscode.Uri.file(settings.projectsRoot), folderName);
+    const folderUri = vscode.Uri.joinPath(destinationFolder, folderName);
     const projectExists = await this.pathExists(folderUri);
 
     if (projectExists) {
@@ -175,14 +180,27 @@ export class ProjectCreationService {
   ): Promise<GitChoice | undefined> {
     return vscode.window.showQuickPick<GitChoice>(
       [
-        { label: "SÃ­", value: true, picked: defaultGitRepoByDefault },
+        { label: "Sí", value: true, picked: defaultGitRepoByDefault },
         { label: "No", value: false, picked: !defaultGitRepoByDefault },
       ],
       {
         title: "Git local",
-        placeHolder: "Â¿Quieres inicializar Git en este proyecto?",
+        placeHolder: "¿Quieres inicializar Git en este proyecto?",
       }
     );
+  }
+
+  private async pickDestinationFolder(projectsRoot: string): Promise<vscode.Uri | undefined> {
+    const picked = await vscode.window.showOpenDialog({
+      canSelectFolders: true,
+      canSelectFiles: false,
+      canSelectMany: false,
+      defaultUri: vscode.Uri.file(projectsRoot),
+      title: "Carpeta destino",
+      openLabel: "Usar carpeta",
+    });
+
+    return picked?.[0];
   }
 
   private async pickGitChoice(): Promise<GitChoice | undefined> {

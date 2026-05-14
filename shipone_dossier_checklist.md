@@ -274,20 +274,20 @@ Goal: release a useful first version.
 
 ### Project creation
 
-- [ ] Add create project command
-- [ ] Ask project name
-- [ ] Ask project type
-- [ ] Ask destination folder
-- [ ] Ask Git yes/no
-- [ ] Ask GitHub repo yes/no
-- [ ] Ask repo visibility if GitHub yes
-- [ ] Create folder
+- [x] Add create project command
+- [x] Ask project name
+- [x] Ask project type
+- [x] Ask destination folder
+- [x] Ask Git yes/no
+- [x] Ask GitHub repo yes/no
+- [x] Ask repo visibility if GitHub yes
+- [x] Create folder
 - [ ] Generate selected template
-- [ ] Initialize Git if selected
-- [ ] Create first commit if Git selected
-- [ ] Create GitHub repo if selected
-- [ ] Save metadata
-- [ ] Ask if user wants to open project
+- [x] Initialize Git if selected
+- [x] Create first commit if Git selected
+- [x] Create GitHub repo if selected
+- [x] Save metadata
+- [x] Ask if user wants to open project
 
 ### Templates
 
