@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { randomUUID } from "crypto";
+import { t } from "../localization";
 import { ProjectMetadata, ProjectStatus } from "../models/project";
 import { ShipOneSettings } from "../models/settings";
 import { ProjectStoreService } from "./projectStoreService";
@@ -10,10 +11,10 @@ import { ProjectContextService } from "./projectContextService";
 import { StatusFileService } from "./statusFileService";
 
 const PROJECT_TYPES = [
-  { label: "Blank", value: "blank" },
-  { label: "React Vite", value: "react-vite" },
-  { label: "Next.js", value: "nextjs" },
-  { label: "Python", value: "python" },
+  { label: t("Blank"), value: "blank" },
+  { label: t("React Vite"), value: "react-vite" },
+  { label: t("Next.js"), value: "nextjs" },
+  { label: t("Python"), value: "python" },
 ] as const;
 
 type GitChoice = { label: string; value: boolean; picked?: boolean };
@@ -35,8 +36,8 @@ export class ProjectCreationService {
 
   async createProject(settings: ShipOneSettings): Promise<ProjectMetadata | undefined> {
     const name = await vscode.window.showInputBox({
-      prompt: "Nombre del proyecto",
-      placeHolder: "my-saas-app",
+      prompt: t("Nombre del proyecto"),
+      placeHolder: t("my-saas-app"),
       validateInput: validateProjectName,
     });
 
@@ -51,8 +52,8 @@ export class ProjectCreationService {
 
     const description =
       (await vscode.window.showInputBox({
-        prompt: "Descripcion",
-        placeHolder: "Proyecto simple para ShipOne",
+        prompt: t("Descripcion"),
+        placeHolder: t("Proyecto simple para ShipOne"),
       })) ?? "";
 
     const destinationFolder = await this.pickDestinationFolder(settings.projectsRoot);
@@ -85,7 +86,7 @@ export class ProjectCreationService {
         }
       } else {
         vscode.window.showWarningMessage(
-          "GitHub no esta autenticado. Se omitira la creacion del repo."
+          t("GitHub no esta autenticado. Se omitira la creacion del repo.")
         );
       }
     }
@@ -96,7 +97,9 @@ export class ProjectCreationService {
 
     if (projectExists) {
       vscode.window.showErrorMessage(
-        "Ya existe una carpeta con ese nombre. Prueba otro nombre o elige otra carpeta."
+        t(
+          "Ya existe una carpeta con ese nombre. Prueba otro nombre o elige otra carpeta."
+        )
       );
       return undefined;
     }
@@ -141,13 +144,13 @@ export class ProjectCreationService {
 
       if (!gitInitialized) {
         vscode.window.showWarningMessage(
-          "No se pudo inicializar Git, pero el proyecto fue creado. Puedes hacerlo luego."
+          t("No se pudo inicializar Git, pero el proyecto fue creado. Puedes hacerlo luego.")
         );
       } else {
         const committed = await this.gitService.createInitialCommit(folderUri);
         if (!committed) {
           vscode.window.showWarningMessage(
-            "Git se inicializo, pero no se pudo crear el commit inicial."
+            t("Git se inicializo, pero no se pudo crear el commit inicial.")
           );
         }
       }
@@ -162,7 +165,7 @@ export class ProjectCreationService {
 
       if (!project.repoUrl) {
         vscode.window.showWarningMessage(
-          "No se pudo crear el repo de GitHub, pero el proyecto local si fue creado."
+          t("No se pudo crear el repo de GitHub, pero el proyecto local si fue creado.")
         );
       }
     }
@@ -177,8 +180,8 @@ export class ProjectCreationService {
   }
 
   async createSampleIdea(settings: ShipOneSettings): Promise<ProjectMetadata | undefined> {
-    const name = "Mi primera idea";
-    const description = "Describe la idea principal aqui.";
+    const name = t("Mi primera idea");
+    const description = t("Describe la idea principal aqui.");
     const type: ShipOneSettings["defaultProjectType"] = "blank";
     const packageManager = settings.defaultPackageManager;
 
@@ -233,8 +236,8 @@ export class ProjectCreationService {
     }));
 
     const choice = await vscode.window.showQuickPick(choices, {
-      title: "Tipo de proyecto",
-      placeHolder: "Elige un starter",
+      title: t("Tipo de proyecto"),
+      placeHolder: t("Elige un starter"),
     });
 
     return choice?.value as ShipOneSettings["defaultProjectType"] | undefined;
@@ -245,12 +248,12 @@ export class ProjectCreationService {
   ): Promise<GitChoice | undefined> {
     return vscode.window.showQuickPick<GitChoice>(
       [
-        { label: "Si", value: true, picked: defaultGitRepoByDefault },
-        { label: "No", value: false, picked: !defaultGitRepoByDefault },
+        { label: t("Si"), value: true, picked: defaultGitRepoByDefault },
+        { label: t("No"), value: false, picked: !defaultGitRepoByDefault },
       ],
       {
-        title: "Git local",
-        placeHolder: "Quieres inicializar Git en este proyecto?",
+        title: t("Git local"),
+        placeHolder: t("Quieres inicializar Git en este proyecto?"),
       }
     );
   }
@@ -261,8 +264,8 @@ export class ProjectCreationService {
       canSelectFiles: false,
       canSelectMany: false,
       defaultUri: vscode.Uri.file(projectsRoot),
-      title: "Carpeta destino",
-      openLabel: "Usar carpeta",
+      title: t("Carpeta destino"),
+      openLabel: t("Usar carpeta"),
     });
 
     return picked?.[0];
@@ -276,14 +279,14 @@ export class ProjectCreationService {
       value: ShipOneSettings["defaultPackageManager"];
       picked?: boolean;
     }> = [
-      { label: "npm", value: "npm", picked: defaultPackageManager === "npm" },
-      { label: "pnpm", value: "pnpm", picked: defaultPackageManager === "pnpm" },
-      { label: "yarn", value: "yarn", picked: defaultPackageManager === "yarn" },
+      { label: t("npm"), value: "npm", picked: defaultPackageManager === "npm" },
+      { label: t("pnpm"), value: "pnpm", picked: defaultPackageManager === "pnpm" },
+      { label: t("yarn"), value: "yarn", picked: defaultPackageManager === "yarn" },
     ];
 
     const choice = await vscode.window.showQuickPick(choices, {
-      title: "Package manager",
-      placeHolder: "Elige una opcion",
+      title: t("Package manager"),
+      placeHolder: t("Elige una opcion"),
     });
 
     return choice?.value;
@@ -295,12 +298,12 @@ export class ProjectCreationService {
   ): Promise<GithubChoice | undefined> {
     const createChoice = await vscode.window.showQuickPick(
       [
-        { label: "Si", value: true, picked: defaultCreateGithubRepoByDefault },
-        { label: "No", value: false, picked: !defaultCreateGithubRepoByDefault },
+        { label: t("Si"), value: true, picked: defaultCreateGithubRepoByDefault },
+        { label: t("No"), value: false, picked: !defaultCreateGithubRepoByDefault },
       ],
       {
-        title: "GitHub",
-        placeHolder: "¿Quieres crear un repo de GitHub?",
+        title: t("GitHub"),
+        placeHolder: t("Quieres crear un repo de GitHub?"),
       }
     );
 
@@ -311,17 +314,17 @@ export class ProjectCreationService {
     const visibilityOptions =
       defaultVisibility === "private"
         ? [
-            { label: "Privado", value: "private" as const },
-            { label: "Público", value: "public" as const },
+            { label: t("Privado"), value: "private" as const },
+            { label: t("Público"), value: "public" as const },
           ]
         : [
-            { label: "Público", value: "public" as const },
-            { label: "Privado", value: "private" as const },
+            { label: t("Público"), value: "public" as const },
+            { label: t("Privado"), value: "private" as const },
           ];
 
     const visibility = await vscode.window.showQuickPick(visibilityOptions, {
-      title: "Visibilidad",
-      placeHolder: "¿Privado o público?",
+      title: t("Visibilidad"),
+      placeHolder: t("Privado o público?"),
     });
 
     if (!visibility) {
@@ -355,11 +358,11 @@ export class ProjectCreationService {
 
 function validateProjectName(value: string): string | undefined {
   if (!value.trim()) {
-    return "Escribe un nombre.";
+    return t("Escribe un nombre.");
   }
 
   if (!/^[a-zA-Z0-9 _.-]+$/.test(value)) {
-    return "Usa solo letras, numeros, espacios, guiones o puntos.";
+    return t("Usa solo letras, numeros, espacios, guiones o puntos.");
   }
 
   return undefined;
