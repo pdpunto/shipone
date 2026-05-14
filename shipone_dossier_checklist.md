@@ -344,7 +344,7 @@ Goal: release a useful first version.
 - [ ] User can add next action
 - [ ] User can mark project Finished
 - [ ] Extension works after VS Code restart
-- [ ] README explains the workflow
+- [x] README explains the workflow
 
 ---
 
@@ -549,7 +549,7 @@ Goal: prepare for real users.
 - [ ] Final logo
 - [ ] Screenshots
 - [ ] Demo GIF
-- [ ] README polished
+- [x] README polished
 - [ ] Installation instructions
 - [ ] Usage examples
 - [ ] Known limitations
