@@ -9,6 +9,7 @@ import { SettingsService } from "./services/settingsService";
 
 const COMMAND_SHOW_WELCOME = "shipone.showWelcome";
 const COMMAND_CREATE_PROJECT = "shipone.createProject";
+const COMMAND_CREATE_SAMPLE_IDEA = "shipone.createSampleIdea";
 const COMMAND_OPEN_PROJECTS_ROOT = "shipone.openProjectsRoot";
 const COMMAND_OPEN_PROJECT_QUICK_PICK = "shipone.openProjectQuickPick";
 const COMMAND_EDIT_MVP_CHECKLIST = "shipone.editMvpChecklist";
@@ -83,6 +84,8 @@ export async function activate(context: vscode.ExtensionContext) {
       treeDataProvider.refresh();
     }
   });
+
+  void showFirstRunOnboarding(context, settingsService);
 
   const setFocusMode = async (enabled: boolean) => {
     focusModeEnabled = enabled;
@@ -196,6 +199,19 @@ export async function activate(context: vscode.ExtensionContext) {
       if (project) {
         treeDataProvider.refresh();
         vscode.window.showInformationMessage(`Proyecto creado: ${project.name}`);
+      }
+    }
+  );
+
+  const createSampleIdeaCommand = vscode.commands.registerCommand(
+    COMMAND_CREATE_SAMPLE_IDEA,
+    async () => {
+      const settings = settingsService.getSettings();
+      const project = await projectCreationService.createSampleIdea(settings);
+
+      if (project) {
+        treeDataProvider.refresh();
+        vscode.window.showInformationMessage(`Idea creada: ${project.name}`);
       }
     }
   );
@@ -723,6 +739,7 @@ export async function activate(context: vscode.ExtensionContext) {
     resumeProjectCommand,
     searchProjectCommand,
     createProjectCommand,
+    createSampleIdeaCommand,
     openProjectCommand,
     changeStatusCommand,
     markProjectIdeaCommand,
@@ -1036,6 +1053,41 @@ function isStaleProject(project: ProjectMetadata): boolean {
   }
 
   return Date.now() - openedAt >= 14 * 86_400_000;
+}
+
+async function showFirstRunOnboarding(
+  context: vscode.ExtensionContext,
+  settingsService: SettingsService
+): Promise<void> {
+  const seen = context.globalState.get<boolean>("shipone.firstRunSeen", false);
+  if (seen) {
+    return;
+  }
+
+  await context.globalState.update("shipone.firstRunSeen", true);
+
+  const settings = settingsService.getSettings();
+  const choice = await vscode.window.showInformationMessage(
+    `ShipOne listo. Ruta base: ${settings.projectsRoot}. Solo un proyecto Active a la vez.`,
+    "Crear proyecto",
+    "Crear idea de ejemplo",
+    "Abrir ajustes",
+    "Entendido"
+  );
+
+  if (choice === "Crear proyecto") {
+    await vscode.commands.executeCommand(COMMAND_CREATE_PROJECT);
+    return;
+  }
+
+  if (choice === "Crear idea de ejemplo") {
+    await vscode.commands.executeCommand(COMMAND_CREATE_SAMPLE_IDEA);
+    return;
+  }
+
+  if (choice === "Abrir ajustes") {
+    await vscode.commands.executeCommand("workbench.action.openSettings", "ShipOne");
+  }
 }
 
 export function deactivate() {}

@@ -500,8 +500,8 @@ Goal: improve project creation.
 - [ ] Ask projects root
 - [ ] Ask GitHub preference
 - [x] Ask package manager
-- [ ] Create sample idea
-- [ ] Explain one-active-project rule
+- [x] Create sample idea
+- [x] Explain one-active-project rule
 
 ---
 

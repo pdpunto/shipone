@@ -173,6 +173,45 @@ export class ProjectCreationService {
     return project;
   }
 
+  async createSampleIdea(settings: ShipOneSettings): Promise<ProjectMetadata | undefined> {
+    const name = "Mi primera idea";
+    const description = "Describe la idea principal aqui.";
+    const type: ShipOneSettings["defaultProjectType"] = "blank";
+    const packageManager = settings.defaultPackageManager;
+
+    const destinationFolder = vscode.Uri.file(settings.projectsRoot);
+    const baseFolderName = sanitizeFolderName(name);
+    const folderUri = await this.findAvailableFolderUri(destinationFolder, baseFolderName);
+
+    await this.projectStore.createProjectFolder(folderUri);
+    if (settings.createStatusFileByDefault) {
+      await this.writeStatusFile(folderUri, name, description);
+    }
+    await this.createSelectedTemplate(folderUri, name, description, type, packageManager);
+
+    const project: ProjectMetadata = {
+      id: randomUUID(),
+      name,
+      description,
+      type,
+      status: "idea" as ProjectStatus,
+      path: folderUri.fsPath,
+      repoUrl: null,
+      createdAt: new Date().toISOString(),
+      lastOpenedAt: new Date().toISOString(),
+      finishedAt: null,
+      nextAction: null,
+      favorite: false,
+      tags: [],
+      mvpTasks: [],
+      pauseReason: null,
+      pauseNote: null,
+    };
+
+    await this.projectStore.createProject(project, settings.enforceOneActiveProject);
+    return project;
+  }
+
   private async pickProjectType(
     defaultProjectType: ShipOneSettings["defaultProjectType"]
   ): Promise<ShipOneSettings["defaultProjectType"] | undefined> {
@@ -667,6 +706,18 @@ server.listen(3000, () => {
       null,
       2
     );
+  }
+
+  private async findAvailableFolderUri(baseFolder: vscode.Uri, folderName: string): Promise<vscode.Uri> {
+    let candidate = vscode.Uri.joinPath(baseFolder, folderName);
+    let suffix = 2;
+
+    while (await this.pathExists(candidate)) {
+      candidate = vscode.Uri.joinPath(baseFolder, `${folderName}-${suffix}`);
+      suffix += 1;
+    }
+
+    return candidate;
   }
 
   private async tryInitializeGit(folderUri: vscode.Uri): Promise<boolean> {
