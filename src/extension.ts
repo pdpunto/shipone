@@ -1093,6 +1093,7 @@ async function showFirstRunOnboarding(
     `ShipOne listo. Ruta base: ${settings.projectsRoot}. Solo un proyecto Active a la vez.`,
     "Crear proyecto",
     "Crear idea de ejemplo",
+    "Conectar GitHub",
     "Abrir ajustes",
     "Entendido"
   );
@@ -1104,6 +1105,11 @@ async function showFirstRunOnboarding(
 
   if (choice === "Crear idea de ejemplo") {
     await vscode.commands.executeCommand(COMMAND_CREATE_SAMPLE_IDEA);
+    return;
+  }
+
+  if (choice === "Conectar GitHub") {
+    await vscode.commands.executeCommand(COMMAND_CONNECT_GITHUB);
     return;
   }
 
