@@ -5,8 +5,14 @@ import { ProjectStoreService } from "../services/projectStoreService";
 import {
   ProjectHealthService,
   type ProjectHealth,
-  type ProjectMetrics,
 } from "../services/projectHealthService";
+import { GroupNode } from "./treeNodes/groupNode";
+import { MetricsNode } from "./treeNodes/metricsNode";
+import { MetricItemNode } from "./treeNodes/metricItemNode";
+import { EmptyStateNode } from "./treeNodes/emptyStateNode";
+import { WarningNode } from "./treeNodes/warningNode";
+import { FocusNode } from "./treeNodes/focusNode";
+import { ProjectNode } from "./treeNodes/projectNode";
 
 type ShipOneTreeNode = MetricsNode | MetricItemNode | GroupNode | ProjectNode | EmptyStateNode;
 
@@ -56,10 +62,7 @@ export class ShipOneProjectsTreeDataProvider
           settings.staleWarningDays
         );
 
-        return [
-          new FocusNode(activeProject, health),
-          new GroupNode("active", "Active", "play"),
-        ];
+        return [new FocusNode(activeProject, health), new GroupNode("active", "Active", "play")];
       }
 
       const settings = this.settingsService.getSettings();
@@ -106,8 +109,11 @@ export class ShipOneProjectsTreeDataProvider
     }
 
     if (element instanceof GroupNode) {
-      const grouped = await this.projectStore.getProjectsByStatus();
-      const projects = grouped[element.status];
+      const grouped = (await this.projectStore.getProjectsByStatus()) as Record<
+        ProjectStatus,
+        ProjectMetadata[]
+      >;
+      const projects = grouped[element.status] ?? [];
       const settings = this.settingsService.getSettings();
 
       if (projects.length === 0) {
@@ -134,176 +140,6 @@ export class ShipOneProjectsTreeDataProvider
 
     return [];
   }
-}
-
-class GroupNode extends vscode.TreeItem {
-  constructor(
-    readonly status: ProjectStatus,
-    label: string,
-    iconName: string
-  ) {
-    super(label, vscode.TreeItemCollapsibleState.Collapsed);
-    this.iconPath = new vscode.ThemeIcon(iconName);
-    this.contextValue = "shipone.group";
-    this.tooltip = new vscode.MarkdownString(
-      [
-        `**${label}**`,
-        "",
-        `Abre el grupo de proyectos ${label.toLowerCase()}.`,
-      ].join("\n")
-    );
-  }
-}
-
-class MetricsNode extends vscode.TreeItem {
-  constructor() {
-    super("Metrics", vscode.TreeItemCollapsibleState.Collapsed);
-    this.iconPath = new vscode.ThemeIcon("graph");
-    this.contextValue = "shipone.metrics";
-  }
-}
-
-class FocusNode extends vscode.TreeItem {
-  constructor(project: ProjectMetadata, health: ProjectHealth) {
-    super("Focus mode", vscode.TreeItemCollapsibleState.None);
-    this.description = project.nextAction ?? "Sin next action";
-    this.iconPath = new vscode.ThemeIcon("eye");
-    this.tooltip = new vscode.MarkdownString(
-      [
-        `**${project.name}**`,
-        "",
-        `Estado: ${project.status}`,
-        `Salud: ${health.label}`,
-        `Siguiente accion: ${project.nextAction ?? "Sin next action"}`,
-        `Ruta: ${project.path}`,
-      ].join("\n")
-    );
-    this.command = {
-      command: "shipone.openProject",
-      title: "Abrir proyecto",
-      arguments: [project.id],
-    };
-    this.contextValue = "shipone.focus";
-  }
-}
-
-class MetricItemNode extends vscode.TreeItem {
-  constructor(label: string, value: string | number, iconName: string) {
-    super(label, vscode.TreeItemCollapsibleState.None);
-    this.description = String(value);
-    this.iconPath = new vscode.ThemeIcon(iconName);
-    this.contextValue = "shipone.metric";
-  }
-}
-
-class WarningNode extends vscode.TreeItem {
-  constructor(label: string, detail: string, projectId: string) {
-    super(label, vscode.TreeItemCollapsibleState.None);
-    this.description = detail;
-    this.iconPath = new vscode.ThemeIcon("alert");
-    this.tooltip = new vscode.MarkdownString(`**${label}**\n\n${detail}`);
-    this.command = {
-      command: "shipone.openProject",
-      title: "Abrir proyecto",
-      arguments: [projectId],
-    };
-    this.contextValue = "shipone.warning";
-  }
-}
-
-class ProjectNode extends vscode.TreeItem {
-  constructor(
-    public readonly project: ProjectMetadata,
-    health: ProjectHealth,
-    warning: string | null
-  ) {
-    super(project.name, vscode.TreeItemCollapsibleState.None);
-
-    const mvpProgress = getMvpProgress(project.mvpTasks);
-    const projectType = formatProjectType(project.type);
-    const nextActionWarning = project.status === "active" && !project.nextAction ? "no next" : null;
-
-    this.description = [
-      projectType,
-      project.nextAction ? `next: ${project.nextAction}` : undefined,
-      nextActionWarning,
-      health.label,
-      project.pauseReason ? `pause: ${project.pauseReason}` : undefined,
-      warning ?? undefined,
-      mvpProgress ?? undefined,
-    ]
-      .filter(Boolean)
-      .join(" · ");
-
-    this.tooltip = new vscode.MarkdownString(
-      [
-        `**${project.name}**`,
-        "",
-        `Tipo: ${projectType}`,
-        `Estado: ${project.status}`,
-        `Salud: ${health.label}`,
-        `Ruta: ${project.path}`,
-        `Ultima apertura: ${project.lastOpenedAt ?? "sin registro"}`,
-        project.status === "active" && !project.nextAction ? "Aviso: falta next action" : "",
-        project.pauseReason ? `Pausa: ${project.pauseReason}` : "",
-        project.pauseNote ? `Nota: ${project.pauseNote}` : "",
-        health.issues.length > 0 ? `Problemas: ${health.issues.join(", ")}` : "",
-        mvpProgress ? `MVP: ${mvpProgress}` : "",
-        warning ? `Aviso: ${warning}` : "",
-      ]
-        .filter(Boolean)
-        .join("\n")
-    );
-
-    this.contextValue = "shipone.project";
-    this.iconPath = new vscode.ThemeIcon(project.favorite ? "star-full" : getStatusIcon(project.status));
-    this.command = {
-      command: "shipone.openProject",
-      title: "Abrir proyecto",
-      arguments: [project.id],
-    };
-  }
-}
-
-class EmptyStateNode extends vscode.TreeItem {
-  constructor(label: string, actionLabel?: string, iconName = "info") {
-    super(label, vscode.TreeItemCollapsibleState.None);
-    this.contextValue = "shipone.emptyState";
-    this.iconPath = new vscode.ThemeIcon(iconName);
-    this.tooltip = new vscode.MarkdownString(
-      actionLabel
-        ? `**${label}**\n\nUsa ${actionLabel} para empezar.`
-        : `**${label}**`
-    );
-    if (actionLabel) {
-      this.command = {
-        command: "shipone.createProject",
-        title: actionLabel,
-      };
-    }
-  }
-}
-
-function getStatusIcon(status: ProjectStatus): string {
-  switch (status) {
-    case "active":
-      return "play";
-    case "idea":
-      return "lightbulb";
-    case "paused":
-      return "debug-pause";
-    case "finished":
-      return "check";
-  }
-}
-
-function getMvpProgress(tasks: ProjectMetadata["mvpTasks"]): string | null {
-  if (!tasks || tasks.length === 0) {
-    return null;
-  }
-
-  const done = tasks.filter((task) => task.done).length;
-  return `${done}/${tasks.length}`;
 }
 
 function buildActiveWarnings(
@@ -336,19 +172,4 @@ function buildActiveWarnings(
   }
 
   return warnings;
-}
-
-function formatProjectType(type: string): string {
-  switch (type) {
-    case "blank":
-      return "Blank";
-    case "react-vite":
-      return "React Vite";
-    case "nextjs":
-      return "Next.js";
-    case "python":
-      return "Python";
-    default:
-      return type;
-  }
 }

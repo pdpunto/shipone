@@ -42,7 +42,7 @@ Objetivo: convertir el codigo actual en una base mantenible y segura antes de es
 - [x] Crear `StatusFileService`
 - [x] Crear `ProjectHealthService`
 - [x] Crear `TodoScannerService`
-- [ ] Separar nodes de UI en archivos individuales
+- [x] Separar nodes de UI en archivos individuales
 - [ ] Separar renderizado del arbol
 - [ ] Crear icon provider
 - [ ] Crear tooltip provider
