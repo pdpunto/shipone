@@ -372,7 +372,7 @@ Goal: make the MVP feel reliable.
 - [x] Search by name
 - [x] Search by type
 - [x] Search by tag
-- [ ] Open selected project from QuickPick
+- [x] Open selected project from QuickPick
 
 ### Favorites
 

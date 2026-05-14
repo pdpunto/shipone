@@ -7,6 +7,7 @@ import { SettingsService } from "./services/settingsService";
 
 const COMMAND_SHOW_WELCOME = "shipone.showWelcome";
 const COMMAND_CREATE_PROJECT = "shipone.createProject";
+const COMMAND_OPEN_PROJECT_QUICK_PICK = "shipone.openProjectQuickPick";
 const COMMAND_SEARCH_PROJECT = "shipone.searchProject";
 const COMMAND_OPEN_PROJECT = "shipone.openProject";
 const COMMAND_CHANGE_PROJECT_STATUS = "shipone.changeProjectStatus";
@@ -140,6 +141,19 @@ export async function activate(context: vscode.ExtensionContext) {
     }
   );
 
+  const openProjectQuickPickCommand = vscode.commands.registerCommand(
+    COMMAND_OPEN_PROJECT_QUICK_PICK,
+    async () => {
+      const project = await pickProject(projectStore);
+
+      if (!project) {
+        return;
+      }
+
+      await vscode.commands.executeCommand(COMMAND_OPEN_PROJECT, project.id);
+    }
+  );
+
   const openProjectCommand = vscode.commands.registerCommand(
     COMMAND_OPEN_PROJECT,
     async (projectId: string) => {
@@ -270,6 +284,7 @@ export async function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     treeView,
     welcomeCommand,
+    openProjectQuickPickCommand,
     searchProjectCommand,
     createProjectCommand,
     openProjectCommand,

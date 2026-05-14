@@ -32,6 +32,10 @@
         "title": "ShipOne: Crear proyecto"
       },
       {
+        "command": "shipone.openProjectQuickPick",
+        "title": "ShipOne: Abrir proyecto"
+      },
+      {
         "command": "shipone.searchProject",
         "title": "ShipOne: Buscar proyecto"
       },
@@ -68,6 +72,11 @@
       "view/title": [
         {
           "command": "shipone.createProject",
+          "when": "view == shipone.projectsView",
+          "group": "navigation"
+        },
+        {
+          "command": "shipone.openProjectQuickPick",
           "when": "view == shipone.projectsView",
           "group": "navigation"
         },
