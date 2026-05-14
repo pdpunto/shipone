@@ -154,5 +154,20 @@
   "Visibilidad": "Visibility",
   "Privado o público?": "Private or public?",
   "Escribe un nombre.": "Type a name.",
-  "Usa solo letras, numeros, espacios, guiones o puntos.": "Use only letters, numbers, spaces, hyphens or dots."
+  "Usa solo letras, numeros, espacios, guiones o puntos.": "Use only letters, numbers, spaces, hyphens or dots.",
+  "Checklist MVP": "MVP checklist",
+  "Separa tareas con coma": "Separate tasks with comma",
+  "Login, Dashboard, Deploy": "Login, Dashboard, Deploy",
+  "Checklist MVP actualizada en {0}.": "MVP checklist updated in {0}.",
+  "No hay tareas MVP pendientes.": "There are no pending MVP tasks.",
+  "Pendiente": "Pending",
+  "Marcar tarea MVP hecha": "Mark MVP task done",
+  "Elige una tarea": "Choose a task",
+  "Tarea MVP marcada en {0}.": "MVP task marked in {0}.",
+  "STATUS.md sincronizado en {0}.": "STATUS.md synced in {0}.",
+  "ShipOne recupero el almacenamiento desde el backup.": "ShipOne restored storage from the backup.",
+  "No se pudo recuperar el almacenamiento de ShipOne.": "Could not recover ShipOne storage.",
+  "Sin bloqueadores en {0}.": "No blockers in {0}.",
+  "{0}: {1}": "{0}: {1}",
+  "AI_CONTEXT.md generado en {0}.": "AI_CONTEXT.md generated in {0}."
 }

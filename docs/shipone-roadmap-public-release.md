@@ -101,7 +101,7 @@ Objetivo: hacer que ShipOne funcione automaticamante en el idioma configurado po
 
 - [x] Traducir warnings
 - [ ] Traducir errors
-- [ ] Traducir success messages
+- [x] Traducir success messages
 - [x] Traducir quick picks
 - [x] Traducir placeholders
 - [x] Traducir input boxes

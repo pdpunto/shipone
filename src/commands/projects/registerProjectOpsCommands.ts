@@ -1,13 +1,11 @@
 import * as vscode from "vscode";
+import { t } from "../../localization";
 import { ProjectCreationService } from "../../services/projectCreationService";
 import { ProjectContextService } from "../../services/projectContextService";
 import { ProjectStoreService } from "../../services/projectStoreService";
 import { SettingsService } from "../../services/settingsService";
 import { StatusFileService } from "../../services/statusFileService";
-import {
-  parseMvpTasks,
-  pickProject,
-} from "./projectOpsHelpers";
+import { parseMvpTasks, pickProject } from "./projectOpsHelpers";
 
 const COMMAND_OPEN_PROJECT = "shipone.openProject";
 const COMMAND_EDIT_MVP_CHECKLIST = "shipone.editMvpChecklist";
@@ -28,7 +26,6 @@ export function registerProjectOpsCommands(options: {
 }): vscode.Disposable[] {
   const {
     projectStore,
-    settingsService,
     projectCreationService,
     statusFileService,
     projectContextService,
@@ -47,9 +44,9 @@ export function registerProjectOpsCommands(options: {
       const currentTasks = project.mvpTasks ?? [];
       const currentValue = currentTasks.map((task) => task.text).join(", ");
       const rawValue = await vscode.window.showInputBox({
-        title: "Checklist MVP",
-        prompt: "Separa tareas con coma",
-        placeHolder: "Login, Dashboard, Deploy",
+        title: t("Checklist MVP"),
+        prompt: t("Separa tareas con coma"),
+        placeHolder: t("Login, Dashboard, Deploy"),
         value: currentValue,
       });
 
@@ -60,7 +57,9 @@ export function registerProjectOpsCommands(options: {
       const nextTasks = parseMvpTasks(rawValue, currentTasks);
       await projectStore.setMvpTasks(project.id, nextTasks);
       treeRefresh();
-      vscode.window.showInformationMessage(`Checklist MVP actualizada en ${project.name}.`);
+      vscode.window.showInformationMessage(
+        t("Checklist MVP actualizada en {0}.", project.name)
+      );
     }
   );
 
@@ -75,19 +74,19 @@ export function registerProjectOpsCommands(options: {
 
       const tasks = (project.mvpTasks ?? []).filter((task) => !task.done);
       if (tasks.length === 0) {
-        vscode.window.showInformationMessage("No hay tareas MVP pendientes.");
+        vscode.window.showInformationMessage(t("No hay tareas MVP pendientes."));
         return;
       }
 
       const choice = await vscode.window.showQuickPick(
         tasks.map((task) => ({
           label: task.text,
-          description: "Pendiente",
+          description: t("Pendiente"),
           task,
         })),
         {
-          title: "Marcar tarea MVP hecha",
-          placeHolder: "Elige una tarea",
+          title: t("Marcar tarea MVP hecha"),
+          placeHolder: t("Elige una tarea"),
         }
       );
 
@@ -97,7 +96,7 @@ export function registerProjectOpsCommands(options: {
 
       await projectStore.markMvpTaskDone(project.id, choice.task.id);
       treeRefresh();
-      vscode.window.showInformationMessage(`Tarea MVP marcada en ${project.name}.`);
+      vscode.window.showInformationMessage(t("Tarea MVP marcada en {0}.", project.name));
     }
   );
 
@@ -111,7 +110,7 @@ export function registerProjectOpsCommands(options: {
       }
 
       await statusFileService.syncStatusFile(project);
-      vscode.window.showInformationMessage(`STATUS.md sincronizado en ${project.name}.`);
+      vscode.window.showInformationMessage(t("STATUS.md sincronizado en {0}.", project.name));
     }
   );
 
@@ -122,9 +121,11 @@ export function registerProjectOpsCommands(options: {
 
       if (restored) {
         treeRefresh();
-        vscode.window.showInformationMessage("ShipOne recupero el almacenamiento desde el backup.");
+        vscode.window.showInformationMessage(
+          t("ShipOne recupero el almacenamiento desde el backup.")
+        );
       } else {
-        vscode.window.showErrorMessage("No se pudo recuperar el almacenamiento de ShipOne.");
+        vscode.window.showErrorMessage(t("No se pudo recuperar el almacenamiento de ShipOne."));
       }
     }
   );
@@ -145,11 +146,11 @@ export function registerProjectOpsCommands(options: {
       const blockers = await projectContextService.getBlockers(project.path);
 
       if (blockers.length === 0) {
-        vscode.window.showInformationMessage(`Sin bloqueadores en ${project.name}.`);
+        vscode.window.showInformationMessage(t("Sin bloqueadores en {0}.", project.name));
         return;
       }
 
-      vscode.window.showWarningMessage(`${project.name}: ${blockers.join(" | ")}`);
+      vscode.window.showWarningMessage(t("{0}: {1}", project.name, blockers.join(" | ")));
     }
   );
 
@@ -163,7 +164,7 @@ export function registerProjectOpsCommands(options: {
       }
 
       await projectContextService.generateAiContext(project);
-      vscode.window.showInformationMessage(`AI_CONTEXT.md generado en ${project.name}.`);
+      vscode.window.showInformationMessage(t("AI_CONTEXT.md generado en {0}.", project.name));
     }
   );
 

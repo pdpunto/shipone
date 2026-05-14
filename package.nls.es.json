@@ -154,5 +154,20 @@
   "Visibilidad": "Visibilidad",
   "Privado o público?": "Privado o público?",
   "Escribe un nombre.": "Escribe un nombre.",
-  "Usa solo letras, numeros, espacios, guiones o puntos.": "Usa solo letras, numeros, espacios, guiones o puntos."
+  "Usa solo letras, numeros, espacios, guiones o puntos.": "Usa solo letras, numeros, espacios, guiones o puntos.",
+  "Checklist MVP": "Checklist MVP",
+  "Separa tareas con coma": "Separa tareas con coma",
+  "Login, Dashboard, Deploy": "Login, Dashboard, Deploy",
+  "Checklist MVP actualizada en {0}.": "Checklist MVP actualizada en {0}.",
+  "No hay tareas MVP pendientes.": "No hay tareas MVP pendientes.",
+  "Pendiente": "Pendiente",
+  "Marcar tarea MVP hecha": "Marcar tarea MVP hecha",
+  "Elige una tarea": "Elige una tarea",
+  "Tarea MVP marcada en {0}.": "Tarea MVP marcada en {0}.",
+  "STATUS.md sincronizado en {0}.": "STATUS.md sincronizado en {0}.",
+  "ShipOne recupero el almacenamiento desde el backup.": "ShipOne recupero el almacenamiento desde el backup.",
+  "No se pudo recuperar el almacenamiento de ShipOne.": "No se pudo recuperar el almacenamiento de ShipOne.",
+  "Sin bloqueadores en {0}.": "Sin bloqueadores en {0}.",
+  "{0}: {1}": "{0}: {1}",
+  "AI_CONTEXT.md generado en {0}.": "AI_CONTEXT.md generado en {0}."
 }
