@@ -6,6 +6,8 @@ import { promisify } from "util";
 import { ProjectMetadata, ProjectStatus } from "../models/project";
 import { ShipOneSettings } from "../models/settings";
 import { ProjectStoreService } from "./projectStoreService";
+import { GitService } from "./gitService";
+import { GithubService } from "./githubService";
 import { TemplateService } from "./templateService";
 
 const PROJECT_TYPES = [
@@ -267,28 +269,13 @@ server.listen(port, () => {
 export class ProjectCreationService {
   constructor(
     private readonly projectStore: ProjectStoreService,
-    private readonly templateService = new TemplateService()
+    private readonly templateService = new TemplateService(),
+    private readonly gitService = new GitService(),
+    private readonly githubService = new GithubService()
   ) {}
 
   async connectGithub(): Promise<void> {
-    const ghInstalled = await this.isGithubCliInstalled();
-
-    if (!ghInstalled) {
-      vscode.window.showErrorMessage("GitHub CLI no esta instalado. Instala 'gh' y prueba otra vez.");
-      return;
-    }
-
-    const githubReady = await this.isGithubAuthenticated();
-
-    if (githubReady) {
-      vscode.window.showInformationMessage("GitHub ya esta conectado.");
-      return;
-    }
-
-    const terminal = vscode.window.createTerminal("ShipOne GitHub");
-    terminal.show(true);
-    terminal.sendText("gh auth login -h github.com");
-    vscode.window.showInformationMessage("Abre la terminal para conectar GitHub.");
+    await this.githubService.connectGithub();
   }
 
   async createProject(settings: ShipOneSettings): Promise<ProjectMetadata | undefined> {
@@ -330,7 +317,7 @@ export class ProjectCreationService {
 
     let githubChoice: GithubChoice | undefined;
     if (gitChoice.value) {
-      const githubReady = await this.isGithubAuthenticated();
+      const githubReady = await this.githubService.isGithubAuthenticated();
 
       if (githubReady) {
         githubChoice = await this.pickGithubChoice(
@@ -372,14 +359,14 @@ export class ProjectCreationService {
 
     let gitInitialized = false;
     if (gitChoice.value) {
-      gitInitialized = await this.tryInitializeGit(folderUri);
+      gitInitialized = await this.gitService.initializeGit(folderUri);
 
       if (!gitInitialized) {
         vscode.window.showWarningMessage(
           "No se pudo inicializar Git, pero el proyecto fue creado. Puedes hacerlo luego."
         );
       } else {
-        const committed = await this.tryCreateInitialCommit(folderUri);
+        const committed = await this.gitService.createInitialCommit(folderUri);
         if (!committed) {
           vscode.window.showWarningMessage(
             "Git se inicializó, pero no se pudo crear el commit inicial."
@@ -390,7 +377,11 @@ export class ProjectCreationService {
 
     let repoUrl: string | null = null;
     if (gitInitialized && githubChoice?.create) {
-      repoUrl = await this.tryCreateGithubRepo(folderUri, folderName, githubChoice.visibility);
+      repoUrl = await this.githubService.createGithubRepo(
+        folderUri,
+        folderName,
+        githubChoice.visibility
+      );
 
       if (!repoUrl) {
         vscode.window.showWarningMessage(

@@ -37,9 +37,8 @@ Objetivo: convertir el codigo actual en una base mantenible y segura antes de es
 - [ ] Separar `ProjectCreationService`
 - [x] Crear `TemplateService`
 - [x] Crear `ProjectContextService`
-- [ ] Crear `GitService`
-- [ ] Crear `GithubService`
-- [ ] Crear `TemplateService`
+- [x] Crear `GitService`
+- [x] Crear `GithubService`
 - [ ] Crear `StatusFileService`
 - [ ] Crear `ProjectHealthService`
 - [ ] Crear `TodoScannerService`
