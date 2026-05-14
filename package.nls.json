@@ -169,5 +169,12 @@
   "No se pudo recuperar el almacenamiento de ShipOne.": "Could not recover ShipOne storage.",
   "Sin bloqueadores en {0}.": "No blockers in {0}.",
   "{0}: {1}": "{0}: {1}",
-  "AI_CONTEXT.md generado en {0}.": "AI_CONTEXT.md generated in {0}."
+  "AI_CONTEXT.md generado en {0}.": "AI_CONTEXT.md generated in {0}.",
+  "ShipOne listo. Ruta base: {0}. Solo un proyecto Active a la vez.": "ShipOne is ready. Base folder: {0}. Only one Active project at a time.",
+  "Crear proyecto": "Create project",
+  "Crear idea de ejemplo": "Create sample idea",
+  "Elegir carpeta base": "Choose base folder",
+  "Conectar GitHub": "Connect GitHub",
+  "Abrir ajustes": "Open settings",
+  "Entendido": "Understood"
 }
