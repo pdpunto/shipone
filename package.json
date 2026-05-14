@@ -239,6 +239,11 @@
           "default": true,
           "description": "Preseleccionar la creacion de repo GitHub al crear proyectos."
         },
+        "shipone.enforceOneActiveProject": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mantener solo un proyecto Active a la vez."
+        },
         "shipone.openAfterCreate": {
           "type": "boolean",
           "default": true,

@@ -4,6 +4,7 @@ export interface ShipOneSettings {
   defaultProjectType: "blank" | "react-vite" | "nextjs" | "python";
   createGitRepoByDefault: boolean;
   createGitHubRepoByDefault: boolean;
+  enforceOneActiveProject: boolean;
   openAfterCreate: boolean;
   inactiveWarningDays: number;
   staleWarningDays: number;

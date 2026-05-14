@@ -60,14 +60,18 @@ export class ProjectStoreService {
     await this.saveProjects(projects);
   }
 
-  async createProject(project: ProjectMetadata): Promise<void> {
+  async createProject(project: ProjectMetadata, enforceOneActiveProject = true): Promise<void> {
     const projects = await this.loadProjects();
-    const normalized = await this.normalizeActiveProject(projects, project);
+    const normalized = await this.normalizeActiveProject(projects, project, enforceOneActiveProject);
     projects.push(normalized);
     await this.saveProjects(projects);
   }
 
-  async setProjectStatus(projectId: string, status: ProjectStatus): Promise<void> {
+  async setProjectStatus(
+    projectId: string,
+    status: ProjectStatus,
+    enforceOneActiveProject = true
+  ): Promise<void> {
     const projects = await this.loadProjects();
     const target = projects.find((project) => project.id === projectId);
 
@@ -75,7 +79,7 @@ export class ProjectStoreService {
       throw new Error("No se encontró el proyecto.");
     }
 
-    if (status === "active") {
+    if (status === "active" && enforceOneActiveProject) {
       for (const project of projects) {
         if (project.id !== projectId && project.status === "active") {
           project.status = "paused";
@@ -245,9 +249,10 @@ export class ProjectStoreService {
 
   private async normalizeActiveProject(
     projects: ProjectMetadata[],
-    project: ProjectMetadata
+    project: ProjectMetadata,
+    enforceOneActiveProject: boolean
   ): Promise<ProjectMetadata> {
-    if (project.status === "active") {
+    if (project.status === "active" && enforceOneActiveProject) {
       for (const existing of projects) {
         if (existing.status === "active") {
           existing.status = "paused";

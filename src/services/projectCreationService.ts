@@ -155,7 +155,7 @@ export class ProjectCreationService {
       pauseNote: null,
     };
 
-    await this.projectStore.createProject(project);
+    await this.projectStore.createProject(project, settings.enforceOneActiveProject);
 
     if (settings.openAfterCreate) {
       await vscode.commands.executeCommand("vscode.openFolder", folderUri, false);

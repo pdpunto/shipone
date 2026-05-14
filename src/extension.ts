@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { randomUUID } from "crypto";
 import { ProjectMetadata, ProjectStatus } from "./models/project";
+import { ShipOneSettings } from "./models/settings";
 import { ProjectCreationService } from "./services/projectCreationService";
 import { ShipOneProjectsTreeDataProvider } from "./providers/shiponeProjectsTreeDataProvider";
 import { ProjectStoreService } from "./services/projectStoreService";
@@ -472,6 +473,7 @@ export async function activate(context: vscode.ExtensionContext) {
   const resumeProjectCommand = vscode.commands.registerCommand(
     COMMAND_RESUME_PROJECT,
     async () => {
+      const settings = settingsService.getSettings();
       const projects = await projectStore.loadProjects();
       const pausedProjects = projects.filter((project) => project.status === "paused");
 
@@ -497,7 +499,14 @@ export async function activate(context: vscode.ExtensionContext) {
         return;
       }
 
-      await updateProjectStatus(projectStore, treeDataProvider, choice.project, "active", "Active");
+      await updateProjectStatus(
+        projectStore,
+        treeDataProvider,
+        settings,
+        choice.project,
+        "active",
+        "Active"
+      );
       vscode.window.showInformationMessage(`Proyecto reanudado: ${choice.project.name}.`);
     }
   );
@@ -524,6 +533,7 @@ export async function activate(context: vscode.ExtensionContext) {
   const changeStatusCommand = vscode.commands.registerCommand(
     COMMAND_CHANGE_PROJECT_STATUS,
     async (projectArg?: unknown) => {
+      const settings = settingsService.getSettings();
       const project = await resolveProject(projectStore, projectArg, selectedProjectId);
 
       if (!project) {
@@ -542,6 +552,7 @@ export async function activate(context: vscode.ExtensionContext) {
       await updateProjectStatus(
         projectStore,
         treeDataProvider,
+        settings,
         project,
         statusChoice.value,
         statusChoice.label
@@ -552,28 +563,60 @@ export async function activate(context: vscode.ExtensionContext) {
   const markProjectIdeaCommand = vscode.commands.registerCommand(
     COMMAND_MARK_PROJECT_IDEA,
     async (projectArg?: unknown) => {
-      await markProjectStatus(projectStore, treeDataProvider, "idea", projectArg, selectedProjectId);
+      const settings = settingsService.getSettings();
+      await markProjectStatus(
+        projectStore,
+        treeDataProvider,
+        settings,
+        "idea",
+        projectArg,
+        selectedProjectId
+      );
     }
   );
 
   const markProjectActiveCommand = vscode.commands.registerCommand(
     COMMAND_MARK_PROJECT_ACTIVE,
     async (projectArg?: unknown) => {
-      await markProjectStatus(projectStore, treeDataProvider, "active", projectArg, selectedProjectId);
+      const settings = settingsService.getSettings();
+      await markProjectStatus(
+        projectStore,
+        treeDataProvider,
+        settings,
+        "active",
+        projectArg,
+        selectedProjectId
+      );
     }
   );
 
   const markProjectPausedCommand = vscode.commands.registerCommand(
     COMMAND_MARK_PROJECT_PAUSED,
     async (projectArg?: unknown) => {
-      await markProjectStatus(projectStore, treeDataProvider, "paused", projectArg, selectedProjectId);
+      const settings = settingsService.getSettings();
+      await markProjectStatus(
+        projectStore,
+        treeDataProvider,
+        settings,
+        "paused",
+        projectArg,
+        selectedProjectId
+      );
     }
   );
 
   const markProjectFinishedCommand = vscode.commands.registerCommand(
     COMMAND_MARK_PROJECT_FINISHED,
     async (projectArg?: unknown) => {
-      await markProjectStatus(projectStore, treeDataProvider, "finished", projectArg, selectedProjectId);
+      const settings = settingsService.getSettings();
+      await markProjectStatus(
+        projectStore,
+        treeDataProvider,
+        settings,
+        "finished",
+        projectArg,
+        selectedProjectId
+      );
     }
   );
 
@@ -722,6 +765,7 @@ async function pickProject(projectStore: ProjectStoreService) {
 async function markProjectStatus(
   projectStore: ProjectStoreService,
   treeDataProvider: ShipOneProjectsTreeDataProvider,
+  settings: ShipOneSettings,
   status: ProjectStatus,
   projectArg?: unknown,
   selectedProjectId?: string
@@ -732,7 +776,7 @@ async function markProjectStatus(
     return;
   }
 
-  await updateProjectStatus(projectStore, treeDataProvider, project, status, status);
+  await updateProjectStatus(projectStore, treeDataProvider, settings, project, status, status);
 }
 
 async function resolveProject(
@@ -788,11 +832,19 @@ function unwrapProjectArg(projectArg?: unknown): ProjectMetadata | undefined {
 async function updateProjectStatus(
   projectStore: ProjectStoreService,
   treeDataProvider: ShipOneProjectsTreeDataProvider,
+  settings: ShipOneSettings,
   project: ProjectMetadata,
   status: ProjectStatus,
   statusLabel: string
 ) {
   if (status === "active") {
+    if (!settings.enforceOneActiveProject) {
+      await projectStore.setProjectStatus(project.id, status, false);
+      treeDataProvider.refresh();
+      vscode.window.showInformationMessage(`${project.name} ahora esta en ${statusLabel}.`);
+      return;
+    }
+
     const projects = await projectStore.loadProjects();
     const otherActive = projects.find(
       (item) => item.status === "active" && item.id !== project.id
@@ -811,7 +863,7 @@ async function updateProjectStatus(
     }
   }
 
-  await projectStore.setProjectStatus(project.id, status);
+  await projectStore.setProjectStatus(project.id, status, settings.enforceOneActiveProject);
   treeDataProvider.refresh();
   vscode.window.showInformationMessage(`${project.name} ahora esta en ${statusLabel}.`);
 }
