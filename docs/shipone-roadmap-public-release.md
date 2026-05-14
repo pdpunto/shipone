@@ -35,6 +35,7 @@ Objetivo: convertir el codigo actual en una base mantenible y segura antes de es
 - [x] Crear registradores por dominio
 - [x] Separar comandos por dominio real
 - [ ] Separar `ProjectCreationService`
+- [x] Crear `ProjectContextService`
 - [ ] Crear `GitService`
 - [ ] Crear `GithubService`
 - [ ] Crear `TemplateService`

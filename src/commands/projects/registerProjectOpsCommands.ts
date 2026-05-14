@@ -1,13 +1,11 @@
 import * as vscode from "vscode";
 import { ProjectCreationService } from "../../services/projectCreationService";
+import { ProjectContextService } from "../../services/projectContextService";
 import { ProjectStoreService } from "../../services/projectStoreService";
 import { SettingsService } from "../../services/settingsService";
 import {
-  buildAiContextContent,
-  buildStatusFileContent,
   parseMvpTasks,
   pickProject,
-  readStatusBlockers,
 } from "./projectOpsHelpers";
 
 const COMMAND_OPEN_PROJECT = "shipone.openProject";
@@ -17,15 +15,16 @@ const COMMAND_SYNC_STATUS_FILE = "shipone.syncStatusFile";
 const COMMAND_CONNECT_GITHUB = "shipone.connectGithub";
 const COMMAND_DETECT_BLOCKERS = "shipone.detectBlockers";
 const COMMAND_GENERATE_AI_CONTEXT = "shipone.generateAiContext";
-const STATUS_FILE_NAME = "STATUS.md";
 
 export function registerProjectOpsCommands(options: {
   projectStore: ProjectStoreService;
   settingsService: SettingsService;
   projectCreationService: ProjectCreationService;
+  projectContextService: ProjectContextService;
   treeRefresh: () => void;
 }): vscode.Disposable[] {
-  const { projectStore, settingsService, projectCreationService, treeRefresh } = options;
+  const { projectStore, settingsService, projectCreationService, projectContextService, treeRefresh } =
+    options;
 
   const editMvpChecklistCommand = vscode.commands.registerCommand(
     COMMAND_EDIT_MVP_CHECKLIST,
@@ -102,9 +101,7 @@ export function registerProjectOpsCommands(options: {
         return;
       }
 
-      const statusFileUri = vscode.Uri.joinPath(vscode.Uri.file(project.path), STATUS_FILE_NAME);
-      const content = buildStatusFileContent(project);
-      await vscode.workspace.fs.writeFile(statusFileUri, new TextEncoder().encode(content));
+      await projectContextService.syncStatusFile(project);
       vscode.window.showInformationMessage(`STATUS.md sincronizado en ${project.name}.`);
     }
   );
@@ -122,7 +119,7 @@ export function registerProjectOpsCommands(options: {
         return;
       }
 
-      const blockers = await readStatusBlockers(project.path);
+      const blockers = await projectContextService.getBlockers(project.path);
 
       if (blockers.length === 0) {
         vscode.window.showInformationMessage(`Sin bloqueadores en ${project.name}.`);
@@ -142,11 +139,7 @@ export function registerProjectOpsCommands(options: {
         return;
       }
 
-      const blockers = await readStatusBlockers(project.path);
-      const contextFileUri = vscode.Uri.joinPath(vscode.Uri.file(project.path), "AI_CONTEXT.md");
-      const content = buildAiContextContent(project, blockers);
-
-      await vscode.workspace.fs.writeFile(contextFileUri, new TextEncoder().encode(content));
+      await projectContextService.generateAiContext(project);
       vscode.window.showInformationMessage(`AI_CONTEXT.md generado en ${project.name}.`);
     }
   );
