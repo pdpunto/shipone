@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { randomUUID } from "crypto";
 import { ProjectMetadata, ProjectStatus } from "./models/project";
 import { ProjectCreationService } from "./services/projectCreationService";
 import { ShipOneProjectsTreeDataProvider } from "./providers/shiponeProjectsTreeDataProvider";
@@ -8,6 +9,8 @@ import { SettingsService } from "./services/settingsService";
 const COMMAND_SHOW_WELCOME = "shipone.showWelcome";
 const COMMAND_CREATE_PROJECT = "shipone.createProject";
 const COMMAND_OPEN_PROJECT_QUICK_PICK = "shipone.openProjectQuickPick";
+const COMMAND_EDIT_MVP_CHECKLIST = "shipone.editMvpChecklist";
+const COMMAND_MARK_MVP_ITEM_DONE = "shipone.markMvpItemDone";
 const COMMAND_SEARCH_PROJECT = "shipone.searchProject";
 const COMMAND_OPEN_PROJECT = "shipone.openProject";
 const COMMAND_CHANGE_PROJECT_STATUS = "shipone.changeProjectStatus";
@@ -154,6 +157,72 @@ export async function activate(context: vscode.ExtensionContext) {
     }
   );
 
+  const editMvpChecklistCommand = vscode.commands.registerCommand(
+    COMMAND_EDIT_MVP_CHECKLIST,
+    async () => {
+      const project = await pickProject(projectStore);
+
+      if (!project) {
+        return;
+      }
+
+      const currentTasks = project.mvpTasks ?? [];
+      const currentValue = currentTasks.map((task) => task.text).join(", ");
+      const rawValue = await vscode.window.showInputBox({
+        title: "Checklist MVP",
+        prompt: "Separa tareas con coma",
+        placeHolder: "Login, Dashboard, Deploy",
+        value: currentValue,
+      });
+
+      if (rawValue === undefined) {
+        return;
+      }
+
+      const nextTasks = parseMvpTasks(rawValue, currentTasks);
+      await projectStore.setMvpTasks(project.id, nextTasks);
+      treeDataProvider.refresh();
+      vscode.window.showInformationMessage(`Checklist MVP actualizada en ${project.name}.`);
+    }
+  );
+
+  const markMvpItemDoneCommand = vscode.commands.registerCommand(
+    COMMAND_MARK_MVP_ITEM_DONE,
+    async () => {
+      const project = await pickProject(projectStore);
+
+      if (!project) {
+        return;
+      }
+
+      const tasks = (project.mvpTasks ?? []).filter((task) => !task.done);
+      if (tasks.length === 0) {
+        vscode.window.showInformationMessage("No hay tareas MVP pendientes.");
+        return;
+      }
+
+      const choice = await vscode.window.showQuickPick(
+        tasks.map((task) => ({
+          label: task.text,
+          description: "Pendiente",
+          task,
+        })),
+        {
+          title: "Marcar tarea MVP hecha",
+          placeHolder: "Elige una tarea",
+        }
+      );
+
+      if (!choice) {
+        return;
+      }
+
+      await projectStore.markMvpTaskDone(project.id, choice.task.id);
+      treeDataProvider.refresh();
+      vscode.window.showInformationMessage(`Tarea MVP marcada en ${project.name}.`);
+    }
+  );
+
   const openProjectCommand = vscode.commands.registerCommand(
     COMMAND_OPEN_PROJECT,
     async (projectId: string) => {
@@ -286,6 +355,8 @@ export async function activate(context: vscode.ExtensionContext) {
     treeView,
     welcomeCommand,
     openProjectQuickPickCommand,
+    editMvpChecklistCommand,
+    markMvpItemDoneCommand,
     searchProjectCommand,
     createProjectCommand,
     openProjectCommand,
@@ -351,6 +422,26 @@ function filterProjectsByTag(projects: ProjectMetadata[], tag: string) {
   return projects.filter((project) =>
     (project.tags ?? []).some((projectTag) => projectTag.toLowerCase().includes(normalizedTag))
   );
+}
+
+function parseMvpTasks(rawValue: string, currentTasks: NonNullable<ProjectMetadata["mvpTasks"]>) {
+  const existingByText = new Map(
+    currentTasks.map((task) => [task.text.trim().toLowerCase(), task])
+  );
+
+  return rawValue
+    .split(/,|\n/)
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .map((text) => {
+      const existing = existingByText.get(text.toLowerCase());
+
+      return {
+        id: existing?.id ?? randomUUID(),
+        text,
+        done: existing?.done ?? false,
+      };
+    });
 }
 
 function buildProjectDetail(project: {

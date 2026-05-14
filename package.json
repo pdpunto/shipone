@@ -36,6 +36,14 @@
         "title": "ShipOne: Abrir proyecto"
       },
       {
+        "command": "shipone.editMvpChecklist",
+        "title": "ShipOne: Editar checklist MVP"
+      },
+      {
+        "command": "shipone.markMvpItemDone",
+        "title": "ShipOne: Marcar tarea MVP hecha"
+      },
+      {
         "command": "shipone.toggleFavorite",
         "title": "ShipOne: Alternar favorito"
       },
@@ -82,6 +90,16 @@
         },
         {
           "command": "shipone.searchProject",
+          "when": "view == shipone.projectsView",
+          "group": "navigation"
+        },
+        {
+          "command": "shipone.editMvpChecklist",
+          "when": "view == shipone.projectsView",
+          "group": "navigation"
+        },
+        {
+          "command": "shipone.markMvpItemDone",
           "when": "view == shipone.projectsView",
           "group": "navigation"
         },

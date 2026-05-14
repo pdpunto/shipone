@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { TextDecoder, TextEncoder } from "util";
-import { ProjectMetadata, ProjectStatus } from "../models/project";
+import { MvpTask, ProjectMetadata, ProjectStatus } from "../models/project";
 
 const STORAGE_FILE_NAME = "projects.json";
 const EMPTY_GROUPS: ProjectStatus[] = ["idea", "active", "paused", "finished"];
@@ -111,6 +111,35 @@ export class ProjectStoreService {
     }
 
     target.favorite = !target.favorite;
+    await this.saveProjects(projects);
+  }
+
+  async setMvpTasks(projectId: string, tasks: MvpTask[]): Promise<void> {
+    const projects = await this.loadProjects();
+    const target = projects.find((project) => project.id === projectId);
+
+    if (!target) {
+      throw new Error("No se encontrÃ³ el proyecto.");
+    }
+
+    target.mvpTasks = tasks;
+    await this.saveProjects(projects);
+  }
+
+  async markMvpTaskDone(projectId: string, taskId: string): Promise<void> {
+    const projects = await this.loadProjects();
+    const target = projects.find((project) => project.id === projectId);
+
+    if (!target) {
+      throw new Error("No se encontrÃ³ el proyecto.");
+    }
+
+    const task = target.mvpTasks?.find((item) => item.id === taskId);
+    if (!task) {
+      throw new Error("No se encontrÃ³ la tarea.");
+    }
+
+    task.done = true;
     await this.saveProjects(projects);
   }
 
