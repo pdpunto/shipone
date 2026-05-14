@@ -19,6 +19,249 @@ const execFileAsync = promisify(execFile);
 
 type GitChoice = { label: string; value: boolean; picked?: boolean };
 type GithubChoice = { create: boolean; visibility: "private" | "public" };
+type TemplateFile = { uri: vscode.Uri; content: string };
+type TemplateContext = {
+  folderUri: vscode.Uri;
+  projectName: string;
+  description: string;
+  packageManager: ShipOneSettings["defaultPackageManager"];
+  gitignore: string;
+};
+type TemplateDefinition = {
+  type: ShipOneSettings["defaultProjectType"];
+  buildFiles: (context: TemplateContext) => TemplateFile[];
+};
+
+const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
+  {
+    type: "blank",
+    buildFiles: (context) => [
+      {
+        uri: vscode.Uri.joinPath(context.folderUri, "README.md"),
+        content: [
+          `# ${context.projectName}`,
+          "",
+          context.description || "Proyecto creado con ShipOne.",
+          "",
+          "## Proximo paso",
+          "- Define el primer objetivo.",
+          "",
+        ].join("\n"),
+      },
+      { uri: vscode.Uri.joinPath(context.folderUri, ".gitignore"), content: context.gitignore },
+    ],
+  },
+  {
+    type: "react-vite",
+    buildFiles: (context) => [
+      {
+        uri: vscode.Uri.joinPath(context.folderUri, "package.json"),
+        content: JSON.stringify(
+          {
+            name: sanitizePackageName(context.projectName),
+            private: true,
+            version: "0.0.0",
+            packageManager: formatPackageManager(context.packageManager),
+            scripts: {
+              dev: "vite",
+              build: "vite build",
+              preview: "vite preview",
+            },
+          },
+          null,
+          2
+        ),
+      },
+      {
+        uri: vscode.Uri.joinPath(context.folderUri, "index.html"),
+        content: `<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>${context.projectName}</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+`,
+      },
+      {
+        uri: vscode.Uri.joinPath(context.folderUri, "src", "main.tsx"),
+        content: `import "./style.css";
+
+const root = document.getElementById("root");
+
+if (root) {
+  root.innerHTML = \`
+    <main class="app">
+      <h1>${context.projectName}</h1>
+      <p>Proyecto creado con ShipOne.</p>
+    </main>
+  \`;
+}
+`,
+      },
+      {
+        uri: vscode.Uri.joinPath(context.folderUri, "src", "style.css"),
+        content: `body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+}
+
+.app {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+`,
+      },
+      { uri: vscode.Uri.joinPath(context.folderUri, ".gitignore"), content: context.gitignore },
+    ],
+  },
+  {
+    type: "nextjs",
+    buildFiles: (context) => [
+      {
+        uri: vscode.Uri.joinPath(context.folderUri, "package.json"),
+        content: JSON.stringify(
+          {
+            name: sanitizePackageName(context.projectName),
+            private: true,
+            version: "0.0.0",
+            packageManager: formatPackageManager(context.packageManager),
+            scripts: {
+              dev: "next dev",
+              build: "next build",
+              start: "next start",
+            },
+          },
+          null,
+          2
+        ),
+      },
+      {
+        uri: vscode.Uri.joinPath(context.folderUri, "app", "layout.tsx"),
+        content: `export const metadata = {
+  title: "${context.projectName}",
+  description: "${escapeForTsx(context.description || "Proyecto creado con ShipOne.")}",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="es">
+      <body>{children}</body>
+    </html>
+  );
+}
+`,
+      },
+      {
+        uri: vscode.Uri.joinPath(context.folderUri, "app", "page.tsx"),
+        content: `export default function Page() {
+  return (
+    <main>
+      <h1>${context.projectName}</h1>
+      <p>${escapeForTsx(context.description || "Proyecto creado con ShipOne.")}</p>
+    </main>
+  );
+}
+`,
+      },
+      { uri: vscode.Uri.joinPath(context.folderUri, ".gitignore"), content: context.gitignore },
+    ],
+  },
+  {
+    type: "python",
+    buildFiles: (context) => [
+      {
+        uri: vscode.Uri.joinPath(context.folderUri, "main.py"),
+        content: [
+          '"""',
+          context.projectName,
+          context.description || "Proyecto creado con ShipOne.",
+          '"""',
+          "",
+          "def main() -> None:",
+          `    print("${escapeForPython(context.projectName)}")`,
+          "",
+          "",
+          'if __name__ == "__main__":',
+          "    main()",
+          "",
+        ].join("\n"),
+      },
+      {
+        uri: vscode.Uri.joinPath(context.folderUri, "requirements.txt"),
+        content: "# Requisitos del proyecto\n",
+      },
+      { uri: vscode.Uri.joinPath(context.folderUri, ".gitignore"), content: context.gitignore },
+    ],
+  },
+  {
+    type: "node-api",
+    buildFiles: (context) => [
+      {
+        uri: vscode.Uri.joinPath(context.folderUri, "package.json"),
+        content: JSON.stringify(
+          {
+            name: sanitizePackageName(context.projectName),
+            private: true,
+            version: "0.0.0",
+            packageManager: formatPackageManager(context.packageManager),
+            scripts: {
+              dev: "node --watch src/index.ts",
+              start: "node src/index.ts",
+            },
+          },
+          null,
+          2
+        ),
+      },
+      {
+        uri: vscode.Uri.joinPath(context.folderUri, "src", "index.ts"),
+        content: `import http from "http";
+
+const port = Number(process.env.PORT ?? 3000);
+
+const server = http.createServer((_, res) => {
+  res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8" });
+  res.end("ShipOne API");
+});
+
+server.listen(port, () => {
+  console.log("ShipOne API running on http://localhost:" + port);
+});
+`,
+      },
+      {
+        uri: vscode.Uri.joinPath(context.folderUri, "tsconfig.json"),
+        content: JSON.stringify(
+          {
+            compilerOptions: {
+              target: "ES2020",
+              module: "NodeNext",
+              moduleResolution: "NodeNext",
+              outDir: "dist",
+              rootDir: "src",
+            },
+            include: ["src"],
+          },
+          null,
+          2
+        ),
+      },
+      { uri: vscode.Uri.joinPath(context.folderUri, ".gitignore"), content: context.gitignore },
+    ],
+  },
+];
 
 export class ProjectCreationService {
   constructor(private readonly projectStore: ProjectStoreService) {}
@@ -405,96 +648,14 @@ export class ProjectCreationService {
       ".env",
       "",
     ].join("\n");
-
-    if (type === "react-vite") {
-      return [
-        {
-          uri: vscode.Uri.joinPath(folderUri, "package.json"),
-          content: this.buildReactVitePackageJson(projectName, packageManager),
-        },
-        {
-          uri: vscode.Uri.joinPath(folderUri, "index.html"),
-          content: this.buildReactViteIndexHtml(projectName),
-        },
-        {
-          uri: vscode.Uri.joinPath(folderUri, "src", "main.tsx"),
-          content: this.buildReactViteMainTsx(projectName),
-        },
-        {
-          uri: vscode.Uri.joinPath(folderUri, "src", "style.css"),
-          content: this.buildReactViteStyleCss(),
-        },
-        { uri: vscode.Uri.joinPath(folderUri, ".gitignore"), content: gitignore },
-      ];
-    }
-
-    if (type === "python") {
-      return [
-        {
-          uri: vscode.Uri.joinPath(folderUri, "main.py"),
-          content: this.buildPythonMainPy(projectName, description),
-        },
-        {
-          uri: vscode.Uri.joinPath(folderUri, "requirements.txt"),
-          content: "# Requisitos del proyecto\n",
-        },
-        { uri: vscode.Uri.joinPath(folderUri, ".gitignore"), content: gitignore },
-      ];
-    }
-
-    if (type === "nextjs") {
-      return [
-        {
-          uri: vscode.Uri.joinPath(folderUri, "package.json"),
-          content: this.buildNextJsPackageJson(projectName, packageManager),
-        },
-        {
-          uri: vscode.Uri.joinPath(folderUri, "app", "layout.tsx"),
-          content: this.buildNextJsLayoutTsx(projectName, description),
-        },
-        {
-          uri: vscode.Uri.joinPath(folderUri, "app", "page.tsx"),
-          content: this.buildNextJsPageTsx(projectName, description),
-        },
-        { uri: vscode.Uri.joinPath(folderUri, ".gitignore"), content: gitignore },
-      ];
-    }
-
-    if (type === "node-api") {
-      return [
-        {
-          uri: vscode.Uri.joinPath(folderUri, "package.json"),
-          content: this.buildNodeApiPackageJson(projectName, packageManager),
-        },
-        {
-          uri: vscode.Uri.joinPath(folderUri, "src", "index.ts"),
-          content: this.buildNodeApiIndexTs(projectName),
-        },
-        {
-          uri: vscode.Uri.joinPath(folderUri, "tsconfig.json"),
-          content: this.buildNodeApiTsconfig(),
-        },
-        { uri: vscode.Uri.joinPath(folderUri, ".gitignore"), content: gitignore },
-      ];
-    }
-
-    if (type === "blank") {
-      return [
-        {
-          uri: vscode.Uri.joinPath(folderUri, "README.md"),
-          content: this.buildBlankReadme(projectName, description),
-        },
-        { uri: vscode.Uri.joinPath(folderUri, ".gitignore"), content: gitignore },
-      ];
-    }
-
-    return [
-      {
-        uri: vscode.Uri.joinPath(folderUri, "README.md"),
-        content: this.buildBlankReadme(projectName, description),
-      },
-      { uri: vscode.Uri.joinPath(folderUri, ".gitignore"), content: gitignore },
-    ];
+    const definition = TEMPLATE_DEFINITIONS.find((item) => item.type === type) ?? TEMPLATE_DEFINITIONS[0];
+    return definition.buildFiles({
+      folderUri,
+      projectName,
+      description,
+      packageManager,
+      gitignore,
+    });
   }
 
   private async writeFileIfMissing(uri: vscode.Uri, content: string): Promise<void> {
