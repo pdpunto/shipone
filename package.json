@@ -30,6 +30,7 @@
       { "command": "shipone.editMvpChecklist", "title": "ShipOne: Editar checklist MVP", "icon": "$(checklist)" },
       { "command": "shipone.markMvpItemDone", "title": "ShipOne: Marcar tarea MVP hecha", "icon": "$(check)" },
       { "command": "shipone.syncStatusFile", "title": "ShipOne: Sincronizar STATUS.md", "icon": "$(sync)" },
+      { "command": "shipone.detectBlockers", "title": "ShipOne: Detectar bloqueadores", "icon": "$(warning)" },
       { "command": "shipone.focusMode", "title": "ShipOne: Focus mode", "icon": "$(eye)" },
       { "command": "shipone.exitFocusMode", "title": "ShipOne: Salir de focus mode", "icon": "$(eye-closed)" },
       { "command": "shipone.weeklyReview", "title": "ShipOne: Weekly review", "icon": "$(calendar)" },
@@ -78,6 +79,11 @@
         },
         {
           "command": "shipone.syncStatusFile",
+          "when": "view == shipone.projectsView",
+          "group": "navigation"
+        },
+        {
+          "command": "shipone.detectBlockers",
           "when": "view == shipone.projectsView",
           "group": "navigation"
         },

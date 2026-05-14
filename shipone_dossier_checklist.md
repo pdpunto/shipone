@@ -517,7 +517,7 @@ Goal: add AI support without making AI required.
 - [ ] Add command: generate project summary
 - [ ] Add command: generate next action suggestions
 - [ ] Add command: generate MVP checklist
-- [ ] Add command: detect blockers from STATUS.md
+- [x] Add command: detect blockers from STATUS.md
 - [ ] Keep AI provider optional
 
 ### TODO/FIXME detection

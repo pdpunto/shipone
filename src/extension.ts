@@ -13,6 +13,7 @@ const COMMAND_OPEN_PROJECT_QUICK_PICK = "shipone.openProjectQuickPick";
 const COMMAND_EDIT_MVP_CHECKLIST = "shipone.editMvpChecklist";
 const COMMAND_MARK_MVP_ITEM_DONE = "shipone.markMvpItemDone";
 const COMMAND_SYNC_STATUS_FILE = "shipone.syncStatusFile";
+const COMMAND_DETECT_BLOCKERS = "shipone.detectBlockers";
 const COMMAND_FOCUS_MODE = "shipone.focusMode";
 const COMMAND_EXIT_FOCUS_MODE = "shipone.exitFocusMode";
 const COMMAND_WEEKLY_REVIEW = "shipone.weeklyReview";
@@ -270,6 +271,28 @@ export async function activate(context: vscode.ExtensionContext) {
       const content = buildStatusFileContent(project);
       await vscode.workspace.fs.writeFile(statusFileUri, new TextEncoder().encode(content));
       vscode.window.showInformationMessage(`STATUS.md sincronizado en ${project.name}.`);
+    }
+  );
+
+  const detectBlockersCommand = vscode.commands.registerCommand(
+    COMMAND_DETECT_BLOCKERS,
+    async () => {
+      const project = await pickProject(projectStore);
+
+      if (!project) {
+        return;
+      }
+
+      const blockers = await readStatusBlockers(project.path);
+
+      if (blockers.length === 0) {
+        vscode.window.showInformationMessage(`Sin bloqueadores en ${project.name}.`);
+        return;
+      }
+
+      vscode.window.showWarningMessage(
+        `${project.name}: ${blockers.join(" | ")}`
+      );
     }
   );
 
@@ -589,6 +612,7 @@ export async function activate(context: vscode.ExtensionContext) {
     editMvpChecklistCommand,
     markMvpItemDoneCommand,
     syncStatusFileCommand,
+    detectBlockersCommand,
     focusModeCommand,
     exitFocusModeCommand,
     weeklyReviewCommand,
@@ -733,6 +757,42 @@ function buildWeeklyReviewSummary(projects: ProjectMetadata[]) {
   return {
     active: projects.find((project) => project.status === "active") ?? null,
   };
+}
+
+async function readStatusBlockers(projectPath: string): Promise<string[]> {
+  try {
+    const statusFileUri = vscode.Uri.joinPath(vscode.Uri.file(projectPath), STATUS_FILE_NAME);
+    const raw = await vscode.workspace.fs.readFile(statusFileUri);
+    const text = new TextDecoder().decode(raw);
+    const lines = text.split(/\r?\n/);
+
+    const blockers: string[] = [];
+    let inBlockers = false;
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+
+      if (/^##\s+Bloqueos$/i.test(trimmed)) {
+        inBlockers = true;
+        continue;
+      }
+
+      if (inBlockers && /^##\s+/.test(trimmed)) {
+        break;
+      }
+
+      if (inBlockers && trimmed.startsWith("-")) {
+        const blocker = trimmed.replace(/^-+\s*/, "").trim();
+        if (blocker && blocker.toLowerCase() !== "ninguno por ahora") {
+          blockers.push(blocker);
+        }
+      }
+    }
+
+    return blockers;
+  } catch {
+    return [];
+  }
 }
 
 function getFinishedThisWeek(projects: ProjectMetadata[]): ProjectMetadata[] {
