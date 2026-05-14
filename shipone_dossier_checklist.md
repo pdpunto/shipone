@@ -383,10 +383,10 @@ Goal: make the MVP feel reliable.
 
 ### Inactivity detection
 
-- [ ] Track last opened date
-- [ ] Show inactive warning after 7 days
-- [ ] Show stronger warning after 30 days
-- [ ] Add setting for warning thresholds
+- [x] Track last opened date
+- [x] Show inactive warning after 7 days
+- [x] Show stronger warning after 30 days
+- [x] Add setting for warning thresholds
 
 ### Metrics
 

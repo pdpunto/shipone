@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { ProjectMetadata, ProjectStatus } from "../models/project";
+import { SettingsService } from "../services/settingsService";
 import { ProjectStoreService } from "../services/projectStoreService";
 
 type ShipOneTreeNode = GroupNode | ProjectNode | EmptyStateNode;
@@ -18,7 +19,10 @@ export class ShipOneProjectsTreeDataProvider
 
   readonly onDidChangeTreeData = this.onDidChangeTreeDataEmitter.event;
 
-  constructor(private readonly projectStore: ProjectStoreService) {}
+  constructor(
+    private readonly projectStore: ProjectStoreService,
+    private readonly settingsService: SettingsService
+  ) {}
 
   refresh(): void {
     this.onDidChangeTreeDataEmitter.fire();
@@ -36,12 +40,16 @@ export class ShipOneProjectsTreeDataProvider
     if (element instanceof GroupNode) {
       const grouped = await this.projectStore.getProjectsByStatus();
       const projects = grouped[element.status];
+      const settings = this.settingsService.getSettings();
 
       if (projects.length === 0) {
-        return [new EmptyStateNode("Sin proyectos todavía")];
+        return [new EmptyStateNode("Sin proyectos todavia")];
       }
 
-      return projects.map((project) => new ProjectNode(project));
+      return projects.map(
+        (project) =>
+          new ProjectNode(project, settings.inactiveWarningDays, settings.staleWarningDays)
+      );
     }
 
     return [];
@@ -61,12 +69,33 @@ class GroupNode extends vscode.TreeItem {
 }
 
 class ProjectNode extends vscode.TreeItem {
-  constructor(project: ProjectMetadata) {
+  constructor(
+    project: ProjectMetadata,
+    inactiveWarningDays: number,
+    staleWarningDays: number
+  ) {
     super(project.name, vscode.TreeItemCollapsibleState.None);
 
-    this.description = project.nextAction ?? undefined;
+    const warning = getInactivityWarning(
+      project.lastOpenedAt,
+      inactiveWarningDays,
+      staleWarningDays
+    );
+
+    this.description = [project.nextAction ?? undefined, warning ?? undefined]
+      .filter(Boolean)
+      .join(" · ");
     this.tooltip = new vscode.MarkdownString(
-      `**${project.name}**\n\nEstado: ${project.status}\nRuta: ${project.path}`
+      [
+        `**${project.name}**`,
+        "",
+        `Estado: ${project.status}`,
+        `Ruta: ${project.path}`,
+        `Ultima apertura: ${project.lastOpenedAt ?? "sin registro"}`,
+        warning ? `Aviso: ${warning}` : "",
+      ]
+        .filter(Boolean)
+        .join("\n")
     );
     this.contextValue = "shipone.project";
     this.iconPath = new vscode.ThemeIcon(project.favorite ? "star-full" : getStatusIcon(project.status));
@@ -97,4 +126,31 @@ function getStatusIcon(status: ProjectStatus): string {
     case "finished":
       return "check";
   }
+}
+
+function getInactivityWarning(
+  lastOpenedAt: string | undefined,
+  inactiveWarningDays: number,
+  staleWarningDays: number
+): string | null {
+  if (!lastOpenedAt) {
+    return null;
+  }
+
+  const openedAt = new Date(lastOpenedAt);
+  if (Number.isNaN(openedAt.getTime())) {
+    return null;
+  }
+
+  const ageDays = Math.floor((Date.now() - openedAt.getTime()) / 86_400_000);
+
+  if (ageDays >= staleWarningDays) {
+    return `stale ${ageDays}d`;
+  }
+
+  if (ageDays >= inactiveWarningDays) {
+    return `inactive ${ageDays}d`;
+  }
+
+  return null;
 }

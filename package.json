@@ -53,19 +53,15 @@
       },
       {
         "command": "shipone.editNextAction",
-        "title": "ShipOne: Editar siguiente acción"
+        "title": "ShipOne: Editar siguiente accion"
       },
       {
         "command": "shipone.clearNextAction",
-        "title": "ShipOne: Limpiar siguiente acción"
+        "title": "ShipOne: Limpiar siguiente accion"
       },
       {
         "command": "shipone.openStatusFile",
         "title": "ShipOne: Abrir STATUS.md"
-      },
-      {
-        "command": "shipone.toggleFavorite",
-        "title": "ShipOne: Alternar favorito"
       },
       {
         "command": "shipone.refreshProjects",
@@ -165,7 +161,19 @@
         "shipone.openAfterCreate": {
           "type": "boolean",
           "default": true,
-          "description": "Abrir el proyecto recién creado al terminar."
+          "description": "Abrir el proyecto recien creado al terminar."
+        },
+        "shipone.inactiveWarningDays": {
+          "type": "number",
+          "default": 7,
+          "minimum": 1,
+          "description": "Dias sin abrir antes de mostrar aviso de inactividad."
+        },
+        "shipone.staleWarningDays": {
+          "type": "number",
+          "default": 30,
+          "minimum": 1,
+          "description": "Dias sin abrir antes de mostrar aviso fuerte."
         }
       }
     }

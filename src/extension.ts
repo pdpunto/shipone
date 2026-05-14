@@ -38,7 +38,7 @@ export async function activate(context: vscode.ExtensionContext) {
   const projectStore = new ProjectStoreService(context);
   const projectCreationService = new ProjectCreationService(projectStore);
   await projectStore.initialize();
-  const treeDataProvider = new ShipOneProjectsTreeDataProvider(projectStore);
+  const treeDataProvider = new ShipOneProjectsTreeDataProvider(projectStore, settingsService);
 
   const treeView = vscode.window.createTreeView("shipone.projectsView", {
     treeDataProvider,
@@ -164,6 +164,7 @@ export async function activate(context: vscode.ExtensionContext) {
         return;
       }
 
+      await projectStore.markProjectOpened(project.id);
       await vscode.commands.executeCommand(
         "vscode.openFolder",
         vscode.Uri.file(project.path),

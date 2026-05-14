@@ -11,6 +11,8 @@ export class SettingsService {
       projectsRoot: config.get<string>("projectsRoot", "C:\\dev\\proyectos"),
       defaultVisibility: config.get<"private" | "public">("defaultVisibility", "private"),
       openAfterCreate: config.get<boolean>("openAfterCreate", true),
+      inactiveWarningDays: config.get<number>("inactiveWarningDays", 7),
+      staleWarningDays: config.get<number>("staleWarningDays", 30),
     };
   }
 }

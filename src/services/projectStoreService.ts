@@ -114,6 +114,18 @@ export class ProjectStoreService {
     await this.saveProjects(projects);
   }
 
+  async markProjectOpened(projectId: string): Promise<void> {
+    const projects = await this.loadProjects();
+    const target = projects.find((project) => project.id === projectId);
+
+    if (!target) {
+      throw new Error("No se encontrÃ³ el proyecto.");
+    }
+
+    target.lastOpenedAt = new Date().toISOString();
+    await this.saveProjects(projects);
+  }
+
   async getProject(projectId: string): Promise<ProjectMetadata | undefined> {
     const projects = await this.loadProjects();
     return projects.find((project) => project.id === projectId);
