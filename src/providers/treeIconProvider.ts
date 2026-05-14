@@ -35,8 +35,8 @@ export class TreeIconProvider {
     }
   }
 
-  getEmptyStateIcon(label: string): string {
-    return label.toLowerCase().includes("sin proyecto") ? "info" : "info";
+  getEmptyStateIcon(): string {
+    return "info";
   }
 
   getWarningIcon(): string {
@@ -48,6 +48,6 @@ export class TreeIconProvider {
   }
 
   getProjectIcon(project: ProjectMetadata): string {
-    return project.favorite ? "star-full" : this.getGroupIcon(project.status as ProjectStatus);
+    return project.favorite ? "star-full" : this.getGroupIcon(project.status);
   }
 }
