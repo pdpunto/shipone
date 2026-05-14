@@ -1,5 +1,11 @@
 export type ProjectStatus = "idea" | "active" | "paused" | "finished";
 
+export interface MvpTask {
+  id: string;
+  text: string;
+  done: boolean;
+}
+
 export interface ProjectMetadata {
   id: string;
   name: string;
@@ -14,4 +20,5 @@ export interface ProjectMetadata {
   nextAction?: string | null;
   favorite?: boolean;
   tags?: string[];
+  mvpTasks?: MvpTask[];
 }

@@ -416,7 +416,7 @@ Goal: make ShipOne more than a launcher.
 
 ### MVP checklist
 
-- [ ] Add MVP tasks field
+- [x] Add MVP tasks field
 - [ ] Add command: edit MVP checklist
 - [ ] Add command: mark MVP item done
 - [ ] Show MVP progress

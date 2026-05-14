@@ -114,8 +114,9 @@ class ProjectNode extends vscode.TreeItem {
       inactiveWarningDays,
       staleWarningDays
     );
+    const mvpProgress = getMvpProgress(project.mvpTasks);
 
-    this.description = [project.nextAction ?? undefined, warning ?? undefined]
+    this.description = [project.nextAction ?? undefined, warning ?? undefined, mvpProgress ?? undefined]
       .filter(Boolean)
       .join(" · ");
     this.tooltip = new vscode.MarkdownString(
@@ -125,6 +126,7 @@ class ProjectNode extends vscode.TreeItem {
         `Estado: ${project.status}`,
         `Ruta: ${project.path}`,
         `Ultima apertura: ${project.lastOpenedAt ?? "sin registro"}`,
+        mvpProgress ? `MVP: ${mvpProgress}` : "",
         warning ? `Aviso: ${warning}` : "",
       ]
         .filter(Boolean)
@@ -186,6 +188,15 @@ function getInactivityWarning(
   }
 
   return null;
+}
+
+function getMvpProgress(tasks: ProjectMetadata["mvpTasks"]): string | null {
+  if (!tasks || tasks.length === 0) {
+    return null;
+  }
+
+  const done = tasks.filter((task) => task.done).length;
+  return `${done}/${tasks.length}`;
 }
 
 function buildMetrics(projects: ProjectMetadata[]) {

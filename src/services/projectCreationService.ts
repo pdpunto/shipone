@@ -121,6 +121,7 @@ export class ProjectCreationService {
       nextAction: null,
       favorite: false,
       tags: [],
+      mvpTasks: [],
     };
 
     await this.projectStore.createProject(project);
