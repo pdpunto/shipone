@@ -1,5 +1,6 @@
 ﻿import * as vscode from "vscode";
 import { TextDecoder, TextEncoder } from "util";
+import { t } from "../localization";
 import type { ProjectMetadata, ProjectStatus } from "../models/project";
 import {
   normalizeProjectListWithDiagnostics,
@@ -56,6 +57,11 @@ export class ProjectStoreService {
       this.logError("No se pudo recuperar el almacenamiento desde backup.", error, {
         source: this.formatLocation(this.backupFileUri),
       });
+      await vscode.window.showWarningMessage(
+        t("No se pudo recuperar el almacenamiento desde el backup."),
+        t("Abrir carpeta"),
+        t("Crear proyecto")
+      );
       return false;
     }
   }
@@ -95,6 +101,11 @@ export class ProjectStoreService {
       });
     } catch (error) {
       await this.deleteIfExists(tempUri);
+      await vscode.window.showErrorMessage(
+        t("No se pudo guardar el almacenamiento."),
+        t("Reintentar"),
+        t("Abrir carpeta")
+      );
       throw error;
     }
   }
@@ -344,6 +355,11 @@ export class ProjectStoreService {
         this.logError("Fallo tambien la lectura del backup.", backupError, {
           source: this.formatLocation(this.backupFileUri),
         });
+        await vscode.window.showWarningMessage(
+          t("El almacenamiento principal fallo y el backup tampoco pudo leerse."),
+          t("Abrir carpeta"),
+          t("Crear proyecto")
+        );
         return { projects: [], version: STORAGE_VERSION };
       }
     }

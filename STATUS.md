@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `Better filesystem errors`.
+Seguir con `Better authentication warnings`.
 
 ## Bloqueos
 - Ninguno por ahora

@@ -223,7 +223,7 @@ Goal: make ShipOne feel simple, modern, and professional.
 - [x] Actionable recovery suggestions
 - [x] Better Git errors
 - [x] Better GitHub errors
-- [ ] Better filesystem errors
+- [x] Better filesystem errors
 - [ ] Better authentication warnings
 
 ---
