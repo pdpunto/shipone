@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { randomUUID } from "crypto";
 import { t } from "../localization";
+import { translationKeys as k } from "../localization/keys";
 import type { ProjectMetadata, ProjectStatus } from "../models/project";
 import { createProjectMetadata } from "../models/projectValidation";
 import type { ShipOneSettings } from "../models/settings";
@@ -12,11 +13,11 @@ import type { ProjectContextService } from "./projectContextService";
 import type { StatusFileService } from "./statusFileService";
 
 const PROJECT_TYPES = [
-  { label: t("Blank"), value: "blank" },
-  { label: t("React Vite"), value: "react-vite" },
-  { label: t("Next.js"), value: "nextjs" },
-  { label: t("Python"), value: "python" },
-  { label: t("Node API"), value: "node-api" },
+  { label: t(k.projectCreation.blank), value: "blank" },
+  { label: t(k.projectCreation.reactVite), value: "react-vite" },
+  { label: t(k.projectCreation.nextJs), value: "nextjs" },
+  { label: t(k.projectCreation.python), value: "python" },
+  { label: t(k.projectCreation.nodeApi), value: "node-api" },
 ] as const;
 
 type GitChoice = { label: string; value: boolean; picked?: boolean };
@@ -89,12 +90,12 @@ export class ProjectCreationService {
 
       if (!githubReady) {
         const choice = await vscode.window.showWarningMessage(
-          t("GitHub no esta autenticado. Puedes conectarlo ahora o seguir sin GitHub."),
-          t("Conectar GitHub"),
-          t("Seguir sin GitHub")
+          t(k.github.notAuthenticated),
+          t(k.common.connectGitHub),
+          t(k.common.followWithoutGitHub)
         );
 
-        if (choice === t("Conectar GitHub")) {
+        if (choice === t(k.common.connectGitHub)) {
           await this.githubService.connectGitHub();
           githubReady = await this.githubService.isGitHubAuthenticated();
         }
@@ -111,7 +112,7 @@ export class ProjectCreationService {
         }
       } else {
         vscode.window.showWarningMessage(
-          t("GitHub no esta autenticado. Se omitira la creacion del repo.")
+          t(k.github.notAuthenticatedSkipped)
         );
       }
     }
@@ -164,11 +165,11 @@ export class ProjectCreationService {
       if (!gitInitialized) {
         const choice = await vscode.window.showWarningMessage(
           t("No se pudo inicializar Git, pero el proyecto ya existe."),
-          t("Abrir carpeta"),
-          t("Seguir sin Git")
+          t(k.common.openFolder),
+          t(k.common.followWithoutGit)
         );
 
-        if (choice === t("Abrir carpeta")) {
+        if (choice === t(k.common.openFolder)) {
           await vscode.commands.executeCommand(
             "vscode.openFolder",
             folderUri,
@@ -180,11 +181,11 @@ export class ProjectCreationService {
         if (!committed) {
           const choice = await vscode.window.showWarningMessage(
             t("Git se inicializo, pero fallo el commit inicial."),
-            t("Abrir carpeta"),
-            t("Seguir sin commit")
+            t(k.common.openFolder),
+            t(k.common.followWithoutCommit)
           );
 
-          if (choice === t("Abrir carpeta")) {
+          if (choice === t(k.common.openFolder)) {
             await vscode.commands.executeCommand(
               "vscode.openFolder",
               folderUri,
@@ -205,13 +206,13 @@ export class ProjectCreationService {
       if (!project.repoUrl) {
         const choice = await vscode.window.showWarningMessage(
           t("No se pudo crear el repo de GitHub, pero el proyecto local ya existe."),
-          t("Conectar GitHub"),
-          t("Abrir carpeta")
+          t(k.common.connectGitHub),
+          t(k.common.openFolder)
         );
 
-        if (choice === t("Conectar GitHub")) {
+        if (choice === t(k.common.connectGitHub)) {
           await this.githubService.connectGitHub();
-        } else if (choice === t("Abrir carpeta")) {
+        } else if (choice === t(k.common.openFolder)) {
           await vscode.commands.executeCommand(
             "vscode.openFolder",
             folderUri,
@@ -296,8 +297,8 @@ export class ProjectCreationService {
     }));
 
     const choice = await vscode.window.showQuickPick(choices, {
-      title: t("Tipo de proyecto"),
-      placeHolder: t("Elige un starter"),
+        title: t(k.projectCreation.projectType),
+        placeHolder: t("Elige un starter"),
     });
 
     return choice?.value as ShipOneSettings["defaultProjectType"] | undefined;
@@ -359,7 +360,7 @@ export class ProjectCreationService {
     ];
 
     const choice = await vscode.window.showQuickPick(choices, {
-      title: t("Package manager"),
+      title: t(k.projectCreation.packageManager),
       placeHolder: t("Elige una opcion"),
     });
 
@@ -373,19 +374,19 @@ export class ProjectCreationService {
     const createChoice = await vscode.window.showQuickPick(
       [
         {
-          label: t("Si"),
+          label: t(k.common.yes),
           value: true,
           picked: defaultCreateGithubRepoByDefault,
         },
         {
-          label: t("No"),
+          label: t(k.common.no),
           value: false,
           picked: !defaultCreateGithubRepoByDefault,
         },
       ],
       {
-        title: t("GitHub"),
-        placeHolder: t("Quieres crear un repo de GitHub?"),
+        title: t(k.projectCreation.gitHub),
+        placeHolder: t(k.projectCreation.askGitHubRepo),
       }
     );
 
@@ -396,16 +397,16 @@ export class ProjectCreationService {
     const visibilityOptions =
       defaultVisibility === "private"
         ? [
-            { label: t("Privado"), value: "private" as const },
-            { label: t("Público"), value: "public" as const },
+            { label: t(k.projectCreation.private), value: "private" as const },
+            { label: t(k.projectCreation.public), value: "public" as const },
           ]
         : [
-            { label: t("Público"), value: "public" as const },
-            { label: t("Privado"), value: "private" as const },
+            { label: t(k.projectCreation.public), value: "public" as const },
+            { label: t(k.projectCreation.private), value: "private" as const },
           ];
 
     const visibility = await vscode.window.showQuickPick(visibilityOptions, {
-      title: t("Visibilidad"),
+      title: t(k.projectCreation.visibility),
       placeHolder: t("Privado o público?"),
     });
 

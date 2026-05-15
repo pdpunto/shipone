@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { t } from "../../localization";
+import { translationKeys as k } from "../../localization/keys";
 import type { ProjectCreationService } from "../../services/projectCreationService";
 import type { ProjectStoreService } from "../../services/projectStoreService";
 import type { SettingsService } from "../../services/settingsService";
@@ -20,11 +21,11 @@ const COMMAND_OPEN_PROJECT = "shipone.openProject";
 
 const PROJECT_TYPE_PICKERS: Array<{ label: string; value: string | null }> = [
   { label: t("Todos"), value: null },
-  { label: t("Blank"), value: "blank" },
-  { label: t("React Vite"), value: "react-vite" },
-  { label: t("Next.js"), value: "nextjs" },
-  { label: t("Python"), value: "python" },
-  { label: t("Node API"), value: "node-api" },
+  { label: t(k.projectCreation.blank), value: "blank" },
+  { label: t(k.projectCreation.reactVite), value: "react-vite" },
+  { label: t(k.projectCreation.nextJs), value: "nextjs" },
+  { label: t(k.projectCreation.python), value: "python" },
+  { label: t(k.projectCreation.nodeApi), value: "node-api" },
 ];
 
 export function registerLaunchCommands(options: {
@@ -88,21 +89,21 @@ export function registerLaunchCommands(options: {
 
       if (projects.length === 0) {
         const choice = await vscode.window.showInformationMessage(
-          t("Todavia no hay proyectos."),
-          t("Crear proyecto"),
-          t("Crear idea de ejemplo")
+          t(k.launch.noProjectsYet),
+          t(k.common.createProject),
+          t(k.common.createExample)
         );
 
-        if (choice === t("Crear proyecto")) {
+        if (choice === t(k.common.createProject)) {
           await vscode.commands.executeCommand(COMMAND_CREATE_PROJECT);
-        } else if (choice === t("Crear idea de ejemplo")) {
+        } else if (choice === t(k.common.createExample)) {
           await vscode.commands.executeCommand(COMMAND_CREATE_SAMPLE_IDEA);
         }
         return;
       }
 
       const searchTerm = await vscode.window.showInputBox({
-        title: t("Buscar proyecto"),
+        title: t(k.launch.searchProject),
         prompt: t("Escribe parte del nombre"),
         placeHolder: t("my-saas-app"),
       });
@@ -116,7 +117,7 @@ export function registerLaunchCommands(options: {
       const typeChoice = await vscode.window.showQuickPick(
         PROJECT_TYPE_PICKERS,
         {
-          title: t("Filtrar por tipo"),
+          title: t(k.launch.filterByType),
           placeHolder: t("Elige un tipo o deja todo"),
         }
       );
@@ -132,13 +133,13 @@ export function registerLaunchCommands(options: {
 
       if (filteredByType.length === 0) {
         vscode.window.showInformationMessage(
-          t("No hay proyectos con esos filtros. Prueba otra busqueda.")
+          t(k.launch.noProjectsWithFilters)
         );
         return;
       }
 
       const tagChoice = await vscode.window.showInputBox({
-        title: t("Filtrar por etiqueta"),
+        title: t(k.launch.filterByTag),
         prompt: t("Escribe una etiqueta o deja vacio"),
         placeHolder: t("frontend"),
       });
@@ -151,7 +152,7 @@ export function registerLaunchCommands(options: {
 
       if (filteredByTag.length === 0) {
         vscode.window.showInformationMessage(
-          t("No hay proyectos con esa etiqueta. Prueba otra etiqueta.")
+          t(k.launch.noProjectsWithTag)
         );
         return;
       }
@@ -164,8 +165,8 @@ export function registerLaunchCommands(options: {
           project,
         })),
         {
-          title: t("Buscar proyecto"),
-          placeHolder: t("Elige un proyecto"),
+          title: t(k.launch.searchProject),
+          placeHolder: t(k.launch.chooseProject),
           matchOnDescription: true,
           matchOnDetail: true,
         }
@@ -237,14 +238,14 @@ export function registerLaunchCommands(options: {
 
       if (projects.length === 0) {
         const choice = await vscode.window.showInformationMessage(
-          t("Todavia no hay proyectos."),
-          t("Crear proyecto"),
-          t("Crear idea de ejemplo")
+          t(k.launch.noProjectsYet),
+          t(k.common.createProject),
+          t(k.common.createExample)
         );
 
-        if (choice === t("Crear proyecto")) {
+        if (choice === t(k.common.createProject)) {
           await vscode.commands.executeCommand(COMMAND_CREATE_PROJECT);
-        } else if (choice === t("Crear idea de ejemplo")) {
+        } else if (choice === t(k.common.createExample)) {
           await vscode.commands.executeCommand(COMMAND_CREATE_SAMPLE_IDEA);
         }
         return;

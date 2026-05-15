@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { t } from "../localization";
+import { translationKeys as k } from "../localization/keys";
 import type { SettingsService } from "../services/settingsService";
 
 export async function showFirstRunOnboarding(
@@ -16,23 +17,23 @@ export async function showFirstRunOnboarding(
   const settings = settingsService.getSettings();
   const choice = await vscode.window.showInformationMessage(
     t(
-      "ShipOne listo. Ruta base: {0}. Solo un proyecto activo a la vez.",
+      k.onboarding.ready,
       settings.projectsRoot
     ),
-    t("Crear proyecto"),
-    t("Crear idea de ejemplo"),
+    t(k.common.createProject),
+    t(k.common.createExample),
     t("Elegir carpeta base"),
-    t("Conectar GitHub"),
-    t("Abrir ajustes"),
+    t(k.common.connectGitHub),
+    t(k.common.openSettings),
     t("Entendido")
   );
 
-  if (choice === t("Crear proyecto")) {
+  if (choice === t(k.common.createProject)) {
     await vscode.commands.executeCommand("shipone.createProject");
     return;
   }
 
-  if (choice === t("Crear idea de ejemplo")) {
+  if (choice === t(k.common.createExample)) {
     await vscode.commands.executeCommand("shipone.createSampleIdea");
     return;
   }
@@ -42,12 +43,12 @@ export async function showFirstRunOnboarding(
     return;
   }
 
-  if (choice === t("Conectar GitHub")) {
+  if (choice === t(k.common.connectGitHub)) {
     await vscode.commands.executeCommand("shipone.connectGithub");
     return;
   }
 
-  if (choice === t("Abrir ajustes")) {
+  if (choice === t(k.common.openSettings)) {
     await vscode.commands.executeCommand(
       "workbench.action.openSettings",
       "ShipOne"

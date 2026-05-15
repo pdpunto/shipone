@@ -2,6 +2,7 @@ import { execFile } from "child_process";
 import { promisify } from "util";
 import * as vscode from "vscode";
 import { t } from "../localization";
+import { translationKeys as k } from "../localization/keys";
 
 const execFileAsync = promisify(execFile);
 
@@ -14,12 +15,12 @@ export class GitHubService {
 
     if (!ghInstalled) {
       const choice = await vscode.window.showWarningMessage(
-        t("No se encontro GitHub CLI. Instala 'gh' y vuelve a intentarlo."),
-        t("Abrir ajustes"),
+        t(k.github.noCli),
+        t(k.common.openSettings),
         t("Seguir")
       );
 
-      if (choice === t("Abrir ajustes")) {
+      if (choice === t(k.common.openSettings)) {
         await vscode.commands.executeCommand(
           "workbench.action.openSettings",
           "GitHub"
@@ -31,7 +32,7 @@ export class GitHubService {
     const githubReady = await this.isGitHubAuthenticated();
 
     if (githubReady) {
-      vscode.window.showInformationMessage(t("GitHub ya esta conectado."));
+      vscode.window.showInformationMessage(t(k.github.connected));
       return;
     }
 
@@ -39,7 +40,7 @@ export class GitHubService {
     terminal.show(true);
     terminal.sendText("gh auth login -h github.com");
     vscode.window.showInformationMessage(
-      t("Abre la terminal para conectar GitHub.")
+      t(k.github.connectInTerminal)
     );
   }
 

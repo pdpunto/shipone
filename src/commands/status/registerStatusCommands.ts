@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { t } from "../../localization";
+import { translationKeys as k } from "../../localization/keys";
 import type { ProjectStoreService } from "../../services/projectStoreService";
 import type { StatusFileService } from "../../services/statusFileService";
 import { pickProject } from "../projects/projectOpsHelpers";
@@ -33,14 +34,14 @@ export function registerStatusCommands(options: {
         await vscode.window.showTextDocument(document, { preview: false });
       } catch {
         const choice = await vscode.window.showErrorMessage(
-          t("No se pudo abrir STATUS.md."),
+          t(k.status.openFailed),
           t("Crear archivo"),
-          t("Abrir carpeta")
+          t(k.common.openFolder)
         );
 
         if (choice === t("Crear archivo")) {
           await vscode.commands.executeCommand("shipone.syncStatusFile");
-        } else if (choice === t("Abrir carpeta")) {
+        } else if (choice === t(k.common.openFolder)) {
           await vscode.commands.executeCommand("vscode.openFolder", vscode.Uri.file(project.path), false);
         }
       }
@@ -58,7 +59,7 @@ export function registerStatusCommands(options: {
 
       await statusFileService.syncStatusFile(project);
       vscode.window.showInformationMessage(
-        t("STATUS.md sincronizado en {0}.", project.name)
+        t(k.status.syncDone, project.name)
       );
     }
   );

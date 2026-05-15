@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `Group keys by domain`.
+Seguir con `Avoid duplicated strings`.
 
 ## Bloqueos
 - Ninguno por ahora
