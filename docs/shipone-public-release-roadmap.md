@@ -96,9 +96,9 @@ Goal: reduce technical debt and make the extension easier to maintain.
 ### 1.6 Storage Reliability
 
 - [x] Validate JSON before parse
-- [ ] Detect corrupted metadata
-- [ ] Restore from backup automatically
-- [ ] Add recovery flow
+- [x] Detect corrupted metadata
+- [x] Restore from backup automatically
+- [x] Add recovery flow
 - [ ] Add migration system
 - [ ] Add structured error logging
 - [ ] Add safe write strategy

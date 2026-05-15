@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con detectar metadata corrupta y recuperar desde backup.
+Seguir con agregar logging estructurado.
 
 ## Bloqueos
 - Ninguno por ahora

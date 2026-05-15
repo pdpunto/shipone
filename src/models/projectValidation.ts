@@ -71,14 +71,31 @@ export function normalizeProjectMetadata(
 }
 
 export function normalizeProjectList(value: unknown): ProjectMetadata[] {
+  return normalizeProjectListWithDiagnostics(value).projects;
+}
+
+export function normalizeProjectListWithDiagnostics(value: unknown): {
+  projects: ProjectMetadata[];
+  corrupted: boolean;
+} {
   if (!Array.isArray(value)) {
-    return [];
+    return { projects: [], corrupted: false };
   }
 
-  return value.flatMap((item) => {
+  let corrupted = false;
+  const projects: ProjectMetadata[] = [];
+
+  for (const item of value) {
     const normalized = normalizeProjectMetadata(item);
-    return normalized ? [normalized] : [];
-  });
+    if (!normalized) {
+      corrupted = true;
+      continue;
+    }
+
+    projects.push(normalized);
+  }
+
+  return { projects, corrupted };
 }
 
 function normalizeOptionalString(value: unknown): string | undefined {

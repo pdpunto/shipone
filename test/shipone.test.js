@@ -3,7 +3,10 @@ const assert = require("node:assert/strict");
 
 const { filterProjectsByName, filterProjectsByTag, buildProjectDetail } = require("../out/utils/projectSearch");
 const { parseMvpTasks, getFinishedThisWeek, isStaleProject } = require("../out/utils/projectReview");
-const { normalizeProjectMetadata } = require("../out/models/projectValidation");
+const {
+  normalizeProjectMetadata,
+  normalizeProjectListWithDiagnostics,
+} = require("../out/models/projectValidation");
 
 test("filterProjectsByName busca sin distinguir mayusculas", () => {
   const projects = [
@@ -69,6 +72,27 @@ test("normalizeProjectMetadata rellena campos opcionales", () => {
   assert.equal(project.favorite, false);
   assert.deepEqual(project.tags, []);
   assert.deepEqual(project.mvpTasks, []);
+});
+
+test("normalizeProjectListWithDiagnostics marca corrupcion", () => {
+  const result = normalizeProjectListWithDiagnostics([
+    {
+      id: "p1",
+      name: "Valido",
+      description: "Test",
+      type: "blank",
+      status: "idea",
+      path: "/tmp/a",
+      createdAt: "2026-05-15T00:00:00.000Z",
+    },
+    {
+      id: "p2",
+      name: 123,
+    },
+  ]);
+
+  assert.equal(result.projects.length, 1);
+  assert.equal(result.corrupted, true);
 });
 
 test("isStaleProject marca proyecto activo viejo", () => {

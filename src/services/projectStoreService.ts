@@ -2,7 +2,7 @@
 import { TextDecoder, TextEncoder } from "util";
 import { ProjectMetadata, ProjectStatus } from "../models/project";
 import {
-  normalizeProjectList,
+  normalizeProjectListWithDiagnostics,
   normalizeProjectMetadata,
 } from "../models/projectValidation";
 
@@ -334,7 +334,12 @@ export class ProjectStoreService {
     const parsed = this.parseJsonSnapshot(text, uri);
 
     if (Array.isArray(parsed)) {
-      return { projects: normalizeProjectList(parsed), version: 1 };
+      const diagnostics = normalizeProjectListWithDiagnostics(parsed);
+      if (diagnostics.corrupted) {
+        throw new Error("Metadata corrupta detectada en lista de proyectos.");
+      }
+
+      return { projects: diagnostics.projects, version: 1 };
     }
 
     if (typeof parsed === "object" && parsed !== null) {
@@ -343,8 +348,13 @@ export class ProjectStoreService {
       };
       const version =
         typeof snapshot.version === "number" ? snapshot.version : 1;
+      const diagnostics = normalizeProjectListWithDiagnostics(snapshot.projects);
+      if (diagnostics.corrupted) {
+        throw new Error("Metadata corrupta detectada en snapshot de proyectos.");
+      }
+
       return {
-        projects: normalizeProjectList(snapshot.projects),
+        projects: diagnostics.projects,
         version,
       };
     }
