@@ -243,6 +243,41 @@ test("buildProjectDescription muestra la salud visible", () => {
   }
 });
 
+test("buildPausedProjectDescription muestra contexto de pausa", () => {
+  const originalLoad = Module._load;
+
+  try {
+    Module._load = function patchedLoad(request, parent, isMain) {
+      if (request === "vscode") {
+        return {
+          l10n: {
+            t: () => "",
+          },
+        };
+      }
+
+      return originalLoad.call(this, request, parent, isMain);
+    };
+
+    delete require.cache[require.resolve("../out/localization/localizationService")];
+    delete require.cache[require.resolve("../out/localization/index")];
+    delete require.cache[require.resolve("../out/utils/projectReviewDisplay")];
+
+    const { buildPausedProjectDescription } = require("../out/utils/projectReviewDisplay");
+
+    assert.equal(
+      buildPausedProjectDescription(
+        "Esperando feedback",
+        "Retomar login",
+        "Bloqueado por dependencias externas"
+      ),
+      "Pausado · Motivo: Esperando feedback · Siguiente: Retomar login · Nota: Bloqueado por dependencias externas"
+    );
+  } finally {
+    Module._load = originalLoad;
+  }
+});
+
 test("getFinishedThisWeek devuelve solo recientes", () => {
   const recent = new Date(Date.now() - 2 * 86_400_000).toISOString();
   const old = new Date(Date.now() - 10 * 86_400_000).toISOString();

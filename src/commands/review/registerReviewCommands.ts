@@ -13,6 +13,7 @@ import {
   isStaleProject,
   pickProject,
 } from "../projects/projectOpsHelpers";
+import { buildPausedProjectDescription } from "../../utils/projectReviewDisplay";
 
 const COMMAND_OPEN_PROJECT = "shipone.openProject";
 const COMMAND_SCAN_TODOS = "shipone.scanTodos";
@@ -252,8 +253,11 @@ export function registerReviewCommands(options: {
       const choice = await vscode.window.showQuickPick(
         pausedProjects.map((project) => ({
           label: project.name,
-          description:
-            project.pauseReason ?? project.nextAction ?? t("Pausado"),
+          description: buildPausedProjectDescription(
+            project.pauseReason,
+            project.nextAction,
+            project.pauseNote
+          ),
           detail: project.pauseNote ?? project.path,
           project,
         })),
