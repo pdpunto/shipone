@@ -70,15 +70,15 @@ test("normalizeProjectMetadata rellena campos opcionales", () => {
   });
 
   assert.ok(project);
-  assert.equal(project.schemaVersion, 1);
+  assert.equal(project.schemaVersion, 2);
   assert.equal(project.favorite, false);
   assert.deepEqual(project.tags, []);
   assert.deepEqual(project.mvpTasks, []);
 });
 
-test("normalizeProjectMetadata conserva schemaVersion", () => {
+test("normalizeProjectMetadata migra schema viejo", () => {
   const project = normalizeProjectMetadata({
-    schemaVersion: 3,
+    schemaVersion: 1,
     id: "p1",
     name: "ShipOne",
     description: "Test",
@@ -86,10 +86,12 @@ test("normalizeProjectMetadata conserva schemaVersion", () => {
     status: "idea",
     path: "/tmp/shipone",
     createdAt: "2026-05-15T00:00:00.000Z",
+    tags: ["ui", "ui", 123],
   });
 
   assert.ok(project);
-  assert.equal(project.schemaVersion, 3);
+  assert.equal(project.schemaVersion, 2);
+  assert.deepEqual(project.tags, ["ui"]);
 });
 
 test("normalizeProjectListWithDiagnostics marca corrupcion", () => {

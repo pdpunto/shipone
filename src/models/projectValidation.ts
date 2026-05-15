@@ -1,7 +1,7 @@
 import type { MvpTask, ProjectMetadata, ProjectStatus } from "./project";
 
 type ProjectMetadataInput = Record<string, unknown>;
-const PROJECT_SCHEMA_VERSION = 1;
+const PROJECT_SCHEMA_VERSION = 2;
 
 export function isProjectStatus(value: unknown): value is ProjectStatus {
   return (
@@ -36,30 +36,34 @@ export function isProjectMetadata(value: unknown): value is ProjectMetadata {
 export function normalizeProjectMetadata(
   value: unknown
 ): ProjectMetadata | undefined {
-  if (!isProjectMetadata(value)) {
+  if (
+    !hasProjectMetadataSchema(value) &&
+    !hasLegacyProjectMetadataSchema(value)
+  ) {
     return undefined;
   }
 
   const project = value as unknown as ProjectMetadataInput;
+  const migrated = migrateProjectMetadata(project);
 
   return {
-    schemaVersion: normalizeSchemaVersion(project.schemaVersion),
-    id: requireString(project.id),
-    name: requireString(project.name),
-    description: requireString(project.description),
-    type: requireString(project.type),
-    status: requireProjectStatus(project.status),
-    path: requireString(project.path),
-    repoUrl: normalizeNullableString(project.repoUrl),
-    createdAt: requireString(project.createdAt),
-    lastOpenedAt: normalizeOptionalString(project.lastOpenedAt),
-    finishedAt: normalizeNullableString(project.finishedAt),
-    nextAction: normalizeNullableString(project.nextAction),
-    favorite: typeof project.favorite === "boolean" ? project.favorite : false,
-    tags: normalizeStringArray(project.tags),
-    mvpTasks: normalizeMvpTasks(project.mvpTasks),
-    pauseReason: normalizeNullableString(project.pauseReason),
-    pauseNote: normalizeNullableString(project.pauseNote),
+    schemaVersion: PROJECT_SCHEMA_VERSION,
+    id: requireString(migrated.id),
+    name: requireString(migrated.name),
+    description: requireString(migrated.description),
+    type: requireString(migrated.type),
+    status: requireProjectStatus(migrated.status),
+    path: requireString(migrated.path),
+    repoUrl: normalizeNullableString(migrated.repoUrl),
+    createdAt: requireString(migrated.createdAt),
+    lastOpenedAt: normalizeOptionalString(migrated.lastOpenedAt),
+    finishedAt: normalizeNullableString(migrated.finishedAt),
+    nextAction: normalizeNullableString(migrated.nextAction),
+    favorite: typeof migrated.favorite === "boolean" ? migrated.favorite : false,
+    tags: normalizeStringArray(migrated.tags),
+    mvpTasks: normalizeMvpTasks(migrated.mvpTasks),
+    pauseReason: normalizeNullableString(migrated.pauseReason),
+    pauseNote: normalizeNullableString(migrated.pauseNote),
   };
 }
 
@@ -112,7 +116,22 @@ function normalizeStringArray(value: unknown): string[] {
     return [];
   }
 
-  return value.filter((item): item is string => typeof item === "string");
+  const uniqueValues = new Set<string>();
+
+  for (const item of value) {
+    if (typeof item !== "string") {
+      continue;
+    }
+
+    const normalized = item.trim();
+    if (!normalized) {
+      continue;
+    }
+
+    uniqueValues.add(normalized);
+  }
+
+  return [...uniqueValues];
 }
 
 function normalizeMvpTasks(value: unknown): MvpTask[] {
@@ -157,30 +176,54 @@ function isMvpTaskArray(value: unknown): value is MvpTask[] | undefined {
   return value === undefined || (Array.isArray(value) && value.every(isMvpTask));
 }
 
-function hasProjectMetadataSchema(project: ProjectMetadataInput): boolean {
+function hasProjectMetadataSchema(project: unknown): boolean {
+  if (typeof project !== "object" || project === null) {
+    return false;
+  }
+
+  const typed = project as ProjectMetadataInput;
   return (
-    isSchemaVersion(project.schemaVersion) &&
-    typeof project.id === "string" &&
-    typeof project.name === "string" &&
-    typeof project.description === "string" &&
-    typeof project.type === "string" &&
-    isProjectStatus(project.status) &&
-    typeof project.path === "string" &&
-    typeof project.createdAt === "string" &&
-    isOptionalString(project.repoUrl, true) &&
-    isOptionalString(project.lastOpenedAt, false) &&
-    isOptionalString(project.finishedAt, true) &&
-    isOptionalString(project.nextAction, true) &&
-    (project.favorite === undefined || typeof project.favorite === "boolean") &&
-    isStringArray(project.tags) &&
-    isMvpTaskArray(project.mvpTasks) &&
-    isOptionalString(project.pauseReason, true) &&
-    isOptionalString(project.pauseNote, true)
+    isSchemaVersion(typed.schemaVersion) &&
+    typeof typed.id === "string" &&
+    typeof typed.name === "string" &&
+    typeof typed.description === "string" &&
+    typeof typed.type === "string" &&
+    isProjectStatus(typed.status) &&
+    typeof typed.path === "string" &&
+    typeof typed.createdAt === "string" &&
+    isOptionalString(typed.repoUrl, true) &&
+    isOptionalString(typed.lastOpenedAt, false) &&
+    isOptionalString(typed.finishedAt, true) &&
+    isOptionalString(typed.nextAction, true) &&
+    (typed.favorite === undefined || typeof typed.favorite === "boolean") &&
+    isStringArray(typed.tags) &&
+    isMvpTaskArray(typed.mvpTasks) &&
+    isOptionalString(typed.pauseReason, true) &&
+    isOptionalString(typed.pauseNote, true)
+  );
+}
+
+function hasLegacyProjectMetadataSchema(
+  project: unknown
+): project is ProjectMetadataInput {
+  if (typeof project !== "object" || project === null) {
+    return false;
+  }
+
+  const legacy = project as ProjectMetadataInput;
+  return (
+    typeof legacy.id === "string" &&
+    typeof legacy.name === "string" &&
+    typeof legacy.description === "string" &&
+    typeof legacy.type === "string" &&
+    isProjectStatus(legacy.status) &&
+    typeof legacy.path === "string" &&
+    typeof legacy.createdAt === "string"
   );
 }
 
 function normalizeSchemaVersion(value: unknown): number {
-  return isValidSchemaVersion(value) ? value : PROJECT_SCHEMA_VERSION;
+  return isValidSchemaVersion(value) ? value : 1;
 }
 
 function isSchemaVersion(value: unknown): value is number | undefined {
@@ -189,4 +232,19 @@ function isSchemaVersion(value: unknown): value is number | undefined {
 
 function isValidSchemaVersion(value: unknown): value is number {
   return typeof value === "number" && Number.isInteger(value) && value >= 1;
+}
+
+function migrateProjectMetadata(project: ProjectMetadataInput): ProjectMetadataInput {
+  const schemaVersion = normalizeSchemaVersion(project.schemaVersion);
+
+  if (schemaVersion >= PROJECT_SCHEMA_VERSION) {
+    return project;
+  }
+
+  return {
+    ...project,
+    schemaVersion: PROJECT_SCHEMA_VERSION,
+    tags: normalizeStringArray(project.tags),
+    mvpTasks: normalizeMvpTasks(project.mvpTasks),
+  };
 }
