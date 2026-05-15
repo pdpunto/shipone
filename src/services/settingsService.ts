@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { ShipOneSettings } from "../models/settings";
+import type { ShipOneSettings } from "../models/settings";
 
 const CONFIG_SECTION = "shipone";
 

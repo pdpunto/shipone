@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { t } from "../../localization";
-import { TreeIconProvider } from "../treeIconProvider";
-import { TreeTooltipProvider } from "../treeTooltipProvider";
+import type { TreeIconProvider } from "../treeIconProvider";
+import type { TreeTooltipProvider } from "../treeTooltipProvider";
 
 export class WarningNode extends vscode.TreeItem {
   constructor(

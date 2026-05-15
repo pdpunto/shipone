@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+import type * as vscode from "vscode";
 import { ShipOneApp } from "./shiponeApp";
 
 export async function initializeShipOne(

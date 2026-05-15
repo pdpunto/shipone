@@ -1,10 +1,10 @@
 ﻿import * as vscode from "vscode";
 import { t } from "../../localization";
-import { ProjectMetadata, ProjectStatus } from "../../models/project";
-import { ShipOneSettings } from "../../models/settings";
-import { ProjectStoreService } from "../../services/projectStoreService";
-import { SettingsService } from "../../services/settingsService";
-import { ShipOneProjectsTreeDataProvider } from "../../providers/shiponeProjectsTreeDataProvider";
+import type { ProjectMetadata, ProjectStatus } from "../../models/project";
+import type { ShipOneSettings } from "../../models/settings";
+import type { ProjectStoreService } from "../../services/projectStoreService";
+import type { SettingsService } from "../../services/settingsService";
+import type { ShipOneProjectsTreeDataProvider } from "../../providers/shiponeProjectsTreeDataProvider";
 import { confirmCanActivateProject, pickProject } from "./projectOpsHelpers";
 
 const STATUS_FILE_NAME = "STATUS.md";

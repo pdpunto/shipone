@@ -1,6 +1,6 @@
 ﻿import * as vscode from "vscode";
 import { TextDecoder, TextEncoder } from "util";
-import { ProjectMetadata, ProjectStatus } from "../models/project";
+import type { ProjectMetadata, ProjectStatus } from "../models/project";
 import {
   normalizeProjectListWithDiagnostics,
   normalizeProjectMetadata,

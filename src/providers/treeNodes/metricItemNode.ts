@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { TreeIconProvider } from "../treeIconProvider";
+import type { TreeIconProvider } from "../treeIconProvider";
 
 export class MetricItemNode extends vscode.TreeItem {
   constructor(

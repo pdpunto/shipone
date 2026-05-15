@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { ProjectMetadata } from "../models/project";
+import type { ProjectMetadata } from "../models/project";
 import { buildStatusFileContent } from "../commands/projects/projectOpsHelpers";
 
 export class StatusFileService {

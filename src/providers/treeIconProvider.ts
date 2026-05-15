@@ -1,4 +1,4 @@
-import { ProjectMetadata, ProjectStatus } from "../models/project";
+import type { ProjectMetadata, ProjectStatus } from "../models/project";
 
 export class TreeIconProvider {
   getGroupIcon(status: ProjectStatus): string {

@@ -1,4 +1,4 @@
-import { ProjectStoreService } from "./projectStoreService";
+import type { ProjectStoreService } from "./projectStoreService";
 
 export class ProjectRecoveryService {
   constructor(private readonly projectStore: ProjectStoreService) {}

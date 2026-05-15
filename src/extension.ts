@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+import type * as vscode from "vscode";
 import { initializeShipOne } from "./bootstrap/shiponeBootstrap";
 
 export async function activate(context: vscode.ExtensionContext) {

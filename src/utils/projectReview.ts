@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import { ProjectMetadata } from "../models/project";
+import type { ProjectMetadata } from "../models/project";
 
 export function parseMvpTasks(
   rawValue: string,

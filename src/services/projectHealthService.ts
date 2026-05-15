@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { execFile } from "child_process";
 import { promisify } from "util";
-import { ProjectMetadata } from "../models/project";
+import type { ProjectMetadata } from "../models/project";
 
 const execFileAsync = promisify(execFile);
 

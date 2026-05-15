@@ -1,14 +1,14 @@
 import * as vscode from "vscode";
 import { randomUUID } from "crypto";
 import { t } from "../localization";
-import { ProjectMetadata, ProjectStatus } from "../models/project";
-import { ShipOneSettings } from "../models/settings";
-import { ProjectStoreService } from "./projectStoreService";
+import type { ProjectMetadata, ProjectStatus } from "../models/project";
+import type { ShipOneSettings } from "../models/settings";
+import type { ProjectStoreService } from "./projectStoreService";
 import { GitService } from "./gitService";
 import { GitHubService } from "./githubService";
 import { TemplateService } from "./templateService";
-import { ProjectContextService } from "./projectContextService";
-import { StatusFileService } from "./statusFileService";
+import type { ProjectContextService } from "./projectContextService";
+import type { StatusFileService } from "./statusFileService";
 
 const PROJECT_TYPES = [
   { label: t("Blank"), value: "blank" },

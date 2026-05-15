@@ -1,9 +1,9 @@
 import * as vscode from "vscode";
 import { t } from "../../localization";
-import { ProjectMetadata } from "../../models/project";
-import { ProjectHealth } from "../../services/projectHealthService";
-import { TreeIconProvider } from "../treeIconProvider";
-import { TreeTooltipProvider } from "../treeTooltipProvider";
+import type { ProjectMetadata } from "../../models/project";
+import type { ProjectHealth } from "../../services/projectHealthService";
+import type { TreeIconProvider } from "../treeIconProvider";
+import type { TreeTooltipProvider } from "../treeTooltipProvider";
 
 export class FocusNode extends vscode.TreeItem {
   constructor(

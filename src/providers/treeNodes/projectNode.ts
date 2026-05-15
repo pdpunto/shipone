@@ -1,10 +1,10 @@
 import * as vscode from "vscode";
 import { t } from "../../localization";
-import { ProjectMetadata } from "../../models/project";
-import { ProjectHealth } from "../../services/projectHealthService";
-import { ProjectHealthRenderer } from "../projectHealthRenderer";
-import { TreeIconProvider } from "../treeIconProvider";
-import { TreeTooltipProvider } from "../treeTooltipProvider";
+import type { ProjectMetadata } from "../../models/project";
+import type { ProjectHealth } from "../../services/projectHealthService";
+import type { ProjectHealthRenderer } from "../projectHealthRenderer";
+import type { TreeIconProvider } from "../treeIconProvider";
+import type { TreeTooltipProvider } from "../treeTooltipProvider";
 import { getMvpProgress } from "./shared";
 
 export class ProjectNode extends vscode.TreeItem {

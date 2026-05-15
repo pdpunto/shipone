@@ -1,10 +1,11 @@
 import * as vscode from "vscode";
 import { t } from "../../localization";
-import { ProjectCreationService } from "../../services/projectCreationService";
-import { ProjectStoreService } from "../../services/projectStoreService";
-import { SettingsService } from "../../services/settingsService";
+import type { ProjectCreationService } from "../../services/projectCreationService";
+import type { ProjectStoreService } from "../../services/projectStoreService";
+import type { SettingsService } from "../../services/settingsService";
+import type {
+  TodoScannerService} from "../../services/todoScannerService";
 import {
-  TodoScannerService,
   type TodoTask,
 } from "../../services/todoScannerService";
 import {

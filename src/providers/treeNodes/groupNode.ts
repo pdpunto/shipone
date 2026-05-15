@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
-import { ProjectStatus } from "../../models/project";
-import { TreeIconProvider } from "../treeIconProvider";
-import { TreeTooltipProvider } from "../treeTooltipProvider";
+import type { ProjectStatus } from "../../models/project";
+import type { TreeIconProvider } from "../treeIconProvider";
+import type { TreeTooltipProvider } from "../treeTooltipProvider";
 
 export class GroupNode extends vscode.TreeItem {
   constructor(

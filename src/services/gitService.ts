@@ -1,6 +1,6 @@
 import { execFile } from "child_process";
 import { promisify } from "util";
-import * as vscode from "vscode";
+import type * as vscode from "vscode";
 
 const execFileAsync = promisify(execFile);
 

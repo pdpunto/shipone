@@ -1,6 +1,6 @@
 import { t } from "../localization";
-import { ProjectMetadata } from "../models/project";
-import { ProjectHealth } from "../services/projectHealthService";
+import type { ProjectMetadata } from "../models/project";
+import type { ProjectHealth } from "../services/projectHealthService";
 import { formatProjectType, getMvpProgress } from "./treeNodes/shared";
 
 export class ProjectHealthRenderer {

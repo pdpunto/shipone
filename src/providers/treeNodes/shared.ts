@@ -1,4 +1,4 @@
-import { ProjectMetadata, ProjectStatus } from "../../models/project";
+import type { ProjectMetadata, ProjectStatus } from "../../models/project";
 
 export function getStatusIcon(status: ProjectStatus): string {
   switch (status) {

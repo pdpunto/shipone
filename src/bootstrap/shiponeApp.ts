@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { ProjectMetadata } from "../models/project";
+import type { ProjectMetadata } from "../models/project";
 import { registerProjectCommands } from "../commands/projects/registerProjectCommands";
 import { registerLaunchCommands } from "../commands/projects/registerLaunchCommands";
 import { registerProjectOpsCommands } from "../commands/projects/registerProjectOpsCommands";

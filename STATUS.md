@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con configurar reglas estrictas de ESLint.
+Seguir con agregar documentacion inline donde haga falta.
 
 ## Bloqueos
 - Ninguno por ahora

@@ -1,4 +1,4 @@
-import { ProjectMetadata } from "../models/project";
+import type { ProjectMetadata } from "../models/project";
 
 export function filterProjectsByName(
   projects: ProjectMetadata[],

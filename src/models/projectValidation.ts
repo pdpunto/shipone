@@ -1,4 +1,4 @@
-import { MvpTask, ProjectMetadata, ProjectStatus } from "./project";
+import type { MvpTask, ProjectMetadata, ProjectStatus } from "./project";
 
 type ProjectMetadataInput = Record<string, unknown>;
 

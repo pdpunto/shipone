@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { t } from "../../localization";
-import { ProjectMetadata } from "../../models/project";
+import type { ProjectMetadata } from "../../models/project";
 export {
   getFinishedThisWeek,
   isStaleProject,

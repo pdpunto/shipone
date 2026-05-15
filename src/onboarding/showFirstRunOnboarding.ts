@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { t } from "../localization";
-import { SettingsService } from "../services/settingsService";
+import type { SettingsService } from "../services/settingsService";
 
 export async function showFirstRunOnboarding(
   context: vscode.ExtensionContext,

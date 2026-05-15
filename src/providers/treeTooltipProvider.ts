@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { t } from "../localization";
-import { ProjectMetadata } from "../models/project";
-import { ProjectHealth } from "../services/projectHealthService";
+import type { ProjectMetadata } from "../models/project";
+import type { ProjectHealth } from "../services/projectHealthService";
 
 export class TreeTooltipProvider {
   buildGroupTooltip(label: string): vscode.MarkdownString {

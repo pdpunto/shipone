@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 import { t } from "../../localization";
-import { ProjectCreationService } from "../../services/projectCreationService";
-import { ProjectStoreService } from "../../services/projectStoreService";
-import { SettingsService } from "../../services/settingsService";
+import type { ProjectCreationService } from "../../services/projectCreationService";
+import type { ProjectStoreService } from "../../services/projectStoreService";
+import type { SettingsService } from "../../services/settingsService";
 import {
   buildProjectDetail,
   filterProjectsByName,

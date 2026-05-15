@@ -1,10 +1,10 @@
 import * as vscode from "vscode";
 import { t } from "../../localization";
-import { ProjectCreationService } from "../../services/projectCreationService";
-import { ProjectContextService } from "../../services/projectContextService";
-import { ProjectRecoveryService } from "../../services/projectRecoveryService";
-import { ProjectStoreService } from "../../services/projectStoreService";
-import { StatusFileService } from "../../services/statusFileService";
+import type { ProjectCreationService } from "../../services/projectCreationService";
+import type { ProjectContextService } from "../../services/projectContextService";
+import type { ProjectRecoveryService } from "../../services/projectRecoveryService";
+import type { ProjectStoreService } from "../../services/projectStoreService";
+import type { StatusFileService } from "../../services/statusFileService";
 import { parseMvpTasks, pickProject } from "./projectOpsHelpers";
 
 const COMMAND_EDIT_MVP_CHECKLIST = "shipone.editMvpChecklist";

@@ -1,10 +1,10 @@
-import { ProjectMetadata, ProjectStatus } from "../models/project";
-import { SettingsService } from "../services/settingsService";
-import { ProjectStoreService } from "../services/projectStoreService";
-import { ProjectHealthService } from "../services/projectHealthService";
-import { ProjectHealthRenderer } from "./projectHealthRenderer";
-import { TreeIconProvider } from "./treeIconProvider";
-import { TreeTooltipProvider } from "./treeTooltipProvider";
+import type { ProjectMetadata, ProjectStatus } from "../models/project";
+import type { SettingsService } from "../services/settingsService";
+import type { ProjectStoreService } from "../services/projectStoreService";
+import type { ProjectHealthService } from "../services/projectHealthService";
+import type { ProjectHealthRenderer } from "./projectHealthRenderer";
+import type { TreeIconProvider } from "./treeIconProvider";
+import type { TreeTooltipProvider } from "./treeTooltipProvider";
 import { t } from "../localization";
 import { GroupNode } from "./treeNodes/groupNode";
 import { MetricsNode } from "./treeNodes/metricsNode";

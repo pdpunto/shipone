@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { t } from "../localization";
 import { dirname, relative } from "path";
-import { ShipOneSettings } from "../models/settings";
+import type { ShipOneSettings } from "../models/settings";
 
 type TemplateContext = {
   folderUri: vscode.Uri;
