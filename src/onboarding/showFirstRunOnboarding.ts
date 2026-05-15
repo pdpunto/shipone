@@ -16,7 +16,7 @@ export async function showFirstRunOnboarding(
   const settings = settingsService.getSettings();
   const choice = await vscode.window.showInformationMessage(
     t(
-      "ShipOne listo. Ruta base: {0}. Solo un proyecto Active a la vez.",
+      "ShipOne listo. Ruta base: {0}. Solo un proyecto activo a la vez.",
       settings.projectsRoot
     ),
     t("Crear proyecto"),
