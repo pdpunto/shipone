@@ -154,7 +154,7 @@ export class TreeRendererService {
       return [
         new EmptyStateNode(
           t("Sin proyectos todavia"),
-          t("No hay proyectos en este grupo todavia."),
+          t("Aqui apareceran los proyectos de {0}.", renderGroupLabel(status)),
           t("Crear proyecto"),
           this.iconProvider,
           this.tooltipProvider
@@ -222,5 +222,18 @@ export class TreeRendererService {
         this.tooltipProvider
       ),
     ];
+  }
+}
+
+function renderGroupLabel(status: ProjectStatus): string {
+  switch (status) {
+    case "active":
+      return t("activos");
+    case "idea":
+      return t("ideas");
+    case "paused":
+      return t("pausados");
+    case "finished":
+      return t("terminados");
   }
 }

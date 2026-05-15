@@ -215,7 +215,7 @@ Goal: make ShipOne feel simple, modern, and professional.
 - [x] Add no-project states
 - [x] Add no-active-project state
 - [x] Add recovery suggestions
-- [ ] Add contextual hints
+- [x] Add contextual hints
 
 ### 3.5 Error UX
 
