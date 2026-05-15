@@ -1,8 +1,17 @@
-﻿const test = require("node:test");
+const test = require("node:test");
 const assert = require("node:assert/strict");
+const Module = require("node:module");
 
-const { filterProjectsByName, filterProjectsByTag, buildProjectDetail } = require("../out/utils/projectSearch");
-const { parseMvpTasks, getFinishedThisWeek, isStaleProject } = require("../out/utils/projectReview");
+const {
+  filterProjectsByName,
+  filterProjectsByTag,
+  buildProjectDetail,
+} = require("../out/utils/projectSearch");
+const {
+  parseMvpTasks,
+  getFinishedThisWeek,
+  isStaleProject,
+} = require("../out/utils/projectReview");
 const {
   isProjectMetadata,
   createProjectMetadata,
@@ -45,7 +54,10 @@ test("buildProjectDetail junta ruta, etiquetas y next action", () => {
     nextAction: "Crear login",
   });
 
-  assert.equal(detail, "/tmp/proyecto \u00b7 Etiquetas: ui, mvp \u00b7 Siguiente: Crear login");
+  assert.equal(
+    detail,
+    "/tmp/proyecto \u00b7 Etiquetas: ui, mvp \u00b7 Siguiente: Crear login"
+  );
 });
 
 test("parseMvpTasks conserva tareas existentes", () => {
@@ -174,11 +186,11 @@ test("describeInactivityWarning muestra un texto legible", () => {
 
   assert.equal(
     describeInactivityWarning(oldDate, 7, 30),
-    "Inactivo hace 15 d\u00edas"
+    "Inactivo hace 15 días"
   );
   assert.equal(
     describeInactivityWarning(oldDate, 7, 10),
-    "Obsoleto hace 15 d\u00edas"
+    "Obsoleto hace 15 días"
   );
 });
 
@@ -188,6 +200,47 @@ test("getInactivityWarning detecta proyectos inactivos", () => {
   assert.equal(getInactivityWarning(oldDate, 7, 30), "inactive 15d");
   assert.equal(getInactivityWarning(oldDate, 7, 10), "stale 15d");
   assert.equal(getInactivityWarning(undefined, 7, 30), null);
+});
+
+test("buildProjectDescription muestra la salud visible", () => {
+  const originalLoad = Module._load;
+
+  try {
+    Module._load = function patchedLoad(request, parent, isMain) {
+      if (request === "vscode") {
+        return {
+          l10n: {
+            t: () => "",
+          },
+        };
+      }
+
+      return originalLoad.call(this, request, parent, isMain);
+    };
+
+    delete require.cache[require.resolve("../out/localization/localizationService")];
+    delete require.cache[require.resolve("../out/localization/index")];
+    delete require.cache[require.resolve("../out/providers/projectHealthRenderer")];
+
+    const { ProjectHealthRenderer } = require("../out/providers/projectHealthRenderer");
+    const renderer = new ProjectHealthRenderer();
+
+    const description = renderer.buildProjectDescription(
+      {
+        type: "blank",
+        nextAction: "Crear login",
+      },
+      { label: "warning", issues: ["missing-next-action"] },
+      "Inactivo hace 15 días"
+    );
+
+    assert.equal(
+      description,
+      "Blank · Salud: warning · Siguiente: Crear login · Inactivo hace 15 días"
+    );
+  } finally {
+    Module._load = originalLoad;
+  }
 });
 
 test("getFinishedThisWeek devuelve solo recientes", () => {
@@ -202,4 +255,3 @@ test("getFinishedThisWeek devuelve solo recientes", () => {
 
   assert.equal(result.length, 1);
 });
-

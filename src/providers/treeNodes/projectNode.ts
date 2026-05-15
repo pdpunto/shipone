@@ -22,6 +22,7 @@ export class ProjectNode extends vscode.TreeItem {
     const mvpProgress = getMvpProgress(project.mvpTasks);
     this.description = healthRenderer.buildProjectDescription(
       project,
+      health,
       warning
     );
     this.tooltip = tooltipProvider.buildProjectTooltip(
