@@ -13,9 +13,18 @@ export class GitHubService {
     const ghInstalled = await this.isGitHubCliInstalled();
 
     if (!ghInstalled) {
-      vscode.window.showErrorMessage(
-        t("GitHub CLI no esta instalado. Instala 'gh' y prueba otra vez.")
+      const choice = await vscode.window.showWarningMessage(
+        t("No se encontro GitHub CLI. Instala 'gh' y vuelve a intentarlo."),
+        t("Abrir ajustes"),
+        t("Seguir")
       );
+
+      if (choice === t("Abrir ajustes")) {
+        await vscode.commands.executeCommand(
+          "workbench.action.openSettings",
+          "GitHub"
+        );
+      }
       return;
     }
 

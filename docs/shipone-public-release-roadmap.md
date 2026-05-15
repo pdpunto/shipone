@@ -222,7 +222,7 @@ Goal: make ShipOne feel simple, modern, and professional.
 - [x] Human-readable errors
 - [x] Actionable recovery suggestions
 - [x] Better Git errors
-- [ ] Better GitHub errors
+- [x] Better GitHub errors
 - [ ] Better filesystem errors
 - [ ] Better authentication warnings
 

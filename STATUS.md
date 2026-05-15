@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `Better GitHub errors`.
+Seguir con `Better filesystem errors`.
 
 ## Bloqueos
 - Ninguno por ahora
