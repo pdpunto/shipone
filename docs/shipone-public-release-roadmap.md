@@ -49,9 +49,9 @@ Goal: reduce technical debt and make the extension easier to maintain.
 ### 1.1 Extension Architecture
 
 - [x] Reduce `src/extension.ts` to bootstrap only
-- [ ] Move command registration by domain
-- [ ] Extract domain coordinators
-- [ ] Centralize startup flow
+- [x] Move command registration by domain
+- [x] Extract domain coordinators
+- [x] Centralize startup flow
 - [x] Remove business logic from `extension.ts`
 
 ### 1.2 Commands

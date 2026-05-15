@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con centralizar el flujo de arranque de la extension.
+Seguir con añadir `ProjectRecoveryService`.
 
 ## Bloqueos
 - Ninguno por ahora
