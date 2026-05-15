@@ -143,7 +143,7 @@ Goal: make ShipOne render correctly in every supported environment.
 - [x] Localize menus
 - [x] Localize settings
 - [x] Localize configuration descriptions
-- [ ] Localize walkthrough titles
+- [x] Localize walkthrough titles
 
 ### 2.3 Runtime UI Localization
 

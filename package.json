@@ -355,6 +355,26 @@
         }
       ]
     },
+    "walkthroughs": [
+      {
+        "id": "shipone-getting-started",
+        "title": "%walkthrough.gettingStarted.title%",
+        "description": "%walkthrough.gettingStarted.description%",
+        "steps": [
+          {
+            "id": "create-project",
+            "title": "%walkthrough.gettingStarted.step.createProject.title%",
+            "description": "%walkthrough.gettingStarted.step.createProject.description%",
+            "media": {
+              "markdown": "media/walkthrough/getting-started.md"
+            },
+            "completionEvents": [
+              "onCommand:shipone.createProject"
+            ]
+          }
+        ]
+      }
+    ],
     "configuration": {
       "title": "%configuration.title%",
       "properties": {
@@ -449,7 +469,7 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "validate:translations": "node scripts/validate-translations.mjs",
-    "test": "npm run compile && node --test test/shipone.test.js test/localization.test.js test/translationKeys.test.js",
+    "test": "npm run compile && node --test test/shipone.test.js test/localization.test.js test/translationKeys.test.js test/walkthrough.test.js",
     "lint": "eslint \"src/**/*.ts\"",
     "format": "prettier --check \"src/**/*.ts\" \"*.json\" \"docs/**/*.md\""
   },
