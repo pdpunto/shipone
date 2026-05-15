@@ -1,6 +1,7 @@
 ﻿import * as vscode from "vscode";
 import { TextDecoder, TextEncoder } from "util";
 import { t } from "../localization";
+import { translationKeys as k } from "../localization/keys";
 import type { ProjectMetadata, ProjectStatus } from "../models/project";
 import {
   normalizeProjectListWithDiagnostics,
@@ -58,7 +59,7 @@ export class ProjectStoreService {
         source: this.formatLocation(this.backupFileUri),
       });
       await vscode.window.showWarningMessage(
-        t("No se pudo recuperar el almacenamiento desde el backup."),
+        t(k.warning.storageRestoreFailed),
         t("Abrir carpeta"),
         t("Crear proyecto")
       );
@@ -102,7 +103,7 @@ export class ProjectStoreService {
     } catch (error) {
       await this.deleteIfExists(tempUri);
       await vscode.window.showErrorMessage(
-        t("No se pudo guardar el almacenamiento."),
+        t(k.warning.storageSaveFailed),
         t("Reintentar"),
         t("Abrir carpeta")
       );

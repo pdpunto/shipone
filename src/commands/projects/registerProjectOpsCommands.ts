@@ -108,7 +108,7 @@ export function registerProjectOpsCommands(options: {
         );
       } else {
         const choice = await vscode.window.showWarningMessage(
-          t("No se pudo recuperar el almacenamiento de ShipOne."),
+          t(k.warning.storageRecoveryFailed),
           t("Intentar de nuevo"),
           t("Crear proyecto"),
           t("Abrir ajustes")

@@ -164,7 +164,7 @@ export class ProjectCreationService {
 
       if (!gitInitialized) {
         const choice = await vscode.window.showWarningMessage(
-          t("No se pudo inicializar Git, pero el proyecto ya existe."),
+          t(k.warning.gitInitFailed),
           t(k.common.openFolder),
           t(k.common.followWithoutGit)
         );
@@ -180,7 +180,7 @@ export class ProjectCreationService {
         const committed = await this.gitService.createInitialCommit(folderUri);
         if (!committed) {
           const choice = await vscode.window.showWarningMessage(
-            t("Git se inicializo, pero fallo el commit inicial."),
+            t(k.warning.gitCommitFailed),
             t(k.common.openFolder),
             t(k.common.followWithoutCommit)
           );
@@ -205,7 +205,7 @@ export class ProjectCreationService {
 
       if (!project.repoUrl) {
         const choice = await vscode.window.showWarningMessage(
-          t("No se pudo crear el repo de GitHub, pero el proyecto local ya existe."),
+          t(k.warning.githubRepoFailed),
           t(k.common.connectGitHub),
           t(k.common.openFolder)
         );

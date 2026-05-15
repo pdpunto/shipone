@@ -27,6 +27,14 @@ export const translationKeys = {
     noPausedProjects: "No hay proyectos pausados.",
     projectNotFound: "No se encontró el proyecto.",
   },
+  warning: {
+    storageRestoreFailed: "No se pudo recuperar el almacenamiento desde el backup.",
+    storageSaveFailed: "No se pudo guardar el almacenamiento.",
+    storageRecoveryFailed: "No se pudo recuperar el almacenamiento de ShipOne.",
+    gitInitFailed: "No se pudo inicializar Git, pero el proyecto ya existe.",
+    gitCommitFailed: "Git se inicializo, pero fallo el commit inicial.",
+    githubRepoFailed: "No se pudo crear el repo de GitHub, pero el proyecto local ya existe.",
+  },
   common: {
     yes: "Si",
     no: "No",
