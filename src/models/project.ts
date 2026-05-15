@@ -7,6 +7,7 @@ export interface MvpTask {
 }
 
 export interface ProjectMetadata {
+  schemaVersion?: number;
   id: string;
   name: string;
   description: string;

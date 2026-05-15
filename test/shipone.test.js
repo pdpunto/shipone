@@ -70,9 +70,26 @@ test("normalizeProjectMetadata rellena campos opcionales", () => {
   });
 
   assert.ok(project);
+  assert.equal(project.schemaVersion, 1);
   assert.equal(project.favorite, false);
   assert.deepEqual(project.tags, []);
   assert.deepEqual(project.mvpTasks, []);
+});
+
+test("normalizeProjectMetadata conserva schemaVersion", () => {
+  const project = normalizeProjectMetadata({
+    schemaVersion: 3,
+    id: "p1",
+    name: "ShipOne",
+    description: "Test",
+    type: "blank",
+    status: "idea",
+    path: "/tmp/shipone",
+    createdAt: "2026-05-15T00:00:00.000Z",
+  });
+
+  assert.ok(project);
+  assert.equal(project.schemaVersion, 3);
 });
 
 test("normalizeProjectListWithDiagnostics marca corrupcion", () => {
@@ -99,6 +116,7 @@ test("normalizeProjectListWithDiagnostics marca corrupcion", () => {
 test("isProjectMetadata rechaza esquema invalido anidado", () => {
   assert.equal(
     isProjectMetadata({
+      schemaVersion: 1,
       id: "p1",
       name: "Valido",
       description: "Test",

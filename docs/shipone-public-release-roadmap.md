@@ -89,7 +89,7 @@ Goal: reduce technical debt and make the extension easier to maintain.
 
 - [x] Add stronger type guards
 - [x] Add metadata schema validation
-- [ ] Add schema versioning
+- [x] Add schema versioning
 - [ ] Add migration support
 - [ ] Normalize project metadata consistently
 

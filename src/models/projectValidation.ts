@@ -1,6 +1,7 @@
 import type { MvpTask, ProjectMetadata, ProjectStatus } from "./project";
 
 type ProjectMetadataInput = Record<string, unknown>;
+const PROJECT_SCHEMA_VERSION = 1;
 
 export function isProjectStatus(value: unknown): value is ProjectStatus {
   return (
@@ -42,6 +43,7 @@ export function normalizeProjectMetadata(
   const project = value as unknown as ProjectMetadataInput;
 
   return {
+    schemaVersion: normalizeSchemaVersion(project.schemaVersion),
     id: requireString(project.id),
     name: requireString(project.name),
     description: requireString(project.description),
@@ -157,6 +159,7 @@ function isMvpTaskArray(value: unknown): value is MvpTask[] | undefined {
 
 function hasProjectMetadataSchema(project: ProjectMetadataInput): boolean {
   return (
+    isSchemaVersion(project.schemaVersion) &&
     typeof project.id === "string" &&
     typeof project.name === "string" &&
     typeof project.description === "string" &&
@@ -174,4 +177,16 @@ function hasProjectMetadataSchema(project: ProjectMetadataInput): boolean {
     isOptionalString(project.pauseReason, true) &&
     isOptionalString(project.pauseNote, true)
   );
+}
+
+function normalizeSchemaVersion(value: unknown): number {
+  return isValidSchemaVersion(value) ? value : PROJECT_SCHEMA_VERSION;
+}
+
+function isSchemaVersion(value: unknown): value is number | undefined {
+  return value === undefined || isValidSchemaVersion(value);
+}
+
+function isValidSchemaVersion(value: unknown): value is number {
+  return typeof value === "number" && Number.isInteger(value) && value >= 1;
 }
