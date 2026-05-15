@@ -85,7 +85,20 @@ export class ProjectCreationService {
     let githubChoice: GitHubChoice | undefined;
     // GitHub solo tiene sentido si Git local va a existir y el usuario ya esta autenticado.
     if (gitChoice.value) {
-      const githubReady = await this.githubService.isGitHubAuthenticated();
+      let githubReady = await this.githubService.isGitHubAuthenticated();
+
+      if (!githubReady) {
+        const choice = await vscode.window.showWarningMessage(
+          t("GitHub no esta autenticado. Puedes conectarlo ahora o seguir sin GitHub."),
+          t("Conectar GitHub"),
+          t("Seguir sin GitHub")
+        );
+
+        if (choice === t("Conectar GitHub")) {
+          await this.githubService.connectGitHub();
+          githubReady = await this.githubService.isGitHubAuthenticated();
+        }
+      }
 
       if (githubReady) {
         githubChoice = await this.pickGitHubChoice(

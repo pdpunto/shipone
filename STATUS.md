@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `Better authentication warnings`.
+Seguir con `Group keys by domain`.
 
 ## Bloqueos
 - Ninguno por ahora
