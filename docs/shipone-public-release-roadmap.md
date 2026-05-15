@@ -196,7 +196,7 @@ Goal: make ShipOne feel simple, modern, and professional.
 
 - [x] Add Quick Create
 - [x] Add Advanced Create
-- [ ] Reduce unnecessary prompts
+- [x] Reduce unnecessary prompts
 - [ ] Improve defaults
 - [ ] Improve placeholders
 - [ ] Improve project type selection

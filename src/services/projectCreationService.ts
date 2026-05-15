@@ -71,20 +71,6 @@ export class ProjectCreationService {
         placeHolder: t(k.common.projectDescriptionPlaceholder),
       })) ?? "";
 
-    const destinationFolder = await this.pickDestinationFolder(
-      settings.projectsRoot
-    );
-    if (!destinationFolder) {
-      return undefined;
-    }
-
-    const packageManager = await this.pickPackageManager(
-      settings.defaultPackageManager
-    );
-    if (!packageManager) {
-      return undefined;
-    }
-
     const gitChoice = await this.pickGitChoiceWithDefault(
       settings.createGitRepoByDefault
     );
@@ -130,8 +116,8 @@ export class ProjectCreationService {
       name,
       description,
       type,
-      destinationFolder,
-      packageManager,
+      destinationFolder: vscode.Uri.file(settings.projectsRoot),
+      packageManager: settings.defaultPackageManager,
       gitChoice,
       githubChoice,
     });
@@ -256,54 +242,6 @@ export class ProjectCreationService {
         placeHolder: t(k.common.askGitLocal),
       }
     );
-  }
-
-  private async pickDestinationFolder(
-    projectsRoot: string
-  ): Promise<vscode.Uri | undefined> {
-    const picked = await vscode.window.showOpenDialog({
-      canSelectFolders: true,
-      canSelectFiles: false,
-      canSelectMany: false,
-      defaultUri: vscode.Uri.file(projectsRoot),
-      title: t(k.projectCreation.destinationFolder),
-      openLabel: t(k.common.useFolder),
-    });
-
-    return picked?.[0];
-  }
-
-  private async pickPackageManager(
-    defaultPackageManager: ShipOneSettings["defaultPackageManager"]
-  ): Promise<ShipOneSettings["defaultPackageManager"] | undefined> {
-    const choices: Array<{
-      label: string;
-      value: ShipOneSettings["defaultPackageManager"];
-      picked?: boolean;
-    }> = [
-      {
-        label: t(k.common.npm),
-        value: "npm",
-        picked: defaultPackageManager === "npm",
-      },
-      {
-        label: t(k.common.pnpm),
-        value: "pnpm",
-        picked: defaultPackageManager === "pnpm",
-      },
-      {
-        label: t(k.common.yarn),
-        value: "yarn",
-        picked: defaultPackageManager === "yarn",
-      },
-    ];
-
-    const choice = await vscode.window.showQuickPick(choices, {
-      title: t(k.projectCreation.packageManager),
-      placeHolder: t(k.common.chooseOption),
-    });
-
-    return choice?.value;
   }
 
   private async pickGitHubChoice(
