@@ -32,7 +32,17 @@ export function registerStatusCommands(options: {
         const document = await vscode.workspace.openTextDocument(statusFileUri);
         await vscode.window.showTextDocument(document, { preview: false });
       } catch {
-        vscode.window.showErrorMessage(t("No se pudo abrir STATUS.md."));
+        const choice = await vscode.window.showErrorMessage(
+          t("No se pudo abrir STATUS.md."),
+          t("Crear archivo"),
+          t("Abrir carpeta")
+        );
+
+        if (choice === t("Crear archivo")) {
+          await vscode.commands.executeCommand("shipone.syncStatusFile");
+        } else if (choice === t("Abrir carpeta")) {
+          await vscode.commands.executeCommand("vscode.openFolder", vscode.Uri.file(project.path), false);
+        }
       }
     }
   );
