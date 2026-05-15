@@ -5,7 +5,7 @@ import { ProjectMetadata, ProjectStatus } from "../models/project";
 import { ShipOneSettings } from "../models/settings";
 import { ProjectStoreService } from "./projectStoreService";
 import { GitService } from "./gitService";
-import { GithubService } from "./githubService";
+import { GitHubService } from "./githubService";
 import { TemplateService } from "./templateService";
 import { ProjectContextService } from "./projectContextService";
 import { StatusFileService } from "./statusFileService";
@@ -19,7 +19,7 @@ const PROJECT_TYPES = [
 ] as const;
 
 type GitChoice = { label: string; value: boolean; picked?: boolean };
-type GithubChoice = { create: boolean; visibility: "private" | "public" };
+type GitHubChoice = { create: boolean; visibility: "private" | "public" };
 
 export class ProjectCreationService {
   constructor(
@@ -28,11 +28,11 @@ export class ProjectCreationService {
     private readonly projectContextService: ProjectContextService,
     private readonly templateService = new TemplateService(),
     private readonly gitService = new GitService(),
-    private readonly githubService = new GithubService()
+    private readonly githubService = new GitHubService()
   ) {}
 
-  async connectGithub(): Promise<void> {
-    await this.githubService.connectGithub();
+  async connectGitHub(): Promise<void> {
+    await this.githubService.connectGitHub();
   }
 
   async createProject(
@@ -81,13 +81,13 @@ export class ProjectCreationService {
       return undefined;
     }
 
-    let githubChoice: GithubChoice | undefined;
+    let githubChoice: GitHubChoice | undefined;
     // GitHub solo tiene sentido si Git local va a existir y el usuario ya esta autenticado.
     if (gitChoice.value) {
-      const githubReady = await this.githubService.isGithubAuthenticated();
+      const githubReady = await this.githubService.isGitHubAuthenticated();
 
       if (githubReady) {
-        githubChoice = await this.pickGithubChoice(
+        githubChoice = await this.pickGitHubChoice(
           settings.createGitHubRepoByDefault,
           settings.defaultVisibility
         );
@@ -171,7 +171,7 @@ export class ProjectCreationService {
     }
 
     if (gitInitialized && githubChoice?.create) {
-      project.repoUrl = await this.githubService.createGithubRepo(
+      project.repoUrl = await this.githubService.createGitHubRepo(
         folderUri,
         folderName,
         githubChoice.visibility
@@ -338,10 +338,10 @@ export class ProjectCreationService {
     return choice?.value;
   }
 
-  private async pickGithubChoice(
+  private async pickGitHubChoice(
     defaultCreateGithubRepoByDefault: boolean,
     defaultVisibility: "private" | "public"
-  ): Promise<GithubChoice | undefined> {
+  ): Promise<GitHubChoice | undefined> {
     const createChoice = await vscode.window.showQuickPick(
       [
         {

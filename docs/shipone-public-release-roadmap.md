@@ -111,7 +111,7 @@ Goal: reduce technical debt and make the extension easier to maintain.
 - [ ] Configure Prettier
 - [x] Remove dead code
 - [x] Remove duplicate logic
-- [ ] Fix inconsistent naming
+- [x] Fix inconsistent naming
 - [ ] Improve async safety
 - [ ] Review exception handling
 - [ ] Add inline documentation where needed

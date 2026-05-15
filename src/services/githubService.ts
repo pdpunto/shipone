@@ -5,9 +5,9 @@ import { t } from "../localization";
 
 const execFileAsync = promisify(execFile);
 
-export class GithubService {
-  async connectGithub(): Promise<void> {
-    const ghInstalled = await this.isGithubCliInstalled();
+export class GitHubService {
+  async connectGitHub(): Promise<void> {
+    const ghInstalled = await this.isGitHubCliInstalled();
 
     if (!ghInstalled) {
       vscode.window.showErrorMessage(
@@ -16,7 +16,7 @@ export class GithubService {
       return;
     }
 
-    const githubReady = await this.isGithubAuthenticated();
+    const githubReady = await this.isGitHubAuthenticated();
 
     if (githubReady) {
       vscode.window.showInformationMessage(t("GitHub ya esta conectado."));
@@ -31,7 +31,7 @@ export class GithubService {
     );
   }
 
-  async isGithubAuthenticated(): Promise<boolean> {
+  async isGitHubAuthenticated(): Promise<boolean> {
     try {
       await execFileAsync("gh", ["auth", "status", "-h", "github.com"]);
       return true;
@@ -40,7 +40,7 @@ export class GithubService {
     }
   }
 
-  async createGithubRepo(
+  async createGitHubRepo(
     folderUri: vscode.Uri,
     repoName: string,
     visibility: "private" | "public"
@@ -75,7 +75,7 @@ export class GithubService {
     }
   }
 
-  async isGithubCliInstalled(): Promise<boolean> {
+  async isGitHubCliInstalled(): Promise<boolean> {
     try {
       await execFileAsync("gh", ["--version"]);
       return true;

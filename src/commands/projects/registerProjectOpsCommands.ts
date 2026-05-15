@@ -141,7 +141,7 @@ export function registerProjectOpsCommands(options: {
   const connectGithubCommand = vscode.commands.registerCommand(
     COMMAND_CONNECT_GITHUB,
     async () => {
-      await projectCreationService.connectGithub();
+      await projectCreationService.connectGitHub();
     }
   );
 
