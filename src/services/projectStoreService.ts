@@ -330,7 +330,8 @@ export class ProjectStoreService {
       return { projects: [], version: STORAGE_VERSION };
     }
 
-    const parsed = JSON.parse(new TextDecoder().decode(raw)) as unknown;
+    const text = new TextDecoder().decode(raw);
+    const parsed = this.parseJsonSnapshot(text, uri);
 
     if (Array.isArray(parsed)) {
       return { projects: normalizeProjectList(parsed), version: 1 };
@@ -349,6 +350,29 @@ export class ProjectStoreService {
     }
 
     return { projects: [], version: STORAGE_VERSION };
+  }
+
+  private parseJsonSnapshot(text: string, uri: vscode.Uri): unknown {
+    const trimmed = text.trim();
+
+    if (!trimmed) {
+      return [];
+    }
+
+    try {
+      return JSON.parse(trimmed) as unknown;
+    } catch (error) {
+      const location = this.formatLocation(uri);
+      this.logError(
+        `JSON invalido en ${location}. Se intentara recuperacion.`,
+        error
+      );
+      throw new Error(`JSON invalido en ${location}.`);
+    }
+  }
+
+  private formatLocation(uri: vscode.Uri): string {
+    return uri.fsPath || uri.toString();
   }
 
   private async pathExists(uri: vscode.Uri): Promise<boolean> {

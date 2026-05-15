@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con validar JSON antes de parsear metadata.
+Seguir con detectar metadata corrupta y recuperar desde backup.
 
 ## Bloqueos
 - Ninguno por ahora
