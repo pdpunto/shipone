@@ -104,6 +104,22 @@ test("package.nls.es.json traduce claves estructuradas de creacion", () => {
   assert.equal(es["Carpeta destino"], "Carpeta destino");
 });
 
+test("package.nls.es.json traduce acentos rotos", () => {
+  const es = readJson("package.nls.es.json");
+
+  assert.equal(
+    es["Active sin next action"],
+    "Proyecto activo sin siguiente acción"
+  );
+  assert.equal(es["Sin next action"], "Sin siguiente acción");
+  assert.equal(es.bad, "crítico");
+  assert.equal(
+    es["Aviso: falta next action"],
+    "Aviso: falta siguiente acción"
+  );
+  assert.equal(es["missing-next-action"], "falta siguiente acción");
+});
+
 test("package.nls.es.json traduce metricas", () => {
   const es = readJson("package.nls.es.json");
 

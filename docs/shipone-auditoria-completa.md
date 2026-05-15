@@ -494,8 +494,8 @@ Si falta algo, la extension avisa y sigue, lo cual esta bien para no bloquear el
 
 Se detectaron varios textos con mojibake o codificacion rota en el codigo y en documentos existentes. Ejemplos claros:
 
-- textos de visibilidad como `PÃºblico`;
-- separadores como `Ã‚Â·`;
+- textos de visibilidad como `Público`;
+- separadores como `·`;
 - algunas cadenas de UI y mensajes traducidos;
 - el propio documento previo de auditoria ya arrastraba esos caracteres.
 
