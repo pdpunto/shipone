@@ -6,6 +6,9 @@ import { t } from "../localization";
 const execFileAsync = promisify(execFile);
 
 export class GitHubService {
+  private readonly outputChannel =
+    vscode.window.createOutputChannel("ShipOne GitHub");
+
   async connectGitHub(): Promise<void> {
     const ghInstalled = await this.isGitHubCliInstalled();
 
@@ -35,7 +38,8 @@ export class GitHubService {
     try {
       await execFileAsync("gh", ["auth", "status", "-h", "github.com"]);
       return true;
-    } catch {
+    } catch (error) {
+      this.logError("No se pudo comprobar autenticacion de GitHub.", error);
       return false;
     }
   }
@@ -70,7 +74,8 @@ export class GitHubService {
       );
 
       return stdout.trim() || null;
-    } catch {
+    } catch (error) {
+      this.logError("No se pudo crear el repo de GitHub.", error);
       return null;
     }
   }
@@ -79,8 +84,15 @@ export class GitHubService {
     try {
       await execFileAsync("gh", ["--version"]);
       return true;
-    } catch {
+    } catch (error) {
+      this.logError("No se pudo verificar GitHub CLI.", error);
       return false;
     }
+  }
+
+  private logError(message: string, error: unknown): void {
+    const detail = error instanceof Error ? error.message : String(error);
+    this.outputChannel.appendLine(`[error] ${message}`);
+    this.outputChannel.appendLine(detail);
   }
 }
