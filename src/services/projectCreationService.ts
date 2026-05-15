@@ -16,26 +16,31 @@ const PROJECT_TYPES = [
   {
     label: t(k.projectCreation.blank),
     description: t(k.projectCreation.blankDescription),
+    icon: "file",
     value: "blank",
   },
   {
     label: t(k.projectCreation.reactVite),
     description: t(k.projectCreation.reactViteDescription),
+    icon: "zap",
     value: "react-vite",
   },
   {
     label: t(k.projectCreation.nextJs),
     description: t(k.projectCreation.nextJsDescription),
+    icon: "rocket",
     value: "nextjs",
   },
   {
     label: t(k.projectCreation.python),
     description: t(k.projectCreation.pythonDescription),
+    icon: "beaker",
     value: "python",
   },
   {
     label: t(k.projectCreation.nodeApi),
     description: t(k.projectCreation.nodeApiDescription),
+    icon: "server-process",
     value: "node-api",
   },
 ] as const;
@@ -244,6 +249,7 @@ export class ProjectCreationService {
   ): Promise<ShipOneSettings["defaultProjectType"] | undefined> {
     const choices = PROJECT_TYPES.map((item) => ({
       ...item,
+      iconPath: new vscode.ThemeIcon(item.icon),
       picked: item.value === defaultProjectType,
     }));
 

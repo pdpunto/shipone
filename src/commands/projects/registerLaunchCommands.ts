@@ -20,13 +20,21 @@ const COMMAND_OPEN_PROJECT_QUICK_PICK = "shipone.openProjectQuickPick";
 const COMMAND_SEARCH_PROJECT = "shipone.searchProject";
 const COMMAND_OPEN_PROJECT = "shipone.openProject";
 
-const PROJECT_TYPE_PICKERS: Array<{ label: string; value: string | null }> = [
+const PROJECT_TYPE_PICKERS: Array<{
+  label: string;
+  value: string | null;
+  icon?: string;
+}> = [
   { label: t(k.common.all), value: null },
-  { label: t(k.projectCreation.blank), value: "blank" },
-  { label: t(k.projectCreation.reactVite), value: "react-vite" },
-  { label: t(k.projectCreation.nextJs), value: "nextjs" },
-  { label: t(k.projectCreation.python), value: "python" },
-  { label: t(k.projectCreation.nodeApi), value: "node-api" },
+  { label: t(k.projectCreation.blank), value: "blank", icon: "file" },
+  { label: t(k.projectCreation.reactVite), value: "react-vite", icon: "zap" },
+  { label: t(k.projectCreation.nextJs), value: "nextjs", icon: "rocket" },
+  { label: t(k.projectCreation.python), value: "python", icon: "beaker" },
+  {
+    label: t(k.projectCreation.nodeApi),
+    value: "node-api",
+    icon: "server-process",
+  },
 ];
 
 export function registerLaunchCommands(options: {
@@ -116,7 +124,10 @@ export function registerLaunchCommands(options: {
       const filteredByName = filterProjectsByName(projects, searchTerm);
 
       const typeChoice = await vscode.window.showQuickPick(
-        PROJECT_TYPE_PICKERS,
+        PROJECT_TYPE_PICKERS.map((item) => ({
+          ...item,
+          iconPath: item.icon ? new vscode.ThemeIcon(item.icon) : undefined,
+        })),
         {
           title: t(k.launch.filterByType),
           placeHolder: t(k.common.typeOrAllPlaceholder),
