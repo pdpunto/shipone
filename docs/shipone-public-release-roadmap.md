@@ -219,7 +219,7 @@ Goal: make ShipOne feel simple, modern, and professional.
 
 ### 3.5 Error UX
 
-- [ ] Human-readable errors
+- [x] Human-readable errors
 - [ ] Actionable recovery suggestions
 - [ ] Better Git errors
 - [ ] Better GitHub errors

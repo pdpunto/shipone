@@ -18,10 +18,10 @@ export class ProjectHealthRenderer {
 
     return [
       projectType,
-      project.nextAction ? t("Next: {0}", project.nextAction) : undefined,
+      project.nextAction ? t("Siguiente: {0}", project.nextAction) : undefined,
       nextActionWarning,
-      t("Health: {0}", renderHealthLabel(health.label)),
-      project.pauseReason ? t("Pause: {0}", project.pauseReason) : undefined,
+      t("Salud: {0}", renderHealthLabel(health.label)),
+      project.pauseReason ? t("Pausa: {0}", project.pauseReason) : undefined,
       warning ?? undefined,
       mvpProgress ?? undefined,
     ]
@@ -33,10 +33,10 @@ export class ProjectHealthRenderer {
 function renderHealthLabel(label: ProjectHealth["label"]): string {
   switch (label) {
     case "healthy":
-      return t("healthy");
+      return t("saludable");
     case "warning":
-      return t("warning");
+      return t("con avisos");
     case "bad":
-      return t("bad");
+      return t("critico");
   }
 }

@@ -80,24 +80,24 @@ function buildMarkdownTooltip(lines: Array<string | undefined>): vscode.Markdown
 function renderHealthLabel(label: ProjectHealth["label"]): string {
   switch (label) {
     case "healthy":
-      return t("healthy");
+      return t("saludable");
     case "warning":
-      return t("warning");
+      return t("con avisos");
     case "bad":
-      return t("bad");
+      return t("critico");
   }
 }
 
 function renderIssueLabel(issue: string): string {
   switch (issue) {
     case "missing-next-action":
-      return t("missing-next-action");
+      return t("Falta el siguiente paso");
     case "inactive-active":
-      return t("inactive-active");
+      return t("Proyecto activo inactivo");
     case "no-readme":
-      return t("no-readme");
+      return t("Falta README");
     case "no-recent-commits":
-      return t("no-recent-commits");
+      return t("Sin commits recientes");
     default:
       return issue;
   }
