@@ -9,6 +9,7 @@ import {
 } from "../../services/todoScannerService";
 import {
   buildWeeklyReviewSummary,
+  confirmCanActivateProject,
   getFinishedThisWeek,
   isStaleProject,
   pickProject,
@@ -294,21 +295,13 @@ export function registerReviewCommands(options: {
         return;
       }
 
-      const activeProjects = await projectStore.loadProjects();
-      const otherActive = activeProjects.find(
-        (item) => item.status === "active" && item.id !== choice.project.id
+      const canActivate = await confirmCanActivateProject(
+        projectStore,
+        choice.project.id
       );
 
-      if (otherActive) {
-        const confirmation = await vscode.window.showWarningMessage(
-          t("Ya hay un proyecto activo: {0}.", otherActive.name),
-          t("Pausar y activar"),
-          t("Cancelar")
-        );
-
-        if (confirmation !== t("Pausar y activar")) {
-          return;
-        }
+      if (!canActivate) {
+        return;
       }
 
       await projectStore.setProjectStatus(choice.project.id, "active", true);

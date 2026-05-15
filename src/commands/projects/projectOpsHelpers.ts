@@ -36,6 +36,27 @@ export async function pickProject(projectStore: {
   return choice?.project;
 }
 
+export async function confirmCanActivateProject(projectStore: {
+  loadProjects(): Promise<ProjectMetadata[]>;
+}, projectId: string): Promise<boolean> {
+  const activeProjects = await projectStore.loadProjects();
+  const otherActive = activeProjects.find(
+    (item) => item.status === "active" && item.id !== projectId
+  );
+
+  if (!otherActive) {
+    return true;
+  }
+
+  const choice = await vscode.window.showWarningMessage(
+    t("Ya hay un proyecto activo: {0}.", otherActive.name),
+    t("Pausar y activar"),
+    t("Cancelar")
+  );
+
+  return choice === t("Pausar y activar");
+}
+
 export function buildStatusFileContent(project: ProjectMetadata): string {
   const tasks = project.mvpTasks ?? [];
   const mvpLines = tasks.length

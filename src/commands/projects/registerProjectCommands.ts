@@ -5,7 +5,7 @@ import { ShipOneSettings } from "../../models/settings";
 import { ProjectStoreService } from "../../services/projectStoreService";
 import { SettingsService } from "../../services/settingsService";
 import { ShipOneProjectsTreeDataProvider } from "../../providers/shiponeProjectsTreeDataProvider";
-import { pickProject } from "./projectOpsHelpers";
+import { confirmCanActivateProject, pickProject } from "./projectOpsHelpers";
 
 const STATUS_FILE_NAME = "STATUS.md";
 const COMMAND_OPEN_PROJECT = "shipone.openProject";
@@ -388,21 +388,13 @@ async function updateProjectStatus(
       return;
     }
 
-    const projects = await projectStore.loadProjects();
-    const otherActive = projects.find(
-      (item) => item.status === "active" && item.id !== project.id
+    const canActivate = await confirmCanActivateProject(
+      projectStore,
+      project.id
     );
 
-    if (otherActive) {
-      const choice = await vscode.window.showWarningMessage(
-        t("Ya hay un proyecto activo: {0}.", otherActive.name),
-        t("Pausar y activar"),
-        t("Cancelar")
-      );
-
-      if (choice !== t("Pausar y activar")) {
-        return;
-      }
+    if (!canActivate) {
+      return;
     }
   }
 
