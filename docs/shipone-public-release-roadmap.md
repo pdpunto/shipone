@@ -253,7 +253,7 @@ Status logic:
 
 Health:
 
-- [ ] Test inactive project detection
+- [x] Test inactive project detection
 - [ ] Test missing README detection
 - [ ] Test Git health detection
 - [ ] Test next action validation

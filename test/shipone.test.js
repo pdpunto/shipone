@@ -1,4 +1,4 @@
-const test = require("node:test");
+﻿const test = require("node:test");
 const assert = require("node:assert/strict");
 
 const { filterProjectsByName, filterProjectsByTag, buildProjectDetail } = require("../out/utils/projectSearch");
@@ -11,6 +11,7 @@ const {
 } = require("../out/models/projectValidation");
 const {
   describeInactivityWarning,
+  getInactivityWarning,
 } = require("../out/utils/inactivityWarning");
 
 test("filterProjectsByName busca sin distinguir mayusculas", () => {
@@ -173,12 +174,20 @@ test("describeInactivityWarning muestra un texto legible", () => {
 
   assert.equal(
     describeInactivityWarning(oldDate, 7, 30),
-    "Inactivo hace 15 días"
+    "Inactivo hace 15 d\u00edas"
   );
   assert.equal(
     describeInactivityWarning(oldDate, 7, 10),
-    "Obsoleto hace 15 días"
+    "Obsoleto hace 15 d\u00edas"
   );
+});
+
+test("getInactivityWarning detecta proyectos inactivos", () => {
+  const oldDate = new Date(Date.now() - 15 * 86_400_000).toISOString();
+
+  assert.equal(getInactivityWarning(oldDate, 7, 30), "inactive 15d");
+  assert.equal(getInactivityWarning(oldDate, 7, 10), "stale 15d");
+  assert.equal(getInactivityWarning(undefined, 7, 30), null);
 });
 
 test("getFinishedThisWeek devuelve solo recientes", () => {
@@ -193,3 +202,4 @@ test("getFinishedThisWeek devuelve solo recientes", () => {
 
   assert.equal(result.length, 1);
 });
+
