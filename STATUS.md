@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con mejorar async safety.
+Seguir con configurar reglas estrictas de ESLint.
 
 ## Bloqueos
 - Ninguno por ahora

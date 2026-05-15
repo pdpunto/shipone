@@ -112,7 +112,7 @@ Goal: reduce technical debt and make the extension easier to maintain.
 - [x] Remove dead code
 - [x] Remove duplicate logic
 - [x] Fix inconsistent naming
-- [ ] Improve async safety
+- [x] Improve async safety
 - [ ] Review exception handling
 - [ ] Add inline documentation where needed
 

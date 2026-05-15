@@ -25,6 +25,7 @@ const FOCUS_MODE_CONTEXT_KEY = "shipone.focusMode";
 const FOCUS_MODE_STATE_KEY = "shipone.focusMode";
 
 export class ShipOneApp {
+  private readonly outputChannel = vscode.window.createOutputChannel("ShipOne");
   private readonly settingsService = new SettingsService();
   private readonly projectStore: ProjectStoreService;
   private readonly projectContextService = new ProjectContextService();
@@ -96,7 +97,11 @@ export class ShipOneApp {
       }
     );
 
-    void showFirstRunOnboarding(this.context, this.settingsService);
+    void showFirstRunOnboarding(this.context, this.settingsService).catch(
+      (error) => {
+        this.logError("No se pudo mostrar el onboarding inicial.", error);
+      }
+    );
 
     const welcomeCommand = vscode.commands.registerCommand(
       COMMAND_SHOW_WELCOME,
@@ -170,5 +175,11 @@ export class ShipOneApp {
       enabled
     );
     this.treeDataProvider?.refresh();
+  }
+
+  private logError(message: string, error: unknown): void {
+    const detail = error instanceof Error ? error.message : String(error);
+    this.outputChannel.appendLine(`[error] ${message}`);
+    this.outputChannel.appendLine(detail);
   }
 }
