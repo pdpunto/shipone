@@ -114,7 +114,7 @@ Goal: reduce technical debt and make the extension easier to maintain.
 - [x] Fix inconsistent naming
 - [x] Improve async safety
 - [ ] Review exception handling
-- [ ] Add inline documentation where needed
+- [x] Add inline documentation where needed
 
 ---
 

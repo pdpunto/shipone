@@ -97,6 +97,7 @@ export class ShipOneApp {
       }
     );
 
+    // Onboarding es opcional; si falla, solo lo registramos y seguimos.
     void showFirstRunOnboarding(this.context, this.settingsService).catch(
       (error) => {
         this.logError("No se pudo mostrar el onboarding inicial.", error);

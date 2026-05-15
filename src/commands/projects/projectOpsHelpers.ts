@@ -39,6 +39,7 @@ export async function pickProject(projectStore: {
 export async function confirmCanActivateProject(projectStore: {
   loadProjects(): Promise<ProjectMetadata[]>;
 }, projectId: string): Promise<boolean> {
+  // Regla central: solo un proyecto puede quedar Active a la vez.
   const activeProjects = await projectStore.loadProjects();
   const otherActive = activeProjects.find(
     (item) => item.status === "active" && item.id !== projectId

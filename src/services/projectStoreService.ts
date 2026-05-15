@@ -66,6 +66,7 @@ export class ProjectStoreService {
   ): Promise<void> {
     await vscode.workspace.fs.createDirectory(this.context.globalStorageUri);
 
+    // Backup primero: si la escritura nueva falla, queda copia previa recuperable.
     if (createBackup && (await this.pathExists(this.storageFileUri))) {
       await vscode.workspace.fs.copy(this.storageFileUri, this.backupFileUri, {
         overwrite: true,
@@ -88,6 +89,7 @@ export class ProjectStoreService {
     await vscode.workspace.fs.writeFile(tempUri, payload);
 
     try {
+      // Rename final: evita dejar archivo parcial si proceso cae a mitad.
       await vscode.workspace.fs.rename(tempUri, this.storageFileUri, {
         overwrite: true,
       });
@@ -326,6 +328,7 @@ export class ProjectStoreService {
     try {
       return await this.readProjectsFromUri(this.storageFileUri);
     } catch (error) {
+      // Si archivo principal falla, intentamos backup sin interrumpir flujo.
       this.logError("Fallo la lectura del almacenamiento principal.", error, {
         source: this.formatLocation(this.storageFileUri),
         fallback: this.formatLocation(this.backupFileUri),
@@ -355,6 +358,7 @@ export class ProjectStoreService {
     }
 
     const text = new TextDecoder().decode(raw);
+    // Parse primero, luego validamos forma y contenido por separado.
     const parsed = this.parseJsonSnapshot(text, uri);
 
     if (Array.isArray(parsed)) {
