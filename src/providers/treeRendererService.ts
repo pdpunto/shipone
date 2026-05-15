@@ -7,6 +7,7 @@ import type { TreeIconProvider } from "./treeIconProvider";
 import type { TreeTooltipProvider } from "./treeTooltipProvider";
 import { t } from "../localization";
 import { translationKeys as k } from "../localization/keys";
+import { describeInactivityWarning } from "../utils/inactivityWarning";
 import { GroupNode } from "./treeNodes/groupNode";
 import { MetricsNode } from "./treeNodes/metricsNode";
 import { MetricItemNode } from "./treeNodes/metricItemNode";
@@ -184,7 +185,7 @@ export class TreeRendererService {
           settings.inactiveWarningDays,
           settings.staleWarningDays
         );
-        const warning = this.projectHealthService.getInactivityWarning(
+        const warning = describeInactivityWarning(
           project.lastOpenedAt,
           settings.inactiveWarningDays,
           settings.staleWarningDays
@@ -208,16 +209,14 @@ export class TreeRendererService {
     staleWarningDays: number
   ): WarningNode[] {
     const warnings: string[] = [];
-    const inactivity = this.projectHealthService.getInactivityWarning(
+    const inactivity = describeInactivityWarning(
       project.lastOpenedAt,
       inactiveWarningDays,
       staleWarningDays
     );
 
     if (inactivity) {
-      warnings.push(
-        t(k.tree.lastOpened, project.lastOpenedAt ?? t("sin registro"))
-      );
+      warnings.push(inactivity);
     }
 
     if (!project.nextAction) {

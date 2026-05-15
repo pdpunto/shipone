@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { execFile } from "child_process";
 import { promisify } from "util";
 import type { ProjectMetadata } from "../models/project";
+import { getInactivityWarning } from "../utils/inactivityWarning";
 
 const execFileAsync = promisify(execFile);
 
@@ -49,26 +50,11 @@ export class ProjectHealthService {
     inactiveWarningDays: number,
     staleWarningDays: number
   ): string | null {
-    if (!lastOpenedAt) {
-      return null;
-    }
-
-    const openedAt = new Date(lastOpenedAt);
-    if (Number.isNaN(openedAt.getTime())) {
-      return null;
-    }
-
-    const ageDays = Math.floor((Date.now() - openedAt.getTime()) / 86_400_000);
-
-    if (ageDays >= staleWarningDays) {
-      return `stale ${ageDays}d`;
-    }
-
-    if (ageDays >= inactiveWarningDays) {
-      return `inactive ${ageDays}d`;
-    }
-
-    return null;
+    return getInactivityWarning(
+      lastOpenedAt,
+      inactiveWarningDays,
+      staleWarningDays
+    );
   }
 
   async buildProjectHealth(

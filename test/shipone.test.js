@@ -9,6 +9,9 @@ const {
   normalizeProjectMetadata,
   normalizeProjectListWithDiagnostics,
 } = require("../out/models/projectValidation");
+const {
+  describeInactivityWarning,
+} = require("../out/utils/inactivityWarning");
 
 test("filterProjectsByName busca sin distinguir mayusculas", () => {
   const projects = [
@@ -162,6 +165,19 @@ test("isStaleProject marca proyecto activo viejo", () => {
       lastOpenedAt: oldDate,
     }),
     true
+  );
+});
+
+test("describeInactivityWarning muestra un texto legible", () => {
+  const oldDate = new Date(Date.now() - 15 * 86_400_000).toISOString();
+
+  assert.equal(
+    describeInactivityWarning(oldDate, 7, 30),
+    "Inactivo hace 15 días"
+  );
+  assert.equal(
+    describeInactivityWarning(oldDate, 7, 10),
+    "Obsoleto hace 15 días"
   );
 });
 

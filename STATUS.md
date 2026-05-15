@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `Improve inactive project warnings`.
+Seguir con `Test inactive project detection`.
 
 ## Bloqueos
 - Ninguno por ahora

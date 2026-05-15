@@ -188,7 +188,7 @@ Goal: make ShipOne feel simple, modern, and professional.
 - [x] Reduce repeated warnings
 - [x] Improve hierarchy
 - [x] Improve status visibility
-- [ ] Improve inactive project warnings
+- [x] Improve inactive project warnings
 - [ ] Improve project health display
 
 ### 3.2 Project Creation UX
