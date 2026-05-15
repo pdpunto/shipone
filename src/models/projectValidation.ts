@@ -70,10 +70,6 @@ export function normalizeProjectMetadata(
   };
 }
 
-export function normalizeProjectList(value: unknown): ProjectMetadata[] {
-  return normalizeProjectListWithDiagnostics(value).projects;
-}
-
 export function normalizeProjectListWithDiagnostics(value: unknown): {
   projects: ProjectMetadata[];
   corrupted: boolean;
