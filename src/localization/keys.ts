@@ -35,6 +35,13 @@ export const translationKeys = {
     gitCommitFailed: "Git se inicializo, pero fallo el commit inicial.",
     githubRepoFailed: "No se pudo crear el repo de GitHub, pero el proyecto local ya existe.",
   },
+  error: {
+    projectNotFound: "No se encontró el proyecto.",
+    taskNotFound: "No se encontró la tarea.",
+    invalidJson: "JSON invalido en {0}.",
+    corruptedProjectList: "Metadata corrupta detectada en lista de proyectos.",
+    corruptedProjectSnapshot: "Metadata corrupta detectada en snapshot de proyectos.",
+  },
   common: {
     yes: "Si",
     no: "No",

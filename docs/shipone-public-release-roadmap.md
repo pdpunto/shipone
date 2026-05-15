@@ -153,7 +153,7 @@ Goal: make ShipOne render correctly in every supported environment.
 - [x] Translate placeholders
 - [x] Translate notifications
 - [x] Translate warnings
-- [ ] Translate errors
+- [x] Translate errors
 - [x] Translate onboarding
 - [ ] Translate tree descriptions
 - [ ] Translate health messages

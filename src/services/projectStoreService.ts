@@ -327,7 +327,7 @@ export class ProjectStoreService {
     const target = projects.find((project) => project.id === projectId);
 
     if (!target) {
-      throw new Error("No se encontró el proyecto.");
+      throw new Error(t(k.error.projectNotFound));
     }
 
     return target;
@@ -381,7 +381,7 @@ export class ProjectStoreService {
     if (Array.isArray(parsed)) {
       const diagnostics = normalizeProjectListWithDiagnostics(parsed);
       if (diagnostics.corrupted) {
-        throw new Error("Metadata corrupta detectada en lista de proyectos.");
+        throw new Error(t(k.error.corruptedProjectList));
       }
 
       return { projects: diagnostics.projects, version: 1 };
@@ -395,7 +395,7 @@ export class ProjectStoreService {
         typeof snapshot.version === "number" ? snapshot.version : 1;
       const diagnostics = normalizeProjectListWithDiagnostics(snapshot.projects);
       if (diagnostics.corrupted) {
-        throw new Error("Metadata corrupta detectada en snapshot de proyectos.");
+        throw new Error(t(k.error.corruptedProjectSnapshot));
       }
 
       return {
@@ -421,7 +421,7 @@ export class ProjectStoreService {
       this.logError("JSON invalido. Se intentara recuperacion.", error, {
         source: location,
       });
-      throw new Error(`JSON invalido en ${location}.`);
+      throw new Error(t(k.error.invalidJson, location));
     }
   }
 

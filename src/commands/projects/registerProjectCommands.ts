@@ -50,7 +50,7 @@ export function registerProjectCommands(options: {
       );
 
       if (!project) {
-        vscode.window.showErrorMessage(t(k.notification.projectNotFound));
+        vscode.window.showErrorMessage(t(k.error.projectNotFound));
         return;
       }
 
