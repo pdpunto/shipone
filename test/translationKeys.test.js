@@ -27,6 +27,21 @@ test("package.nls.es.json traduce mensajes de salud", () => {
   assert.ok(es["Active sin next action"]);
 });
 
+test("package.nls.es.json traduce foco", () => {
+  const es = readJson("package.nls.es.json");
+  const oAcute = String.fromCharCode(0x00f3);
+
+  assert.equal(es["Focus mode activado."], "Modo enfoque activado.");
+  assert.equal(es["Focus mode desactivado."], "Modo enfoque desactivado.");
+  assert.equal(es["Weekly review"], `Revisi${oAcute}n semanal`);
+  assert.equal(
+    es["Siguiente accion para el proyecto activo"],
+    `Siguiente acci${oAcute}n para el proyecto activo`
+  );
+  assert.equal(es["Focus mode"], "Modo enfoque");
+  assert.equal(es["Siguiente accion"], `Siguiente acci${oAcute}n`);
+});
+
 test("package.nls.es.json traduce metricas", () => {
   const es = readJson("package.nls.es.json");
 
