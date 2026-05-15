@@ -32,8 +32,12 @@ type ProjectCreationDraft = {
   githubChoice?: GitHubChoice;
 };
 
+const LAST_PROJECT_TYPE_KEY = "shipone.lastProjectType";
+const LAST_PACKAGE_MANAGER_KEY = "shipone.lastPackageManager";
+
 export class ProjectCreationService {
   constructor(
+    private readonly context: vscode.ExtensionContext,
     private readonly projectStore: ProjectStoreService,
     private readonly statusFileService: StatusFileService,
     private readonly projectContextService: ProjectContextService,
@@ -49,6 +53,7 @@ export class ProjectCreationService {
   async createProject(
     settings: ShipOneSettings
   ): Promise<ProjectMetadata | undefined> {
+    const defaults = this.getCreationDefaults(settings);
     // Primero recogemos la forma minima del proyecto; lo demas depende de esas elecciones.
     const name = await vscode.window.showInputBox({
       prompt: t(k.projectCreation.projectNamePrompt),
@@ -60,7 +65,7 @@ export class ProjectCreationService {
       return undefined;
     }
 
-    const type = await this.pickProjectType(settings.defaultProjectType);
+    const type = await this.pickProjectType(defaults.projectType);
     if (!type) {
       return undefined;
     }
@@ -117,7 +122,7 @@ export class ProjectCreationService {
       description,
       type,
       destinationFolder: vscode.Uri.file(settings.projectsRoot),
-      packageManager: settings.defaultPackageManager,
+      packageManager: defaults.packageManager,
       gitChoice,
       githubChoice,
     });
@@ -126,6 +131,7 @@ export class ProjectCreationService {
   async createQuickProject(
     settings: ShipOneSettings
   ): Promise<ProjectMetadata | undefined> {
+    const defaults = this.getCreationDefaults(settings);
     const name = await vscode.window.showInputBox({
       prompt: t(k.projectCreation.projectNamePrompt),
       placeHolder: t(k.common.projectNamePlaceholder),
@@ -155,9 +161,9 @@ export class ProjectCreationService {
     return this.createProjectFromDraft(settings, {
       name,
       description: "",
-      type: settings.defaultProjectType,
+      type: defaults.projectType,
       destinationFolder: vscode.Uri.file(settings.projectsRoot),
-      packageManager: settings.defaultPackageManager,
+      packageManager: defaults.packageManager,
       gitChoice,
       githubChoice,
     });
@@ -414,6 +420,8 @@ export class ProjectCreationService {
       );
     }
 
+    await this.updateCreationDefaults(draft.type, draft.packageManager);
+
     return project;
   }
 
@@ -424,6 +432,38 @@ export class ProjectCreationService {
     } catch {
       return false;
     }
+  }
+
+  private getCreationDefaults(settings: ShipOneSettings): {
+    projectType: ShipOneSettings["defaultProjectType"];
+    packageManager: ShipOneSettings["defaultPackageManager"];
+  } {
+    return {
+      projectType:
+        this.context.workspaceState.get<ShipOneSettings["defaultProjectType"]>(
+          LAST_PROJECT_TYPE_KEY,
+          settings.defaultProjectType
+        ),
+      packageManager:
+        this.context.workspaceState.get<ShipOneSettings["defaultPackageManager"]>(
+          LAST_PACKAGE_MANAGER_KEY,
+          settings.defaultPackageManager
+        ),
+    };
+  }
+
+  private async updateCreationDefaults(
+    projectType: ShipOneSettings["defaultProjectType"],
+    packageManager: ShipOneSettings["defaultPackageManager"]
+  ): Promise<void> {
+    await this.context.workspaceState.update(
+      LAST_PROJECT_TYPE_KEY,
+      projectType
+    );
+    await this.context.workspaceState.update(
+      LAST_PACKAGE_MANAGER_KEY,
+      packageManager
+    );
   }
 
   private async findAvailableFolderUri(

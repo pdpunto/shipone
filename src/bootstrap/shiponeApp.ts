@@ -48,6 +48,7 @@ export class ShipOneApp {
   constructor(private readonly context: vscode.ExtensionContext) {
     this.projectStore = new ProjectStoreService(context);
     this.projectCreationService = new ProjectCreationService(
+      context,
       this.projectStore,
       this.statusFileService,
       this.projectContextService
