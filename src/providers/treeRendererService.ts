@@ -90,12 +90,6 @@ export class TreeRendererService {
           this.iconProvider,
           this.tooltipProvider
         ),
-        new EmptyStateNode(
-          t("Usa Crear proyecto para empezar"),
-          undefined,
-          this.iconProvider,
-          this.tooltipProvider
-        ),
       ];
     }
 
@@ -194,7 +188,7 @@ export class TreeRendererService {
     inactiveWarningDays: number,
     staleWarningDays: number
   ): WarningNode[] {
-    const warnings: WarningNode[] = [];
+    const warnings: string[] = [];
     const inactivity = this.projectHealthService.getInactivityWarning(
       project.lastOpenedAt,
       inactiveWarningDays,
@@ -203,28 +197,26 @@ export class TreeRendererService {
 
     if (inactivity) {
       warnings.push(
-        new WarningNode(
-          t("Active sin uso reciente"),
-          t("Ultima apertura: {0}", project.lastOpenedAt ?? t("sin registro")),
-          project.id,
-          this.iconProvider,
-          this.tooltipProvider
-        )
+        t("Ultima apertura: {0}", project.lastOpenedAt ?? t("sin registro"))
       );
     }
 
     if (!project.nextAction) {
-      warnings.push(
-        new WarningNode(
-          t("Active sin next action"),
-          t("Define el siguiente paso para avanzar"),
-          project.id,
-          this.iconProvider,
-          this.tooltipProvider
-        )
-      );
+      warnings.push(t("Define el siguiente paso para avanzar"));
     }
 
-    return warnings;
+    if (warnings.length === 0) {
+      return [];
+    }
+
+    return [
+      new WarningNode(
+        t("Active con avisos"),
+        warnings.join(" · "),
+        project.id,
+        this.iconProvider,
+        this.tooltipProvider
+      ),
+    ];
   }
 }

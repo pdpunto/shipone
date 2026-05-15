@@ -6,10 +6,10 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 ## MVP
 - [x] Vista lateral base funcionando
 - [x] Comandos principales por dominio
-- [ ] Reducir densidad visual de sidebar
+- [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con pulido de sidebar y limpieza de duplicacion visual.
+Seguir con dividir nodos de sidebar en archivos separados.
 
 ## Bloqueos
 - Ninguno por ahora

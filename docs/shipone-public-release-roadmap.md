@@ -181,7 +181,7 @@ Goal: make ShipOne feel simple, modern, and professional.
 
 ### 3.1 Sidebar Simplification
 
-- [ ] Reduce visual density
+- [x] Reduce visual density
 - [ ] Improve spacing
 - [ ] Simplify project descriptions
 - [ ] Reduce repeated warnings
