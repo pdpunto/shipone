@@ -14,7 +14,7 @@ export class ProjectHealthRenderer {
     const projectType = formatProjectType(project.type);
     const nextActionWarning =
       project.status === "active" && !project.nextAction
-        ? t("Sin next action")
+        ? t(k.tree.noNextAction)
         : null;
 
     return [

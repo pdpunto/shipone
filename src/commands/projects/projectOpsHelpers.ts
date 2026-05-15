@@ -40,11 +40,11 @@ export async function pickProject(projectStore: {
 }
 
 export function buildNoProjectsDetail(): string {
-  return t("Crea un proyecto nuevo o una idea de ejemplo para empezar.");
+  return t(k.tree.noProjectsDetail);
 }
 
 export function buildNoActiveProjectDetail(): string {
-  return t("Abre un proyecto activo o crea uno nuevo para entrar en focus.");
+  return t(k.tree.noActiveProjectDetail);
 }
 
 export async function confirmCanActivateProject(projectStore: {
@@ -122,7 +122,7 @@ export function buildAiContextContent(
     project.description || t("Sin descripcion"),
     "",
     t("## Next action"),
-    project.nextAction || t("Sin next action"),
+    project.nextAction || t(k.tree.noNextAction),
     "",
     t("## MVP"),
     t("- Progreso: {0}", mvpProgress),

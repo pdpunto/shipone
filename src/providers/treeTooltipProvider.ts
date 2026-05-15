@@ -55,7 +55,7 @@ export class TreeTooltipProvider {
       t("**{0}**", project.name),
       "",
       t("Ruta: {0}", project.path),
-      t("Ultima apertura: {0}", project.lastOpenedAt ?? t("sin registro")),
+      t(k.tree.lastOpened, project.lastOpenedAt ?? t("sin registro")),
       project.repoUrl ? t("Repo: {0}", project.repoUrl) : "",
       project.tags?.length
         ? t("Etiquetas: {0}", project.tags.join(", "))

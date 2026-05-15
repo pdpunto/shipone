@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `Translate tree descriptions`.
+Seguir con `Translate health messages`.
 
 ## Bloqueos
 - Ninguno por ahora

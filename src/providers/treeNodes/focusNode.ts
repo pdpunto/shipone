@@ -13,8 +13,8 @@ export class FocusNode extends vscode.TreeItem {
     iconProvider: TreeIconProvider,
     tooltipProvider: TreeTooltipProvider
   ) {
-    super(t("Focus mode"), vscode.TreeItemCollapsibleState.None);
-    this.description = project.nextAction ?? t("Sin next action");
+    super(t(k.tree.focusMode), vscode.TreeItemCollapsibleState.None);
+    this.description = project.nextAction ?? t(k.tree.noNextAction);
     this.iconPath = new vscode.ThemeIcon(iconProvider.getFocusIcon());
     this.tooltip = tooltipProvider.buildFocusTooltip(project, health);
     this.command = {

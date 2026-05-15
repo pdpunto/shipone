@@ -6,6 +6,7 @@ import type { ProjectHealthRenderer } from "./projectHealthRenderer";
 import type { TreeIconProvider } from "./treeIconProvider";
 import type { TreeTooltipProvider } from "./treeTooltipProvider";
 import { t } from "../localization";
+import { translationKeys as k } from "../localization/keys";
 import { GroupNode } from "./treeNodes/groupNode";
 import { MetricsNode } from "./treeNodes/metricsNode";
 import { MetricItemNode } from "./treeNodes/metricItemNode";
@@ -23,10 +24,10 @@ export type ShipOneTreeNode =
   | EmptyStateNode;
 
 const GROUPS: Array<{ status: ProjectStatus; label: string }> = [
-  { status: "active", label: t("Active") },
-  { status: "idea", label: t("Ideas") },
-  { status: "paused", label: t("Paused") },
-  { status: "finished", label: t("Finished") },
+  { status: "active", label: t(k.tree.active) },
+  { status: "idea", label: t(k.tree.ideas) },
+  { status: "paused", label: t(k.tree.paused) },
+  { status: "finished", label: t(k.tree.finished) },
 ];
 
 export class TreeRendererService {
@@ -49,7 +50,7 @@ export class TreeRendererService {
       if (!activeProject) {
         return [
           new EmptyStateNode(
-            t("Sin proyecto activo"),
+            t(k.tree.noActiveProject),
             buildNoActiveProjectDetail(),
             t("Crear proyecto"),
             this.iconProvider,
@@ -74,7 +75,7 @@ export class TreeRendererService {
         ),
         new GroupNode(
           "active",
-          "Active",
+          t(k.tree.active),
           this.iconProvider,
           this.tooltipProvider
         ),
@@ -87,8 +88,8 @@ export class TreeRendererService {
     if (projects.length === 0) {
       return [
         new EmptyStateNode(
-          t("Sin proyectos todavia"),
-          t("Empieza creando tu primer proyecto o idea de ejemplo."),
+          t(k.tree.noProjectsYet),
+          t(k.tree.noProjectsDetail),
           t("Crear proyecto"),
           this.iconProvider,
           this.tooltipProvider
@@ -129,13 +130,13 @@ export class TreeRendererService {
     const projects = await this.projectStore.loadProjects();
     const summary = this.projectHealthService.getMetrics(projects);
     return [
-      new MetricItemNode(t("Total"), summary.total, this.iconProvider),
-      new MetricItemNode(t("Ideas"), summary.idea, this.iconProvider),
-      new MetricItemNode(t("Active"), summary.active, this.iconProvider),
-      new MetricItemNode(t("Paused"), summary.paused, this.iconProvider),
-      new MetricItemNode(t("Finished"), summary.finished, this.iconProvider),
+      new MetricItemNode(t(k.tree.total), summary.total, this.iconProvider),
+      new MetricItemNode(t(k.tree.ideas), summary.idea, this.iconProvider),
+      new MetricItemNode(t(k.tree.active), summary.active, this.iconProvider),
+      new MetricItemNode(t(k.tree.paused), summary.paused, this.iconProvider),
+      new MetricItemNode(t(k.tree.finished), summary.finished, this.iconProvider),
       new MetricItemNode(
-        t("Finish ratio"),
+        t(k.tree.finishRatio),
         `${summary.finishRatio}%`,
         this.iconProvider
       ),
@@ -153,8 +154,8 @@ export class TreeRendererService {
     if (projects.length === 0) {
       return [
         new EmptyStateNode(
-          t("Sin proyectos todavia"),
-          t("Aqui apareceran los proyectos de {0}.", renderGroupLabel(status)),
+          t(k.tree.noProjectsYet),
+          t(k.tree.appearsInGroup, renderGroupLabel(status)),
           t("Crear proyecto"),
           this.iconProvider,
           this.tooltipProvider
@@ -201,12 +202,12 @@ export class TreeRendererService {
 
     if (inactivity) {
       warnings.push(
-        t("Ultima apertura: {0}", project.lastOpenedAt ?? t("sin registro"))
+        t(k.tree.lastOpened, project.lastOpenedAt ?? t("sin registro"))
       );
     }
 
     if (!project.nextAction) {
-      warnings.push(t("Define el siguiente paso para avanzar"));
+      warnings.push(t(k.tree.activeNoNextAction));
     }
 
     if (warnings.length === 0) {
@@ -215,7 +216,7 @@ export class TreeRendererService {
 
     return [
       new WarningNode(
-        t("Active con avisos"),
+        t(k.tree.activeWithWarnings),
         warnings.join(" · "),
         project.id,
         this.iconProvider,
@@ -228,12 +229,12 @@ export class TreeRendererService {
 function renderGroupLabel(status: ProjectStatus): string {
   switch (status) {
     case "active":
-      return t("activos");
+      return t(k.tree.activeLabel);
     case "idea":
-      return t("ideas");
+      return t(k.tree.ideasLabel);
     case "paused":
-      return t("pausados");
+      return t(k.tree.pausedLabel);
     case "finished":
-      return t("terminados");
+      return t(k.tree.finishedLabel);
   }
 }
