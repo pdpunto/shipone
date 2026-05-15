@@ -42,6 +42,23 @@ test("package.nls.es.json traduce foco", () => {
   assert.equal(es["Siguiente accion"], `Siguiente acci${oAcute}n`);
 });
 
+test("package.nls.es.json traduce revision semanal", () => {
+  const es = readJson("package.nls.es.json");
+  const oAcute = String.fromCharCode(0x00f3);
+
+  assert.equal(
+    es["command.weeklyReview.title"],
+    `ShipOne: Revisi${oAcute}n semanal`
+  );
+  assert.equal(es["Weekly review"], `Revisi${oAcute}n semanal`);
+  assert.equal(
+    es["Siguiente accion para el proyecto activo"],
+    `Siguiente acci${oAcute}n para el proyecto activo`
+  );
+  assert.equal(es["Revisar login"], "Revisar inicio de sesi\u00f3n");
+  assert.equal(es["## Next action"], `## Siguiente acci${oAcute}n`);
+});
+
 test("package.nls.es.json traduce metricas", () => {
   const es = readJson("package.nls.es.json");
 

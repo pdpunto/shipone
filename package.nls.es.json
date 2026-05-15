@@ -15,7 +15,7 @@
   "command.scanTodos.title": "ShipOne: Detectar TODOs",
   "command.focusMode.title": "ShipOne: Focus mode",
   "command.exitFocusMode.title": "ShipOne: Salir de focus",
-  "command.weeklyReview.title": "ShipOne: Weekly review",
+  "command.weeklyReview.title": "ShipOne: Revisión semanal",
   "command.freezeProject.title": "ShipOne: Congelar proyecto",
   "command.resumeProject.title": "ShipOne: Reanudar proyecto",
   "command.toggleFavorite.title": "ShipOne: Alternar favorito",

@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `Translate weekly review`.
+Seguir con `Translate freeze and resume flow`.
 
 ## Bloqueos
 - Ninguno por ahora
