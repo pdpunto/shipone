@@ -194,7 +194,7 @@ Goal: make ShipOne feel simple, modern, and professional.
 
 ### 3.2 Project Creation UX
 
-- [ ] Add Quick Create
+- [x] Add Quick Create
 - [ ] Add Advanced Create
 - [ ] Reduce unnecessary prompts
 - [ ] Improve defaults

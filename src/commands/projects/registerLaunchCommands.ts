@@ -12,6 +12,7 @@ import {
 } from "../../utils/projectSearch";
 
 const COMMAND_CREATE_PROJECT = "shipone.createProject";
+const COMMAND_QUICK_CREATE_PROJECT = "shipone.quickCreateProject";
 const COMMAND_CREATE_SAMPLE_IDEA = "shipone.createSampleIdea";
 const COMMAND_SET_PROJECTS_ROOT = "shipone.setProjectsRoot";
 const COMMAND_OPEN_PROJECTS_ROOT = "shipone.openProjectsRoot";
@@ -207,6 +208,30 @@ export function registerLaunchCommands(options: {
     }
   );
 
+  const quickCreateProjectCommand = vscode.commands.registerCommand(
+    COMMAND_QUICK_CREATE_PROJECT,
+    async () => {
+      const project = await vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Notification,
+          title: t("ShipOne: creando proyecto rapido"),
+          cancellable: false,
+        },
+        async () => {
+          const settings = settingsService.getSettings();
+          return projectCreationService.createQuickProject(settings);
+        }
+      );
+
+      if (project) {
+        treeRefresh();
+        vscode.window.showInformationMessage(
+          t("Proyecto creado rapido: {0}.", project.name)
+        );
+      }
+    }
+  );
+
   const createSampleIdeaCommand = vscode.commands.registerCommand(
     COMMAND_CREATE_SAMPLE_IDEA,
     async () => {
@@ -282,6 +307,7 @@ export function registerLaunchCommands(options: {
     openProjectsRootCommand,
     searchProjectCommand,
     createProjectCommand,
+    quickCreateProjectCommand,
     createSampleIdeaCommand,
     openProjectQuickPickCommand,
   ];

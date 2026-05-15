@@ -3,6 +3,7 @@
   "description": "ShipOne ayuda a crear y seguir proyectos desde VS Code",
   "command.showWelcome.title": "ShipOne: Bienvenida",
   "command.createProject.title": "ShipOne: Crear proyecto",
+  "command.quickCreateProject.title": "ShipOne: Crear rapido",
   "command.openProjectsRoot.title": "ShipOne: Abrir carpeta raiz",
   "command.openProjectQuickPick.title": "ShipOne: Abrir proyecto",
   "command.editMvpChecklist.title": "ShipOne: Editar checklist MVP",

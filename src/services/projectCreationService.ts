@@ -22,6 +22,15 @@ const PROJECT_TYPES = [
 
 type GitChoice = { label: string; value: boolean; picked?: boolean };
 type GitHubChoice = { create: boolean; visibility: "private" | "public" };
+type ProjectCreationDraft = {
+  name: string;
+  description: string;
+  type: ShipOneSettings["defaultProjectType"];
+  destinationFolder: vscode.Uri;
+  packageManager: ShipOneSettings["defaultPackageManager"];
+  gitChoice: GitChoice;
+  githubChoice?: GitHubChoice;
+};
 
 export class ProjectCreationService {
   constructor(
@@ -117,123 +126,55 @@ export class ProjectCreationService {
       }
     }
 
-    const folderName = sanitizeFolderName(name);
-    const folderUri = vscode.Uri.joinPath(destinationFolder, folderName);
-    const projectExists = await this.pathExists(folderUri);
+    return this.createProjectFromDraft(settings, {
+      name,
+      description,
+      type,
+      destinationFolder,
+      packageManager,
+      gitChoice,
+      githubChoice,
+    });
+  }
 
-    if (projectExists) {
-      vscode.window.showErrorMessage(
-        t(k.projectCreation.projectFolderExists)
-      );
+  async createQuickProject(
+    settings: ShipOneSettings
+  ): Promise<ProjectMetadata | undefined> {
+    const name = await vscode.window.showInputBox({
+      prompt: t(k.projectCreation.projectNamePrompt),
+      placeHolder: t(k.common.projectNamePlaceholder),
+      validateInput: validateProjectName,
+    });
+
+    if (!name) {
       return undefined;
     }
 
-    await this.projectStore.createProjectFolder(folderUri);
+    const gitChoice: GitChoice = {
+      label: t(k.common.yes),
+      value: settings.createGitRepoByDefault,
+    };
 
-    // Guardamos la metadata antes de tocar servicios externos para que el proyecto ya exista en ShipOne.
-    const project = createProjectMetadata({
-      id: randomUUID(),
-      name,
-      description,
-      type,
-      status: "active" as ProjectStatus,
-      path: folderUri.fsPath,
-      repoUrl: null,
-      createdAt: new Date().toISOString(),
-      lastOpenedAt: new Date().toISOString(),
-    });
-
-    if (settings.createStatusFileByDefault) {
-      await this.statusFileService.syncStatusFile(project);
-    }
-
-    await this.templateService.createSelectedTemplate(
-      folderUri,
-      name,
-      description,
-      type,
-      packageManager,
-      settings.customTemplateFolder
-    );
-
-    let gitInitialized = false;
+    let githubChoice: GitHubChoice | undefined;
     if (gitChoice.value) {
-      gitInitialized = await this.gitService.initializeGit(folderUri);
-
-      if (!gitInitialized) {
-        const choice = await vscode.window.showWarningMessage(
-          t(k.warning.gitInitFailed),
-          t(k.common.openFolder),
-          t(k.common.followWithoutGit)
-        );
-
-        if (choice === t(k.common.openFolder)) {
-          await vscode.commands.executeCommand(
-            "vscode.openFolder",
-            folderUri,
-            false
-          );
-        }
-      } else {
-        const committed = await this.gitService.createInitialCommit(folderUri);
-        if (!committed) {
-          const choice = await vscode.window.showWarningMessage(
-            t(k.warning.gitCommitFailed),
-            t(k.common.openFolder),
-            t(k.common.followWithoutCommit)
-          );
-
-          if (choice === t(k.common.openFolder)) {
-            await vscode.commands.executeCommand(
-              "vscode.openFolder",
-              folderUri,
-              false
-            );
-          }
-        }
+      const githubReady = await this.githubService.isGitHubAuthenticated();
+      if (githubReady) {
+        githubChoice = {
+          create: settings.createGitHubRepoByDefault,
+          visibility: settings.defaultVisibility,
+        };
       }
     }
 
-    if (gitInitialized && githubChoice?.create) {
-      project.repoUrl = await this.githubService.createGitHubRepo(
-        folderUri,
-        folderName,
-        githubChoice.visibility
-      );
-
-      if (!project.repoUrl) {
-        const choice = await vscode.window.showWarningMessage(
-          t(k.warning.githubRepoFailed),
-          t(k.common.connectGitHub),
-          t(k.common.openFolder)
-        );
-
-        if (choice === t(k.common.connectGitHub)) {
-          await this.githubService.connectGitHub();
-        } else if (choice === t(k.common.openFolder)) {
-          await vscode.commands.executeCommand(
-            "vscode.openFolder",
-            folderUri,
-            false
-          );
-        }
-      }
-    }
-
-    await this.projectStore.createProject(
-      project,
-      settings.enforceOneActiveProject
-    );
-
-    if (settings.openAfterCreate) {
-      await vscode.commands.executeCommand(
-        "vscode.openFolder",
-        folderUri,
-        false
-      );
-    }
-
-    return project;
+    return this.createProjectFromDraft(settings, {
+      name,
+      description: "",
+      type: settings.defaultProjectType,
+      destinationFolder: vscode.Uri.file(settings.projectsRoot),
+      packageManager: settings.defaultPackageManager,
+      gitChoice,
+      githubChoice,
+    });
   }
 
   async createSampleIdea(
@@ -413,6 +354,129 @@ export class ProjectCreationService {
     }
 
     return { create: true, visibility: visibility.value };
+  }
+
+  private async createProjectFromDraft(
+    settings: ShipOneSettings,
+    draft: ProjectCreationDraft
+  ): Promise<ProjectMetadata | undefined> {
+    const folderName = sanitizeFolderName(draft.name);
+    const folderUri = vscode.Uri.joinPath(draft.destinationFolder, folderName);
+    const projectExists = await this.pathExists(folderUri);
+
+    if (projectExists) {
+      vscode.window.showErrorMessage(
+        t(k.projectCreation.projectFolderExists)
+      );
+      return undefined;
+    }
+
+    await this.projectStore.createProjectFolder(folderUri);
+
+    // Guardamos la metadata antes de tocar servicios externos para que el proyecto ya exista en ShipOne.
+    const project = createProjectMetadata({
+      id: randomUUID(),
+      name: draft.name,
+      description: draft.description,
+      type: draft.type,
+      status: "active" as ProjectStatus,
+      path: folderUri.fsPath,
+      repoUrl: null,
+      createdAt: new Date().toISOString(),
+      lastOpenedAt: new Date().toISOString(),
+    });
+
+    if (settings.createStatusFileByDefault) {
+      await this.statusFileService.syncStatusFile(project);
+    }
+
+    await this.templateService.createSelectedTemplate(
+      folderUri,
+      draft.name,
+      draft.description,
+      draft.type,
+      draft.packageManager,
+      settings.customTemplateFolder
+    );
+
+    let gitInitialized = false;
+    if (draft.gitChoice.value) {
+      gitInitialized = await this.gitService.initializeGit(folderUri);
+
+      if (!gitInitialized) {
+        const choice = await vscode.window.showWarningMessage(
+          t(k.warning.gitInitFailed),
+          t(k.common.openFolder),
+          t(k.common.followWithoutGit)
+        );
+
+        if (choice === t(k.common.openFolder)) {
+          await vscode.commands.executeCommand(
+            "vscode.openFolder",
+            folderUri,
+            false
+          );
+        }
+      } else {
+        const committed = await this.gitService.createInitialCommit(folderUri);
+        if (!committed) {
+          const choice = await vscode.window.showWarningMessage(
+            t(k.warning.gitCommitFailed),
+            t(k.common.openFolder),
+            t(k.common.followWithoutCommit)
+          );
+
+          if (choice === t(k.common.openFolder)) {
+            await vscode.commands.executeCommand(
+              "vscode.openFolder",
+              folderUri,
+              false
+            );
+          }
+        }
+      }
+    }
+
+    if (gitInitialized && draft.githubChoice?.create) {
+      project.repoUrl = await this.githubService.createGitHubRepo(
+        folderUri,
+        folderName,
+        draft.githubChoice.visibility
+      );
+
+      if (!project.repoUrl) {
+        const choice = await vscode.window.showWarningMessage(
+          t(k.warning.githubRepoFailed),
+          t(k.common.connectGitHub),
+          t(k.common.openFolder)
+        );
+
+        if (choice === t(k.common.connectGitHub)) {
+          await this.githubService.connectGitHub();
+        } else if (choice === t(k.common.openFolder)) {
+          await vscode.commands.executeCommand(
+            "vscode.openFolder",
+            folderUri,
+            false
+          );
+        }
+      }
+    }
+
+    await this.projectStore.createProject(
+      project,
+      settings.enforceOneActiveProject
+    );
+
+    if (settings.openAfterCreate) {
+      await vscode.commands.executeCommand(
+        "vscode.openFolder",
+        folderUri,
+        false
+      );
+    }
+
+    return project;
   }
 
   private async pathExists(uri: vscode.Uri): Promise<boolean> {

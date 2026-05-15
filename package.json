@@ -18,6 +18,7 @@
   "activationEvents": [
     "onView:shipone.projectsView",
     "onCommand:shipone.showWelcome",
+    "onCommand:shipone.quickCreateProject",
     "onCommand:shipone.searchProject",
     "onCommand:shipone.scanTodos",
     "onCommand:shipone.generateAiContext",
@@ -36,6 +37,12 @@
         "title": "%command.createProject.title%",
         "category": "ShipOne",
         "icon": "$(add)"
+      },
+      {
+        "command": "shipone.quickCreateProject",
+        "title": "%command.quickCreateProject.title%",
+        "category": "ShipOne",
+        "icon": "$(zap)"
       },
       {
         "command": "shipone.openProjectsRoot",
