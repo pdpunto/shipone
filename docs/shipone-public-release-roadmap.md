@@ -18,6 +18,7 @@ ShipOne exists to help developers:
 
 Everything in the product should support that.
 
+
 Core pillars:
 
 - One Active Project
@@ -157,7 +158,7 @@ Goal: make ShipOne render correctly in every supported environment.
 - [x] Translate onboarding
 - [x] Translate tree descriptions
 - [x] Translate health messages
-- [ ] Translate metrics
+- [x] Translate metrics
 - [ ] Translate focus mode
 - [ ] Translate weekly review
 - [ ] Translate freeze and resume flow

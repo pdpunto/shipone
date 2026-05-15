@@ -132,9 +132,21 @@ export class TreeRendererService {
     return [
       new MetricItemNode(t(k.tree.total), summary.total, this.iconProvider),
       new MetricItemNode(t(k.tree.ideas), summary.idea, this.iconProvider),
-      new MetricItemNode(t(k.tree.active), summary.active, this.iconProvider),
-      new MetricItemNode(t(k.tree.paused), summary.paused, this.iconProvider),
-      new MetricItemNode(t(k.tree.finished), summary.finished, this.iconProvider),
+      new MetricItemNode(
+        t(k.tree.metricsActive),
+        summary.active,
+        this.iconProvider
+      ),
+      new MetricItemNode(
+        t(k.tree.metricsPaused),
+        summary.paused,
+        this.iconProvider
+      ),
+      new MetricItemNode(
+        t(k.tree.metricsFinished),
+        summary.finished,
+        this.iconProvider
+      ),
       new MetricItemNode(
         t(k.tree.finishRatio),
         `${summary.finishRatio}%`,
