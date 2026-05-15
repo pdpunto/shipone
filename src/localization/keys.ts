@@ -21,6 +21,12 @@ export const translationKeys = {
     paused: "Paused",
     finished: "Finished",
   },
+  notification: {
+    focusEnabled: "Focus mode activado.",
+    focusDisabled: "Focus mode desactivado.",
+    noPausedProjects: "No hay proyectos pausados.",
+    projectNotFound: "No se encontró el proyecto.",
+  },
   common: {
     yes: "Si",
     no: "No",

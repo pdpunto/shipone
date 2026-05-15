@@ -166,6 +166,8 @@ export function registerReviewCommands(options: {
             pausedProjects.map((project) => project.name).join(", ")
           )
         );
+      } else {
+        vscode.window.showInformationMessage(t(k.notification.noPausedProjects));
       }
 
       if (finishedThisWeek.length > 0) {
@@ -243,7 +245,7 @@ export function registerReviewCommands(options: {
       );
 
       if (pausedProjects.length === 0) {
-        vscode.window.showInformationMessage(t("No hay proyectos pausados."));
+        vscode.window.showInformationMessage(t(k.notification.noPausedProjects));
         return;
       }
 
