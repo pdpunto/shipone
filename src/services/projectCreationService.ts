@@ -149,17 +149,35 @@ export class ProjectCreationService {
       gitInitialized = await this.gitService.initializeGit(folderUri);
 
       if (!gitInitialized) {
-        vscode.window.showWarningMessage(
-          t(
-            "No se pudo inicializar Git, pero el proyecto fue creado. Puedes hacerlo luego."
-          )
+        const choice = await vscode.window.showWarningMessage(
+          t("No se pudo inicializar Git, pero el proyecto ya existe."),
+          t("Abrir carpeta"),
+          t("Seguir sin Git")
         );
+
+        if (choice === t("Abrir carpeta")) {
+          await vscode.commands.executeCommand(
+            "vscode.openFolder",
+            folderUri,
+            false
+          );
+        }
       } else {
         const committed = await this.gitService.createInitialCommit(folderUri);
         if (!committed) {
-          vscode.window.showWarningMessage(
-            t("Git se inicializo, pero no se pudo crear el commit inicial.")
+          const choice = await vscode.window.showWarningMessage(
+            t("Git se inicializo, pero fallo el commit inicial."),
+            t("Abrir carpeta"),
+            t("Seguir sin commit")
           );
+
+          if (choice === t("Abrir carpeta")) {
+            await vscode.commands.executeCommand(
+              "vscode.openFolder",
+              folderUri,
+              false
+            );
+          }
         }
       }
     }
@@ -172,11 +190,21 @@ export class ProjectCreationService {
       );
 
       if (!project.repoUrl) {
-        vscode.window.showWarningMessage(
-          t(
-            "No se pudo crear el repo de GitHub, pero el proyecto local si fue creado."
-          )
+        const choice = await vscode.window.showWarningMessage(
+          t("No se pudo crear el repo de GitHub, pero el proyecto local ya existe."),
+          t("Conectar GitHub"),
+          t("Abrir carpeta")
         );
+
+        if (choice === t("Conectar GitHub")) {
+          await this.githubService.connectGitHub();
+        } else if (choice === t("Abrir carpeta")) {
+          await vscode.commands.executeCommand(
+            "vscode.openFolder",
+            folderUri,
+            false
+          );
+        }
       }
     }
 
