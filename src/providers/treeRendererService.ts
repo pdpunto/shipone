@@ -13,6 +13,7 @@ import { EmptyStateNode } from "./treeNodes/emptyStateNode";
 import { WarningNode } from "./treeNodes/warningNode";
 import { FocusNode } from "./treeNodes/focusNode";
 import { ProjectNode } from "./treeNodes/projectNode";
+import { buildNoActiveProjectDetail } from "../commands/projects/projectOpsHelpers";
 
 export type ShipOneTreeNode =
   | MetricsNode
@@ -49,8 +50,8 @@ export class TreeRendererService {
         return [
           new EmptyStateNode(
             t("Sin proyecto activo"),
-            t("Crea uno nuevo o marca un proyecto como activo."),
-            undefined,
+            buildNoActiveProjectDetail(),
+            t("Crear proyecto"),
             this.iconProvider,
             this.tooltipProvider
           ),

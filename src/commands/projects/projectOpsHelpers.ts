@@ -42,6 +42,10 @@ export function buildNoProjectsDetail(): string {
   return t("Crea un proyecto nuevo o una idea de ejemplo para empezar.");
 }
 
+export function buildNoActiveProjectDetail(): string {
+  return t("Abre un proyecto activo o crea uno nuevo para entrar en focus.");
+}
+
 export async function confirmCanActivateProject(projectStore: {
   loadProjects(): Promise<ProjectMetadata[]>;
 }, projectId: string): Promise<boolean> {
