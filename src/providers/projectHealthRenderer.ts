@@ -27,17 +27,17 @@ export class ProjectHealthRenderer {
       mvpProgress ?? undefined,
     ]
       .filter(Boolean)
-      .join(" · ");
+      .join(" \u00b7 ");
   }
 }
 
 function renderHealthLabel(label: ProjectHealth["label"]): string {
-    switch (label) {
-      case "healthy":
-        return t(k.health.healthy);
-      case "warning":
-        return t(k.health.warning);
-      case "bad":
-        return t(k.health.bad);
-    }
+  switch (label) {
+    case "healthy":
+      return t(k.health.healthy);
+    case "warning":
+      return t(k.health.warning);
+    case "bad":
+      return t(k.health.bad);
+  }
 }

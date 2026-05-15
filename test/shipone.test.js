@@ -41,7 +41,7 @@ test("buildProjectDetail junta ruta, etiquetas y next action", () => {
     nextAction: "Crear login",
   });
 
-  assert.equal(detail, "/tmp/proyecto · Etiquetas: ui, mvp · Siguiente: Crear login");
+  assert.equal(detail, "/tmp/proyecto \u00b7 Etiquetas: ui, mvp \u00b7 Siguiente: Crear login");
 });
 
 test("parseMvpTasks conserva tareas existentes", () => {

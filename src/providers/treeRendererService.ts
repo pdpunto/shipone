@@ -229,7 +229,7 @@ export class TreeRendererService {
     return [
       new WarningNode(
         t(k.tree.activeWithWarnings),
-        warnings.join(" · "),
+        warnings.join(" \u00b7 "),
         project.id,
         this.iconProvider,
         this.tooltipProvider

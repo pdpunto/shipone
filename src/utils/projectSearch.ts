@@ -55,5 +55,5 @@ export function buildProjectDetail(project: {
     parts.push(`Siguiente: ${project.nextAction}`);
   }
 
-  return parts.join(" · ");
+  return parts.join(" \u00b7 ");
 }
