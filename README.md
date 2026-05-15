@@ -16,7 +16,7 @@ ShipOne es una extension de VS Code para crear, organizar y terminar proyectos s
 
 1. Pulsa `F5` en VS Code.
 2. Abre la vista `ShipOne` en la barra lateral.
-3. Usa `Crear proyecto`, `Abrir proyecto` o `Buscar proyecto`.
+3. Usa `Crear rapido`, `Crear avanzado`, `Abrir proyecto` o `Buscar proyecto`.
 4. Si un proyecto se queda atascado, usa `Congelar proyecto` o `Weekly review`.
 
 ## Comandos utiles

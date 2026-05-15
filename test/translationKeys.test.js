@@ -89,6 +89,7 @@ test("package.nls.es.json traduce confirmaciones de continuar", () => {
 test("package.nls.es.json traduce claves estructuradas de creacion", () => {
   const es = readJson("package.nls.es.json");
 
+  assert.equal(es["command.createProject.title"], "ShipOne: Crear avanzado");
   assert.equal(es["Nombre del proyecto"], "Nombre del proyecto");
   assert.equal(es["Descripcion"], "Descripci\u00f3n");
   assert.equal(es["command.quickCreateProject.title"], "ShipOne: Crear rapido");

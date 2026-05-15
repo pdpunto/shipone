@@ -2,7 +2,7 @@
   "displayName": "ShipOne",
   "description": "ShipOne helps you create and track projects from VS Code",
   "command.showWelcome.title": "ShipOne: Welcome",
-  "command.createProject.title": "ShipOne: Create project",
+  "command.createProject.title": "ShipOne: Advanced create",
   "command.quickCreateProject.title": "ShipOne: Quick create",
   "command.openProjectsRoot.title": "ShipOne: Open projects root",
   "command.openProjectQuickPick.title": "ShipOne: Open project",
