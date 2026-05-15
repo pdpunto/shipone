@@ -29,15 +29,15 @@ export class TreeTooltipProvider {
 
   buildEmptyStateTooltip(
     label: string,
+    detail?: string,
     actionLabel?: string
   ): vscode.MarkdownString {
-    return actionLabel
-      ? buildMarkdownTooltip([
-          t("**{0}**", label),
-          "",
-          t("Usa {0} para empezar.", actionLabel),
-        ])
-      : buildMarkdownTooltip([t("**{0}**", label)]);
+    return buildMarkdownTooltip([
+      t("**{0}**", label),
+      "",
+      detail ?? "",
+      actionLabel ? t("Usa {0} para empezar.", actionLabel) : "",
+    ]);
   }
 
   buildWarningTooltip(label: string, detail: string): vscode.MarkdownString {

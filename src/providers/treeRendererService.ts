@@ -49,6 +49,7 @@ export class TreeRendererService {
         return [
           new EmptyStateNode(
             t("Sin proyecto activo"),
+            t("Crea uno nuevo o marca un proyecto como activo."),
             undefined,
             this.iconProvider,
             this.tooltipProvider
@@ -86,6 +87,7 @@ export class TreeRendererService {
       return [
         new EmptyStateNode(
           t("Sin proyectos todavia"),
+          t("Empieza creando tu primer proyecto o idea de ejemplo."),
           t("Crear proyecto"),
           this.iconProvider,
           this.tooltipProvider
@@ -151,6 +153,7 @@ export class TreeRendererService {
       return [
         new EmptyStateNode(
           t("Sin proyectos todavia"),
+          t("No hay proyectos en este grupo todavia."),
           t("Crear proyecto"),
           this.iconProvider,
           this.tooltipProvider
