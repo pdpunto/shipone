@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con añadir un `LocalizationService` mas claro.
+Seguir con validar JSON antes de parsear metadata.
 
 ## Bloqueos
 - Ninguno por ahora

@@ -1,3 +1,10 @@
-import * as vscode from "vscode";
+import { LocalizationService } from "./localizationService";
 
-export const t = vscode.l10n.t;
+export const localizationService = new LocalizationService();
+
+export function t(
+  message: string,
+  ...args: Array<string | number | boolean | null | undefined>
+): string {
+  return localizationService.translate(message, ...args);
+}

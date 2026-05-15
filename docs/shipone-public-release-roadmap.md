@@ -73,7 +73,7 @@ Goal: reduce technical debt and make the extension easier to maintain.
 - [x] Keep `ProjectHealthService`
 - [x] Keep `TodoScannerService`
 - [x] Add `ProjectRecoveryService`
-- [ ] Add a clearer `LocalizationService`
+- [x] Add a clearer `LocalizationService`
 
 ### 1.4 UI
 
