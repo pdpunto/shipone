@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { t } from "../../localization";
+import { translationKeys as k } from "../../localization/keys";
 import type { ProjectMetadata } from "../../models/project";
 export {
   getFinishedThisWeek,
@@ -17,7 +18,7 @@ export async function pickProject(projectStore: {
 
   if (projects.length === 0) {
     vscode.window.showInformationMessage(
-      t("Todavia no hay proyectos. Crea uno para empezar.")
+      t(k.common.noProjectsYetToStart)
     );
     return undefined;
   }
@@ -31,7 +32,7 @@ export async function pickProject(projectStore: {
     })),
     {
       title: t("Proyecto"),
-      placeHolder: t("Elige un proyecto"),
+      placeHolder: t(k.common.chooseProject),
     }
   );
 

@@ -7,6 +7,7 @@ export const translationKeys = {
   common: {
     yes: "Si",
     no: "No",
+    okay: "Entendido",
     cancel: "Cancelar",
     retry: "Reintentar",
     followWithoutGitHub: "Seguir sin GitHub",
@@ -17,6 +18,14 @@ export const translationKeys = {
     connectGitHub: "Conectar GitHub",
     createProject: "Crear proyecto",
     createExample: "Crear idea de ejemplo",
+    useFolder: "Usar carpeta",
+    chooseProject: "Elige un proyecto",
+    choosePausedProject: "Elige un proyecto pausado",
+    openProject: "Abrir proyecto",
+    noProjectsYet: "Todavia no hay proyectos",
+    noProjectsYetToStart: "Todavia no hay proyectos. Crea uno para empezar.",
+    noProjectsWithFilters: "No hay proyectos con esos filtros. Prueba otra busqueda.",
+    noProjectsWithTag: "No hay proyectos con esa etiqueta. Prueba otra etiqueta.",
   },
   github: {
     notAuthenticated: "GitHub no esta autenticado. Puedes conectarlo ahora o seguir sin GitHub.",
@@ -47,13 +56,9 @@ export const translationKeys = {
     nodeApi: "Node API",
   },
   launch: {
-    noProjectsYet: "Todavia no hay proyectos.",
-    noProjectsWithFilters: "No hay proyectos con esos filtros. Prueba otra busqueda.",
-    noProjectsWithTag: "No hay proyectos con esa etiqueta. Prueba otra etiqueta.",
     searchProject: "Buscar proyecto",
     filterByType: "Filtrar por tipo",
     filterByTag: "Filtrar por etiqueta",
-    chooseProject: "Elige un proyecto",
   },
   onboarding: {
     ready: "ShipOne listo. Ruta base: {0}",

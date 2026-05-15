@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `Avoid duplicated strings`.
+Seguir con `Add fallback language behavior`.
 
 ## Bloqueos
 - Ninguno por ahora

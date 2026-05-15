@@ -328,7 +328,7 @@ export class ProjectCreationService {
       canSelectMany: false,
       defaultUri: vscode.Uri.file(projectsRoot),
       title: t("Carpeta destino"),
-      openLabel: t("Usar carpeta"),
+      openLabel: t(k.common.useFolder),
     });
 
     return picked?.[0];

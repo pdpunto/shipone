@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { t } from "../../localization";
+import { translationKeys as k } from "../../localization/keys";
 import type { ProjectCreationService } from "../../services/projectCreationService";
 import type { ProjectStoreService } from "../../services/projectStoreService";
 import type { SettingsService } from "../../services/settingsService";
@@ -256,7 +257,7 @@ export function registerReviewCommands(options: {
         })),
         {
           title: t("Reanudar proyecto"),
-          placeHolder: t("Elige un proyecto pausado"),
+          placeHolder: t(k.common.choosePausedProject),
         }
       );
 

@@ -25,7 +25,7 @@ export async function showFirstRunOnboarding(
     t("Elegir carpeta base"),
     t(k.common.connectGitHub),
     t(k.common.openSettings),
-    t("Entendido")
+    t(k.common.okay)
   );
 
   if (choice === t(k.common.createProject)) {

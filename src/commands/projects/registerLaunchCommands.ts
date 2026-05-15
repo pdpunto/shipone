@@ -48,7 +48,7 @@ export function registerLaunchCommands(options: {
         canSelectMany: false,
         defaultUri: vscode.Uri.file(settings.projectsRoot),
         title: t("Elegir carpeta base"),
-        openLabel: t("Usar carpeta"),
+        openLabel: t(k.common.useFolder),
       });
 
       const folder = picked?.[0];
@@ -89,7 +89,7 @@ export function registerLaunchCommands(options: {
 
       if (projects.length === 0) {
         const choice = await vscode.window.showInformationMessage(
-          t(k.launch.noProjectsYet),
+          t(k.common.noProjectsYet),
           t(k.common.createProject),
           t(k.common.createExample)
         );
@@ -133,7 +133,7 @@ export function registerLaunchCommands(options: {
 
       if (filteredByType.length === 0) {
         vscode.window.showInformationMessage(
-          t(k.launch.noProjectsWithFilters)
+          t(k.common.noProjectsWithFilters)
         );
         return;
       }
@@ -152,7 +152,7 @@ export function registerLaunchCommands(options: {
 
       if (filteredByTag.length === 0) {
         vscode.window.showInformationMessage(
-          t(k.launch.noProjectsWithTag)
+          t(k.common.noProjectsWithTag)
         );
         return;
       }
@@ -166,7 +166,7 @@ export function registerLaunchCommands(options: {
         })),
         {
           title: t(k.launch.searchProject),
-          placeHolder: t(k.launch.chooseProject),
+          placeHolder: t(k.common.chooseProject),
           matchOnDescription: true,
           matchOnDetail: true,
         }
@@ -238,7 +238,7 @@ export function registerLaunchCommands(options: {
 
       if (projects.length === 0) {
         const choice = await vscode.window.showInformationMessage(
-          t(k.launch.noProjectsYet),
+          t(k.common.noProjectsYet),
           t(k.common.createProject),
           t(k.common.createExample)
         );
@@ -259,8 +259,8 @@ export function registerLaunchCommands(options: {
           project,
         })),
         {
-          title: t("Abrir proyecto"),
-          placeHolder: t("Elige un proyecto"),
+          title: t(k.common.openProject),
+          placeHolder: t(k.common.chooseProject),
           matchOnDescription: true,
           matchOnDetail: true,
         }
