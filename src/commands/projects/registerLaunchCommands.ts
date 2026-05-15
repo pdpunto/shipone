@@ -87,7 +87,17 @@ export function registerLaunchCommands(options: {
       const projects = await projectStore.loadProjects();
 
       if (projects.length === 0) {
-        vscode.window.showInformationMessage(t("Todavia no hay proyectos."));
+        const choice = await vscode.window.showInformationMessage(
+          t("Todavia no hay proyectos."),
+          t("Crear proyecto"),
+          t("Crear idea de ejemplo")
+        );
+
+        if (choice === t("Crear proyecto")) {
+          await vscode.commands.executeCommand(COMMAND_CREATE_PROJECT);
+        } else if (choice === t("Crear idea de ejemplo")) {
+          await vscode.commands.executeCommand(COMMAND_CREATE_SAMPLE_IDEA);
+        }
         return;
       }
 
@@ -122,7 +132,7 @@ export function registerLaunchCommands(options: {
 
       if (filteredByType.length === 0) {
         vscode.window.showInformationMessage(
-          t("No hay proyectos con esos filtros.")
+          t("No hay proyectos con esos filtros. Prueba otra busqueda.")
         );
         return;
       }
@@ -141,7 +151,7 @@ export function registerLaunchCommands(options: {
 
       if (filteredByTag.length === 0) {
         vscode.window.showInformationMessage(
-          t("No hay proyectos con esa etiqueta.")
+          t("No hay proyectos con esa etiqueta. Prueba otra etiqueta.")
         );
         return;
       }
@@ -226,7 +236,17 @@ export function registerLaunchCommands(options: {
       const projects = await projectStore.loadProjects();
 
       if (projects.length === 0) {
-        vscode.window.showInformationMessage(t("Todavia no hay proyectos."));
+        const choice = await vscode.window.showInformationMessage(
+          t("Todavia no hay proyectos."),
+          t("Crear proyecto"),
+          t("Crear idea de ejemplo")
+        );
+
+        if (choice === t("Crear proyecto")) {
+          await vscode.commands.executeCommand(COMMAND_CREATE_PROJECT);
+        } else if (choice === t("Crear idea de ejemplo")) {
+          await vscode.commands.executeCommand(COMMAND_CREATE_SAMPLE_IDEA);
+        }
         return;
       }
 

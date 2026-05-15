@@ -16,7 +16,9 @@ export async function pickProject(projectStore: {
   const projects = Object.values(groupedProjects).flat();
 
   if (projects.length === 0) {
-    vscode.window.showInformationMessage(t("Todavia no hay proyectos."));
+    vscode.window.showInformationMessage(
+      t("Todavia no hay proyectos. Crea uno para empezar.")
+    );
     return undefined;
   }
 
@@ -34,6 +36,10 @@ export async function pickProject(projectStore: {
   );
 
   return choice?.project;
+}
+
+export function buildNoProjectsDetail(): string {
+  return t("Crea un proyecto nuevo o una idea de ejemplo para empezar.");
 }
 
 export async function confirmCanActivateProject(projectStore: {

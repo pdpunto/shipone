@@ -212,7 +212,7 @@ Goal: make ShipOne feel simple, modern, and professional.
 ### 3.4 Empty States
 
 - [x] Add onboarding empty states
-- [ ] Add no-project states
+- [x] Add no-project states
 - [ ] Add no-active-project state
 - [ ] Add recovery suggestions
 - [ ] Add contextual hints
