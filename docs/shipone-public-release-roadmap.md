@@ -77,7 +77,7 @@ Goal: reduce technical debt and make the extension easier to maintain.
 
 ### 1.4 UI
 
-- [ ] Split tree nodes into separate files
+- [x] Split tree nodes into separate files
 - [x] Keep a dedicated tree renderer
 - [x] Keep icon provider
 - [x] Keep tooltip provider

@@ -21,11 +21,11 @@ export type ShipOneTreeNode =
   | ProjectNode
   | EmptyStateNode;
 
-const GROUPS: Array<{ status: ProjectStatus; label: string; icon: string }> = [
-  { status: "active", label: t("Active"), icon: "play" },
-  { status: "idea", label: t("Ideas"), icon: "lightbulb" },
-  { status: "paused", label: t("Paused"), icon: "debug-pause" },
-  { status: "finished", label: t("Finished"), icon: "check" },
+const GROUPS: Array<{ status: ProjectStatus; label: string }> = [
+  { status: "active", label: t("Active") },
+  { status: "idea", label: t("Ideas") },
+  { status: "paused", label: t("Paused") },
+  { status: "finished", label: t("Finished") },
 ];
 
 export class TreeRendererService {

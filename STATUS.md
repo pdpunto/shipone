@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con dividir nodos de sidebar en archivos separados.
+Seguir con centralizar el flujo de arranque de la extension.
 
 ## Bloqueos
 - Ninguno por ahora
