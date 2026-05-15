@@ -29,16 +29,7 @@ export function isProjectMetadata(value: unknown): value is ProjectMetadata {
     return false;
   }
 
-  const project = value as unknown as ProjectMetadataInput;
-  return (
-    typeof project.id === "string" &&
-    typeof project.name === "string" &&
-    typeof project.description === "string" &&
-    typeof project.type === "string" &&
-    isProjectStatus(project.status) &&
-    typeof project.path === "string" &&
-    typeof project.createdAt === "string"
-  );
+  return hasProjectMetadataSchema(value as ProjectMetadataInput);
 }
 
 export function normalizeProjectMetadata(
@@ -140,4 +131,47 @@ function normalizeMvpTasks(value: unknown): MvpTask[] {
       },
     ];
   });
+}
+
+function isOptionalString(
+  value: unknown,
+  allowNull: boolean
+): value is string | null | undefined {
+  return (
+    typeof value === "string" ||
+    (allowNull && value === null) ||
+    value === undefined
+  );
+}
+
+function isStringArray(value: unknown): value is string[] | undefined {
+  return (
+    value === undefined ||
+    (Array.isArray(value) && value.every((item) => typeof item === "string"))
+  );
+}
+
+function isMvpTaskArray(value: unknown): value is MvpTask[] | undefined {
+  return value === undefined || (Array.isArray(value) && value.every(isMvpTask));
+}
+
+function hasProjectMetadataSchema(project: ProjectMetadataInput): boolean {
+  return (
+    typeof project.id === "string" &&
+    typeof project.name === "string" &&
+    typeof project.description === "string" &&
+    typeof project.type === "string" &&
+    isProjectStatus(project.status) &&
+    typeof project.path === "string" &&
+    typeof project.createdAt === "string" &&
+    isOptionalString(project.repoUrl, true) &&
+    isOptionalString(project.lastOpenedAt, false) &&
+    isOptionalString(project.finishedAt, true) &&
+    isOptionalString(project.nextAction, true) &&
+    (project.favorite === undefined || typeof project.favorite === "boolean") &&
+    isStringArray(project.tags) &&
+    isMvpTaskArray(project.mvpTasks) &&
+    isOptionalString(project.pauseReason, true) &&
+    isOptionalString(project.pauseNote, true)
+  );
 }

@@ -4,6 +4,7 @@ const assert = require("node:assert/strict");
 const { filterProjectsByName, filterProjectsByTag, buildProjectDetail } = require("../out/utils/projectSearch");
 const { parseMvpTasks, getFinishedThisWeek, isStaleProject } = require("../out/utils/projectReview");
 const {
+  isProjectMetadata,
   normalizeProjectMetadata,
   normalizeProjectListWithDiagnostics,
 } = require("../out/models/projectValidation");
@@ -93,6 +94,23 @@ test("normalizeProjectListWithDiagnostics marca corrupcion", () => {
 
   assert.equal(result.projects.length, 1);
   assert.equal(result.corrupted, true);
+});
+
+test("isProjectMetadata rechaza esquema invalido anidado", () => {
+  assert.equal(
+    isProjectMetadata({
+      id: "p1",
+      name: "Valido",
+      description: "Test",
+      type: "blank",
+      status: "idea",
+      path: "/tmp/a",
+      createdAt: "2026-05-15T00:00:00.000Z",
+      tags: ["ok", 123],
+      mvpTasks: [{ id: "1", text: "Login", done: "no" }],
+    }),
+    false
+  );
 });
 
 test("isStaleProject marca proyecto activo viejo", () => {
