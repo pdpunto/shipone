@@ -57,7 +57,7 @@ Goal: reduce technical debt and make the extension easier to maintain.
 ### 1.2 Commands
 
 - [x] Keep `commands/projects/`
-- [ ] Add `commands/status/`
+- [x] Add `commands/status/`
 - [ ] Add `commands/focus/`
 - [ ] Add `commands/review/`
 - [ ] Add `commands/github/`

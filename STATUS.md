@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con revisar comandos de metadata si hace falta.
+Seguir con `commands/focus/`.
 
 ## Bloqueos
 - Ninguno por ahora

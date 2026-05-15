@@ -4,12 +4,10 @@ import type { ProjectCreationService } from "../../services/projectCreationServi
 import type { ProjectContextService } from "../../services/projectContextService";
 import type { ProjectRecoveryService } from "../../services/projectRecoveryService";
 import type { ProjectStoreService } from "../../services/projectStoreService";
-import type { StatusFileService } from "../../services/statusFileService";
 import { parseMvpTasks, pickProject } from "./projectOpsHelpers";
 
 const COMMAND_EDIT_MVP_CHECKLIST = "shipone.editMvpChecklist";
 const COMMAND_MARK_MVP_ITEM_DONE = "shipone.markMvpItemDone";
-const COMMAND_SYNC_STATUS_FILE = "shipone.syncStatusFile";
 const COMMAND_RECOVER_STORAGE = "shipone.recoverStorage";
 const COMMAND_CONNECT_GITHUB = "shipone.connectGithub";
 const COMMAND_DETECT_BLOCKERS = "shipone.detectBlockers";
@@ -19,13 +17,11 @@ export function registerProjectOpsCommands(options: {
   projectStore: ProjectStoreService;
   projectCreationService: ProjectCreationService;
   projectRecoveryService: ProjectRecoveryService;
-  statusFileService: StatusFileService;
   projectContextService: ProjectContextService;
   treeRefresh: () => void;
 }): vscode.Disposable[] {
   const {
     projectStore,
-    statusFileService,
     projectContextService,
     projectCreationService,
     projectRecoveryService,
@@ -104,22 +100,6 @@ export function registerProjectOpsCommands(options: {
     }
   );
 
-  const syncStatusFileCommand = vscode.commands.registerCommand(
-    COMMAND_SYNC_STATUS_FILE,
-    async () => {
-      const project = await pickProject(projectStore);
-
-      if (!project) {
-        return;
-      }
-
-      await statusFileService.syncStatusFile(project);
-      vscode.window.showInformationMessage(
-        t("STATUS.md sincronizado en {0}.", project.name)
-      );
-    }
-  );
-
   const recoverStorageCommand = vscode.commands.registerCommand(
     COMMAND_RECOVER_STORAGE,
     async () => {
@@ -188,7 +168,6 @@ export function registerProjectOpsCommands(options: {
   return [
     editMvpChecklistCommand,
     markMvpItemDoneCommand,
-    syncStatusFileCommand,
     recoverStorageCommand,
     connectGithubCommand,
     detectBlockersCommand,

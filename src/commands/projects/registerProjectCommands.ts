@@ -7,7 +7,6 @@ import type { SettingsService } from "../../services/settingsService";
 import type { ShipOneProjectsTreeDataProvider } from "../../providers/shiponeProjectsTreeDataProvider";
 import { confirmCanActivateProject, pickProject } from "./projectOpsHelpers";
 
-const STATUS_FILE_NAME = "STATUS.md";
 const COMMAND_OPEN_PROJECT = "shipone.openProject";
 const COMMAND_CHANGE_PROJECT_STATUS = "shipone.changeProjectStatus";
 const COMMAND_MARK_PROJECT_IDEA = "shipone.markProjectIdea";
@@ -16,7 +15,6 @@ const COMMAND_MARK_PROJECT_PAUSED = "shipone.markProjectPaused";
 const COMMAND_MARK_PROJECT_FINISHED = "shipone.markProjectFinished";
 const COMMAND_EDIT_NEXT_ACTION = "shipone.editNextAction";
 const COMMAND_CLEAR_NEXT_ACTION = "shipone.clearNextAction";
-const COMMAND_OPEN_STATUS_FILE = "shipone.openStatusFile";
 const COMMAND_TOGGLE_FAVORITE = "shipone.toggleFavorite";
 
 const STATUS_PICKERS: Array<{ label: string; value: ProjectStatus }> = [
@@ -214,33 +212,6 @@ export function registerProjectCommands(options: {
     }
   );
 
-  const openStatusFileCommand = vscode.commands.registerCommand(
-    COMMAND_OPEN_STATUS_FILE,
-    async (projectArg?: unknown) => {
-      const project = await resolveProject(
-        projectStore,
-        projectArg,
-        getSelectedProjectId()
-      );
-
-      if (!project) {
-        return;
-      }
-
-      const statusFileUri = vscode.Uri.joinPath(
-        vscode.Uri.file(project.path),
-        STATUS_FILE_NAME
-      );
-
-      try {
-        const document = await vscode.workspace.openTextDocument(statusFileUri);
-        await vscode.window.showTextDocument(document, { preview: false });
-      } catch {
-        vscode.window.showErrorMessage(t("No se pudo abrir STATUS.md."));
-      }
-    }
-  );
-
   const toggleFavoriteCommand = vscode.commands.registerCommand(
     COMMAND_TOGGLE_FAVORITE,
     async (projectArg?: unknown) => {
@@ -274,7 +245,6 @@ export function registerProjectCommands(options: {
     markProjectFinishedCommand,
     editNextActionCommand,
     clearNextActionCommand,
-    openStatusFileCommand,
     toggleFavoriteCommand
   );
 
@@ -287,7 +257,6 @@ export function registerProjectCommands(options: {
     markProjectFinishedCommand,
     editNextActionCommand,
     clearNextActionCommand,
-    openStatusFileCommand,
     toggleFavoriteCommand,
   ];
 }
