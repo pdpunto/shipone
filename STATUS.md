@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `Add missing key detection`.
+Seguir con `Add translation validation script`.
 
 ## Bloqueos
 - Ninguno por ahora
