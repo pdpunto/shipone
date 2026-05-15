@@ -1,0 +1,488 @@
+# ShipOne - Public Release Roadmap
+
+Version: 1.0
+Date: 2026-05-15
+
+## Objective
+
+Turn ShipOne from a strong private VS Code extension into a stable, maintainable, internationalized, polished, public-ready product.
+
+## Product Principle
+
+ShipOne exists to help developers:
+
+- start fewer projects
+- keep context
+- stay focused
+- finish projects
+
+Everything in the product should support that.
+
+Core pillars:
+
+- One Active Project
+- Next Action
+- Focus Mode
+- STATUS.md
+- Project Health
+- Weekly Review
+
+## Scope
+
+This roadmap focuses on:
+
+- stability
+- architecture
+- UX
+- internationalization
+- reliability
+- public release readiness
+
+It does not aim at random feature expansion.
+
+---
+
+## Phase 1 - Core Stabilization
+
+Goal: reduce technical debt and make the extension easier to maintain.
+
+### 1.1 Extension Architecture
+
+- [ ] Reduce `src/extension.ts` to bootstrap only
+- [ ] Move command registration by domain
+- [ ] Extract domain coordinators
+- [ ] Centralize startup flow
+- [ ] Remove business logic from `extension.ts`
+
+### 1.2 Commands
+
+- [ ] Keep `commands/projects/`
+- [ ] Add `commands/status/`
+- [ ] Add `commands/focus/`
+- [ ] Add `commands/review/`
+- [ ] Add `commands/github/`
+- [ ] Add `commands/ai/`
+- [ ] Add `commands/onboarding/`
+
+### 1.3 Services
+
+- [ ] Keep `GitService`
+- [ ] Keep `GithubService`
+- [ ] Keep `TemplateService`
+- [ ] Keep `StatusFileService`
+- [ ] Keep `ProjectHealthService`
+- [ ] Keep `TodoScannerService`
+- [ ] Add `ProjectRecoveryService`
+- [ ] Add a clearer `LocalizationService`
+
+### 1.4 UI
+
+- [ ] Split tree nodes into separate files
+- [ ] Keep a dedicated tree renderer
+- [ ] Keep icon provider
+- [ ] Keep tooltip provider
+- [ ] Keep health renderer
+- [ ] Reduce duplicated tooltip content
+- [ ] Reduce sidebar density
+
+### 1.5 Models
+
+- [ ] Add stronger type guards
+- [ ] Add metadata schema validation
+- [ ] Add schema versioning
+- [ ] Add migration support
+- [ ] Normalize project metadata consistently
+
+### 1.6 Storage Reliability
+
+- [ ] Validate JSON before parse
+- [ ] Detect corrupted metadata
+- [ ] Restore from backup automatically
+- [ ] Add recovery flow
+- [ ] Add migration system
+- [ ] Add structured error logging
+- [ ] Add safe write strategy
+- [ ] Add atomic save strategy
+- [ ] Prevent partial project corruption
+
+### 1.7 Code Quality
+
+- [ ] Configure strict ESLint rules
+- [ ] Configure Prettier
+- [ ] Remove dead code
+- [ ] Remove duplicate logic
+- [ ] Fix inconsistent naming
+- [ ] Improve async safety
+- [ ] Review exception handling
+- [ ] Add inline documentation where needed
+
+---
+
+## Phase 2 - Encoding and Internationalization
+
+Goal: make ShipOne render correctly in every supported environment.
+
+### 2.1 Encoding Cleanup
+
+- [ ] Convert all files to UTF-8
+- [ ] Fix mojibake
+- [ ] Fix broken accents
+- [ ] Fix broken separators
+- [ ] Validate JSON encoding
+- [ ] Validate markdown encoding
+- [ ] Validate TypeScript encoding
+
+### 2.2 VS Code Localization
+
+- [ ] Add `package.nls.json`
+- [ ] Add `package.nls.es.json`
+- [ ] Add more locale files later if needed
+- [ ] Localize extension name
+- [ ] Localize extension description
+- [ ] Localize commands
+- [ ] Localize menus
+- [ ] Localize settings
+- [ ] Localize configuration descriptions
+- [ ] Localize walkthrough titles
+
+### 2.3 Runtime UI Localization
+
+- [ ] Keep `t()` helper
+- [ ] Remove hardcoded UI strings
+- [ ] Translate QuickPick labels
+- [ ] Translate placeholders
+- [ ] Translate notifications
+- [ ] Translate warnings
+- [ ] Translate errors
+- [ ] Translate onboarding
+- [ ] Translate tree descriptions
+- [ ] Translate health messages
+- [ ] Translate metrics
+- [ ] Translate focus mode
+- [ ] Translate weekly review
+- [ ] Translate freeze and resume flow
+- [ ] Translate dialogs
+- [ ] Translate confirmations
+
+### 2.4 Translation Structure
+
+- [ ] Use structured translation keys
+- [ ] Group keys by domain
+- [ ] Avoid duplicated strings
+- [ ] Add fallback language behavior
+- [ ] Add missing key detection
+- [ ] Add translation validation script
+
+---
+
+## Phase 3 - UX Polish
+
+Goal: make ShipOne feel simple, modern, and professional.
+
+### 3.1 Sidebar Simplification
+
+- [ ] Reduce visual density
+- [ ] Improve spacing
+- [ ] Simplify project descriptions
+- [ ] Reduce repeated warnings
+- [ ] Improve hierarchy
+- [ ] Improve status visibility
+- [ ] Improve inactive project warnings
+- [ ] Improve project health display
+
+### 3.2 Project Creation UX
+
+- [ ] Add Quick Create
+- [ ] Add Advanced Create
+- [ ] Reduce unnecessary prompts
+- [ ] Improve defaults
+- [ ] Improve placeholders
+- [ ] Improve project type selection
+- [ ] Expose `node-api` properly
+- [ ] Add project type descriptions
+
+### 3.3 Focus UX
+
+- [ ] Improve Focus Mode visuals
+- [ ] Highlight next action better
+- [ ] Improve active project visibility
+- [ ] Reduce distraction in focus mode
+- [ ] Improve health summaries
+
+### 3.4 Empty States
+
+- [ ] Add onboarding empty states
+- [ ] Add no-project states
+- [ ] Add no-active-project state
+- [ ] Add recovery suggestions
+- [ ] Add contextual hints
+
+### 3.5 Error UX
+
+- [ ] Human-readable errors
+- [ ] Actionable recovery suggestions
+- [ ] Better Git errors
+- [ ] Better GitHub errors
+- [ ] Better filesystem errors
+- [ ] Better authentication warnings
+
+---
+
+## Phase 4 - Testing and Reliability
+
+Goal: make ShipOne stable before public release.
+
+### 4.1 Unit Tests
+
+Storage:
+
+- [ ] Test metadata loading
+- [ ] Test metadata saving
+- [ ] Test corrupted metadata
+- [ ] Test backup recovery
+- [ ] Test migrations
+
+Status logic:
+
+- [ ] Test one active project rule
+- [ ] Test state transitions
+- [ ] Test finish flow
+- [ ] Test pause flow
+- [ ] Test freeze flow
+
+Health:
+
+- [ ] Test inactive project detection
+- [ ] Test missing README detection
+- [ ] Test Git health detection
+- [ ] Test next action validation
+
+Utilities:
+
+- [ ] Test path sanitization
+- [ ] Test project naming
+- [ ] Test template resolution
+- [ ] Test TODO scanner
+
+### 4.2 Integration Tests
+
+- [ ] Create project flow
+- [ ] Open project flow
+- [ ] STATUS.md sync
+- [ ] Git init flow
+- [ ] GitHub creation flow
+- [ ] Focus mode flow
+- [ ] Weekly review flow
+
+### 4.3 Manual QA
+
+Platforms:
+
+- [ ] Windows
+- [ ] macOS
+- [ ] Linux
+
+Scenarios:
+
+- [ ] Without Git
+- [ ] Without GitHub CLI
+- [ ] Offline mode
+- [ ] Paths with spaces
+- [ ] Unicode paths
+- [ ] Corrupted metadata
+- [ ] Empty workspace
+
+### 4.4 Performance
+
+- [ ] Reduce unnecessary refreshes
+- [ ] Cache health checks
+- [ ] Cache TODO scans
+- [ ] Lazy-load heavy operations
+- [ ] Improve tree rendering performance
+- [ ] Avoid renderer recreation
+
+---
+
+## Phase 5 - Product Consolidation
+
+Goal: keep ShipOne focused and avoid feature creep.
+
+### 5.1 Define Official Core
+
+Core features:
+
+- [ ] One Active Project
+- [ ] Next Action
+- [ ] Focus Mode
+- [ ] STATUS.md
+- [ ] Project Health
+- [ ] Weekly Review
+
+### 5.2 Secondary Features
+
+Keep simple:
+
+- [ ] AI Context
+- [ ] TODO Scanner
+- [ ] Templates
+- [ ] GitHub Integration
+- [ ] Metrics
+
+### 5.3 Feature Review
+
+- [ ] Remove confusing commands
+- [ ] Reduce duplicated actions
+- [ ] Simplify command names
+- [ ] Review feature necessity
+- [ ] Remove unnecessary complexity
+
+---
+
+## Phase 6 - Public Repository Preparation
+
+Goal: prepare ShipOne for open-source collaboration.
+
+### 6.1 Repository Structure
+
+- [ ] Add `.github/`
+- [ ] Add issue templates
+- [ ] Add bug report template
+- [ ] Add feature request template
+- [ ] Add pull request template
+
+### 6.2 Community Files
+
+- [ ] Add `CONTRIBUTING.md`
+- [ ] Add `CODE_OF_CONDUCT.md`
+- [ ] Add `SECURITY.md`
+- [ ] Add `CHANGELOG.md`
+- [ ] Add final `LICENSE`
+- [ ] Add release notes template
+
+### 6.3 Documentation
+
+README:
+
+- [ ] Hero section
+- [ ] Product philosophy
+- [ ] Problem explanation
+- [ ] Quick start
+- [ ] Screenshots
+- [ ] GIF demo
+- [ ] Commands
+- [ ] Workflow explanation
+- [ ] Configuration guide
+- [ ] Troubleshooting
+- [ ] FAQ
+- [ ] Roadmap
+- [ ] Contributing guide
+
+---
+
+## Phase 7 - CI/CD and Automation
+
+Goal: automate quality control and releases.
+
+### 7.1 GitHub Actions
+
+- [ ] Build workflow
+- [ ] Lint workflow
+- [ ] Test workflow
+- [ ] Package VSIX workflow
+- [ ] Release workflow
+- [ ] Changelog workflow
+
+### 7.2 Release Management
+
+- [ ] Semantic versioning
+- [ ] Release tagging
+- [ ] Beta release flow
+- [ ] Stable release flow
+- [ ] Marketplace publish workflow
+
+---
+
+## Phase 8 - VS Code Marketplace Release
+
+Goal: publish ShipOne professionally.
+
+### 8.1 Marketplace Assets
+
+- [ ] Final logo
+- [ ] Final banner
+- [ ] Screenshots
+- [ ] Demo GIF
+- [ ] Marketplace preview image
+- [ ] Consistent branding
+
+### 8.2 package.json Metadata
+
+- [ ] Add keywords
+- [ ] Add categories
+- [ ] Add repository URL
+- [ ] Add homepage URL
+- [ ] Add bugs URL
+- [ ] Add icon
+- [ ] Add license
+- [ ] Add engines.vscode
+
+### 8.3 VS Code Publisher
+
+- [ ] Create publisher account
+- [ ] Configure `vsce`
+- [ ] Configure PAT token
+- [ ] Validate package
+- [ ] Generate VSIX package
+
+### 8.4 Public Release Strategy
+
+Beta:
+
+- [ ] Publish beta release
+- [ ] Gather feedback
+- [ ] Fix critical issues
+- [ ] Improve onboarding
+
+Stable:
+
+- [ ] Publish stable release
+- [ ] Announce publicly
+- [ ] Collect community feedback
+- [ ] Prioritize bug fixes
+
+---
+
+## Final Success Criteria
+
+ShipOne is ready for public release when:
+
+- [ ] The extension is stable across platforms
+- [ ] All visible UI supports localization
+- [ ] No broken encoding exists
+- [ ] Core workflows are tested
+- [ ] README is professional
+- [ ] GitHub repository is public-ready
+- [ ] Marketplace assets are polished
+- [ ] Users understand the product quickly
+- [ ] ShipOne still feels simple
+- [ ] The product clearly helps developers finish projects
+
+## Final Positioning
+
+One-liner:
+
+ShipOne is a VS Code extension that helps developers organize, focus on, and finish programming projects.
+
+Product philosophy:
+
+Start less. Ship more.
+
+## Most Important Rule
+
+Do not turn ShipOne into a giant all-in-one platform.
+
+Protect simplicity.
+
+Protect focus.
+
+Protect the finish-projects philosophy.

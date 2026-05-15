@@ -1,140 +1,101 @@
 # ShipOne - Auditoria completa del estado actual
 
-Fecha de auditoria: 2026-05-14
+Fecha de auditoria: 2026-05-15
 
-Este documento resume el estado real actual de ShipOne. Sirve como contexto completo para continuar el desarrollo, pasar el proyecto a otra IA o hacer una revision tecnica y de producto sin perder nada importante.
+Este documento resume el estado real de la extension ShipOne despues de revisar el codigo fuente, la estructura del repo, la logica de negocio y la UI del panel lateral. Sirve como base para seguir desarrollando, refactorizar o pasar el proyecto a otra persona o IA sin perder contexto.
 
 ## 1. Resumen ejecutivo
 
-ShipOne es una extension de VS Code orientada a ayudar a desarrollar, organizar y terminar proyectos. El enfoque principal ya no es solo crear carpetas o guardar metadata: ahora el producto mezcla gestion de proyectos, foco, salud del proyecto, checklist MVP, STATUS.md, busqueda, favoritos, congelacion/reanudacion, deteccion de bloqueadores, generacion de contexto para IA y automatizacion de arranque con Git y GitHub.
+ShipOne ya no es un esqueleto. Es una extension de VS Code con una base funcional amplia para crear, organizar, seguir y cerrar proyectos desde un panel propio.
 
-La extension ya tiene una base funcional amplia y bastante avanzada. No es un esqueleto inicial. Tiene:
+Lo mas importante que hace hoy:
 
-- un panel lateral propio dentro de VS Code;
-- una vista agrupada por estado;
-- metrica basica;
-- favoritos;
-- foco en un proyecto activo;
-- flujo de creacion de proyectos con templates;
-- almacenamiento local persistente;
-- integracion opcional con Git y GitHub;
-- sincronizacion con STATUS.md;
-- herramientas auxiliares para revisar tareas, bloqueos y contexto.
+- crea proyectos con templates;
+- guarda metadata local de cada proyecto;
+- muestra una vista lateral con estados, metricas y alertas;
+- permite marcar proyectos como `idea`, `active`, `paused` o `finished`;
+- mantiene un solo proyecto activo si la configuracion lo exige;
+- sincroniza `STATUS.md` y genera `AI_CONTEXT.md`;
+- integra Git y GitHub de forma opcional;
+- detecta bloqueadores y TODO/FIXME;
+- soporta focus mode, weekly review, favoritos y reanudacion de proyectos.
 
-La idea de producto sigue siendo clara: ayudar a terminar proyectos, no solo a arrancarlos.
+La idea de producto es clara: ayudar a terminar proyectos, no solo a crearlos.
 
-## 2. Estado del repositorio
+## 2. Alcance de la auditoria
 
-### 2.1. Archivos relevantes detectados
+Se reviso:
 
-```txt
-src/
-  extension.ts
-  models/
-    project.ts
-    settings.ts
-  providers/
-    shiponeProjectsTreeDataProvider.ts
-    index.ts
-  services/
-    settingsService.ts
-    projectStoreService.ts
-    projectCreationService.ts
-  utils/
-    index.ts
-media/branding/
-  branding-notes.md
-  banner.png
-  icon-16.png
-  icon-24.png
-  icon-32.png
-  icon-48.png
-  icon-64.png
-  icon-128.png
-  icon-256.png
-  icon-512.png
-  icon.png
-  logo.svg
-  logo-transparent.png
-  marketplace-preview.png
-package.json
-README.md
-STATUS.md
-shipone_dossier_checklist.md
-shipone.code-workspace
-```
+- estructura del repo;
+- archivos de entrada principales;
+- modelo de datos;
+- persistencia;
+- creacion de proyectos;
+- comandos;
+- providers de UI;
+- servicios de dominio;
+- utilidades;
+- onboarding;
+- configuracion y packaging;
+- calidad tecnica visible;
+- riesgos y deuda.
 
-### 2.2. Estado de git
+Tambien se ejecuto la compilacion del proyecto y paso correctamente con:
 
-En el momento de esta auditoria hay dos archivos sin trackear en el workspace:
+- `npm.cmd run compile`
 
-- `STATUS.md`
-- `shipone.code-workspace`
+No se detectaron fallos de TypeScript en el estado actual.
 
-Eso significa que el repositorio no esta completamente limpio. El resto del codigo principal parece versionado y trabajado en sesiones previas.
+## 3. Estructura general del proyecto
 
-### 2.3. Observacion importante del workspace
+La estructura esta bastante bien separada para una extension de VS Code:
 
-El archivo `shipone.code-workspace` incluye una carpeta externa adicional:
+- `src/extension.ts`
+- `src/commands/projects/`
+- `src/models/`
+- `src/providers/`
+- `src/providers/treeNodes/`
+- `src/services/`
+- `src/utils/`
+- `src/onboarding/`
+- `media/branding/`
+- `docs/`
 
-- el repo actual
-- una carpeta de branding localizada fuera del repo: `../../../Users/Usuario/Downloads/ShipOne_Final_Branding`
+### Lectura arquitectonica
 
-Eso es relevante porque parte de la identidad visual puede venir de esa carpeta externa y no del propio arbol del repo.
+- `extension.ts` funciona como bootstrap y coordinador.
+- `services/` contiene la logica de negocio y persistencia.
+- `providers/` arma la UI del panel lateral.
+- `commands/` agrupa acciones por dominio.
+- `models/` define contratos de datos.
+- `utils/` resuelve filtros y formatos.
 
-## 3. Proposito real de ShipOne
+La separacion ya es buena, pero `extension.ts` sigue siendo un punto central demasiado grande para el volumen funcional actual.
 
-ShipOne no pretende ser un Kanban general ni un gestor de tareas puro. Su foco real es:
+## 4. Estado funcional real
 
-- reducir la cantidad de proyectos abiertos;
-- obligar a elegir un proyecto activo;
-- dar siempre un siguiente paso claro;
-- evitar abandonar sin contexto;
-- ayudar a cerrar proyectos;
-- dar visibilidad rapida de estado y salud;
-- facilitar el reenganche rapido a un proyecto pausado.
+ShipOne hoy cubre un flujo bastante completo:
 
-El producto esta claramente orientado a proyectos de desarrollador individual, indie, estudiante o maker.
+1. onboarding inicial;
+2. configuracion de carpeta base;
+3. creacion de proyecto;
+4. templates por tipo;
+5. guardado de metadata;
+6. opcionalmente Git local;
+7. opcionalmente repo GitHub;
+8. vista lateral con estados y metricas;
+9. acciones rapidas por proyecto;
+10. revision de salud y contexto;
+11. cierre o congelacion del proyecto;
+12. reanudacion y seguimiento.
 
-## 4. Arquitectura actual
-
-### 4.1. Estructura de alto nivel
-
-La extension ya esta separada en capas relativamente claras:
-
-- `extension.ts`: orquestacion principal y registro de comandos.
-- `services/`: logica de negocio, almacenamiento, creacion de proyectos, settings.
-- `providers/`: la UI del arbol lateral.
-- `models/`: tipos y contratos de datos.
-- `utils/`: todavia muy vacio.
-
-### 4.2. Observacion de arquitectura
-
-Aunque ya existe separacion por carpetas, la logica principal sigue bastante concentrada en `src/extension.ts`. Ese archivo ya actua como:
-
-- bootstrap de VS Code;
-- router de comandos;
-- coordinador de estado;
-- handler de busqueda;
-- editor de checklist MVP;
-- sincronizador de STATUS.md;
-- detector de bloqueadores;
-- generador de AI context;
-- flujo de focus mode;
-- weekly review;
-- congelacion y reanudacion;
-- cambio de estado;
-- manejo de next action;
-- favorito;
-- apertura de STATUS.md.
-
-Eso funciona, pero ya es una deuda tecnica real. El archivo sigue creciendo y convendria dividirlo por dominios.
+Eso significa que el producto ya tiene una narrativa de uso completa y no solo utilidades sueltas.
 
 ## 5. Modelo de datos
 
-### 5.1. `ProjectMetadata`
+### `ProjectMetadata`
 
-El modelo de proyecto ya es rico. Incluye:
+El modelo de proyecto esta bastante completo:
 
 - `id`
 - `name`
@@ -153,44 +114,41 @@ El modelo de proyecto ya es rico. Incluye:
 - `pauseReason`
 - `pauseNote`
 
-### 5.2. `ProjectStatus`
+### `ProjectStatus`
 
-Los estados principales son:
+Los estados soportados son:
 
 - `idea`
 - `active`
 - `paused`
 - `finished`
 
-### 5.3. `MvpTask`
+### `MvpTask`
 
-Hay un submodelo para checklist MVP:
+Cada tarea MVP tiene:
 
 - `id`
 - `text`
 - `done`
 
-### 5.4. Interpretacion de producto
+### Valor de producto
 
-El modelo ya deja claro que ShipOne no es solo un listado de carpetas. Cada proyecto puede tener:
+El modelo no solo guarda datos. Guarda contexto de trabajo real:
 
-- vida util;
-- estado;
-- repo remoto;
-- evolucion;
-- progreso MVP;
+- estado del proyecto;
+- proxima accion;
+- historial de apertura;
 - motivo de pausa;
-- nota de pausa;
-- favoritismo;
-- contexto para IA.
+- checklist MVP;
+- favorito;
+- repo remoto;
+- metadatos utiles para IA.
 
-## 6. Configuracion disponible
+## 6. Configuracion
 
-### 6.1. `SettingsService`
+La configuracion vive en el namespace `shipone` y esta bastante madura.
 
-La extension lee configuracion desde la seccion `shipone`.
-
-### 6.2. Settings actuales
+### Ajustes actuales
 
 - `shipone.projectsRoot`
 - `shipone.defaultVisibility`
@@ -206,101 +164,88 @@ La extension lee configuracion desde la seccion `shipone`.
 - `shipone.staleWarningDays`
 - `shipone.showFinishedProjects`
 
-### 6.3. Lectura critica
+### Lectura tecnica
 
-La configuracion es ya bastante madura y cubre:
+La configuracion cubre bien:
 
 - ruta base de proyectos;
-- tipo por defecto;
-- Git local y GitHub por defecto;
-- regla de un solo activo;
-- STATUS.md automatico;
+- template por defecto;
+- visibilidad GitHub;
+- Git y GitHub por defecto;
+- una sola app activa;
+- creacion automatica de `STATUS.md`;
 - package manager;
-- templates externos;
+- templates personalizados;
 - apertura automatica;
 - avisos por inactividad;
-- visibilidad de finished.
-
-Esto indica que el producto ya esta orientado a ser personalizable, no rigido.
+- ocultar o mostrar terminados.
 
 ## 7. Persistencia y almacenamiento
 
-### 7.1. `ProjectStoreService`
+### `ProjectStoreService`
 
-La persistencia se hace en el almacenamiento global de VS Code. El archivo principal es:
+La persistencia se hace en `globalStorageUri` de VS Code con:
 
 - `projects.json`
-
-Y existe una copia de seguridad:
-
 - `projects.json.bak`
 
-### 7.2. Funciones principales
+### Lo que ya hace bien
 
-La capa de almacenamiento ya permite:
+- inicializa almacenamiento;
+- carga proyectos;
+- guarda con backup previo;
+- recupera desde backup;
+- actualiza proyecto existente;
+- crea proyecto nuevo;
+- cambia estados;
+- marca favorito;
+- cambia `nextAction`;
+- guarda tareas MVP;
+- marca tareas MVP como hechas;
+- congela proyecto;
+- registra aperturas;
+- agrupa por estado;
+- crea carpetas.
 
-- inicializar almacenamiento;
-- cargar proyectos;
-- guardar proyectos con backup;
-- upsert;
-- crear proyectos respetando la regla de un activo;
-- cambiar estado;
-- editar next action;
-- alternar favorito;
-- setear checklist MVP;
-- marcar tarea MVP como hecha;
-- congelar proyecto;
-- registrar apertura del proyecto;
-- obtener un proyecto por ID;
-- agrupar por estado;
-- crear carpeta de proyecto.
+### Observacion importante
 
-### 7.3. Reglas de negocio en almacenamiento
+La capa de persistencia ya aplica reglas de negocio, no solo I/O. Eso esta bien para un producto pequeno o mediano, pero ya esta cerca del limite donde convendria separar validacion, mutacion y almacenamiento.
 
-La capa ya impone varias reglas de producto:
+### Riesgos detectados
 
-- si se crea o activa un proyecto con estado `active`, los otros `active` pasan a `paused` cuando la config lo exige;
-- al pasar a `paused`, se limpian algunos metadatos de congelacion o pausa segun la operacion;
-- al pasar a `finished`, se rellena `finishedAt`;
-- al activar, se actualiza `lastOpenedAt`.
-
-### 7.4. Riesgos observados
-
-- La validacion de estructura al leer JSON es basica.
-- Si el archivo esta corrompido, se retorna lista vacia en vez de reportar mas contexto.
-- La copia de seguridad existe, pero no hay politica visible de restauracion automatica.
+- si el JSON esta corrupto, la recuperacion cae a lista vacia con poco detalle;
+- la normalizacion es util, pero puede esconder errores de datos;
+- no hay una politica visible de migraciones versionadas mas explicita;
+- la recuperacion automatica existe, pero no esta muy expuesta al usuario.
 
 ## 8. Creacion de proyectos
 
-### 8.1. `ProjectCreationService`
+### `ProjectCreationService`
 
-La creacion de proyectos ya es uno de los bloques mas completos de ShipOne.
+Es uno de los bloques mas completos del proyecto.
 
-### 8.2. Flujo actual
-
-El flujo real de creacion es:
+### Flujo real actual
 
 1. pedir nombre;
 2. pedir tipo;
 3. pedir descripcion;
-4. seleccionar carpeta de destino;
-5. elegir package manager;
-6. decidir si usar Git local;
-7. si Git esta activo, comprobar si `gh` esta autenticado;
-8. decidir si crear repo GitHub y su visibilidad;
-9. resolver carpeta final, evitando colisiones;
+4. pedir carpeta destino;
+5. pedir package manager;
+6. pedir si se crea Git local;
+7. comprobar autenticacion de GitHub CLI si Git se va a usar;
+8. preguntar si crear repo GitHub y su visibilidad;
+9. evitar colision de carpeta;
 10. crear carpeta;
-11. crear `STATUS.md` si la config lo permite;
-12. generar template seleccionado;
-13. inicializar Git si procede;
-14. crear commit inicial si procede;
-15. crear repo GitHub si procede;
-16. guardar metadata;
-17. abrir el proyecto si la config lo pide.
+11. crear metadata;
+12. crear `STATUS.md` si corresponde;
+13. generar template;
+14. inicializar Git;
+15. crear commit inicial;
+16. crear repo GitHub si aplica;
+17. registrar proyecto en el almacenamiento;
+18. abrir el proyecto si la config lo indica.
 
-### 8.3. Templates soportados
-
-Ya existen plantillas para:
+### Templates soportados
 
 - `blank`
 - `react-vite`
@@ -308,185 +253,123 @@ Ya existen plantillas para:
 - `python`
 - `node-api`
 
-### 8.4. Templates custom
+### Punto importante
 
-La extension tambien soporta una carpeta de templates custom configurable. Si existe, puede sobrescribir o complementar el starter segun el tipo.
+Hay una inconsistencia funcional:
 
-### 8.5. STATUS.md
+- `node-api` existe en el tipo de configuracion y en `TemplateService`;
+- pero no aparece en el selector de tipo de proyecto de la UI de creacion;
+- tampoco aparece en el filtro rapido de busqueda.
 
-Al crear proyecto, ShipOne puede crear `STATUS.md` automaticamente con:
+Eso hace que el template exista, pero no este realmente accesible desde los flujos principales.
 
-- objetivo;
-- checklist MVP;
-- proximo paso;
-- bloqueos;
-- nombre del proyecto;
-- fecha de actualizacion.
+### Lectura tecnica
 
-### 8.6. Git local
+La creacion esta bien pensada y es segura en varios puntos:
 
-Si el usuario lo aprueba, se ejecuta:
+- no sobreescribe carpetas existentes;
+- no rompe el flujo completo si falla Git;
+- no rompe el flujo completo si falla GitHub;
+- mantiene la idea de crear primero la carpeta y luego completar el resto.
 
-- `git init`
-- `git add .`
-- `git commit -m "chore: initial commit"`
-- `git branch -M main`
+### Riesgo de atomicidad
 
-### 8.7. GitHub
+Si una parte intermedia falla despues de crear la carpeta, pueden quedar proyectos parcialmente creados. Es aceptable para una extension de este tipo, pero convendria mejorar la recuperacion o limpieza de estados intermedios.
 
-Si GitHub esta disponible y autenticado:
+## 9. UI y experiencia visual
 
-- se pregunta si crear repo remoto;
-- se pregunta visibilidad;
-- se intenta `gh repo create`;
-- si funciona, se guarda `repoUrl`.
+### `ShipOneProjectsTreeDataProvider`
 
-Si `gh` no esta autenticado, la extension no rompe la creacion del proyecto. Solo avisa y sigue.
+La UI lateral es bastante rica. No muestra solo proyectos:
 
-### 8.8. Comportamiento de seguridad
+- muestra metricas;
+- muestra warnings del proyecto activo;
+- agrupa por estado;
+- soporta focus mode;
+- muestra empty states;
+- renderiza salud de cada proyecto;
+- expone favoritas, next action y progreso MVP.
 
-La creacion actual evita:
-
-- sobrescribir carpetas existentes;
-- cortar el flujo entero si Git falla;
-- cortar el flujo entero si GitHub falla;
-- depender de GitHub para poder crear un proyecto local.
-
-### 8.9. Lectura critica
-
-Esta capa ya mezcla:
-
-- orquestacion;
-- templates;
-- configuracion;
-- control de fs;
-- Git;
-- GitHub;
-- STATUS.md;
-- creacion de metadata.
-
-Funciona, pero ya mereceria una separacion futura por subservicios.
-
-## 9. UI lateral y presentacion
-
-### 9.1. `ShipOneProjectsTreeDataProvider`
-
-La vista lateral es bastante mas que una lista simple. Tiene:
-
-- metrics node;
-- warnings de proyecto activo;
-- groups por estado;
-- empty states;
-- focus mode;
-- project nodes;
-- favoritos;
-- progreso MVP;
-- salud del proyecto;
-- next action;
-- aviso de inactividad;
-- aviso de falta de README;
-- aviso de commits recientes;
-- aviso de bloqueadores;
-- acceso rapido a proyecto y STATUS.md.
-
-### 9.2. Estructura visual actual
-
-La extension muestra en el panel:
-
-- Metrics
-- warnings del activo
-- Focus mode cuando aplica
-- Active
-- Ideas
-- Paused
-- Finished
-
-### 9.3. Node types actuales
+### Nodos visuales
 
 - `MetricsNode`
 - `MetricItemNode`
-- `FocusNode`
-- `WarningNode`
 - `GroupNode`
 - `ProjectNode`
+- `WarningNode`
+- `FocusNode`
 - `EmptyStateNode`
 
-### 9.4. Visualización por proyecto
+### Lo que comunica la UI
 
-Cada proyecto puede mostrar:
+La vista transmite:
 
-- tipo;
-- next action;
+- orden;
+- foco;
 - salud;
-- estado;
-- motivo de pausa;
-- advertencia de inactividad;
-- progreso MVP.
+- avance;
+- pausas;
+- proyectos terminados;
+- proximidad al siguiente paso.
 
-Ademas:
+### Lo que hace bien
 
-- favorito se pinta con estrella;
-- el proyecto abre al hacer click;
-- el tooltip da mas contexto;
-- el contexto menu expone acciones.
+- es util sin salir de VS Code;
+- tiene jerarquia visual clara;
+- usa tooltips para dar contexto;
+- usa iconos para reforzar estados;
+- resalta favorito y estado;
+- muestra alertas sin obligar a abrir muchos archivos.
 
-### 9.5. Metrics actuales
+### Lo que podria mejorar
 
-La vista calcula:
+- hay bastante densidad de informacion en una sola vista;
+- algunos mensajes de estado se repiten entre description, tooltip y warning;
+- la UI ya funciona, pero puede sentirse algo cargada si hay muchos proyectos;
+- faltan mas estados intermedios o vistas resumidas para reducir ruido.
 
-- total;
-- ideas;
-- active;
-- paused;
-- finished;
-- finish ratio.
+## 10. Sistema de salud
 
-### 9.6. Focus mode
+### `ProjectHealthService`
 
-Cuando se activa focus mode:
+La salud del proyecto se calcula con:
 
-- la vista se reduce al proyecto activo;
-- se muestra un bloque de salud;
-- se prioriza la siguiente action;
-- si no hay activo, aparece un empty state.
+- `nextAction` presente o no;
+- estado `active` con inactividad;
+- existencia de `README.md`;
+- commits recientes en Git.
 
-### 9.7. Warning system
+### Criterios
 
-La UI ya advierte si:
+- `healthy`
+- `warning`
+- `bad`
 
-- el proyecto activo lleva demasiado tiempo sin abrirse;
-- el proyecto activo no tiene next action;
-- falta README;
-- no hay commits recientes;
-- el proyecto parece estancado.
+### Observacion tecnica
 
-### 9.8. Valor de la UI actual
+El sistema es util, pero tiene limites:
 
-La UI ya deja claro que ShipOne quiere ser un sistema de seguimiento, no solo un navegador de carpetas.
+- un proyecto nuevo puede marcarse como poco sano aunque apenas haya arrancado;
+- la dependencia de `git log` hace que repos sin historial den resultados pobres;
+- el criterio de salud mezcla contexto real con heuristicas simples.
 
-## 10. Inventario de comandos
+Eso no es un error, pero si una decision de producto que conviene documentar bien.
 
-La extension tiene un inventario grande de comandos. Los mas importantes son:
+## 11. Comandos
 
-- `shipone.showWelcome`
-- `shipone.setProjectsRoot`
-- `shipone.openProjectsRoot`
-- `shipone.searchProject`
+La extension expone muchos comandos y ya tiene bastante cobertura de uso real.
+
+### Comandos de creacion y arranque
+
 - `shipone.createProject`
 - `shipone.createSampleIdea`
+- `shipone.setProjectsRoot`
+- `shipone.openProjectsRoot`
 - `shipone.openProjectQuickPick`
-- `shipone.editMvpChecklist`
-- `shipone.markMvpItemDone`
-- `shipone.syncStatusFile`
-- `shipone.connectGithub`
-- `shipone.detectBlockers`
-- `shipone.generateAiContext`
-- `shipone.scanTodos`
-- `shipone.focusMode`
-- `shipone.exitFocusMode`
-- `shipone.weeklyReview`
-- `shipone.freezeProject`
-- `shipone.resumeProject`
+- `shipone.searchProject`
+
+### Comandos de operacion
+
 - `shipone.openProject`
 - `shipone.changeProjectStatus`
 - `shipone.markProjectIdea`
@@ -495,313 +378,259 @@ La extension tiene un inventario grande de comandos. Los mas importantes son:
 - `shipone.markProjectFinished`
 - `shipone.editNextAction`
 - `shipone.clearNextAction`
-- `shipone.openStatusFile`
 - `shipone.toggleFavorite`
+- `shipone.openStatusFile`
 - `shipone.refreshProjects`
 
-### 10.1. Impresion general
+### Comandos de mantenimiento y contexto
 
-Ya hay comandos para:
+- `shipone.editMvpChecklist`
+- `shipone.markMvpItemDone`
+- `shipone.syncStatusFile`
+- `shipone.recoverStorage`
+- `shipone.connectGithub`
+- `shipone.detectBlockers`
+- `shipone.generateAiContext`
 
-- iniciar;
-- organizar;
-- abrir;
-- buscar;
-- cambiar estado;
-- pausar;
-- reanudar;
-- revisar;
-- detectar bloqueos;
-- generar contexto;
-- manejar checklist;
-- sincronizar STATUS;
-- enlazar GitHub;
-- y volver a cargar la UI.
+### Comandos de revision
 
-## 11. Flujo de usuario actual
+- `shipone.scanTodos`
+- `shipone.focusMode`
+- `shipone.exitFocusMode`
+- `shipone.weeklyReview`
+- `shipone.freezeProject`
+- `shipone.resumeProject`
 
-### 11.1. Onboarding
+### Lectura tecnica
 
-En la primera ejecucion:
+El catalogo ya es amplio. El riesgo no es falta de comandos, sino exceso de superficie funcional si no se agrupa mejor la experiencia.
 
-- se muestra bienvenida;
-- se explica la ruta base;
-- se ofrece crear proyecto;
-- se puede crear idea de ejemplo;
-- se puede cambiar carpeta base;
-- se puede conectar GitHub;
-- se puede abrir ajustes.
+## 12. Onboarding
 
-### 11.2. Creacion de proyecto
+### `showFirstRunOnboarding`
 
-El flujo ya no es manual a mano. La extension hace mucho del trabajo:
+El primer arranque muestra una bienvenida con opciones para:
 
-- pide datos basicos;
-- crea la carpeta;
-- genera archivos base;
-- crea metadata;
-- opcionalmente abre el proyecto;
-- opcionalmente crea Git y GitHub.
+- crear proyecto;
+- crear idea de ejemplo;
+- elegir carpeta base;
+- conectar GitHub;
+- abrir ajustes.
 
-### 11.3. Uso diario
+### Hallazgo
 
-Uso esperado:
+El flag `shipone.firstRunSeen` se guarda antes de completar la accion elegida. Eso evita repetir el onboarding, pero tambien hace que si el flujo se interrumpe, el usuario no vuelva a verlo automaticamente.
 
-- abrir ShipOne;
-- ver el proyecto activo;
-- revisar next action;
-- corregir bloqueos;
-- pausar o congelar si hace falta;
-- terminar;
-- marcar finished;
-- revisar metrics y weekly review.
-
-## 12. Sistema de STATUS.md
-
-### 12.1. Papel real
-
-ShipOne usa `STATUS.md` como archivo de soporte contextual.
-
-### 12.2. Capacidades actuales
-
-- se crea automaticamente si la config lo pide;
-- se puede abrir desde ShipOne;
-- se puede sincronizar desde metadata;
-- se puede leer para detectar bloqueadores;
-- se puede usar como parte del AI context.
-
-### 12.3. Estructura esperada
-
-Las secciones clave son:
-
-- Objetivo
-- MVP
-- Proximo paso
-- Bloqueos
-- Proyecto
-- Actualizado
-
-### 12.4. Observacion
-
-`STATUS.md` ya no es decorativo. Forma parte del flujo de producto.
+Es un detalle pequeno, pero real.
 
 ## 13. Integracion con Git y GitHub
 
-### 13.1. Git local
+### `GitService`
 
-ShipOne puede inicializar Git localmente y crear primer commit.
+Hace:
 
-### 13.2. GitHub
+- `git init`
+- `git add .`
+- `git commit -m "chore: initial commit"`
+- `git branch -M main`
 
-ShipOne comprueba:
+### `GithubService`
 
-- si `gh` existe;
-- si `gh` esta autenticado;
-- si el usuario quiere crear repo remoto;
-- si quiere visibilidad privada o publica.
+Hace:
 
-### 13.3. Estado real del entorno
+- comprobar si `gh` existe;
+- comprobar autenticacion;
+- abrir terminal con `gh auth login`;
+- crear repo con `gh repo create`;
+- devolver la URL del repo.
 
-En la auditoria previa se detecto que `gh auth status` no estaba autenticado en este entorno. Por tanto:
+### Dependencias externas
 
-- la integracion esta preparada;
-- pero el flujo remoto depende de autenticacion real;
-- si no hay auth, ShipOne avisa y sigue.
+La integracion funciona, pero depende de:
 
-### 13.4. Riesgo
+- Git instalado;
+- GitHub CLI instalado;
+- GitHub CLI autenticado.
 
-El producto depende de GitHub CLI para el paso remoto. Es correcto, pero conviene documentarlo bien.
+Si falta algo, la extension avisa y sigue, lo cual esta bien para no bloquear el flujo local.
 
-## 14. Bateria de herramientas de producto ya presentes
+## 14. Review de la logica de negocio
 
-ShipOne ya tiene funciones que van mas alla del MVP original:
+### Fortalezas
 
-- buscador de proyectos;
-- checklist MVP;
-- marcar tarea hecha;
-- sincronizacion de STATUS.md;
-- deteccion de bloqueadores;
-- generacion de AI_CONTEXT.md;
-- scan de TODO/FIXME;
-- focus mode;
-- weekly review;
-- freeze / resume;
-- favorito;
-- health hints;
-- metricas;
-- onboarding.
+- el dominio esta bien orientado a un flujo de proyectos reales;
+- la regla de un solo `active` esta bien integrada;
+- hay soporte para `paused`, `finished`, `favorite` y `nextAction`;
+- la persistencia refleja bastante bien el estado de trabajo;
+- la extension conecta UI y datos de forma clara.
 
-## 15. Salud tecnica
+### Fragilidades
 
-### 15.1. Lo bueno
+- `extension.ts` sigue concentrando demasiada responsabilidad;
+- la logica de estado y la logica de UI se cruzan mucho;
+- algunos flujos dependen de varios servicios coordinados sin una capa de orquestacion mas formal;
+- no hay tests visibles para validar reglas criticas.
 
-- La extension compila.
-- Hay separacion por carpetas.
-- Hay persistencia.
-- Hay vista lateral propia.
-- Hay estados.
-- Hay comandos orientados a trabajo real.
-- Hay templates.
-- Hay soporte de Git y GitHub.
+## 15. Calidad de codigo
 
-### 15.2. Lo delicado
+### Lo bueno
 
-- `src/extension.ts` es muy grande.
-- La logica de UI, comandos y reglas sigue bastante concentrada.
-- Hay strings con problemas de codificacion en algunos archivos.
-- Hay bastante comportamiento en una sola capa, lo que complica tests.
+- TypeScript bien usado;
+- tipos de dominio definidos;
+- servicios relativamente pequenos;
+- nombres funcionales y claros;
+- compilacion correcta;
+- separacion por carpetas razonable.
 
-### 15.3. Lo que mas urge a nivel tecnico
+### Lo delicado
 
-1. dividir `extension.ts`.
-2. separar comandos por dominio.
-3. introducir tests basicos para store y parseos.
-4. revisar encoding de textos.
-5. documentar mejor los flujos remotos.
+- `extension.ts` es demasiado central;
+- `ProjectStoreService` hace bastante mas que almacenar;
+- `ProjectCreationService` mezcla UX, validacion, filesystem, Git, GitHub y templates;
+- `TreeRendererService` crea su renderer en cada llamada a `getChildren`;
+- falta una capa de pruebas.
 
-## 16. UX y producto
+## 16. Calidad de texto y codificacion
 
-### 16.1. Lo que transmite la UI
+Se detectaron varios textos con mojibake o codificacion rota en el codigo y en documentos existentes. Ejemplos claros:
 
-ShipOne transmite:
+- textos de visibilidad como `PÃºblico`;
+- separadores como `Ã‚Â·`;
+- algunas cadenas de UI y mensajes traducidos;
+- el propio documento previo de auditoria ya arrastraba esos caracteres.
 
-- orden;
-- foco;
-- estado;
-- progreso;
-- salud;
-- reenganche rapido.
+### Impacto
 
-### 16.2. Lo que ya hace bien
+- la UX se ve afectada;
+- la lectura del codigo empeora;
+- puede dar la sensacion de un producto menos pulido;
+- dificulta futuras traducciones o publicacion en marketplace.
 
-- no obliga a salir de VS Code;
-- da contexto rapido;
-- evita proyectos invisibles;
-- ayuda a no dejar proyectos abandonados;
-- pone la next action en primer plano;
-- hace visible lo que esta estancado.
+### Prioridad
 
-### 16.3. Lo que podria mejorar despues
+Alta. Es una deuda visible para el usuario final.
 
-- simplificar comandos en exceso;
-- evitar duplicidad entre barra lateral y comandos sueltos;
-- hacer mas clara la diferencia entre idea, activo, pausado y terminado;
-- reducir el ruido de opciones al crear proyecto;
-- mejorar empty states y mensajes de ayuda.
+## 17. Hallazgos principales
 
-## 17. Documentacion y branding
+### Critico
 
-### 17.1. README actual
+Ninguno que impida el funcionamiento actual inmediato.
 
-El README ya describe:
+### Alto
 
-- que hace ShipOne;
-- flujo rapido;
-- comandos utiles;
-- configuracion;
-- desarrollo;
-- notas.
+1. `extension.ts` acumula demasiada responsabilidad y ya merece division por dominios.
+2. Hay textos con codificacion rota en varias partes de la UI y utilidades.
+3. `node-api` existe, pero no esta expuesto en los flujos principales de creacion y busqueda.
 
-### 17.2. Branding actual
+### Medio
 
-Los assets presentes en `media/branding/` incluyen:
+1. La persistencia recupera silenciosamente a lista vacia en algunos fallos, lo que puede ocultar problemas de datos.
+2. El sistema de salud depende de heuristicas simples y de Git, lo que puede generar falsos negativos en proyectos nuevos.
+3. El onboarding marca la primera ejecucion como vista antes de completar la accion elegida.
+4. La UI del arbol es rica pero puede quedar demasiado cargada cuando hay muchos proyectos.
 
-- banner.png
-- icon.png
-- icon-16.png
-- icon-24.png
-- icon-32.png
-- icon-48.png
-- icon-64.png
-- icon-128.png
-- icon-256.png
-- icon-512.png
-- logo.svg
-- logo-transparent.png
-- marketplace-preview.png
+### Bajo
 
-### 17.3. Implicacion
+1. `TreeRendererService` recrea el renderer en cada llamada.
+2. Hay mensajes y descripciones duplicadas entre tooltip, description y warnings.
+3. Falta un set de tests basicos para reglas criticas.
 
-ShipOne ya esta pensado para verse como producto, no solo como prototipo interno.
+## 18. Fortalezas del producto
 
-## 18. Riesgos y deuda detectada
+ShipOne ya tiene una identidad de producto bastante clara:
 
-### 18.1. Riesgos de mantenibilidad
+- foco en terminar proyectos;
+- vista visual propia;
+- estados comprensibles;
+- contexto util para IA;
+- soporte para pausas y reanudacion;
+- integracion opcional con Git/GitHub;
+- revision rapida del estado del trabajo.
 
-- `extension.ts` demasiado grande.
-- mezcla de UI, reglas, lectura de archivos, comandos y flujo de onboarding.
-- duplicidad de patrones para seleccionar proyecto.
+Esto es importante: la extension no parece improvisada. Ya tiene una propuesta de valor reconocible.
 
-### 18.2. Riesgos de consistencia
+## 19. Debilidad estructural principal
 
-- varios mensajes y strings siguen con codificacion rota en algunos archivos.
-- el modelo y la UI han evolucionado bastante, pero no todos los archivos probablemente estan igual de pulidos.
+La debilidad mas clara es la concentracion de responsabilidad:
 
-### 18.3. Riesgos de producto
+- `src/extension.ts` coordina demasiadas cosas;
+- los servicios crecen con logica de producto;
+- los comandos ya son muchos;
+- la UX lateral tiene bastante densidad.
 
-- demasiada amplitud funcional puede diluir el objetivo principal;
-- ShipOne podria parecer un “todo en uno” si no se sigue defendiendo la idea central: terminar proyectos.
+No es un problema de que el proyecto este mal hecho. Es un problema natural de crecimiento. Pero si no se corrige, el mantenimiento sera mas caro con cada feature nueva.
 
-### 18.4. Riesgos de dependencia externa
+## 20. Recomendaciones priorizadas
 
-- `gh` necesario para GitHub remoto;
-- Git necesario para health y commit inicial;
-- algunas funciones de salud dependen de que el proyecto tenga historial Git real.
+### Inmediatas
 
-## 19. Lo que ya se puede considerar cubierto
+1. Corregir la codificacion de textos y cadenas visibles.
+2. Exponer `node-api` en los flujos de UI si realmente es parte del producto.
+3. Separar `extension.ts` por dominios o coordinadores mas pequenos.
 
-ShipOne ya cubre razonablemente:
+### Corto plazo
 
-- crear proyecto;
-- abrir proyecto;
-- buscar proyecto;
-- cambiar estado;
-- mantener un solo activo;
-- next action;
-- marcar terminado;
-- favorecer proyectos;
-- abrir STATUS.md;
-- guardar metadata;
-- persistir entre reinicios;
-- mostrar proyectos por estado;
-- generar un contexto para IA;
-- detectar TODO/FIXME;
-- detectar bloqueadores;
-- dar seguimiento a la salud del proyecto.
+1. Crear tests para `ProjectStoreService`, parseo de metadata y utilidades de estado.
+2. Mejorar la politica de recuperacion de datos corruptos.
+3. Reducir duplicacion entre tooltip, description y mensajes.
 
-## 20. Lo que sigue pendiente para una version realmente publicable
+### Medio plazo
 
-- tests automatizados;
-- refactor grande de `extension.ts`;
-- documentacion publica final;
-- checklist de instalacion y uso;
-- screenshots y capturas reales;
-- pulido de textos y codificacion;
-- definicion exacta de MVP frente a features secundarias;
-- revisiones cross-platform;
-- estrategia de release;
-- validacion de que la extension sigue siendo simple de usar.
+1. Simplificar la experiencia de la vista lateral.
+2. Revisar si todos los comandos siguen siendo necesarios.
+3. Definir mejor el MVP frente a features secundarias.
 
-## 21. Lectura final
+### Largo plazo
 
-ShipOne ya es un producto mucho mas serio de lo que era al principio. Tiene una base real y una historia clara:
+1. Formalizar migraciones de datos.
+2. Mejorar observabilidad y diagnostico.
+3. Preparar el proyecto para release publico con textos, capturas y flujo de instalacion mas pulidos.
 
-- proyectos;
-- foco;
-- siguiente accion;
-- estados;
-- cierre;
-- reenganche;
-- salud;
-- contexto;
-- y apoyo visual dentro de VS Code.
+## 21. Estado de documentacion y branding
 
-La siguiente fase no deberia ser “meter mas cosas porque si”, sino:
+### Documentacion
 
-- ordenar;
-- probar;
-- reducir ruido;
-- reforzar el objetivo de terminar proyectos;
-- dejarlo listo para usar y entender rapido.
+El repo ya tiene:
 
-Si esta auditoria se pasa a otra IA, la clave no es que vea una extension “grande”, sino que entienda que ShipOne es un sistema para convertir proyectos abiertos en proyectos terminados.
+- `README.md`
+- `STATUS.md`
+- `shipone_dossier_checklist.md`
+- `docs/shipone-roadmap-public-release.md`
+- este archivo de auditoria
+
+### Branding
+
+En `media/branding/` hay un set completo de imagenes y recursos visuales:
+
+- iconos en varios tamanos;
+- `banner.png`;
+- `logo.svg`;
+- `logo-transparent.png`;
+- `marketplace-preview.png`.
+
+Eso indica que el proyecto ya piensa en presentacion, no solo en funcionalidad interna.
+
+## 22. Conclusiones
+
+ShipOne ya es una extension con base real y con una propuesta de valor concreta.
+
+Lo mejor:
+
+- tiene logica de producto clara;
+- tiene UI propia;
+- tiene persistencia;
+- tiene flujos completos de creacion y seguimiento;
+- compila correctamente;
+- ya soporta muchos escenarios de uso real.
+
+Lo que mas urge:
+
+- limpiar la codificacion rota;
+- bajar la complejidad de `extension.ts`;
+- exponer mejor `node-api` si realmente forma parte del producto;
+- añadir pruebas basicas;
+- pulir la experiencia visual.
+
+Lectura final:
+
+ShipOne ya no necesita mas "ideas". Necesita orden, pulido y control de calidad para consolidarse como una extension seria para seguir y terminar proyectos dentro de VS Code.
