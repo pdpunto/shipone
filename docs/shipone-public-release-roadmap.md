@@ -199,7 +199,7 @@ Goal: make ShipOne feel simple, modern, and professional.
 - [x] Reduce unnecessary prompts
 - [x] Improve defaults
 - [x] Improve placeholders
-- [ ] Improve project type selection
+- [x] Improve project type selection
 - [x] Expose `node-api` properly
 - [ ] Add project type descriptions
 

@@ -13,11 +13,31 @@ import type { ProjectContextService } from "./projectContextService";
 import type { StatusFileService } from "./statusFileService";
 
 const PROJECT_TYPES = [
-  { label: t(k.projectCreation.blank), value: "blank" },
-  { label: t(k.projectCreation.reactVite), value: "react-vite" },
-  { label: t(k.projectCreation.nextJs), value: "nextjs" },
-  { label: t(k.projectCreation.python), value: "python" },
-  { label: t(k.projectCreation.nodeApi), value: "node-api" },
+  {
+    label: t(k.projectCreation.blank),
+    description: t(k.projectCreation.blankDescription),
+    value: "blank",
+  },
+  {
+    label: t(k.projectCreation.reactVite),
+    description: t(k.projectCreation.reactViteDescription),
+    value: "react-vite",
+  },
+  {
+    label: t(k.projectCreation.nextJs),
+    description: t(k.projectCreation.nextJsDescription),
+    value: "nextjs",
+  },
+  {
+    label: t(k.projectCreation.python),
+    description: t(k.projectCreation.pythonDescription),
+    value: "python",
+  },
+  {
+    label: t(k.projectCreation.nodeApi),
+    description: t(k.projectCreation.nodeApiDescription),
+    value: "node-api",
+  },
 ] as const;
 
 type GitChoice = { label: string; value: boolean; picked?: boolean };
@@ -230,6 +250,7 @@ export class ProjectCreationService {
     const choice = await vscode.window.showQuickPick(choices, {
       title: t(k.projectCreation.projectType),
       placeHolder: t(k.common.chooseStarter),
+      matchOnDescription: true,
     });
 
     return choice?.value as ShipOneSettings["defaultProjectType"] | undefined;
