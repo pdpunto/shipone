@@ -91,7 +91,7 @@ Goal: reduce technical debt and make the extension easier to maintain.
 - [x] Add metadata schema validation
 - [x] Add schema versioning
 - [x] Add migration support
-- [ ] Normalize project metadata consistently
+- [x] Normalize project metadata consistently
 
 ### 1.6 Storage Reliability
 

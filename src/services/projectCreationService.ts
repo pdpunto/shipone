@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { randomUUID } from "crypto";
 import { t } from "../localization";
 import type { ProjectMetadata, ProjectStatus } from "../models/project";
+import { createProjectMetadata } from "../models/projectValidation";
 import type { ShipOneSettings } from "../models/settings";
 import type { ProjectStoreService } from "./projectStoreService";
 import { GitService } from "./gitService";
@@ -118,7 +119,7 @@ export class ProjectCreationService {
     await this.projectStore.createProjectFolder(folderUri);
 
     // Guardamos la metadata antes de tocar servicios externos para que el proyecto ya exista en ShipOne.
-    const project: ProjectMetadata = {
+    const project = createProjectMetadata({
       id: randomUUID(),
       name,
       description,
@@ -128,14 +129,7 @@ export class ProjectCreationService {
       repoUrl: null,
       createdAt: new Date().toISOString(),
       lastOpenedAt: new Date().toISOString(),
-      finishedAt: null,
-      nextAction: null,
-      favorite: false,
-      tags: [],
-      mvpTasks: [],
-      pauseReason: null,
-      pauseNote: null,
-    };
+    });
 
     if (settings.createStatusFileByDefault) {
       await this.statusFileService.syncStatusFile(project);
@@ -220,7 +214,7 @@ export class ProjectCreationService {
     await this.projectStore.createProjectFolder(folderUri);
 
     // La idea de ejemplo usa la misma forma que un proyecto real para que el resto del flujo no cambie.
-    const project: ProjectMetadata = {
+    const project = createProjectMetadata({
       id: randomUUID(),
       name,
       description,
@@ -230,14 +224,7 @@ export class ProjectCreationService {
       repoUrl: null,
       createdAt: new Date().toISOString(),
       lastOpenedAt: new Date().toISOString(),
-      finishedAt: null,
-      nextAction: null,
-      favorite: false,
-      tags: [],
-      mvpTasks: [],
-      pauseReason: null,
-      pauseNote: null,
-    };
+    });
 
     if (settings.createStatusFileByDefault) {
       await this.statusFileService.syncStatusFile(project);

@@ -33,6 +33,25 @@ export function isProjectMetadata(value: unknown): value is ProjectMetadata {
   return hasProjectMetadataSchema(value as ProjectMetadataInput);
 }
 
+export function createProjectMetadata(
+  project: Omit<ProjectMetadata, "schemaVersion"> & {
+    schemaVersion?: number;
+  }
+): ProjectMetadata {
+  return normalizeProjectMetadata({
+    schemaVersion: PROJECT_SCHEMA_VERSION,
+    repoUrl: null,
+    finishedAt: null,
+    nextAction: null,
+    favorite: false,
+    tags: [],
+    mvpTasks: [],
+    pauseReason: null,
+    pauseNote: null,
+    ...project,
+  }) as ProjectMetadata;
+}
+
 export function normalizeProjectMetadata(
   value: unknown
 ): ProjectMetadata | undefined {

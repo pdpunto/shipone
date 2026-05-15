@@ -5,6 +5,7 @@ const { filterProjectsByName, filterProjectsByTag, buildProjectDetail } = requir
 const { parseMvpTasks, getFinishedThisWeek, isStaleProject } = require("../out/utils/projectReview");
 const {
   isProjectMetadata,
+  createProjectMetadata,
   normalizeProjectMetadata,
   normalizeProjectListWithDiagnostics,
 } = require("../out/models/projectValidation");
@@ -92,6 +93,24 @@ test("normalizeProjectMetadata migra schema viejo", () => {
   assert.ok(project);
   assert.equal(project.schemaVersion, 2);
   assert.deepEqual(project.tags, ["ui"]);
+});
+
+test("createProjectMetadata fija valores base", () => {
+  const project = createProjectMetadata({
+    id: "p1",
+    name: "ShipOne",
+    description: "Test",
+    type: "blank",
+    status: "idea",
+    path: "/tmp/shipone",
+    createdAt: "2026-05-15T00:00:00.000Z",
+  });
+
+  assert.equal(project.schemaVersion, 2);
+  assert.equal(project.favorite, false);
+  assert.deepEqual(project.tags, []);
+  assert.deepEqual(project.mvpTasks, []);
+  assert.equal(project.repoUrl, null);
 });
 
 test("normalizeProjectListWithDiagnostics marca corrupcion", () => {
