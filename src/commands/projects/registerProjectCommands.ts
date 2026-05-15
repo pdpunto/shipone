@@ -1,5 +1,6 @@
 ﻿import * as vscode from "vscode";
 import { t } from "../../localization";
+import { translationKeys as k } from "../../localization/keys";
 import type { ProjectMetadata, ProjectStatus } from "../../models/project";
 import type { ShipOneSettings } from "../../models/settings";
 import type { ProjectStoreService } from "../../services/projectStoreService";
@@ -18,10 +19,10 @@ const COMMAND_CLEAR_NEXT_ACTION = "shipone.clearNextAction";
 const COMMAND_TOGGLE_FAVORITE = "shipone.toggleFavorite";
 
 const STATUS_PICKERS: Array<{ label: string; value: ProjectStatus }> = [
-  { label: t("Idea"), value: "idea" },
-  { label: t("Active"), value: "active" },
-  { label: t("Paused"), value: "paused" },
-  { label: t("Finished"), value: "finished" },
+  { label: t(k.projectStatus.idea), value: "idea" },
+  { label: t(k.projectStatus.active), value: "active" },
+  { label: t(k.projectStatus.paused), value: "paused" },
+  { label: t(k.projectStatus.finished), value: "finished" },
 ];
 
 export function registerProjectCommands(options: {
@@ -78,7 +79,7 @@ export function registerProjectCommands(options: {
 
       const statusChoice = await vscode.window.showQuickPick(STATUS_PICKERS, {
         title: t("Estado"),
-        placeHolder: t("Elige el nuevo estado"),
+        placeHolder: t(k.common.chooseNewStatus),
       });
 
       if (!statusChoice) {

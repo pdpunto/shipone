@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `Translate QuickPick labels`.
+Seguir con `Translate placeholders`.
 
 ## Bloqueos
 - Ninguno por ahora

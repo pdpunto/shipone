@@ -61,7 +61,7 @@ export function registerReviewCommands(options: {
         })),
         {
           title: t("TODOs en {0}", project.name),
-          placeHolder: t("Elige un hallazgo"),
+          placeHolder: t(k.common.chooseTask),
           matchOnDescription: true,
           matchOnDetail: true,
         }
@@ -140,13 +140,13 @@ export function registerReviewCommands(options: {
       if (activeProject && isStaleProject(activeProject)) {
         const choice = await vscode.window.showQuickPick(
           [
-            { label: t("Mantener activo"), value: "keep" },
-            { label: t("Pasar a pausado"), value: "pause" },
-            { label: t("Marcar terminado"), value: "finish" },
+            { label: t(k.common.keepActive), value: "keep" },
+            { label: t(k.common.pause), value: "pause" },
+            { label: t(k.common.finish), value: "finish" },
           ],
           {
             title: t("Proyecto activo viejo"),
-            placeHolder: t("Que hacemos con este proyecto"),
+            placeHolder: t(k.common.whatToDo),
           }
         );
 
@@ -191,7 +191,7 @@ export function registerReviewCommands(options: {
       const reason = await vscode.window.showInputBox({
         title: t("Congelar proyecto"),
         prompt: t("Motivo de la pausa"),
-        placeHolder: t("Esperando feedback"),
+        placeHolder: t(k.common.waitingFeedback),
       });
 
       if (reason === undefined || !reason.trim()) {
@@ -201,7 +201,7 @@ export function registerReviewCommands(options: {
       const nextAction = await vscode.window.showInputBox({
         title: t("Siguiente accion"),
         prompt: t("Que haras al volver"),
-        placeHolder: t("Revisar login"),
+        placeHolder: t(k.common.reviewLogin),
         value: project.nextAction ?? "",
       });
 
@@ -212,7 +212,7 @@ export function registerReviewCommands(options: {
       const note = await vscode.window.showInputBox({
         title: t("Nota de pausa"),
         prompt: t("Nota corta para recordar contexto"),
-        placeHolder: t("Bloqueado por dependencias externas"),
+        placeHolder: t(k.common.blockedByExternalDeps),
         value: project.pauseNote ?? "",
       });
 

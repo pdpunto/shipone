@@ -298,7 +298,7 @@ export class ProjectCreationService {
 
     const choice = await vscode.window.showQuickPick(choices, {
         title: t(k.projectCreation.projectType),
-        placeHolder: t("Elige un starter"),
+        placeHolder: t(k.common.chooseStarter),
     });
 
     return choice?.value as ShipOneSettings["defaultProjectType"] | undefined;
@@ -309,8 +309,8 @@ export class ProjectCreationService {
   ): Promise<GitChoice | undefined> {
     return vscode.window.showQuickPick<GitChoice>(
       [
-        { label: t("Si"), value: true, picked: defaultGitRepoByDefault },
-        { label: t("No"), value: false, picked: !defaultGitRepoByDefault },
+        { label: t(k.common.yes), value: true, picked: defaultGitRepoByDefault },
+        { label: t(k.common.no), value: false, picked: !defaultGitRepoByDefault },
       ],
       {
         title: t("Git local"),
@@ -343,17 +343,17 @@ export class ProjectCreationService {
       picked?: boolean;
     }> = [
       {
-        label: t("npm"),
+        label: t(k.common.npm),
         value: "npm",
         picked: defaultPackageManager === "npm",
       },
       {
-        label: t("pnpm"),
+        label: t(k.common.pnpm),
         value: "pnpm",
         picked: defaultPackageManager === "pnpm",
       },
       {
-        label: t("yarn"),
+        label: t(k.common.yarn),
         value: "yarn",
         picked: defaultPackageManager === "yarn",
       },
@@ -361,7 +361,7 @@ export class ProjectCreationService {
 
     const choice = await vscode.window.showQuickPick(choices, {
       title: t(k.projectCreation.packageManager),
-      placeHolder: t("Elige una opcion"),
+      placeHolder: t(k.common.chooseOption),
     });
 
     return choice?.value;
@@ -407,7 +407,7 @@ export class ProjectCreationService {
 
     const visibility = await vscode.window.showQuickPick(visibilityOptions, {
       title: t(k.projectCreation.visibility),
-      placeHolder: t("Privado o público?"),
+      placeHolder: t(k.common.privateOrPublic),
     });
 
     if (!visibility) {

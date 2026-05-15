@@ -20,7 +20,7 @@ const COMMAND_SEARCH_PROJECT = "shipone.searchProject";
 const COMMAND_OPEN_PROJECT = "shipone.openProject";
 
 const PROJECT_TYPE_PICKERS: Array<{ label: string; value: string | null }> = [
-  { label: t("Todos"), value: null },
+  { label: t(k.common.all), value: null },
   { label: t(k.projectCreation.blank), value: "blank" },
   { label: t(k.projectCreation.reactVite), value: "react-vite" },
   { label: t(k.projectCreation.nextJs), value: "nextjs" },
