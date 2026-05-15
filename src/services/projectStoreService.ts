@@ -48,13 +48,14 @@ export class ProjectStoreService {
     try {
       const recovered = await this.readProjectsFromUri(this.backupFileUri);
       await this.saveProjects(recovered.projects, false);
-      this.logInfo("Recuperación completada desde backup.");
+      this.logInfo("Recuperacion completada desde backup.", {
+        source: this.formatLocation(this.backupFileUri),
+      });
       return true;
     } catch (error) {
-      this.logError(
-        "No se pudo recuperar el almacenamiento desde backup.",
-        error
-      );
+      this.logError("No se pudo recuperar el almacenamiento desde backup.", error, {
+        source: this.formatLocation(this.backupFileUri),
+      });
       return false;
     }
   }
@@ -309,14 +310,21 @@ export class ProjectStoreService {
     try {
       return await this.readProjectsFromUri(this.storageFileUri);
     } catch (error) {
-      this.logError("Falló la lectura del almacenamiento principal.", error);
+      this.logError("Fallo la lectura del almacenamiento principal.", error, {
+        source: this.formatLocation(this.storageFileUri),
+        fallback: this.formatLocation(this.backupFileUri),
+      });
       try {
         const recovered = await this.readProjectsFromUri(this.backupFileUri);
         await this.saveProjects(recovered.projects, false);
-        this.logInfo("Se recuperó el almacenamiento desde el backup.");
+        this.logInfo("Se recupero el almacenamiento desde el backup.", {
+          source: this.formatLocation(this.backupFileUri),
+        });
         return recovered;
       } catch (backupError) {
-        this.logError("Falló también la lectura del backup.", backupError);
+        this.logError("Fallo tambien la lectura del backup.", backupError, {
+          source: this.formatLocation(this.backupFileUri),
+        });
         return { projects: [], version: STORAGE_VERSION };
       }
     }
@@ -373,10 +381,9 @@ export class ProjectStoreService {
       return JSON.parse(trimmed) as unknown;
     } catch (error) {
       const location = this.formatLocation(uri);
-      this.logError(
-        `JSON invalido en ${location}. Se intentara recuperacion.`,
-        error
-      );
+      this.logError("JSON invalido. Se intentara recuperacion.", error, {
+        source: location,
+      });
       throw new Error(`JSON invalido en ${location}.`);
     }
   }
@@ -394,13 +401,36 @@ export class ProjectStoreService {
     }
   }
 
-  private logInfo(message: string): void {
-    this.outputChannel.appendLine(`[info] ${message}`);
+  private logInfo(
+    message: string,
+    details?: Record<string, string | number | boolean | null | undefined>
+  ): void {
+    this.outputChannel.appendLine(this.formatLogLine("info", message, details));
   }
 
-  private logError(message: string, error: unknown): void {
+  private logError(
+    message: string,
+    error: unknown,
+    details?: Record<string, string | number | boolean | null | undefined>
+  ): void {
     const detail = error instanceof Error ? error.message : String(error);
-    this.outputChannel.appendLine(`[error] ${message}`);
-    this.outputChannel.appendLine(detail);
+    this.outputChannel.appendLine(
+      this.formatLogLine("error", message, {
+        ...details,
+        error: detail,
+      })
+    );
+  }
+
+  private formatLogLine(
+    level: "info" | "error",
+    message: string,
+    details?: Record<string, string | number | boolean | null | undefined>
+  ): string {
+    if (!details) {
+      return `[${level}] ${message}`;
+    }
+
+    return `[${level}] ${message} ${JSON.stringify(details)}`;
   }
 }

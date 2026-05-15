@@ -100,7 +100,7 @@ Goal: reduce technical debt and make the extension easier to maintain.
 - [x] Restore from backup automatically
 - [x] Add recovery flow
 - [ ] Add migration system
-- [ ] Add structured error logging
+- [x] Add structured error logging
 - [ ] Add safe write strategy
 - [ ] Add atomic save strategy
 - [ ] Prevent partial project corruption
