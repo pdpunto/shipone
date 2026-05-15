@@ -45,6 +45,8 @@ test("package.nls.es.json traduce foco", () => {
 test("package.nls.es.json traduce revision semanal", () => {
   const es = readJson("package.nls.es.json");
   const oAcute = String.fromCharCode(0x00f3);
+  const aAcute = String.fromCharCode(0x00e1);
+  const eAcute = String.fromCharCode(0x00e9);
 
   assert.equal(
     es["command.weeklyReview.title"],
@@ -57,6 +59,23 @@ test("package.nls.es.json traduce revision semanal", () => {
   );
   assert.equal(es["Revisar login"], "Revisar inicio de sesi\u00f3n");
   assert.equal(es["## Next action"], `## Siguiente acci${oAcute}n`);
+});
+
+test("package.nls.es.json traduce congelar y reanudar", () => {
+  const es = readJson("package.nls.es.json");
+  const aAcute = String.fromCharCode(0x00e1);
+  const eAcute = String.fromCharCode(0x00e9);
+
+  assert.equal(es["command.freezeProject.title"], "ShipOne: Congelar proyecto");
+  assert.equal(es["command.resumeProject.title"], "ShipOne: Reanudar proyecto");
+  assert.equal(es["Congelar proyecto"], "Congelar proyecto");
+  assert.equal(es["Motivo de la pausa"], "Motivo de la pausa");
+  assert.equal(es["Que haras al volver"], `Qu${eAcute} har${aAcute}s al volver`);
+  assert.equal(es["Nota de pausa"], "Nota de pausa");
+  assert.equal(es["Proyecto congelado: {0}."], "Proyecto congelado: {0}.");
+  assert.equal(es["Pausado"], "Pausado");
+  assert.equal(es["Reanudar proyecto"], "Reanudar proyecto");
+  assert.equal(es["Proyecto reanudado: {0}."], "Proyecto reanudado: {0}.");
 });
 
 test("package.nls.es.json traduce metricas", () => {
