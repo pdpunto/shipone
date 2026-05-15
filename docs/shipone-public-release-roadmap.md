@@ -187,7 +187,7 @@ Goal: make ShipOne feel simple, modern, and professional.
 - [x] Simplify project descriptions
 - [x] Reduce repeated warnings
 - [x] Improve hierarchy
-- [ ] Improve status visibility
+- [x] Improve status visibility
 - [ ] Improve inactive project warnings
 - [ ] Improve project health display
 

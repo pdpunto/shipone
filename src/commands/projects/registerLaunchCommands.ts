@@ -254,7 +254,7 @@ export function registerLaunchCommands(options: {
       const choice = await vscode.window.showQuickPick(
         projects.map((project) => ({
           label: project.name,
-          description: project.status,
+          description: t("Estado: {0}", renderProjectStatus(project.status)),
           detail: buildProjectDetail(project),
           project,
         })),
@@ -285,4 +285,19 @@ export function registerLaunchCommands(options: {
     createSampleIdeaCommand,
     openProjectQuickPickCommand,
   ];
+}
+
+function renderProjectStatus(status: string): string {
+  switch (status) {
+    case "active":
+      return t(k.projectStatus.active);
+    case "idea":
+      return t(k.projectStatus.idea);
+    case "paused":
+      return t(k.projectStatus.paused);
+    case "finished":
+      return t(k.projectStatus.finished);
+    default:
+      return status;
+  }
 }
