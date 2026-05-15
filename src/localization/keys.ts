@@ -4,6 +4,17 @@ export const translationKeys = {
     nextStep: "## Proximo paso",
     nextStepBullet: "- Define el primer objetivo.",
   },
+  health: {
+    healthy: "healthy",
+    warning: "warning",
+    bad: "bad",
+  },
+  issue: {
+    missingNextAction: "Falta el siguiente paso",
+    inactiveActive: "Proyecto activo inactivo",
+    noReadme: "Falta README",
+    noRecentCommits: "Sin commits recientes",
+  },
   common: {
     yes: "Si",
     no: "No",

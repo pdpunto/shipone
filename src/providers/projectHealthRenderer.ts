@@ -1,4 +1,5 @@
 import { t } from "../localization";
+import { translationKeys as k } from "../localization/keys";
 import type { ProjectMetadata } from "../models/project";
 import type { ProjectHealth } from "../services/projectHealthService";
 import { formatProjectType, getMvpProgress } from "./treeNodes/shared";
@@ -31,12 +32,12 @@ export class ProjectHealthRenderer {
 }
 
 function renderHealthLabel(label: ProjectHealth["label"]): string {
-  switch (label) {
-    case "healthy":
-      return t("saludable");
-    case "warning":
-      return t("con avisos");
-    case "bad":
-      return t("critico");
-  }
+    switch (label) {
+      case "healthy":
+        return t(k.health.healthy);
+      case "warning":
+        return t(k.health.warning);
+      case "bad":
+        return t(k.health.bad);
+    }
 }

@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { t } from "../localization";
+import { translationKeys as k } from "../localization/keys";
 import type { ProjectMetadata } from "../models/project";
 import type { ProjectHealth } from "../services/projectHealthService";
 
@@ -80,24 +81,24 @@ function buildMarkdownTooltip(lines: Array<string | undefined>): vscode.Markdown
 function renderHealthLabel(label: ProjectHealth["label"]): string {
   switch (label) {
     case "healthy":
-      return t("saludable");
+      return t(k.health.healthy);
     case "warning":
-      return t("con avisos");
+      return t(k.health.warning);
     case "bad":
-      return t("critico");
+      return t(k.health.bad);
   }
 }
 
 function renderIssueLabel(issue: string): string {
   switch (issue) {
     case "missing-next-action":
-      return t("Falta el siguiente paso");
+      return t(k.issue.missingNextAction);
     case "inactive-active":
-      return t("Proyecto activo inactivo");
+      return t(k.issue.inactiveActive);
     case "no-readme":
-      return t("Falta README");
+      return t(k.issue.noReadme);
     case "no-recent-commits":
-      return t("Sin commits recientes");
+      return t(k.issue.noRecentCommits);
     default:
       return issue;
   }
