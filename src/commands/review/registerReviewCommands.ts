@@ -126,7 +126,7 @@ export function registerReviewCommands(options: {
         const nextAction = await vscode.window.showInputBox({
           title: t("Weekly review"),
           prompt: t("Siguiente accion para el proyecto activo"),
-          placeHolder: t(k.common.finishLoginPlaceholder),
+          placeHolder: t("Escribe el siguiente paso"),
         });
 
         if (nextAction !== undefined) {
@@ -194,7 +194,7 @@ export function registerReviewCommands(options: {
       const reason = await vscode.window.showInputBox({
         title: t("Congelar proyecto"),
         prompt: t("Motivo de la pausa"),
-        placeHolder: t(k.common.waitingFeedback),
+        placeHolder: t("Esperando feedback"),
       });
 
       if (reason === undefined || !reason.trim()) {
@@ -204,7 +204,7 @@ export function registerReviewCommands(options: {
       const nextAction = await vscode.window.showInputBox({
         title: t("Siguiente accion"),
         prompt: t("Que haras al volver"),
-        placeHolder: t(k.common.reviewLogin),
+        placeHolder: t("Retomar login"),
         value: project.nextAction ?? "",
       });
 
@@ -215,7 +215,7 @@ export function registerReviewCommands(options: {
       const note = await vscode.window.showInputBox({
         title: t("Nota de pausa"),
         prompt: t("Nota corta para recordar contexto"),
-        placeHolder: t(k.common.blockedByExternalDeps),
+        placeHolder: t("Bloqueado por dependencias externas"),
         value: project.pauseNote ?? "",
       });
 

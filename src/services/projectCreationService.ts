@@ -57,7 +57,7 @@ export class ProjectCreationService {
     // Primero recogemos la forma minima del proyecto; lo demas depende de esas elecciones.
     const name = await vscode.window.showInputBox({
       prompt: t(k.projectCreation.projectNamePrompt),
-      placeHolder: t(k.common.projectNamePlaceholder),
+      placeHolder: t("my-saas-app"),
       validateInput: validateProjectName,
     });
 
@@ -73,7 +73,7 @@ export class ProjectCreationService {
     const description =
       (await vscode.window.showInputBox({
         prompt: t(k.projectCreation.projectDescriptionPrompt),
-        placeHolder: t(k.common.projectDescriptionPlaceholder),
+        placeHolder: t("Proyecto simple para ShipOne"),
       })) ?? "";
 
     const gitChoice = await this.pickGitChoiceWithDefault(

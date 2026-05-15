@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `Improve placeholders`.
+Seguir con `Improve project type selection`.
 
 ## Bloqueos
 - Ninguno por ahora
