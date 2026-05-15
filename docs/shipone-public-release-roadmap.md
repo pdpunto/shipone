@@ -48,15 +48,15 @@ Goal: reduce technical debt and make the extension easier to maintain.
 
 ### 1.1 Extension Architecture
 
-- [ ] Reduce `src/extension.ts` to bootstrap only
+- [x] Reduce `src/extension.ts` to bootstrap only
 - [ ] Move command registration by domain
 - [ ] Extract domain coordinators
 - [ ] Centralize startup flow
-- [ ] Remove business logic from `extension.ts`
+- [x] Remove business logic from `extension.ts`
 
 ### 1.2 Commands
 
-- [ ] Keep `commands/projects/`
+- [x] Keep `commands/projects/`
 - [ ] Add `commands/status/`
 - [ ] Add `commands/focus/`
 - [ ] Add `commands/review/`
@@ -66,22 +66,22 @@ Goal: reduce technical debt and make the extension easier to maintain.
 
 ### 1.3 Services
 
-- [ ] Keep `GitService`
-- [ ] Keep `GithubService`
-- [ ] Keep `TemplateService`
-- [ ] Keep `StatusFileService`
-- [ ] Keep `ProjectHealthService`
-- [ ] Keep `TodoScannerService`
+- [x] Keep `GitService`
+- [x] Keep `GithubService`
+- [x] Keep `TemplateService`
+- [x] Keep `StatusFileService`
+- [x] Keep `ProjectHealthService`
+- [x] Keep `TodoScannerService`
 - [ ] Add `ProjectRecoveryService`
 - [ ] Add a clearer `LocalizationService`
 
 ### 1.4 UI
 
 - [ ] Split tree nodes into separate files
-- [ ] Keep a dedicated tree renderer
-- [ ] Keep icon provider
-- [ ] Keep tooltip provider
-- [ ] Keep health renderer
+- [x] Keep a dedicated tree renderer
+- [x] Keep icon provider
+- [x] Keep tooltip provider
+- [x] Keep health renderer
 - [ ] Reduce duplicated tooltip content
 - [ ] Reduce sidebar density
 
@@ -125,24 +125,24 @@ Goal: make ShipOne render correctly in every supported environment.
 ### 2.1 Encoding Cleanup
 
 - [ ] Convert all files to UTF-8
-- [ ] Fix mojibake
+- [x] Fix mojibake
 - [ ] Fix broken accents
-- [ ] Fix broken separators
+- [x] Fix broken separators
 - [ ] Validate JSON encoding
 - [ ] Validate markdown encoding
 - [ ] Validate TypeScript encoding
 
 ### 2.2 VS Code Localization
 
-- [ ] Add `package.nls.json`
-- [ ] Add `package.nls.es.json`
+- [x] Add `package.nls.json`
+- [x] Add `package.nls.es.json`
 - [ ] Add more locale files later if needed
-- [ ] Localize extension name
-- [ ] Localize extension description
-- [ ] Localize commands
-- [ ] Localize menus
-- [ ] Localize settings
-- [ ] Localize configuration descriptions
+- [x] Localize extension name
+- [x] Localize extension description
+- [x] Localize commands
+- [x] Localize menus
+- [x] Localize settings
+- [x] Localize configuration descriptions
 - [ ] Localize walkthrough titles
 
 ### 2.3 Runtime UI Localization
@@ -198,7 +198,7 @@ Goal: make ShipOne feel simple, modern, and professional.
 - [ ] Improve defaults
 - [ ] Improve placeholders
 - [ ] Improve project type selection
-- [ ] Expose `node-api` properly
+- [x] Expose `node-api` properly
 - [ ] Add project type descriptions
 
 ### 3.3 Focus UX
