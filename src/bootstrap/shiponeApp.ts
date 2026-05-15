@@ -4,6 +4,7 @@ import { registerProjectCommands } from "../commands/projects/registerProjectCom
 import { registerLaunchCommands } from "../commands/projects/registerLaunchCommands";
 import { registerProjectOpsCommands } from "../commands/projects/registerProjectOpsCommands";
 import { registerReviewCommands } from "../commands/projects/registerReviewCommands";
+import { registerFocusCommands } from "../commands/focus/registerFocusCommands";
 import { registerStatusCommands } from "../commands/status/registerStatusCommands";
 import { ProjectCreationService } from "../services/projectCreationService";
 import { ProjectContextService } from "../services/projectContextService";
@@ -144,13 +145,16 @@ export class ShipOneApp {
       statusFileService: this.statusFileService,
     });
 
+    const focusCommands = registerFocusCommands({
+      setFocusMode: (enabled: boolean) => this.setFocusMode(enabled),
+    });
+
     const reviewCommands = registerReviewCommands({
       projectStore: this.projectStore,
       settingsService: this.settingsService,
       projectCreationService: this.projectCreationService,
       todoScannerService: this.todoScannerService,
       treeRefresh: () => this.treeDataProvider?.refresh(),
-      setFocusMode: (enabled: boolean) => this.setFocusMode(enabled),
     });
 
     const refreshCommand = vscode.commands.registerCommand(
@@ -166,6 +170,7 @@ export class ShipOneApp {
       welcomeCommand,
       ...projectOpsCommands,
       ...statusCommands,
+      ...focusCommands,
       ...reviewCommands,
       ...launchCommands,
       ...projectCommands,

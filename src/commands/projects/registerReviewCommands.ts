@@ -3,11 +3,8 @@ import { t } from "../../localization";
 import type { ProjectCreationService } from "../../services/projectCreationService";
 import type { ProjectStoreService } from "../../services/projectStoreService";
 import type { SettingsService } from "../../services/settingsService";
-import type {
-  TodoScannerService} from "../../services/todoScannerService";
-import {
-  type TodoTask,
-} from "../../services/todoScannerService";
+import type { TodoScannerService } from "../../services/todoScannerService";
+import { type TodoTask } from "../../services/todoScannerService";
 import {
   buildWeeklyReviewSummary,
   confirmCanActivateProject,
@@ -18,8 +15,6 @@ import {
 
 const COMMAND_OPEN_PROJECT = "shipone.openProject";
 const COMMAND_SCAN_TODOS = "shipone.scanTodos";
-const COMMAND_FOCUS_MODE = "shipone.focusMode";
-const COMMAND_EXIT_FOCUS_MODE = "shipone.exitFocusMode";
 const COMMAND_WEEKLY_REVIEW = "shipone.weeklyReview";
 const COMMAND_FREEZE_PROJECT = "shipone.freezeProject";
 const COMMAND_RESUME_PROJECT = "shipone.resumeProject";
@@ -30,14 +25,12 @@ export function registerReviewCommands(options: {
   projectCreationService: ProjectCreationService;
   todoScannerService: TodoScannerService;
   treeRefresh: () => void;
-  setFocusMode: (enabled: boolean) => Promise<void>;
 }): vscode.Disposable[] {
   const {
     projectStore,
     settingsService,
     todoScannerService,
     treeRefresh,
-    setFocusMode,
   } = options;
 
   const scanTodosCommand = vscode.commands.registerCommand(
@@ -85,22 +78,6 @@ export function registerReviewCommands(options: {
       const range = new vscode.Range(line, 0, line, 0);
       editor.selection = new vscode.Selection(line, 0, line, 0);
       editor.revealRange(range, vscode.TextEditorRevealType.InCenter);
-    }
-  );
-
-  const focusModeCommand = vscode.commands.registerCommand(
-    COMMAND_FOCUS_MODE,
-    async () => {
-      await setFocusMode(true);
-      vscode.window.showInformationMessage(t("Focus mode activado."));
-    }
-  );
-
-  const exitFocusModeCommand = vscode.commands.registerCommand(
-    COMMAND_EXIT_FOCUS_MODE,
-    async () => {
-      await setFocusMode(false);
-      vscode.window.showInformationMessage(t("Focus mode desactivado."));
     }
   );
 
@@ -315,8 +292,6 @@ export function registerReviewCommands(options: {
 
   return [
     scanTodosCommand,
-    focusModeCommand,
-    exitFocusModeCommand,
     weeklyReviewCommand,
     freezeProjectCommand,
     resumeProjectCommand,
