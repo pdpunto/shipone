@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `commands/github/`.
+Seguir con `commands/ai/`.
 
 ## Bloqueos
 - Ninguno por ahora

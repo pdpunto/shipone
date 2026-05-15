@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
 import { t } from "../../localization";
-import type { ProjectCreationService } from "../../services/projectCreationService";
 import type { ProjectContextService } from "../../services/projectContextService";
 import type { ProjectRecoveryService } from "../../services/projectRecoveryService";
 import type { ProjectStoreService } from "../../services/projectStoreService";
@@ -9,13 +8,11 @@ import { parseMvpTasks, pickProject } from "./projectOpsHelpers";
 const COMMAND_EDIT_MVP_CHECKLIST = "shipone.editMvpChecklist";
 const COMMAND_MARK_MVP_ITEM_DONE = "shipone.markMvpItemDone";
 const COMMAND_RECOVER_STORAGE = "shipone.recoverStorage";
-const COMMAND_CONNECT_GITHUB = "shipone.connectGithub";
 const COMMAND_DETECT_BLOCKERS = "shipone.detectBlockers";
 const COMMAND_GENERATE_AI_CONTEXT = "shipone.generateAiContext";
 
 export function registerProjectOpsCommands(options: {
   projectStore: ProjectStoreService;
-  projectCreationService: ProjectCreationService;
   projectRecoveryService: ProjectRecoveryService;
   projectContextService: ProjectContextService;
   treeRefresh: () => void;
@@ -23,7 +20,6 @@ export function registerProjectOpsCommands(options: {
   const {
     projectStore,
     projectContextService,
-    projectCreationService,
     projectRecoveryService,
     treeRefresh,
   } = options;
@@ -118,13 +114,6 @@ export function registerProjectOpsCommands(options: {
     }
   );
 
-  const connectGithubCommand = vscode.commands.registerCommand(
-    COMMAND_CONNECT_GITHUB,
-    async () => {
-      await projectCreationService.connectGitHub();
-    }
-  );
-
   const detectBlockersCommand = vscode.commands.registerCommand(
     COMMAND_DETECT_BLOCKERS,
     async () => {
@@ -169,7 +158,6 @@ export function registerProjectOpsCommands(options: {
     editMvpChecklistCommand,
     markMvpItemDoneCommand,
     recoverStorageCommand,
-    connectGithubCommand,
     detectBlockersCommand,
     generateAiContextCommand,
   ];

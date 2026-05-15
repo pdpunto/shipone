@@ -4,6 +4,7 @@ import { registerProjectCommands } from "../commands/projects/registerProjectCom
 import { registerLaunchCommands } from "../commands/projects/registerLaunchCommands";
 import { registerProjectOpsCommands } from "../commands/projects/registerProjectOpsCommands";
 import { registerFocusCommands } from "../commands/focus/registerFocusCommands";
+import { registerGithubCommands } from "../commands/github/registerGithubCommands";
 import { registerReviewCommands } from "../commands/review/registerReviewCommands";
 import { registerStatusCommands } from "../commands/status/registerStatusCommands";
 import { ProjectCreationService } from "../services/projectCreationService";
@@ -134,10 +135,13 @@ export class ShipOneApp {
 
     const projectOpsCommands = registerProjectOpsCommands({
       projectStore: this.projectStore,
-      projectCreationService: this.projectCreationService,
       projectRecoveryService: this.projectRecoveryService,
       projectContextService: this.projectContextService,
       treeRefresh: () => this.treeDataProvider?.refresh(),
+    });
+
+    const githubCommands = registerGithubCommands({
+      projectCreationService: this.projectCreationService,
     });
 
     const statusCommands = registerStatusCommands({
@@ -169,6 +173,7 @@ export class ShipOneApp {
       configurationWatcher,
       welcomeCommand,
       ...projectOpsCommands,
+      ...githubCommands,
       ...statusCommands,
       ...focusCommands,
       ...reviewCommands,
