@@ -10,12 +10,16 @@ export class WarningNode extends vscode.TreeItem {
     detail: string,
     projectId: string,
     iconProvider: TreeIconProvider,
-    tooltipProvider: TreeTooltipProvider
+    tooltipProvider: TreeTooltipProvider,
+    tooltipDetail?: string
   ) {
     super(label, vscode.TreeItemCollapsibleState.None);
     this.description = detail;
     this.iconPath = new vscode.ThemeIcon(iconProvider.getWarningIcon());
-    this.tooltip = tooltipProvider.buildWarningTooltip(label, detail);
+    this.tooltip = tooltipProvider.buildWarningTooltip(
+      label,
+      tooltipDetail ?? detail
+    );
     this.command = {
       command: "shipone.openProject",
       title: t(k.common.openProject),

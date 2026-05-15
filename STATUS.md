@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `Reduce repeated warnings`.
+Seguir con `Improve hierarchy`.
 
 ## Bloqueos
 - Ninguno por ahora
