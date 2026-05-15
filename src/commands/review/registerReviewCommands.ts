@@ -11,7 +11,7 @@ import {
   getFinishedThisWeek,
   isStaleProject,
   pickProject,
-} from "./projectOpsHelpers";
+} from "../projects/projectOpsHelpers";
 
 const COMMAND_OPEN_PROJECT = "shipone.openProject";
 const COMMAND_SCAN_TODOS = "shipone.scanTodos";
