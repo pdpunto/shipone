@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `Translate confirmations`.
+Seguir con `Use structured translation keys`.
 
 ## Bloqueos
 - Ninguno por ahora

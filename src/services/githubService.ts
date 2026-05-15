@@ -17,7 +17,7 @@ export class GitHubService {
       const choice = await vscode.window.showWarningMessage(
         t(k.github.noCli),
         t(k.common.openSettings),
-        t("Seguir")
+        t(k.common.followWithoutGitHub)
       );
 
       if (choice === t(k.common.openSettings)) {

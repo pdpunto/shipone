@@ -78,6 +78,14 @@ test("package.nls.es.json traduce congelar y reanudar", () => {
   assert.equal(es["Proyecto reanudado: {0}."], "Proyecto reanudado: {0}.");
 });
 
+test("package.nls.es.json traduce confirmaciones de continuar", () => {
+  const es = readJson("package.nls.es.json");
+
+  assert.equal(es["Seguir sin GitHub"], "Seguir sin GitHub");
+  assert.equal(es["Seguir sin Git"], "Seguir sin Git");
+  assert.equal(es["Seguir sin commit"], "Seguir sin commit");
+});
+
 test("package.nls.es.json traduce metricas", () => {
   const es = readJson("package.nls.es.json");
 
