@@ -125,7 +125,7 @@ export function registerReviewCommands(options: {
         const nextAction = await vscode.window.showInputBox({
           title: t("Weekly review"),
           prompt: t("Siguiente accion para el proyecto activo"),
-          placeHolder: t("Terminar login"),
+          placeHolder: t(k.common.finishLoginPlaceholder),
         });
 
         if (nextAction !== undefined) {

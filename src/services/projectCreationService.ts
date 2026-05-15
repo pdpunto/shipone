@@ -43,7 +43,7 @@ export class ProjectCreationService {
     // Primero recogemos la forma minima del proyecto; lo demas depende de esas elecciones.
     const name = await vscode.window.showInputBox({
       prompt: t("Nombre del proyecto"),
-      placeHolder: t("my-saas-app"),
+      placeHolder: t(k.common.projectNamePlaceholder),
       validateInput: validateProjectName,
     });
 
@@ -59,7 +59,7 @@ export class ProjectCreationService {
     const description =
       (await vscode.window.showInputBox({
         prompt: t("Descripcion"),
-        placeHolder: t("Proyecto simple para ShipOne"),
+        placeHolder: t(k.common.projectDescriptionPlaceholder),
       })) ?? "";
 
     const destinationFolder = await this.pickDestinationFolder(
@@ -297,8 +297,8 @@ export class ProjectCreationService {
     }));
 
     const choice = await vscode.window.showQuickPick(choices, {
-        title: t(k.projectCreation.projectType),
-        placeHolder: t(k.common.chooseStarter),
+      title: t(k.projectCreation.projectType),
+      placeHolder: t(k.common.chooseStarter),
     });
 
     return choice?.value as ShipOneSettings["defaultProjectType"] | undefined;
@@ -314,7 +314,7 @@ export class ProjectCreationService {
       ],
       {
         title: t("Git local"),
-        placeHolder: t("Quieres inicializar Git en este proyecto?"),
+        placeHolder: t(k.common.askGitLocal),
       }
     );
   }

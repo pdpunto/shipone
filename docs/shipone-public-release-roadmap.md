@@ -150,7 +150,7 @@ Goal: make ShipOne render correctly in every supported environment.
 - [ ] Keep `t()` helper
 - [x] Remove hardcoded UI strings
 - [x] Translate QuickPick labels
-- [ ] Translate placeholders
+- [x] Translate placeholders
 - [ ] Translate notifications
 - [ ] Translate warnings
 - [ ] Translate errors

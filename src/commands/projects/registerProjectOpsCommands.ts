@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { t } from "../../localization";
+import { translationKeys as k } from "../../localization/keys";
 import type { ProjectContextService } from "../../services/projectContextService";
 import type { ProjectRecoveryService } from "../../services/projectRecoveryService";
 import type { ProjectStoreService } from "../../services/projectStoreService";
@@ -37,7 +38,7 @@ export function registerProjectOpsCommands(options: {
       const rawValue = await vscode.window.showInputBox({
         title: t("Checklist MVP"),
         prompt: t("Separa tareas con coma"),
-        placeHolder: t("Login, Dashboard, Deploy"),
+        placeHolder: t(k.common.mvpPlaceholder),
         value: currentValue,
       });
 
@@ -79,7 +80,7 @@ export function registerProjectOpsCommands(options: {
         })),
         {
           title: t("Marcar tarea MVP hecha"),
-          placeHolder: t("Elige una tarea"),
+          placeHolder: t(k.common.chooseTask),
         }
       );
 

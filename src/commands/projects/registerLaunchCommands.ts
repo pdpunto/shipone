@@ -105,7 +105,7 @@ export function registerLaunchCommands(options: {
       const searchTerm = await vscode.window.showInputBox({
         title: t(k.launch.searchProject),
         prompt: t("Escribe parte del nombre"),
-        placeHolder: t("my-saas-app"),
+        placeHolder: t(k.common.searchNamePlaceholder),
       });
 
       if (searchTerm === undefined) {
@@ -118,7 +118,7 @@ export function registerLaunchCommands(options: {
         PROJECT_TYPE_PICKERS,
         {
           title: t(k.launch.filterByType),
-          placeHolder: t("Elige un tipo o deja todo"),
+          placeHolder: t(k.common.typeOrAllPlaceholder),
         }
       );
 
@@ -141,7 +141,7 @@ export function registerLaunchCommands(options: {
       const tagChoice = await vscode.window.showInputBox({
         title: t(k.launch.filterByTag),
         prompt: t("Escribe una etiqueta o deja vacio"),
-        placeHolder: t("frontend"),
+        placeHolder: t(k.common.tagPlaceholder),
       });
 
       if (tagChoice === undefined) {
