@@ -76,6 +76,7 @@ export class TreeRendererService {
         new GroupNode(
           "active",
           t(k.tree.active),
+          1,
           this.iconProvider,
           this.tooltipProvider
         ),
@@ -119,6 +120,7 @@ export class TreeRendererService {
           new GroupNode(
             group.status,
             group.label,
+            projects.filter((project) => project.status === group.status).length,
             this.iconProvider,
             this.tooltipProvider
           )
