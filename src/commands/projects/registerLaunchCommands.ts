@@ -24,6 +24,7 @@ const PROJECT_TYPE_PICKERS: Array<{ label: string; value: string | null }> = [
   { label: t("React Vite"), value: "react-vite" },
   { label: t("Next.js"), value: "nextjs" },
   { label: t("Python"), value: "python" },
+  { label: t("Node API"), value: "node-api" },
 ];
 
 export function registerLaunchCommands(options: {

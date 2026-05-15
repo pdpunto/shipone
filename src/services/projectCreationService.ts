@@ -15,6 +15,7 @@ const PROJECT_TYPES = [
   { label: t("React Vite"), value: "react-vite" },
   { label: t("Next.js"), value: "nextjs" },
   { label: t("Python"), value: "python" },
+  { label: t("Node API"), value: "node-api" },
 ] as const;
 
 type GitChoice = { label: string; value: boolean; picked?: boolean };
