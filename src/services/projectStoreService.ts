@@ -64,7 +64,6 @@ export class ProjectStoreService {
     projects: ProjectMetadata[],
     createBackup = true
   ): Promise<void> {
-    // Mantener un backup antes de sobrescribir evita perder metadata si algo falla a mitad de guardado.
     await vscode.workspace.fs.createDirectory(this.context.globalStorageUri);
 
     if (createBackup && (await this.pathExists(this.storageFileUri))) {
@@ -85,7 +84,17 @@ export class ProjectStoreService {
       )
     );
 
-    await vscode.workspace.fs.writeFile(this.storageFileUri, payload);
+    const tempUri = this.createTemporaryStorageUri();
+    await vscode.workspace.fs.writeFile(tempUri, payload);
+
+    try {
+      await vscode.workspace.fs.rename(tempUri, this.storageFileUri, {
+        overwrite: true,
+      });
+    } catch (error) {
+      await this.deleteIfExists(tempUri);
+      throw error;
+    }
   }
 
   async upsertProject(project: ProjectMetadata): Promise<void> {
@@ -265,6 +274,13 @@ export class ProjectStoreService {
     );
   }
 
+  private createTemporaryStorageUri(): vscode.Uri {
+    return vscode.Uri.joinPath(
+      this.context.globalStorageUri,
+      `${STORAGE_FILE_NAME}.tmp`
+    );
+  }
+
   private createEmptyGroups(): Record<ProjectStatus, ProjectMetadata[]> {
     return {
       idea: [],
@@ -398,6 +414,14 @@ export class ProjectStoreService {
       return true;
     } catch {
       return false;
+    }
+  }
+
+  private async deleteIfExists(uri: vscode.Uri): Promise<void> {
+    try {
+      await vscode.workspace.fs.delete(uri);
+    } catch {
+      // Ignoramos: el objetivo es no dejar temporal huérfano si ya no existe.
     }
   }
 
