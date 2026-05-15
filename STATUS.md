@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `Add fallback language behavior`.
+Seguir con `Add missing key detection`.
 
 ## Bloqueos
 - Ninguno por ahora
