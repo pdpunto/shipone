@@ -106,9 +106,23 @@ export function registerProjectOpsCommands(options: {
           t("ShipOne recupero el almacenamiento desde el backup.")
         );
       } else {
-        vscode.window.showErrorMessage(
-          t("No se pudo recuperar el almacenamiento de ShipOne.")
+        const choice = await vscode.window.showWarningMessage(
+          t("No se pudo recuperar el almacenamiento de ShipOne."),
+          t("Intentar de nuevo"),
+          t("Crear proyecto"),
+          t("Abrir ajustes")
         );
+
+        if (choice === t("Intentar de nuevo")) {
+          await projectRecoveryService.recoverFromBackup();
+        } else if (choice === t("Crear proyecto")) {
+          await vscode.commands.executeCommand("shipone.createProject");
+        } else if (choice === t("Abrir ajustes")) {
+          await vscode.commands.executeCommand(
+            "workbench.action.openSettings",
+            "ShipOne"
+          );
+        }
       }
     }
   );
