@@ -72,7 +72,7 @@ Goal: reduce technical debt and make the extension easier to maintain.
 - [x] Keep `StatusFileService`
 - [x] Keep `ProjectHealthService`
 - [x] Keep `TodoScannerService`
-- [ ] Add `ProjectRecoveryService`
+- [x] Add `ProjectRecoveryService`
 - [ ] Add a clearer `LocalizationService`
 
 ### 1.4 UI

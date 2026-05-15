@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { t } from "../../localization";
 import { ProjectCreationService } from "../../services/projectCreationService";
 import { ProjectContextService } from "../../services/projectContextService";
+import { ProjectRecoveryService } from "../../services/projectRecoveryService";
 import { ProjectStoreService } from "../../services/projectStoreService";
 import { StatusFileService } from "../../services/statusFileService";
 import { parseMvpTasks, pickProject } from "./projectOpsHelpers";
@@ -17,6 +18,7 @@ const COMMAND_GENERATE_AI_CONTEXT = "shipone.generateAiContext";
 export function registerProjectOpsCommands(options: {
   projectStore: ProjectStoreService;
   projectCreationService: ProjectCreationService;
+  projectRecoveryService: ProjectRecoveryService;
   statusFileService: StatusFileService;
   projectContextService: ProjectContextService;
   treeRefresh: () => void;
@@ -26,6 +28,7 @@ export function registerProjectOpsCommands(options: {
     statusFileService,
     projectContextService,
     projectCreationService,
+    projectRecoveryService,
     treeRefresh,
   } = options;
 
@@ -120,7 +123,7 @@ export function registerProjectOpsCommands(options: {
   const recoverStorageCommand = vscode.commands.registerCommand(
     COMMAND_RECOVER_STORAGE,
     async () => {
-      const restored = await projectStore.recoverFromBackup();
+      const restored = await projectRecoveryService.recoverFromBackup();
 
       if (restored) {
         treeRefresh();

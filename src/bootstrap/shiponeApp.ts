@@ -7,6 +7,7 @@ import { registerReviewCommands } from "../commands/projects/registerReviewComma
 import { ProjectCreationService } from "../services/projectCreationService";
 import { ProjectContextService } from "../services/projectContextService";
 import { ProjectHealthService } from "../services/projectHealthService";
+import { ProjectRecoveryService } from "../services/projectRecoveryService";
 import { StatusFileService } from "../services/statusFileService";
 import { TodoScannerService } from "../services/todoScannerService";
 import { ShipOneProjectsTreeDataProvider } from "../providers/shiponeProjectsTreeDataProvider";
@@ -28,6 +29,7 @@ export class ShipOneApp {
   private readonly projectStore: ProjectStoreService;
   private readonly projectContextService = new ProjectContextService();
   private readonly projectHealthService = new ProjectHealthService();
+  private readonly projectRecoveryService: ProjectRecoveryService;
   private readonly treeIconProvider = new TreeIconProvider();
   private readonly treeTooltipProvider = new TreeTooltipProvider();
   private readonly healthRenderer = new ProjectHealthRenderer();
@@ -46,6 +48,7 @@ export class ShipOneApp {
       this.statusFileService,
       this.projectContextService
     );
+    this.projectRecoveryService = new ProjectRecoveryService(this.projectStore);
   }
 
   async init(): Promise<vscode.Disposable[]> {
@@ -124,6 +127,7 @@ export class ShipOneApp {
     const projectOpsCommands = registerProjectOpsCommands({
       projectStore: this.projectStore,
       projectCreationService: this.projectCreationService,
+      projectRecoveryService: this.projectRecoveryService,
       statusFileService: this.statusFileService,
       projectContextService: this.projectContextService,
       treeRefresh: () => this.treeDataProvider?.refresh(),
