@@ -448,6 +448,7 @@
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
+    "validate:translations": "node scripts/validate-translations.mjs",
     "test": "npm run compile && node --test test/shipone.test.js test/localization.test.js test/translationKeys.test.js",
     "lint": "eslint \"src/**/*.ts\"",
     "format": "prettier --check \"src/**/*.ts\" \"*.json\" \"docs/**/*.md\""

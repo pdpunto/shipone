@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `Add translation validation script`.
+Seguir con `Localize walkthrough titles`.
 
 ## Bloqueos
 - Ninguno por ahora
