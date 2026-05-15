@@ -6,6 +6,7 @@ import { registerProjectOpsCommands } from "../commands/projects/registerProject
 import { registerFocusCommands } from "../commands/focus/registerFocusCommands";
 import { registerAiCommands } from "../commands/ai/registerAiCommands";
 import { registerGithubCommands } from "../commands/github/registerGithubCommands";
+import { registerOnboardingCommands } from "../commands/onboarding/registerOnboardingCommands";
 import { registerReviewCommands } from "../commands/review/registerReviewCommands";
 import { registerStatusCommands } from "../commands/status/registerStatusCommands";
 import { ProjectCreationService } from "../services/projectCreationService";
@@ -21,9 +22,7 @@ import { TreeTooltipProvider } from "../providers/treeTooltipProvider";
 import { ProjectStoreService } from "../services/projectStoreService";
 import { SettingsService } from "../services/settingsService";
 import { showFirstRunOnboarding } from "../onboarding/showFirstRunOnboarding";
-import { t } from "../localization";
 
-const COMMAND_SHOW_WELCOME = "shipone.showWelcome";
 const COMMAND_REFRESH_PROJECTS = "shipone.refreshProjects";
 const FOCUS_MODE_CONTEXT_KEY = "shipone.focusMode";
 const FOCUS_MODE_STATE_KEY = "shipone.focusMode";
@@ -108,16 +107,6 @@ export class ShipOneApp {
       }
     );
 
-    const welcomeCommand = vscode.commands.registerCommand(
-      COMMAND_SHOW_WELCOME,
-      () => {
-        const settings = this.settingsService.getSettings();
-        vscode.window.showInformationMessage(
-          t("ShipOne listo. Ruta base: {0}", settings.projectsRoot)
-        );
-      }
-    );
-
     const projectCommands = registerProjectCommands({
       context: this.context,
       projectStore: this.projectStore,
@@ -150,6 +139,10 @@ export class ShipOneApp {
       projectCreationService: this.projectCreationService,
     });
 
+    const onboardingCommands = registerOnboardingCommands({
+      settingsService: this.settingsService,
+    });
+
     const statusCommands = registerStatusCommands({
       projectStore: this.projectStore,
       statusFileService: this.statusFileService,
@@ -177,10 +170,10 @@ export class ShipOneApp {
     return [
       treeView,
       configurationWatcher,
-      welcomeCommand,
       ...projectOpsCommands,
       ...aiCommands,
       ...githubCommands,
+      ...onboardingCommands,
       ...statusCommands,
       ...focusCommands,
       ...reviewCommands,

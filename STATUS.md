@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `commands/onboarding/`.
+Seguir con depuracion de encoding.
 
 ## Bloqueos
 - Ninguno por ahora
