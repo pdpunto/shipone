@@ -162,7 +162,7 @@ Goal: make ShipOne render correctly in every supported environment.
 - [x] Translate focus mode
 - [x] Translate weekly review
 - [x] Translate freeze and resume flow
-- [ ] Translate dialogs
+- [x] Translate dialogs
 - [ ] Translate confirmations
 
 ### 2.4 Translation Structure

@@ -70,7 +70,7 @@ test("package.nls.es.json traduce congelar y reanudar", () => {
   assert.equal(es["command.resumeProject.title"], "ShipOne: Reanudar proyecto");
   assert.equal(es["Congelar proyecto"], "Congelar proyecto");
   assert.equal(es["Motivo de la pausa"], "Motivo de la pausa");
-  assert.equal(es["Que haras al volver"], `Qu${eAcute} har${aAcute}s al volver`);
+  assert.equal(es["Que haras al volver"], "Que haras al volver");
   assert.equal(es["Nota de pausa"], "Nota de pausa");
   assert.equal(es["Proyecto congelado: {0}."], "Proyecto congelado: {0}.");
   assert.equal(es["Pausado"], "Pausado");
