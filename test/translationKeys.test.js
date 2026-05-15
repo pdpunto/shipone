@@ -95,6 +95,9 @@ test("package.nls.es.json traduce claves estructuradas de creacion", () => {
   assert.equal(es["command.quickCreateProject.title"], "ShipOne: Crear rapido");
   assert.equal(es["Starting point for any project."], "Punto de partida para cualquier proyecto.");
   assert.equal(es["Frontend app with Vite."], "Aplicacion frontend con Vite.");
+  assert.equal(es["Full app with routing and backend-friendly setup."], "Aplicacion completa con rutas y base lista para backend.");
+  assert.equal(es["Script, bot, automation or CLI tool."], "Script, bot, automatizacion o herramienta CLI.");
+  assert.equal(es["Node backend or API service."], "Backend Node o servicio API.");
   assert.equal(
     es["Ya existe una carpeta con ese nombre. Prueba otro nombre o elige otra carpeta."],
     "Ya existe una carpeta con ese nombre. Prueba otro nombre o elige otra carpeta."

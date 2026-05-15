@@ -201,7 +201,7 @@ Goal: make ShipOne feel simple, modern, and professional.
 - [x] Improve placeholders
 - [x] Improve project type selection
 - [x] Expose `node-api` properly
-- [ ] Add project type descriptions
+- [x] Add project type descriptions
 
 ### 3.3 Focus UX
 
