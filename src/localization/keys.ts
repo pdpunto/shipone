@@ -133,6 +133,12 @@ export const translationKeys = {
     askGitHubRepo: "Quieres crear un repo de GitHub?",
     gitLocal: "Git local",
     gitHub: "GitHub",
+    projectNamePrompt: "Nombre del proyecto",
+    projectDescriptionPrompt: "Descripcion",
+    projectFolderExists:
+      "Ya existe una carpeta con ese nombre. Prueba otro nombre o elige otra carpeta.",
+    sampleIdeaName: "Mi primera idea",
+    sampleIdeaDescription: "Describe la idea principal aqui.",
     projectType: "Tipo de proyecto",
     destinationFolder: "Carpeta destino",
     packageManager: "Package manager",

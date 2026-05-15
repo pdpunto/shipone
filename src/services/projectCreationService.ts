@@ -42,7 +42,7 @@ export class ProjectCreationService {
   ): Promise<ProjectMetadata | undefined> {
     // Primero recogemos la forma minima del proyecto; lo demas depende de esas elecciones.
     const name = await vscode.window.showInputBox({
-      prompt: t("Nombre del proyecto"),
+      prompt: t(k.projectCreation.projectNamePrompt),
       placeHolder: t(k.common.projectNamePlaceholder),
       validateInput: validateProjectName,
     });
@@ -58,7 +58,7 @@ export class ProjectCreationService {
 
     const description =
       (await vscode.window.showInputBox({
-        prompt: t("Descripcion"),
+        prompt: t(k.projectCreation.projectDescriptionPrompt),
         placeHolder: t(k.common.projectDescriptionPlaceholder),
       })) ?? "";
 
@@ -123,9 +123,7 @@ export class ProjectCreationService {
 
     if (projectExists) {
       vscode.window.showErrorMessage(
-        t(
-          "Ya existe una carpeta con ese nombre. Prueba otro nombre o elige otra carpeta."
-        )
+        t(k.projectCreation.projectFolderExists)
       );
       return undefined;
     }
@@ -241,8 +239,8 @@ export class ProjectCreationService {
   async createSampleIdea(
     settings: ShipOneSettings
   ): Promise<ProjectMetadata | undefined> {
-    const name = t("Mi primera idea");
-    const description = t("Describe la idea principal aqui.");
+    const name = t(k.projectCreation.sampleIdeaName);
+    const description = t(k.projectCreation.sampleIdeaDescription);
     const type: ShipOneSettings["defaultProjectType"] = "blank";
     const packageManager = settings.defaultPackageManager;
 
@@ -313,7 +311,7 @@ export class ProjectCreationService {
         { label: t(k.common.no), value: false, picked: !defaultGitRepoByDefault },
       ],
       {
-        title: t("Git local"),
+        title: t(k.projectCreation.gitLocal),
         placeHolder: t(k.common.askGitLocal),
       }
     );
@@ -327,7 +325,7 @@ export class ProjectCreationService {
       canSelectFiles: false,
       canSelectMany: false,
       defaultUri: vscode.Uri.file(projectsRoot),
-      title: t("Carpeta destino"),
+      title: t(k.projectCreation.destinationFolder),
       openLabel: t(k.common.useFolder),
     });
 

@@ -167,7 +167,7 @@ Goal: make ShipOne render correctly in every supported environment.
 
 ### 2.4 Translation Structure
 
-- [ ] Use structured translation keys
+- [x] Use structured translation keys
 - [x] Group keys by domain
 - [x] Avoid duplicated strings
 - [x] Add fallback language behavior

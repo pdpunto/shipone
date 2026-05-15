@@ -86,6 +86,24 @@ test("package.nls.es.json traduce confirmaciones de continuar", () => {
   assert.equal(es["Seguir sin commit"], "Seguir sin commit");
 });
 
+test("package.nls.es.json traduce claves estructuradas de creacion", () => {
+  const es = readJson("package.nls.es.json");
+
+  assert.equal(es["Nombre del proyecto"], "Nombre del proyecto");
+  assert.equal(es["Descripcion"], "Descripci\u00f3n");
+  assert.equal(
+    es["Ya existe una carpeta con ese nombre. Prueba otro nombre o elige otra carpeta."],
+    "Ya existe una carpeta con ese nombre. Prueba otro nombre o elige otra carpeta."
+  );
+  assert.equal(es["Mi primera idea"], "Mi primera idea");
+  assert.equal(
+    es["Describe la idea principal aqui."],
+    "Describe la idea principal aqui."
+  );
+  assert.equal(es["Git local"], "Git local");
+  assert.equal(es["Carpeta destino"], "Carpeta destino");
+});
+
 test("package.nls.es.json traduce metricas", () => {
   const es = readJson("package.nls.es.json");
 
