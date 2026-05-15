@@ -1,15 +1,15 @@
 # Estado actual
 
 ## Objetivo
-Describe el objetivo principal aquí.
+Preparar ShipOne para release publica estable, simple y mantenible.
 
 ## MVP
-- [ ]
-- [ ]
-- [ ]
+- [x] Vista lateral base funcionando
+- [x] Comandos principales por dominio
+- [ ] Reducir densidad visual de sidebar
 
-## Próximo paso
-Define el siguiente paso aquí.
+## Proximo paso
+Seguir con pulido de sidebar y limpieza de duplicacion visual.
 
 ## Bloqueos
 - Ninguno por ahora
@@ -18,4 +18,4 @@ Define el siguiente paso aquí.
 shipone
 
 ## Actualizado
-2026-05-14
+2026-05-15

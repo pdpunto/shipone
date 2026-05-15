@@ -5,7 +5,7 @@ import { ProjectHealth } from "../../services/projectHealthService";
 import { ProjectHealthRenderer } from "../projectHealthRenderer";
 import { TreeIconProvider } from "../treeIconProvider";
 import { TreeTooltipProvider } from "../treeTooltipProvider";
-import { formatProjectType, getMvpProgress } from "./shared";
+import { getMvpProgress } from "./shared";
 
 export class ProjectNode extends vscode.TreeItem {
   constructor(
@@ -19,7 +19,6 @@ export class ProjectNode extends vscode.TreeItem {
     super(project.name, vscode.TreeItemCollapsibleState.None);
 
     const mvpProgress = getMvpProgress(project.mvpTasks);
-    const projectType = formatProjectType(project.type);
     this.description = healthRenderer.buildProjectDescription(
       project,
       health,
@@ -29,8 +28,7 @@ export class ProjectNode extends vscode.TreeItem {
       project,
       health,
       warning,
-      mvpProgress,
-      projectType
+      mvpProgress
     );
 
     this.contextValue = "shipone.project";
