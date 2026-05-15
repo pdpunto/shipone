@@ -61,7 +61,7 @@ Goal: reduce technical debt and make the extension easier to maintain.
 - [x] Add `commands/focus/`
 - [x] Add `commands/review/`
 - [x] Add `commands/github/`
-- [ ] Add `commands/ai/`
+- [x] Add `commands/ai/`
 - [ ] Add `commands/onboarding/`
 
 ### 1.3 Services

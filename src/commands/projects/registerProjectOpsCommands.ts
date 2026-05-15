@@ -9,7 +9,6 @@ const COMMAND_EDIT_MVP_CHECKLIST = "shipone.editMvpChecklist";
 const COMMAND_MARK_MVP_ITEM_DONE = "shipone.markMvpItemDone";
 const COMMAND_RECOVER_STORAGE = "shipone.recoverStorage";
 const COMMAND_DETECT_BLOCKERS = "shipone.detectBlockers";
-const COMMAND_GENERATE_AI_CONTEXT = "shipone.generateAiContext";
 
 export function registerProjectOpsCommands(options: {
   projectStore: ProjectStoreService;
@@ -138,27 +137,10 @@ export function registerProjectOpsCommands(options: {
     }
   );
 
-  const generateAiContextCommand = vscode.commands.registerCommand(
-    COMMAND_GENERATE_AI_CONTEXT,
-    async () => {
-      const project = await pickProject(projectStore);
-
-      if (!project) {
-        return;
-      }
-
-      await projectContextService.generateAiContext(project);
-      vscode.window.showInformationMessage(
-        t("AI_CONTEXT.md generado en {0}.", project.name)
-      );
-    }
-  );
-
   return [
     editMvpChecklistCommand,
     markMvpItemDoneCommand,
     recoverStorageCommand,
     detectBlockersCommand,
-    generateAiContextCommand,
   ];
 }
