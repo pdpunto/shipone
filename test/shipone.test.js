@@ -62,6 +62,40 @@ test("buildProjectDetail junta ruta, etiquetas y next action", () => {
   );
 });
 
+test("buildStatusFileContent genera STATUS.md", () => {
+  const originalLoad = Module._load;
+
+  try {
+    Module._load = function patchedLoad(request, parent, isMain) {
+      if (request === "vscode") {
+        return {
+          l10n: {
+            t: formatMessage,
+          },
+        };
+      }
+
+      return originalLoad.call(this, request, parent, isMain);
+    };
+
+    delete require.cache[require.resolve("../out/commands/projects/projectOpsHelpers")];
+    const { buildStatusFileContent } = require("../out/commands/projects/projectOpsHelpers");
+
+    const content = buildStatusFileContent({
+      name: "ShipOne",
+      description: "Test",
+      nextAction: "Crear login",
+      mvpTasks: [{ id: "1", text: "Login", done: false }],
+    });
+
+    assert.ok(content.includes("# Estado actual"));
+    assert.ok(content.includes("## Proximo paso"));
+    assert.ok(content.includes("Crear login"));
+  } finally {
+    Module._load = originalLoad;
+  }
+});
+
 test("parseMvpTasks conserva tareas existentes", () => {
   const currentTasks = [
     { id: "1", text: "Login", done: true },
@@ -1616,7 +1650,7 @@ function createIntegrationFixtureWithOptions(options = {}) {
   const errorQueue = [];
   const execCalls = [];
   const commandExecCalls = [];
-  const calls = { refresh: [] };
+  const calls = { refresh: [], openTextDocument: [], showTextDocument: [] };
 
   const uriApi = {
     file: (value) => ({
@@ -1705,7 +1739,15 @@ function createIntegrationFixtureWithOptions(options = {}) {
       },
       withProgress: async (_options, task) => task({ report: () => {} }),
       showOpenDialog: async () => undefined,
-      showTextDocument: async () => undefined,
+      showTextDocument: async (document, options) => {
+        calls.showTextDocument.push({ document, options });
+        return undefined;
+      },
+      openTextDocument: async (uri) => {
+        const document = { uri };
+        calls.openTextDocument.push(uri);
+        return document;
+      },
       createTerminal: () => ({
         show: () => {},
         sendText: () => {},
@@ -2302,6 +2344,60 @@ test("Open project flow abre la carpeta y marca acceso", async () => {
     assert.ok(
       fixture.commandExecCalls.some((call) => call.name === "vscode.openFolder")
     );
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
+test("Sync status file flow escribe STATUS.md", async () => {
+  const fixture = createIntegrationFixture();
+
+  try {
+    const projectOpsHelpersPath = require.resolve(
+      "../out/commands/projects/projectOpsHelpers"
+    );
+    delete require.cache[projectOpsHelpersPath];
+    const projectOpsHelpers = require(projectOpsHelpersPath);
+    projectOpsHelpers.pickProject = async () => fixture.projectStore.projects[0];
+
+    delete require.cache[require.resolve("../out/commands/status/registerStatusCommands")];
+    const { registerStatusCommands } = require("../out/commands/status/registerStatusCommands");
+
+    fixture.projectStore.projects = [
+      {
+        id: "p1",
+        name: "ShipOne",
+        description: "Test",
+        type: "blank",
+        status: "active",
+        path: "C:\\tmp\\shipone-projects\\ShipOne",
+        createdAt: "2026-05-15T00:00:00.000Z",
+        nextAction: "Crear login",
+      },
+    ];
+    fixture.projectStore.getProjectsByStatus = async () => ({
+      idea: [],
+      active: fixture.projectStore.projects,
+      paused: [],
+      finished: [],
+    });
+
+    registerStatusCommands({
+      projectStore: fixture.projectStore,
+      statusFileService: {
+        syncStatusFile: async (project) => {
+          const statusPath = `C:\\tmp\\shipone-projects\\${project.name}\\STATUS.md`;
+          fixture.files.set(statusPath, Buffer.from("STATUS", "utf8"));
+        },
+      },
+    });
+
+    await fixture.commandHandlers.get("shipone.syncStatusFile")();
+
+    assert.ok(
+      fixture.files.has("C:\\tmp\\shipone-projects\\ShipOne\\STATUS.md")
+    );
+    assert.equal(fixture.messages.info.length, 1);
   } finally {
     fixture.restoreLoad();
   }
