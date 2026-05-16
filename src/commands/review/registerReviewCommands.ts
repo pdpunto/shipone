@@ -25,13 +25,13 @@ export function registerReviewCommands(options: {
   projectStore: ProjectStoreService;
   settingsService: SettingsService;
   projectCreationService: ProjectCreationService;
-  todoScannerService: TodoScannerService;
+  getTodoScannerService: () => TodoScannerService;
   treeRefresh: () => void;
 }): vscode.Disposable[] {
   const {
     projectStore,
     settingsService,
-    todoScannerService,
+    getTodoScannerService,
     treeRefresh,
   } = options;
 
@@ -44,7 +44,9 @@ export function registerReviewCommands(options: {
         return;
       }
 
-      const tasks = await todoScannerService.scanProjectTodoTasks(project.path);
+      const tasks = await getTodoScannerService().scanProjectTodoTasks(
+        project.path
+      );
 
       if (tasks.length === 0) {
         vscode.window.showInformationMessage(

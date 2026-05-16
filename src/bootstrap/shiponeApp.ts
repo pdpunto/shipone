@@ -38,8 +38,8 @@ export class ShipOneApp {
   private readonly treeTooltipProvider = new TreeTooltipProvider();
   private readonly healthRenderer = new ProjectHealthRenderer();
   private readonly statusFileService = new StatusFileService();
-  private readonly todoScannerService = new TodoScannerService();
   private readonly projectCreationService: ProjectCreationService;
+  private todoScannerService: TodoScannerService | undefined;
 
   private treeDataProvider: ShipOneProjectsTreeDataProvider | undefined;
   private focusModeEnabled = false;
@@ -157,7 +157,7 @@ export class ShipOneApp {
       projectStore: this.projectStore,
       settingsService: this.settingsService,
       projectCreationService: this.projectCreationService,
-      todoScannerService: this.todoScannerService,
+      getTodoScannerService: () => this.getTodoScannerService(),
       treeRefresh: () => this.treeDataProvider?.refresh(),
     });
 
@@ -193,6 +193,14 @@ export class ShipOneApp {
       enabled
     );
     this.treeDataProvider?.refresh();
+  }
+
+  private getTodoScannerService(): TodoScannerService {
+    if (!this.todoScannerService) {
+      this.todoScannerService = new TodoScannerService();
+    }
+
+    return this.todoScannerService;
   }
 
   private logError(message: string, error: unknown): void {

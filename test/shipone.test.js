@@ -2330,7 +2330,9 @@ test("Weekly review flow pide next action y resume resumen", async () => {
       projectStore: fixture.projectStore,
       settingsService: { getSettings: () => fixture.settings },
       projectCreationService: {},
-      todoScannerService: {},
+      getTodoScannerService: () => ({
+        scanProjectTodoTasks: async () => [],
+      }),
       treeRefresh: () => fixture.calls.refresh.push(true),
     });
 
@@ -2338,6 +2340,57 @@ test("Weekly review flow pide next action y resume resumen", async () => {
 
     assert.deepEqual(fixture.projectStore.setNextActionCalls, [["p1", "Crear login"]]);
     assert.equal(fixture.projectStore.setProjectStatusCalls.length, 0);
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
+test("Scan TODOs usa el scanner solo al ejecutar el comando", async () => {
+  const fixture = createIntegrationFixture();
+
+  try {
+    const projectOpsHelpersPath = require.resolve(
+      "../out/commands/projects/projectOpsHelpers"
+    );
+    delete require.cache[projectOpsHelpersPath];
+    const projectOpsHelpers = require(projectOpsHelpersPath);
+    projectOpsHelpers.pickProject = async () => fixture.projectStore.projects[0];
+
+    delete require.cache[require.resolve("../out/commands/review/registerReviewCommands")];
+    const { registerReviewCommands } = require("../out/commands/review/registerReviewCommands");
+
+    fixture.projectStore.projects = [
+      {
+        id: "p1",
+        name: "ShipOne",
+        description: "Test",
+        type: "blank",
+        status: "active",
+        path: "C:\\tmp\\shipone-projects\\ShipOne",
+        createdAt: "2026-05-15T00:00:00.000Z",
+      },
+    ];
+    fixture.projectStore.getProjectsByStatus = async () => ({
+      active: fixture.projectStore.projects,
+    });
+
+    let scannerCalls = 0;
+    registerReviewCommands({
+      projectStore: fixture.projectStore,
+      settingsService: { getSettings: () => fixture.settings },
+      projectCreationService: {},
+      getTodoScannerService: () => {
+        scannerCalls += 1;
+        return {
+          scanProjectTodoTasks: async () => [],
+        };
+      },
+      treeRefresh: () => fixture.calls.refresh.push(true),
+    });
+
+    assert.equal(scannerCalls, 0);
+    await fixture.commandHandlers.get("shipone.scanTodos")();
+    assert.equal(scannerCalls, 1);
   } finally {
     fixture.restoreLoad();
   }

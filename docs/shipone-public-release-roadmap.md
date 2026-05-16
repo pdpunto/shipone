@@ -299,7 +299,7 @@ Scenarios:
 - [x] Reduce unnecessary refreshes
 - [x] Cache health checks
 - [x] Cache TODO scans
-- [ ] Lazy-load heavy operations
+- [x] Lazy-load heavy operations
 - [ ] Improve tree rendering performance
 - [ ] Avoid renderer recreation
 
