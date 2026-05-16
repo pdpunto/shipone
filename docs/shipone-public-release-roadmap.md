@@ -238,11 +238,11 @@ Goal: make ShipOne stable before public release.
 
 Storage:
 
-- [ ] Test metadata loading
-- [ ] Test metadata saving
-- [ ] Test corrupted metadata
-- [ ] Test backup recovery
-- [ ] Test migrations
+- [x] Test metadata loading
+- [x] Test metadata saving
+- [x] Test corrupted metadata
+- [x] Test backup recovery
+- [x] Test migrations
 
 Status logic:
 

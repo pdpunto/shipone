@@ -23,6 +23,8 @@ const {
   getInactivityWarning,
 } = require("../out/utils/inactivityWarning");
 
+const STORAGE_ROOT = "C:\\tmp\\shipone-storage";
+
 test("filterProjectsByName busca sin distinguir mayusculas", () => {
   const projects = [
     { name: "ShipOne", tags: [], path: "/a" },
@@ -148,6 +150,226 @@ test("normalizeProjectListWithDiagnostics marca corrupcion", () => {
 
   assert.equal(result.projects.length, 1);
   assert.equal(result.corrupted, true);
+});
+
+test("ProjectStoreService guarda y carga metadata", async () => {
+  const fsState = createMemoryFs();
+  const vscodeApi = createMockVscodeForStorage(fsState);
+  const originalLoad = Module._load;
+
+  try {
+    Module._load = function patchedLoad(request, parent, isMain) {
+      if (request === "vscode") {
+        return vscodeApi;
+      }
+
+      return originalLoad.call(this, request, parent, isMain);
+    };
+
+    delete require.cache[require.resolve("../out/services/projectStoreService")];
+    const { ProjectStoreService } = require("../out/services/projectStoreService");
+    const service = new ProjectStoreService({
+      globalStorageUri: vscodeApi.Uri.file(STORAGE_ROOT),
+    });
+    const storageFile = storageFilePath(STORAGE_ROOT);
+
+    const project = createProjectMetadata({
+      id: "p1",
+      name: "ShipOne",
+      description: "Test",
+      type: "blank",
+      status: "idea",
+      path: "/tmp/shipone",
+      createdAt: "2026-05-15T00:00:00.000Z",
+    });
+
+    await service.saveProjects([project]);
+    const projects = await service.loadProjects();
+
+    assert.equal(projects.length, 1);
+    assert.equal(projects[0].id, "p1");
+    assert.equal(projects[0].schemaVersion, 2);
+    assert.equal(
+      fsState.files.get(storageFile).toString("utf8"),
+      JSON.stringify({ version: 2, projects: [project] }, null, 2)
+    );
+  } finally {
+    Module._load = originalLoad;
+  }
+});
+
+test("ProjectStoreService recupera desde backup", async () => {
+  const fsState = createMemoryFs();
+  const vscodeApi = createMockVscodeForStorage(fsState);
+  const originalLoad = Module._load;
+
+  try {
+    Module._load = function patchedLoad(request, parent, isMain) {
+      if (request === "vscode") {
+        return vscodeApi;
+      }
+
+      return originalLoad.call(this, request, parent, isMain);
+    };
+
+    delete require.cache[require.resolve("../out/services/projectStoreService")];
+    const { ProjectStoreService } = require("../out/services/projectStoreService");
+    const service = new ProjectStoreService({
+      globalStorageUri: vscodeApi.Uri.file(STORAGE_ROOT),
+    });
+    const storageFile = storageFilePath(STORAGE_ROOT);
+    const backupFile = storageBackupPath(STORAGE_ROOT);
+
+    fsState.files.set(storageFile, Buffer.from("{bad json", "utf8"));
+    fsState.files.set(
+      backupFile,
+      Buffer.from(
+        JSON.stringify({
+          version: 2,
+          projects: [
+            {
+              schemaVersion: 2,
+              id: "p1",
+              name: "Backup",
+              description: "Test",
+              type: "blank",
+              status: "idea",
+              path: "/tmp/backup",
+              createdAt: "2026-05-15T00:00:00.000Z",
+            },
+          ],
+        }),
+        "utf8"
+      )
+    );
+
+    const projects = await service.loadProjects();
+
+    assert.equal(projects.length, 1);
+    assert.equal(projects[0].name, "Backup");
+    assert.deepEqual(
+      JSON.parse(fsState.files.get(storageFile).toString("utf8")),
+      {
+        version: 2,
+        projects: [
+          {
+            schemaVersion: 2,
+            id: "p1",
+            name: "Backup",
+            description: "Test",
+            type: "blank",
+            status: "idea",
+            path: "/tmp/backup",
+            createdAt: "2026-05-15T00:00:00.000Z",
+            favorite: false,
+            tags: [],
+            mvpTasks: [],
+          },
+        ],
+      }
+    );
+  } finally {
+    Module._load = originalLoad;
+  }
+});
+
+test("ProjectStoreService migra metadata vieja", async () => {
+  const fsState = createMemoryFs();
+  const vscodeApi = createMockVscodeForStorage(fsState);
+  const originalLoad = Module._load;
+
+  try {
+    Module._load = function patchedLoad(request, parent, isMain) {
+      if (request === "vscode") {
+        return vscodeApi;
+      }
+
+      return originalLoad.call(this, request, parent, isMain);
+    };
+
+    delete require.cache[require.resolve("../out/services/projectStoreService")];
+    const { ProjectStoreService } = require("../out/services/projectStoreService");
+    const service = new ProjectStoreService({
+      globalStorageUri: vscodeApi.Uri.file(STORAGE_ROOT),
+    });
+    const storageFile = storageFilePath(STORAGE_ROOT);
+
+    fsState.files.set(
+      storageFile,
+      Buffer.from(
+        JSON.stringify([
+          {
+            id: "p1",
+            name: "Legacy",
+            description: "Test",
+            type: "blank",
+            status: "idea",
+            path: "/tmp/legacy",
+            createdAt: "2026-05-15T00:00:00.000Z",
+          },
+        ]),
+        "utf8"
+      )
+    );
+
+    const projects = await service.loadProjects();
+
+    assert.equal(projects.length, 1);
+    assert.equal(projects[0].schemaVersion, 2);
+    const stored = JSON.parse(fsState.files.get(storageFile).toString("utf8"));
+    assert.equal(stored.version, 2);
+    assert.equal(stored.projects[0].schemaVersion, 2);
+  } finally {
+    Module._load = originalLoad;
+  }
+});
+
+test("ProjectStoreService marca metadata corrupta", async () => {
+  const fsState = createMemoryFs();
+  const vscodeApi = createMockVscodeForStorage(fsState);
+  const originalLoad = Module._load;
+
+  try {
+    Module._load = function patchedLoad(request, parent, isMain) {
+      if (request === "vscode") {
+        return vscodeApi;
+      }
+
+      return originalLoad.call(this, request, parent, isMain);
+    };
+
+    delete require.cache[require.resolve("../out/services/projectStoreService")];
+    const { ProjectStoreService } = require("../out/services/projectStoreService");
+    const service = new ProjectStoreService({
+      globalStorageUri: vscodeApi.Uri.file(STORAGE_ROOT),
+    });
+    const storageFile = storageFilePath(STORAGE_ROOT);
+
+    fsState.files.set(
+      storageFile,
+      Buffer.from(
+        JSON.stringify([
+          {
+            id: "p1",
+            name: "Broken",
+            description: "Test",
+            type: "blank",
+            status: "oops",
+            path: "/tmp/broken",
+            createdAt: "2026-05-15T00:00:00.000Z",
+          },
+        ]),
+        "utf8"
+      )
+    );
+
+    const projects = await service.loadProjects();
+
+    assert.equal(projects.length, 0);
+    assert.equal(vscodeApi.__messages.warning.length > 0, true);
+  } finally {
+    Module._load = originalLoad;
+  }
 });
 
 test("isProjectMetadata rechaza esquema invalido anidado", () => {
@@ -388,6 +610,119 @@ function createMockVscode() {
       }
     },
   };
+}
+
+function createMockVscodeForStorage(fsState) {
+  const messages = {
+    warning: [],
+    error: [],
+    info: [],
+  };
+
+  const uriApi = {
+    file: (value) => ({
+      fsPath: value,
+      toString: () => value,
+    }),
+    joinPath: (base, ...parts) => {
+      const joined = require("node:path").win32.join(base.fsPath, ...parts);
+      return uriApi.file(joined);
+    },
+  };
+
+  return {
+    __messages: messages,
+    l10n: {
+      t: formatMessage,
+    },
+    Uri: uriApi,
+    TreeItem: class {
+      constructor(label, collapsibleState) {
+        this.label = label;
+        this.collapsibleState = collapsibleState;
+      }
+    },
+    TreeItemCollapsibleState: {
+      None: 0,
+    },
+    ThemeIcon: class {
+      constructor(id) {
+        this.id = id;
+      }
+    },
+    window: {
+      createOutputChannel: () => ({
+        appendLine: () => {},
+      }),
+      showWarningMessage: async (...args) => {
+        messages.warning.push(args);
+        return undefined;
+      },
+      showErrorMessage: async (...args) => {
+        messages.error.push(args);
+        return undefined;
+      },
+      showInformationMessage: async (...args) => {
+        messages.info.push(args);
+        return undefined;
+      },
+    },
+    workspace: {
+      fs: {
+        createDirectory: async () => {},
+        readFile: async (uri) => {
+          const file = fsState.files.get(uri.fsPath);
+          if (!file) {
+            throw new Error("ENOENT");
+          }
+
+          return file;
+        },
+        writeFile: async (uri, data) => {
+          fsState.files.set(uri.fsPath, Buffer.from(data));
+        },
+        rename: async (from, to) => {
+          const data = fsState.files.get(from.fsPath);
+          if (!data) {
+            throw new Error("ENOENT");
+          }
+
+          fsState.files.set(to.fsPath, Buffer.from(data));
+          fsState.files.delete(from.fsPath);
+        },
+        copy: async (from, to) => {
+          const data = fsState.files.get(from.fsPath);
+          if (!data) {
+            throw new Error("ENOENT");
+          }
+
+          fsState.files.set(to.fsPath, Buffer.from(data));
+        },
+        stat: async (uri) => {
+          if (!fsState.files.has(uri.fsPath)) {
+            throw new Error("ENOENT");
+          }
+        },
+        delete: async (uri) => {
+          fsState.files.delete(uri.fsPath);
+        },
+      },
+    },
+  };
+}
+
+function createMemoryFs() {
+  return {
+    files: new Map(),
+  };
+}
+
+function storageFilePath(root) {
+  return require("node:path").win32.join(root, "projects.json");
+}
+
+function storageBackupPath(root) {
+  return require("node:path").win32.join(root, "projects.json.bak");
 }
 
 function formatMessage(message, ...values) {
