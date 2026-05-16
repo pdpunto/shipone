@@ -318,7 +318,7 @@ Core features:
 - [x] Focus Mode
 - [x] STATUS.md
 - [x] Project Health
-- [ ] Weekly Review
+- [x] Weekly Review
 
 ### 5.2 Secondary Features
 

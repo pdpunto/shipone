@@ -96,6 +96,40 @@ test("buildStatusFileContent genera STATUS.md", () => {
   }
 });
 
+test("buildWeeklyReviewSummaryLines genera el resumen", () => {
+  const originalLoad = Module._load;
+
+  try {
+    Module._load = function patchedLoad(request, parent, isMain) {
+      if (request === "vscode") {
+        return {
+          l10n: {
+            t: formatMessage,
+          },
+        };
+      }
+
+      return originalLoad.call(this, request, parent, isMain);
+    };
+
+    delete require.cache[require.resolve("../out/utils/projectReviewDisplay")];
+    const { buildWeeklyReviewSummaryLines } = require("../out/utils/projectReviewDisplay");
+
+    const summary = buildWeeklyReviewSummaryLines({
+      activeName: "ShipOne",
+      pausedCount: 2,
+      finishedThisWeekCount: 1,
+    });
+
+    assert.equal(
+      summary,
+      "Activo: ShipOne | Pausados: 2 | Terminados esta semana: 1"
+    );
+  } finally {
+    Module._load = originalLoad;
+  }
+});
+
 test("parseMvpTasks conserva tareas existentes", () => {
   const currentTasks = [
     { id: "1", text: "Login", done: true },

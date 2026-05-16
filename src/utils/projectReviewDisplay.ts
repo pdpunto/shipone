@@ -14,3 +14,15 @@ export function buildPausedProjectDescription(
     .filter(Boolean)
     .join(" \u00b7 ");
 }
+
+export function buildWeeklyReviewSummaryLines(summary: {
+  activeName: string | null;
+  pausedCount: number;
+  finishedThisWeekCount: number;
+}): string {
+  return [
+    t("Activo: {0}", summary.activeName ?? t("ninguno")),
+    t("Pausados: {0}", summary.pausedCount),
+    t("Terminados esta semana: {0}", summary.finishedThisWeekCount),
+  ].join(" | ");
+}

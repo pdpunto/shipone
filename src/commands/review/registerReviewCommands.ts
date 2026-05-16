@@ -13,7 +13,10 @@ import {
   isStaleProject,
   pickProject,
 } from "../projects/projectOpsHelpers";
-import { buildPausedProjectDescription } from "../../utils/projectReviewDisplay";
+import {
+  buildPausedProjectDescription,
+  buildWeeklyReviewSummaryLines,
+} from "../../utils/projectReviewDisplay";
 
 const COMMAND_OPEN_PROJECT = "shipone.openProject";
 const COMMAND_SCAN_TODOS = "shipone.scanTodos";
@@ -99,16 +102,16 @@ export function registerReviewCommands(options: {
       );
       const finishedThisWeek = getFinishedThisWeek(projects);
 
-      const summaryLines = [
-        t("Activo: {0}", summary.active ? summary.active.name : t("ninguno")),
-        t("Pausados: {0}", pausedProjects.length),
-        t("Terminados esta semana: {0}", finishedThisWeek.length),
-      ];
+      const summaryLines = buildWeeklyReviewSummaryLines({
+        activeName: summary.active ? summary.active.name : null,
+        pausedCount: pausedProjects.length,
+        finishedThisWeekCount: finishedThisWeek.length,
+      });
 
       if (activeProject) {
         const actions = [t("Ver activo"), t("Salir")];
         const choice = await vscode.window.showInformationMessage(
-          summaryLines.join(" | "),
+          summaryLines,
           ...actions
         );
 
@@ -121,7 +124,7 @@ export function registerReviewCommands(options: {
           activeProject.id
         );
       } else {
-        vscode.window.showInformationMessage(summaryLines.join(" | "));
+        vscode.window.showInformationMessage(summaryLines);
       }
 
       if (activeProject && !activeProject.nextAction) {
