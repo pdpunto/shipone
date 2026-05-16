@@ -940,6 +940,102 @@ test("getRootNodes en focus mode muestra un unico nodo", async () => {
   }
 });
 
+test("ShipOneProjectsTreeDataProvider agrupa refresh seguidos", async () => {
+  const originalLoad = Module._load;
+
+  try {
+    Module._load = function patchedLoad(request, parent, isMain) {
+      if (request === "vscode") {
+        return {
+          ...createMockVscode(),
+          EventEmitter: class {
+            constructor() {
+              this.handlers = [];
+            }
+
+            event = (handler) => {
+              this.handlers.push(handler);
+              return { dispose: () => {} };
+            };
+
+            fire() {
+              for (const handler of this.handlers) {
+                handler();
+              }
+            }
+          },
+        };
+      }
+
+      return originalLoad.call(this, request, parent, isMain);
+    };
+
+    delete require.cache[require.resolve("../out/providers/shiponeProjectsTreeDataProvider")];
+    const { ShipOneProjectsTreeDataProvider } = require("../out/providers/shiponeProjectsTreeDataProvider");
+
+    const provider = new ShipOneProjectsTreeDataProvider(
+      {
+        loadProjects: async () => [],
+        getProjectsByStatus: async () => ({}),
+      },
+      {
+        getSettings: () => ({
+          inactiveWarningDays: 7,
+          staleWarningDays: 30,
+          showFinishedProjects: true,
+        }),
+      },
+      {
+        buildProjectHealth: async () => ({ label: "ok", issues: [] }),
+        getMetrics: () => ({
+          total: 0,
+          idea: 0,
+          active: 0,
+          paused: 0,
+          finished: 0,
+          finishRatio: 0,
+        }),
+        getInactivityWarning: () => null,
+      },
+      {
+        getFocusIcon: () => "eye",
+        getGroupIcon: () => "play",
+        getMetricsIcon: () => "graph",
+        getMetricItemIcon: () => "symbol-numeric",
+        getEmptyStateIcon: () => "info",
+        getWarningIcon: () => "alert",
+        getProjectIcon: () => "eye",
+      },
+      {
+        buildFocusTooltip: () => "tooltip",
+        buildGroupTooltip: () => "tooltip",
+        buildEmptyStateTooltip: () => "tooltip",
+        buildWarningTooltip: () => "tooltip",
+        buildProjectTooltip: () => "tooltip",
+      },
+      {
+        buildProjectDescription: () => "desc",
+      },
+      () => false
+    );
+
+    let refreshCount = 0;
+    provider.onDidChangeTreeData(() => {
+      refreshCount += 1;
+    });
+
+    provider.refresh();
+    provider.refresh();
+    provider.refresh();
+
+    await Promise.resolve();
+
+    assert.equal(refreshCount, 1);
+  } finally {
+    Module._load = originalLoad;
+  }
+});
+
 test("buildPausedProjectDescription muestra contexto de pausa", () => {
   const originalLoad = Module._load;
 

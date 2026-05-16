@@ -14,6 +14,7 @@ import { GroupNode } from "./treeNodes/groupNode";
 
 export class ShipOneProjectsTreeDataProvider implements vscode.TreeDataProvider<ShipOneTreeNode> {
   private readonly onDidChangeTreeDataEmitter = new vscode.EventEmitter<void>();
+  private refreshQueued = false;
 
   readonly onDidChangeTreeData = this.onDidChangeTreeDataEmitter.event;
 
@@ -28,7 +29,15 @@ export class ShipOneProjectsTreeDataProvider implements vscode.TreeDataProvider<
   ) {}
 
   refresh(): void {
-    this.onDidChangeTreeDataEmitter.fire();
+    if (this.refreshQueued) {
+      return;
+    }
+
+    this.refreshQueued = true;
+    queueMicrotask(() => {
+      this.refreshQueued = false;
+      this.onDidChangeTreeDataEmitter.fire();
+    });
   }
 
   getTreeItem(element: ShipOneTreeNode): vscode.TreeItem {
