@@ -328,7 +328,7 @@ Keep simple:
 - [x] TODO Scanner
 - [x] Templates
 - [x] GitHub Integration
-- [ ] Metrics
+- [x] Metrics
 
 ### 5.3 Feature Review
 

@@ -1288,6 +1288,108 @@ test("getRootNodes en focus mode muestra un unico nodo", async () => {
   }
 });
 
+test("getMetricsNodes muestra salud y resumen", async () => {
+  const originalLoad = Module._load;
+
+  try {
+    Module._load = function patchedLoad(request, parent, isMain) {
+      if (request === "vscode") {
+        return createMockVscode();
+      }
+
+      return originalLoad.call(this, request, parent, isMain);
+    };
+
+    delete require.cache[require.resolve("../out/providers/treeRendererService")];
+
+    const { TreeRendererService } = require("../out/providers/treeRendererService");
+
+    const renderer = new TreeRendererService(
+      {
+        loadProjects: async () => [
+          {
+            id: "p1",
+            name: "ShipOne",
+            description: "Test",
+            type: "blank",
+            status: "active",
+            path: "/tmp/shipone",
+            createdAt: "2026-05-15T00:00:00.000Z",
+            lastOpenedAt: "2026-05-15T00:00:00.000Z",
+            nextAction: "Crear login",
+          },
+          {
+            id: "p2",
+            name: "Paused",
+            description: "Test",
+            type: "blank",
+            status: "paused",
+            path: "/tmp/paused",
+            createdAt: "2026-05-15T00:00:00.000Z",
+          },
+        ],
+        getProjectsByStatus: async () => ({}),
+      },
+      {
+        getSettings: () => ({
+          inactiveWarningDays: 7,
+          staleWarningDays: 30,
+          showFinishedProjects: true,
+        }),
+      },
+      {
+        buildProjectHealth: async () => ({ label: "warning", issues: [] }),
+        getMetrics: () => ({
+          total: 2,
+          idea: 0,
+          active: 1,
+          paused: 1,
+          finished: 0,
+          finishRatio: 0,
+        }),
+        getInactivityWarning: () => null,
+        getHealthSummary: async () => ({
+          healthy: 1,
+          warning: 1,
+          bad: 0,
+        }),
+      },
+      {
+        getFocusIcon: () => "eye",
+        getGroupIcon: () => "play",
+        getMetricsIcon: () => "graph",
+        getMetricItemIcon: () => "symbol-numeric",
+        getEmptyStateIcon: () => "info",
+        getWarningIcon: () => "alert",
+        getProjectIcon: () => "eye",
+      },
+      {
+        buildFocusTooltip: () => "tooltip",
+        buildGroupTooltip: () => "tooltip",
+        buildEmptyStateTooltip: () => "tooltip",
+        buildWarningTooltip: () => "tooltip",
+        buildProjectTooltip: () => "tooltip",
+      },
+      {
+        buildProjectDescription: () => "desc",
+      },
+      () => false
+    );
+
+    const nodes = await renderer.getMetricsNodes();
+
+    assert.equal(nodes.length, 9);
+    assert.equal(nodes[0].label, "Total");
+    assert.equal(nodes[0].description, "2");
+    assert.equal(nodes[6].label, "healthy");
+    assert.equal(nodes[6].description, "1");
+    assert.equal(nodes[7].label, "warning");
+    assert.equal(nodes[7].description, "1");
+  } finally {
+    Module._load = originalLoad;
+  }
+});
+
 test("ShipOneProjectsTreeDataProvider agrupa refresh seguidos", async () => {
   const originalLoad = Module._load;
 
