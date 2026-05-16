@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `4.3 Manual QA`, empezando por `macOS`.
+Seguir con `4.3 Manual QA`, empezando por `Without GitHub CLI`.
 
 ## Bloqueos
 - Ninguno por ahora
