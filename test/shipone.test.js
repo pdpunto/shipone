@@ -372,6 +372,180 @@ test("ProjectStoreService marca metadata corrupta", async () => {
   }
 });
 
+test("ProjectStoreService aplica una sola activo", async () => {
+  const fixture = createStoreServiceFixture([
+    createProjectMetadata({
+      id: "p1",
+      name: "Uno",
+      description: "Test",
+      type: "blank",
+      status: "active",
+      path: "/tmp/uno",
+      createdAt: "2026-05-15T00:00:00.000Z",
+    }),
+  ]);
+
+  try {
+    const newProject = createProjectMetadata({
+      id: "p2",
+      name: "Dos",
+      description: "Test",
+      type: "blank",
+      status: "active",
+      path: "/tmp/dos",
+      createdAt: "2026-05-15T00:00:00.000Z",
+    });
+
+    await fixture.service.createProject(newProject, true);
+
+    const projects = await fixture.service.loadProjects();
+    const active = projects.filter((project) => project.status === "active");
+    const paused = projects.filter((project) => project.status === "paused");
+
+    assert.equal(active.length, 1);
+    assert.equal(active[0].id, "p2");
+    assert.equal(paused.length, 1);
+    assert.equal(paused[0].id, "p1");
+    assert.equal(
+      JSON.parse(fixture.fsState.files.get(fixture.storageFile).toString("utf8"))
+        .projects.length,
+      2
+    );
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
+test("ProjectStoreService cambia estado y limpia pausa", async () => {
+  const fixture = createStoreServiceFixture([
+    createProjectMetadata({
+      id: "p1",
+      name: "Uno",
+      description: "Test",
+      type: "blank",
+      status: "paused",
+      path: "/tmp/uno",
+      createdAt: "2026-05-15T00:00:00.000Z",
+      pauseReason: "Esperando feedback",
+      pauseNote: "Revisar login",
+    }),
+    createProjectMetadata({
+      id: "p2",
+      name: "Dos",
+      description: "Test",
+      type: "blank",
+      status: "active",
+      path: "/tmp/dos",
+      createdAt: "2026-05-15T00:00:00.000Z",
+    }),
+  ]);
+
+  try {
+    await fixture.service.setProjectStatus("p1", "active", true);
+
+    const projects = await fixture.service.loadProjects();
+    const target = projects.find((project) => project.id === "p1");
+    const other = projects.find((project) => project.id === "p2");
+
+    assert.equal(target.status, "active");
+    assert.equal(target.pauseReason, null);
+    assert.equal(target.pauseNote, null);
+    assert.equal(typeof target.lastOpenedAt, "string");
+    assert.equal(other.status, "paused");
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
+test("ProjectStoreService finaliza proyectos", async () => {
+  const fixture = createStoreServiceFixture([
+    createProjectMetadata({
+      id: "p1",
+      name: "Uno",
+      description: "Test",
+      type: "blank",
+      status: "active",
+      path: "/tmp/uno",
+      createdAt: "2026-05-15T00:00:00.000Z",
+      pauseReason: "Esperando feedback",
+      pauseNote: "Revisar login",
+    }),
+  ]);
+
+  try {
+    await fixture.service.setProjectStatus("p1", "finished", true);
+
+    const project = await fixture.service.getProject("p1");
+    assert.equal(project.status, "finished");
+    assert.equal(project.pauseReason, null);
+    assert.equal(project.pauseNote, null);
+    assert.equal(project.finishedAt !== null, true);
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
+test("ProjectStoreService mantiene pausa al pausar", async () => {
+  const fixture = createStoreServiceFixture([
+    createProjectMetadata({
+      id: "p1",
+      name: "Uno",
+      description: "Test",
+      type: "blank",
+      status: "active",
+      path: "/tmp/uno",
+      createdAt: "2026-05-15T00:00:00.000Z",
+      pauseReason: "Esperando feedback",
+      pauseNote: "Revisar login",
+    }),
+  ]);
+
+  try {
+    await fixture.service.setProjectStatus("p1", "paused", true);
+
+    const project = await fixture.service.getProject("p1");
+    assert.equal(project.status, "paused");
+    assert.equal(project.pauseReason, "Esperando feedback");
+    assert.equal(project.pauseNote, "Revisar login");
+    assert.equal(project.finishedAt, null);
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
+test("ProjectStoreService congela proyectos", async () => {
+  const fixture = createStoreServiceFixture([
+    createProjectMetadata({
+      id: "p1",
+      name: "Uno",
+      description: "Test",
+      type: "blank",
+      status: "active",
+      path: "/tmp/uno",
+      createdAt: "2026-05-15T00:00:00.000Z",
+      nextAction: "Crear login",
+    }),
+  ]);
+
+  try {
+    await fixture.service.freezeProject(
+      "p1",
+      "Esperando feedback",
+      "Retomar login",
+      "Bloqueado por dependencias externas"
+    );
+
+    const project = await fixture.service.getProject("p1");
+    assert.equal(project.status, "paused");
+    assert.equal(project.pauseReason, "Esperando feedback");
+    assert.equal(project.pauseNote, "Bloqueado por dependencias externas");
+    assert.equal(project.nextAction, "Retomar login");
+    assert.equal(project.finishedAt, null);
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
 test("isProjectMetadata rechaza esquema invalido anidado", () => {
   assert.equal(
     isProjectMetadata({
@@ -714,6 +888,49 @@ function createMockVscodeForStorage(fsState) {
 function createMemoryFs() {
   return {
     files: new Map(),
+  };
+}
+
+function createStoreServiceFixture(projects) {
+  const fsState = createMemoryFs();
+  const vscodeApi = createMockVscodeForStorage(fsState);
+  const storageFile = storageFilePath(STORAGE_ROOT);
+  fsState.files.set(
+    storageFile,
+    Buffer.from(
+      JSON.stringify(
+        {
+          version: 2,
+          projects,
+        },
+        null,
+        2
+      ),
+      "utf8"
+    )
+  );
+
+  const originalLoad = Module._load;
+  Module._load = function patchedLoad(request, parent, isMain) {
+    if (request === "vscode") {
+      return vscodeApi;
+    }
+
+    return originalLoad.call(this, request, parent, isMain);
+  };
+
+  delete require.cache[require.resolve("../out/services/projectStoreService")];
+  const { ProjectStoreService } = require("../out/services/projectStoreService");
+
+  return {
+    service: new ProjectStoreService({
+      globalStorageUri: vscodeApi.Uri.file(STORAGE_ROOT),
+    }),
+    fsState,
+    storageFile,
+    restoreLoad: () => {
+      Module._load = originalLoad;
+    },
   };
 }
 

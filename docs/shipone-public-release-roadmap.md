@@ -246,11 +246,11 @@ Storage:
 
 Status logic:
 
-- [ ] Test one active project rule
-- [ ] Test state transitions
-- [ ] Test finish flow
-- [ ] Test pause flow
-- [ ] Test freeze flow
+- [x] Test one active project rule
+- [x] Test state transitions
+- [x] Test finish flow
+- [x] Test pause flow
+- [x] Test freeze flow
 
 Health:
 

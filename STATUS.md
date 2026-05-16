@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `Test one active project rule`.
+Seguir con `Test missing README detection`.
 
 ## Bloqueos
 - Ninguno por ahora
