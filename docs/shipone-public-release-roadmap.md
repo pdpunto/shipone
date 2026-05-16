@@ -290,7 +290,7 @@ Scenarios:
 - [x] Without GitHub CLI
 - [x] Offline mode
 - [x] Paths with spaces
-- [ ] Unicode paths
+- [x] Unicode paths
 - [ ] Corrupted metadata
 - [ ] Empty workspace
 
