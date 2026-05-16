@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `4.4 Performance`, empezando por `Improve tree rendering performance`.
+Seguir con `5.1 Define Official Core`, empezando por `One Active Project`.
 
 ## Bloqueos
 - Ninguno por ahora

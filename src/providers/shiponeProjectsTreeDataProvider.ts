@@ -15,6 +15,7 @@ import { GroupNode } from "./treeNodes/groupNode";
 export class ShipOneProjectsTreeDataProvider implements vscode.TreeDataProvider<ShipOneTreeNode> {
   private readonly onDidChangeTreeDataEmitter = new vscode.EventEmitter<void>();
   private refreshQueued = false;
+  private readonly treeRenderer: TreeRendererService;
 
   readonly onDidChangeTreeData = this.onDidChangeTreeDataEmitter.event;
 
@@ -26,7 +27,16 @@ export class ShipOneProjectsTreeDataProvider implements vscode.TreeDataProvider<
     private readonly tooltipProvider: TreeTooltipProvider,
     private readonly healthRenderer: ProjectHealthRenderer,
     private readonly isFocusModeEnabled: () => boolean
-  ) {}
+  ) {
+    this.treeRenderer = new TreeRendererService(
+      this.projectStore,
+      this.settingsService,
+      this.projectHealthService,
+      this.iconProvider,
+      this.tooltipProvider,
+      this.healthRenderer
+    );
+  }
 
   refresh(): void {
     this.projectHealthService.clearCache();
@@ -46,26 +56,16 @@ export class ShipOneProjectsTreeDataProvider implements vscode.TreeDataProvider<
   }
 
   async getChildren(element?: ShipOneTreeNode): Promise<ShipOneTreeNode[]> {
-    // Construimos el renderer por llamada para mantener el provider fino y sin estado propio extra.
-    const renderer = new TreeRendererService(
-      this.projectStore,
-      this.settingsService,
-      this.projectHealthService,
-      this.iconProvider,
-      this.tooltipProvider,
-      this.healthRenderer
-    );
-
     if (!element) {
-      return renderer.getRootNodes(this.isFocusModeEnabled());
+      return this.treeRenderer.getRootNodes(this.isFocusModeEnabled());
     }
 
     if (element instanceof MetricsNode) {
-      return renderer.getMetricsNodes();
+      return this.treeRenderer.getMetricsNodes();
     }
 
     if (element instanceof GroupNode) {
-      return renderer.getGroupNodes(element.status);
+      return this.treeRenderer.getGroupNodes(element.status);
     }
 
     return [];

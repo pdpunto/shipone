@@ -300,8 +300,8 @@ Scenarios:
 - [x] Cache health checks
 - [x] Cache TODO scans
 - [x] Lazy-load heavy operations
-- [ ] Improve tree rendering performance
-- [ ] Avoid renderer recreation
+- [x] Improve tree rendering performance
+- [x] Avoid renderer recreation
 
 ---
 
