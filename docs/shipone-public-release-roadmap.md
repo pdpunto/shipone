@@ -297,7 +297,7 @@ Scenarios:
 ### 4.4 Performance
 
 - [x] Reduce unnecessary refreshes
-- [ ] Cache health checks
+- [x] Cache health checks
 - [ ] Cache TODO scans
 - [ ] Lazy-load heavy operations
 - [ ] Improve tree rendering performance

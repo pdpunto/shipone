@@ -21,6 +21,8 @@ export type ProjectMetrics = {
 };
 
 export class ProjectHealthService {
+  private readonly healthCache = new Map<string, Promise<ProjectHealth>>();
+
   getMetrics(projects: ProjectMetadata[]): ProjectMetrics {
     const total = projects.length;
     const idea = projects.filter((project) => project.status === "idea").length;
@@ -58,6 +60,39 @@ export class ProjectHealthService {
   }
 
   async buildProjectHealth(
+    project: ProjectMetadata,
+    inactiveWarningDays: number,
+    staleWarningDays: number
+  ): Promise<ProjectHealth> {
+    const cacheKey = [
+      project.path,
+      project.status,
+      project.lastOpenedAt ?? "",
+      project.nextAction ?? "",
+      inactiveWarningDays,
+      staleWarningDays,
+    ].join("|");
+
+    const cached = this.healthCache.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
+    const promise = this.computeProjectHealth(
+      project,
+      inactiveWarningDays,
+      staleWarningDays
+    );
+
+    this.healthCache.set(cacheKey, promise);
+    return promise;
+  }
+
+  clearCache(): void {
+    this.healthCache.clear();
+  }
+
+  private async computeProjectHealth(
     project: ProjectMetadata,
     inactiveWarningDays: number,
     staleWarningDays: number

@@ -809,6 +809,39 @@ test("ProjectHealthService detecta next action faltante", async () => {
   }
 });
 
+test("ProjectHealthService cachea comprobaciones de salud", async () => {
+  const fixture = createHealthServiceFixture({
+    readmeExists: true,
+    gitTimestamp: Date.now(),
+    counters: {
+      readme: 0,
+      git: 0,
+    },
+  });
+
+  try {
+    const project = fixture.buildProject({
+      id: "p1",
+      name: "ShipOne",
+      description: "Test",
+      type: "blank",
+      status: "active",
+      path: "C:\\tmp\\shipone",
+      createdAt: "2026-05-15T00:00:00.000Z",
+      nextAction: "Crear login",
+    });
+
+    const first = await fixture.service.buildProjectHealth(project, 7, 30);
+    const second = await fixture.service.buildProjectHealth(project, 7, 30);
+
+    assert.deepEqual(first, second);
+    assert.equal(fixture.counters.readme, 1);
+    assert.equal(fixture.counters.git, 1);
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
 test("buildProjectDescription muestra la salud visible", () => {
   const originalLoad = Module._load;
 
@@ -987,6 +1020,7 @@ test("ShipOneProjectsTreeDataProvider agrupa refresh seguidos", async () => {
       },
       {
         buildProjectHealth: async () => ({ label: "ok", issues: [] }),
+        clearCache: () => {},
         getMetrics: () => ({
           total: 0,
           idea: 0,
@@ -1192,7 +1226,7 @@ function createMockVscodeForStorage(fsState) {
   };
 }
 
-function createMockVscodeForHealth(readmeExists) {
+function createMockVscodeForHealth(readmeExists, counters) {
   const uriApi = {
     file: (value) => ({
       fsPath: value,
@@ -1212,6 +1246,9 @@ function createMockVscodeForHealth(readmeExists) {
     workspace: {
       fs: {
         stat: async (uri) => {
+          if (counters) {
+            counters.readme += 1;
+          }
           if (readmeExists && uri.fsPath.endsWith("README.md")) {
             return true;
           }
@@ -1391,7 +1428,8 @@ function createMockVscodeForGenericFs(fsState) {
 }
 
 function createHealthServiceFixture(options) {
-  const vscodeApi = createMockVscodeForHealth(options.readmeExists);
+  const counters = options.counters ?? { readme: 0, git: 0 };
+  const vscodeApi = createMockVscodeForHealth(options.readmeExists, counters);
   const originalLoad = Module._load;
 
   Module._load = function patchedLoad(request, parent, isMain) {
@@ -1406,6 +1444,7 @@ function createHealthServiceFixture(options) {
             callback = execOptions;
           }
 
+          counters.git += 1;
           if (typeof options.gitTimestamp === "number") {
             callback(null, `${Math.floor(options.gitTimestamp / 1000)}\n`, "");
             return;
@@ -1424,6 +1463,7 @@ function createHealthServiceFixture(options) {
 
   return {
     service: new ProjectHealthService(),
+    counters,
     restoreLoad: () => {
       Module._load = originalLoad;
     },
