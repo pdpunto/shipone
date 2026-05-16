@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `Test path sanitization`.
+Seguir con `Create project flow`.
 
 ## Bloqueos
 - Ninguno por ahora

@@ -598,6 +598,136 @@ test("getInactivityWarning detecta proyectos inactivos", () => {
   assert.equal(getInactivityWarning(undefined, 7, 30), null);
 });
 
+test("validateProjectName rechaza nombres vacios e invalidos", () => {
+  const originalLoad = Module._load;
+  const vscodeApi = createMockVscodeForGenericFs(createMemoryFs());
+
+  try {
+    Module._load = function patchedLoad(request, parent, isMain) {
+      if (request === "vscode") {
+        return vscodeApi;
+      }
+
+      return originalLoad.call(this, request, parent, isMain);
+    };
+
+    delete require.cache[require.resolve("../out/services/projectCreationService")];
+    const { validateProjectName } = require("../out/services/projectCreationService");
+
+    assert.equal(validateProjectName(""), "Escribe un nombre.");
+    assert.equal(
+      validateProjectName("Proyecto: Malo"),
+      "Usa solo letras, numeros, espacios, guiones o puntos."
+    );
+    assert.equal(validateProjectName("ShipOne"), undefined);
+  } finally {
+    Module._load = originalLoad;
+  }
+});
+
+test("sanitizeFolderName limpia caracteres raros", () => {
+  const originalLoad = Module._load;
+  const vscodeApi = createMockVscodeForGenericFs(createMemoryFs());
+
+  try {
+    Module._load = function patchedLoad(request, parent, isMain) {
+      if (request === "vscode") {
+        return vscodeApi;
+      }
+
+      return originalLoad.call(this, request, parent, isMain);
+    };
+
+    delete require.cache[require.resolve("../out/services/projectCreationService")];
+    const { sanitizeFolderName } = require("../out/services/projectCreationService");
+
+    assert.equal(sanitizeFolderName(" Mi proyecto/1 "), "Mi-proyecto-1");
+  } finally {
+    Module._load = originalLoad;
+  }
+});
+
+test("sanitizePackageName normaliza nombre npm", () => {
+  const fixture = createTemplateServiceFixture();
+
+  try {
+    delete require.cache[require.resolve("../out/services/templateService")];
+    const { sanitizePackageName } = require("../out/services/templateService");
+
+    assert.equal(sanitizePackageName("Mi Proyecto API!"), "mi-proyecto-api");
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
+test("TemplateService resuelve plantilla personalizada", async () => {
+  const fixture = createTemplateServiceFixture();
+
+  try {
+    delete require.cache[require.resolve("../out/services/templateService")];
+    const { TemplateService } = require("../out/services/templateService");
+    fixture.files.set(
+      "C:\\templates\\react-vite\\src\\App.tsx",
+      Buffer.from("console.log(\"custom\");", "utf8")
+    );
+
+    const service = new TemplateService();
+    await service.createSelectedTemplate(
+      fixture.vscode.Uri.file("C:\\dest"),
+      "ShipOne App",
+      "Test",
+      "react-vite",
+      "npm",
+      "C:\\templates"
+    );
+
+    assert.equal(
+      fixture.files.get("C:\\dest\\src\\App.tsx").toString("utf8"),
+      "console.log(\"custom\");"
+    );
+    assert.equal(
+      fixture.files.get("C:\\dest\\package.json").includes("shipone-app"),
+      true
+    );
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
+test("TodoScannerService encuentra TODO y FIXME", async () => {
+  const fixture = createTodoScannerFixture();
+
+  try {
+    fixture.directories.set("C:\\repo", [
+      ["README.md", fixture.vscode.FileType.File],
+      ["src", fixture.vscode.FileType.Directory],
+    ]);
+    fixture.directories.set("C:\\repo\\src", [
+      ["app.ts", fixture.vscode.FileType.File],
+    ]);
+    fixture.files.set(
+      "C:\\repo\\README.md",
+      Buffer.from("TODO: revisar\ntexto\nFIXME arreglar", "utf8")
+    );
+    fixture.files.set(
+      "C:\\repo\\src\\app.ts",
+      Buffer.from("const x = 1; // FIXME ajustar", "utf8")
+    );
+
+    delete require.cache[require.resolve("../out/services/todoScannerService")];
+    const { TodoScannerService } = require("../out/services/todoScannerService");
+    const service = new TodoScannerService();
+    const tasks = await service.scanProjectTodoTasks("C:\\repo");
+
+    assert.equal(tasks.length, 3);
+    assert.equal(tasks[0].kind, "TODO");
+    assert.equal(tasks[1].kind, "FIXME");
+    assert.equal(tasks[2].kind, "FIXME");
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
 test("ProjectHealthService detecta README faltante", async () => {
   const fixture = createHealthServiceFixture({
     readmeExists: false,
@@ -1000,6 +1130,167 @@ function createMockVscodeForHealth(readmeExists) {
 function createMemoryFs() {
   return {
     files: new Map(),
+    dirs: new Set(),
+    directories: new Map(),
+  };
+}
+
+function createTemplateServiceFixture() {
+  const fsState = createMemoryFs();
+  const originalLoad = Module._load;
+  const vscodeApi = createMockVscodeForGenericFs(fsState);
+
+  fsState.dirs.add("C:\\templates");
+  fsState.dirs.add("C:\\templates\\react-vite");
+  fsState.dirs.add("C:\\templates\\react-vite\\src");
+  fsState.directories.set("C:\\templates", [
+    ["react-vite", vscodeApi.FileType.Directory],
+  ]);
+  fsState.directories.set("C:\\templates\\react-vite", [
+    ["src", vscodeApi.FileType.Directory],
+  ]);
+  fsState.directories.set("C:\\templates\\react-vite\\src", [
+    ["App.tsx", vscodeApi.FileType.File],
+  ]);
+  fsState.files.set(
+    "C:\\templates\\react-vite\\src\\App.tsx",
+    Buffer.from("console.log(\"custom\");", "utf8")
+  );
+
+  Module._load = function patchedLoad(request, parent, isMain) {
+    if (request === "vscode") {
+      return vscodeApi;
+    }
+
+    return originalLoad.call(this, request, parent, isMain);
+  };
+
+  return {
+    files: fsState.files,
+    directories: fsState.directories,
+    vscode: vscodeApi,
+    restoreLoad: () => {
+      Module._load = originalLoad;
+    },
+  };
+}
+
+function createTodoScannerFixture() {
+  const fsState = createMemoryFs();
+  const originalLoad = Module._load;
+  const vscodeApi = createMockVscodeForGenericFs(fsState);
+
+  fsState.dirs.add("C:\\repo");
+  fsState.dirs.add("C:\\repo\\src");
+  fsState.directories.set("C:\\repo", [
+    ["README.md", vscodeApi.FileType.File],
+    ["src", vscodeApi.FileType.Directory],
+  ]);
+  fsState.directories.set("C:\\repo\\src", []);
+
+  Module._load = function patchedLoad(request, parent, isMain) {
+    if (request === "vscode") {
+      return vscodeApi;
+    }
+
+    return originalLoad.call(this, request, parent, isMain);
+  };
+
+  return {
+    files: fsState.files,
+    directories: fsState.directories,
+    restoreLoad: () => {
+      Module._load = originalLoad;
+    },
+    vscode: vscodeApi,
+  };
+}
+
+function createMockVscodeForGenericFs(fsState) {
+  const uriApi = {
+    file: (value) => ({
+      fsPath: value,
+      toString: () => value,
+    }),
+    joinPath: (base, ...parts) => {
+      const joined = require("node:path").win32.join(base.fsPath, ...parts);
+      return uriApi.file(joined);
+    },
+  };
+
+  const FileType = {
+    File: 1,
+    Directory: 2,
+    SymbolicLink: 64,
+  };
+
+  return {
+    l10n: {
+      t: formatMessage,
+    },
+    Uri: uriApi,
+    FileType,
+    workspace: {
+      fs: {
+        createDirectory: async (uri) => {
+          fsState.dirs.add(uri.fsPath);
+        },
+        readFile: async (uri) => {
+          const file = fsState.files.get(uri.fsPath);
+          if (!file) {
+            throw new Error("ENOENT");
+          }
+
+          return file;
+        },
+        writeFile: async (uri, data) => {
+          fsState.files.set(uri.fsPath, Buffer.from(data));
+        },
+        rename: async (from, to) => {
+          const data = fsState.files.get(from.fsPath);
+          if (!data) {
+            throw new Error("ENOENT");
+          }
+
+          fsState.files.set(to.fsPath, Buffer.from(data));
+          fsState.files.delete(from.fsPath);
+        },
+        copy: async (from, to) => {
+          const data = fsState.files.get(from.fsPath);
+          if (!data) {
+            throw new Error("ENOENT");
+          }
+
+          fsState.files.set(to.fsPath, Buffer.from(data));
+        },
+        stat: async (uri) => {
+          if (fsState.files.has(uri.fsPath) || fsState.dirs.has(uri.fsPath)) {
+            return true;
+          }
+
+          throw new Error("ENOENT");
+        },
+        delete: async (uri) => {
+          fsState.files.delete(uri.fsPath);
+          fsState.dirs.delete(uri.fsPath);
+        },
+        readDirectory: async (uri) => {
+          return fsState.directories.get(uri.fsPath) ?? [];
+        },
+      },
+      asRelativePath: (uri) => {
+        const path = require("node:path").win32;
+        return path.basename(uri.fsPath);
+      },
+    },
+    window: {
+      createOutputChannel: () => ({
+        appendLine: () => {},
+      }),
+      showWarningMessage: async () => undefined,
+      showErrorMessage: async () => undefined,
+      showInformationMessage: async () => undefined,
+    },
   };
 }
 

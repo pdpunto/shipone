@@ -509,7 +509,7 @@ export class ProjectCreationService {
   }
 }
 
-function validateProjectName(value: string): string | undefined {
+export function validateProjectName(value: string): string | undefined {
   if (!value.trim()) {
     return t("Escribe un nombre.");
   }
@@ -521,7 +521,7 @@ function validateProjectName(value: string): string | undefined {
   return undefined;
 }
 
-function sanitizeFolderName(value: string): string {
+export function sanitizeFolderName(value: string): string {
   return value
     .trim()
     .replace(/[^a-zA-Z0-9 _.-]/g, "-")

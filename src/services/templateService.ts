@@ -418,7 +418,7 @@ export class TemplateService {
   }
 }
 
-function sanitizePackageName(value: string): string {
+export function sanitizePackageName(value: string): string {
   return value
     .trim()
     .toLowerCase()

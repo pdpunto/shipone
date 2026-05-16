@@ -261,10 +261,10 @@ Health:
 
 Utilities:
 
-- [ ] Test path sanitization
-- [ ] Test project naming
-- [ ] Test template resolution
-- [ ] Test TODO scanner
+- [x] Test path sanitization
+- [x] Test project naming
+- [x] Test template resolution
+- [x] Test TODO scanner
 
 ### 4.2 Integration Tests
 
