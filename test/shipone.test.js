@@ -546,6 +546,42 @@ test("ProjectStoreService congela proyectos", async () => {
   }
 });
 
+test("confirmCanActivateProject bloquea otro activo", async () => {
+  const fixture = createIntegrationFixture();
+
+  try {
+    const projectOpsHelpersPath = require.resolve(
+      "../out/commands/projects/projectOpsHelpers"
+    );
+    delete require.cache[projectOpsHelpersPath];
+    const { confirmCanActivateProject } = require(projectOpsHelpersPath);
+
+    fixture.projectStore.projects = [
+      {
+        id: "p1",
+        name: "Uno",
+        status: "active",
+      },
+    ];
+
+    const result = await confirmCanActivateProject(
+      {
+        loadProjects: async () => fixture.projectStore.projects,
+      },
+      "p2"
+    );
+
+    assert.equal(result, false);
+    assert.equal(fixture.messages.warning.length, 1);
+    assert.equal(
+      fixture.messages.warning[0][0],
+      "Ya hay un proyecto activo: Uno."
+    );
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
 test("isProjectMetadata rechaza esquema invalido anidado", () => {
   assert.equal(
     isProjectMetadata({

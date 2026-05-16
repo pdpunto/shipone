@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `5.1 Define Official Core`, empezando por `One Active Project`.
+Seguir con `5.1 Define Official Core`, empezando por `Next Action`.
 
 ## Bloqueos
 - Ninguno por ahora

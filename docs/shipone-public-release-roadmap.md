@@ -313,7 +313,7 @@ Goal: keep ShipOne focused and avoid feature creep.
 
 Core features:
 
-- [ ] One Active Project
+- [x] One Active Project
 - [ ] Next Action
 - [ ] Focus Mode
 - [ ] STATUS.md
