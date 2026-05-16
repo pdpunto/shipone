@@ -96,6 +96,49 @@ test("buildStatusFileContent genera STATUS.md", () => {
   }
 });
 
+test("buildAiContextContent genera AI_CONTEXT.md", () => {
+  const originalLoad = Module._load;
+
+  try {
+    Module._load = function patchedLoad(request, parent, isMain) {
+      if (request === "vscode") {
+        return {
+          l10n: {
+            t: formatMessage,
+          },
+        };
+      }
+
+      return originalLoad.call(this, request, parent, isMain);
+    };
+
+    delete require.cache[require.resolve("../out/commands/projects/projectOpsHelpers")];
+    const { buildAiContextContent } = require("../out/commands/projects/projectOpsHelpers");
+
+    const content = buildAiContextContent(
+      {
+        name: "ShipOne",
+        status: "active",
+        type: "blank",
+        path: "C:\\tmp\\shipone",
+        favorite: false,
+        description: "Test",
+        nextAction: "Crear login",
+        mvpTasks: [{ id: "1", text: "Login", done: true }],
+      },
+      ["README faltante"]
+    );
+
+    assert.ok(content.includes("# ShipOne AI Context"));
+    assert.ok(content.includes("## Proyecto"));
+    assert.ok(content.includes("## Next action"));
+    assert.ok(content.includes("Crear login"));
+    assert.ok(content.includes("- README faltante"));
+  } finally {
+    Module._load = originalLoad;
+  }
+});
+
 test("buildWeeklyReviewSummaryLines genera el resumen", () => {
   const originalLoad = Module._load;
 
