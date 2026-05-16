@@ -1950,6 +1950,60 @@ test("Create project flow sin red sigue creando local", async () => {
   }
 });
 
+test("Create project flow con ruta con espacios mantiene la carpeta", async () => {
+  const fixture = createIntegrationFixtureWithOptions();
+  fixture.settings.projectsRoot = "C:\\tmp\\shipone projects";
+  fixture.settings.openAfterCreate = true;
+
+  try {
+    fixture.enqueueInput("ShipOne App");
+    fixture.enqueueInput("Proyecto web");
+    fixture.enqueueQuickPick((items) => items.find((item) => item.value === "react-vite"));
+    fixture.enqueueQuickPick((items) => items.find((item) => item.value === true));
+    fixture.enqueueQuickPick((items) => items.find((item) => item.value === true));
+    fixture.enqueueQuickPick((items) => items.find((item) => item.value === "private"));
+
+    delete require.cache[require.resolve("../out/services/projectCreationService")];
+    delete require.cache[require.resolve("../out/services/templateService")];
+    delete require.cache[require.resolve("../out/services/gitService")];
+    delete require.cache[require.resolve("../out/services/githubService")];
+    delete require.cache[require.resolve("../out/services/statusFileService")];
+
+    const { ProjectCreationService } = require("../out/services/projectCreationService");
+    const { TemplateService } = require("../out/services/templateService");
+    const { GitService } = require("../out/services/gitService");
+    const { GitHubService } = require("../out/services/githubService");
+    const { StatusFileService } = require("../out/services/statusFileService");
+
+    const service = new ProjectCreationService(
+      fixture.context,
+      fixture.projectStore,
+      new StatusFileService(),
+      {},
+      new TemplateService(),
+      new GitService(),
+      new GitHubService()
+    );
+
+    const project = await service.createProject(fixture.settings);
+
+    assert.equal(project.name, "ShipOne App");
+    assert.equal(project.path, "C:\\tmp\\shipone projects\\ShipOne-App");
+    assert.ok(
+      fixture.files.has("C:\\tmp\\shipone projects\\ShipOne-App\\STATUS.md")
+    );
+    assert.ok(
+      fixture.commandExecCalls.some(
+        (call) =>
+          call.name === "vscode.openFolder" &&
+          call.args[0]?.fsPath === "C:\\tmp\\shipone projects\\ShipOne-App"
+      )
+    );
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
 test("Open project flow abre la carpeta y marca acceso", async () => {
   const fixture = createIntegrationFixture();
 
