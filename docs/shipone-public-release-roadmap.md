@@ -280,7 +280,7 @@ Utilities:
 
 Platforms:
 
-- [ ] Windows
+- [x] Windows
 - [ ] macOS
 - [ ] Linux
 
