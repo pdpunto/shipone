@@ -268,13 +268,13 @@ Utilities:
 
 ### 4.2 Integration Tests
 
-- [ ] Create project flow
-- [ ] Open project flow
-- [ ] STATUS.md sync
-- [ ] Git init flow
-- [ ] GitHub creation flow
-- [ ] Focus mode flow
-- [ ] Weekly review flow
+- [x] Create project flow
+- [x] Open project flow
+- [x] STATUS.md sync
+- [x] Git init flow
+- [x] GitHub creation flow
+- [x] Focus mode flow
+- [x] Weekly review flow
 
 ### 4.3 Manual QA
 

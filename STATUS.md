@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `Create project flow`.
+Seguir con `4.3 Manual QA`, empezando por `Windows`.
 
 ## Bloqueos
 - Ninguno por ahora

@@ -1386,6 +1386,280 @@ function storageBackupPath(root) {
   return require("node:path").win32.join(root, "projects.json.bak");
 }
 
+function createIntegrationFixture() {
+  const fsState = createMemoryFs();
+  const originalLoad = Module._load;
+  const commandHandlers = new Map();
+  const inputQueue = [];
+  const quickPickQueue = [];
+  const infoQueue = [];
+  const warningQueue = [];
+  const errorQueue = [];
+  const execCalls = [];
+  const commandExecCalls = [];
+  const calls = { refresh: [] };
+
+  const uriApi = {
+    file: (value) => ({
+      fsPath: value,
+      toString: () => value,
+    }),
+    joinPath: (base, ...parts) => {
+      const joined = require("node:path").win32.join(base.fsPath, ...parts);
+      return uriApi.file(joined);
+    },
+  };
+
+  const FileType = {
+    File: 1,
+    Directory: 2,
+    SymbolicLink: 64,
+  };
+
+  const vscodeApi = {
+    l10n: {
+      t: formatMessage,
+    },
+    Uri: uriApi,
+    FileType,
+    ThemeIcon: class {
+      constructor(id) {
+        this.id = id;
+      }
+    },
+    Range: class {
+      constructor(startLine, startChar, endLine, endChar) {
+        this.startLine = startLine;
+        this.startChar = startChar;
+        this.endLine = endLine;
+        this.endChar = endChar;
+      }
+    },
+    Selection: class {
+      constructor(startLine, startChar, endLine, endChar) {
+        this.startLine = startLine;
+        this.startChar = startChar;
+        this.endLine = endLine;
+        this.endChar = endChar;
+      }
+    },
+    TextEditorRevealType: {
+      InCenter: 1,
+    },
+    commands: {
+      registerCommand: (name, handler) => {
+        commandHandlers.set(name, handler);
+        return { dispose: () => {} };
+      },
+      executeCommand: async (name, ...args) => {
+        commandExecCalls.push({ name, args });
+        const handler = commandHandlers.get(name);
+        if (handler) {
+          return handler(...args);
+        }
+        return undefined;
+      },
+    },
+    window: {
+      createOutputChannel: () => ({
+        appendLine: () => {},
+      }),
+      showInputBox: async () => {
+        const next = inputQueue.shift();
+        return typeof next === "function" ? next() : next;
+      },
+      showQuickPick: async (items, options) => {
+        const next = quickPickQueue.shift();
+        return typeof next === "function" ? next(items, options) : next;
+      },
+      showInformationMessage: async (...args) => {
+        infoQueue.push(args);
+        return undefined;
+      },
+      showWarningMessage: async (...args) => {
+        warningQueue.push(args);
+        return undefined;
+      },
+      showErrorMessage: async (...args) => {
+        errorQueue.push(args);
+        return undefined;
+      },
+      withProgress: async (_options, task) => task({ report: () => {} }),
+      showOpenDialog: async () => undefined,
+      showTextDocument: async () => undefined,
+      createTerminal: () => ({
+        show: () => {},
+        sendText: () => {},
+      }),
+    },
+    workspace: {
+      fs: {
+        createDirectory: async (uri) => {
+          fsState.dirs.add(uri.fsPath);
+        },
+        readFile: async (uri) => {
+          const file = fsState.files.get(uri.fsPath);
+          if (!file) {
+            throw new Error("ENOENT");
+          }
+          return file;
+        },
+        writeFile: async (uri, data) => {
+          fsState.files.set(uri.fsPath, Buffer.from(data));
+        },
+        rename: async (from, to) => {
+          const data = fsState.files.get(from.fsPath);
+          if (!data) {
+            throw new Error("ENOENT");
+          }
+          fsState.files.set(to.fsPath, Buffer.from(data));
+          fsState.files.delete(from.fsPath);
+        },
+        copy: async (from, to) => {
+          const data = fsState.files.get(from.fsPath);
+          if (!data) {
+            throw new Error("ENOENT");
+          }
+          fsState.files.set(to.fsPath, Buffer.from(data));
+        },
+        stat: async (uri) => {
+          if (fsState.files.has(uri.fsPath) || fsState.dirs.has(uri.fsPath)) {
+            return true;
+          }
+          throw new Error("ENOENT");
+        },
+        delete: async (uri) => {
+          fsState.files.delete(uri.fsPath);
+          fsState.dirs.delete(uri.fsPath);
+        },
+        readDirectory: async (uri) => fsState.directories.get(uri.fsPath) ?? [],
+      },
+      asRelativePath: (uri) => require("node:path").win32.basename(uri.fsPath),
+    },
+  };
+
+  const childProcessStub = {
+    execFile: (command, args, options, callback) => {
+      let cwd = undefined;
+      let cb = callback;
+
+      if (typeof options === "function") {
+        cb = options;
+      } else if (options && typeof options === "object") {
+        cwd = options.cwd;
+      }
+
+      execCalls.push({ command, args, cwd });
+
+      if (typeof cb !== "function") {
+        return;
+      }
+
+      if (command === "gh" && args[0] === "repo" && args[1] === "view") {
+        cb(null, "https://github.com/pdpunto/shipone\n", "");
+        return;
+      }
+
+      cb(null, "", "");
+    },
+  };
+
+  Module._load = function patchedLoad(request, parent, isMain) {
+    if (request === "vscode") {
+      return vscodeApi;
+    }
+
+    if (request === "child_process") {
+      return childProcessStub;
+    }
+
+    return originalLoad.call(this, request, parent, isMain);
+  };
+
+  const projectStore = {
+    projects: [],
+    projectsById: new Map(),
+    createdProjects: [],
+    markProjectOpenedCalls: [],
+    setNextActionCalls: [],
+    setProjectStatusCalls: [],
+    createProjectFolder: async (uri) => {
+      fsState.dirs.add(uri.fsPath);
+    },
+    createProject: async (project) => {
+      projectStore.createdProjects.push({ project });
+      projectStore.projects.push(project);
+      projectStore.projectsById.set(project.id, project);
+    },
+    loadProjects: async () => projectStore.projects,
+    getProject: async (projectId) => projectStore.projectsById.get(projectId),
+    markProjectOpened: async (projectId) => {
+      projectStore.markProjectOpenedCalls.push(projectId);
+    },
+    setNextAction: async (projectId, nextAction) => {
+      projectStore.setNextActionCalls.push([projectId, nextAction]);
+    },
+    setProjectStatus: async (projectId, status) => {
+      projectStore.setProjectStatusCalls.push([projectId, status]);
+    },
+    toggleFavorite: async () => {},
+    setMvpTasks: async () => {},
+    markMvpTaskDone: async () => {},
+    freezeProject: async () => {},
+  };
+
+  const workspaceState = new Map();
+  const context = {
+    subscriptions: [],
+    workspaceState: {
+      get: (key, defaultValue) =>
+        workspaceState.has(key) ? workspaceState.get(key) : defaultValue,
+      update: async (key, value) => {
+        workspaceState.set(key, value);
+      },
+    },
+  };
+
+  return {
+    vscode: vscodeApi,
+    files: fsState.files,
+    dirs: fsState.dirs,
+    directories: fsState.directories,
+    execCalls,
+    commandExecCalls,
+    commandHandlers,
+    projectStore,
+    context,
+    settings: {
+      projectsRoot: "C:\\tmp\\shipone-projects",
+      defaultProjectType: "blank",
+      defaultPackageManager: "npm",
+      createGitRepoByDefault: true,
+      createGitHubRepoByDefault: true,
+      defaultVisibility: "private",
+      createStatusFileByDefault: true,
+      openAfterCreate: false,
+      enforceOneActiveProject: true,
+      customTemplateFolder: "",
+      showFinishedProjects: true,
+      inactiveWarningDays: 7,
+      staleWarningDays: 30,
+    },
+    calls,
+    messages: {
+      info: infoQueue,
+      warning: warningQueue,
+      error: errorQueue,
+    },
+    calls,
+    enqueueInput: (value) => inputQueue.push(value),
+    enqueueQuickPick: (value) => quickPickQueue.push(value),
+    restoreLoad: () => {
+      Module._load = originalLoad;
+    },
+  };
+}
+
 function formatMessage(message, ...values) {
   return message.replace(/\{(\d+)\}/g, (_match, index) => {
     const value = values[Number(index)];
@@ -1404,4 +1678,172 @@ test("getFinishedThisWeek devuelve solo recientes", () => {
   ]);
 
   assert.equal(result.length, 1);
+});
+
+test("Create project flow cubre status, git y GitHub", async () => {
+  const fixture = createIntegrationFixture();
+
+  try {
+    fixture.enqueueInput("ShipOne App");
+    fixture.enqueueInput("Proyecto web");
+    fixture.enqueueQuickPick((items) => items.find((item) => item.value === "react-vite"));
+    fixture.enqueueQuickPick((items) => items.find((item) => item.value === true));
+    fixture.enqueueQuickPick((items) => items.find((item) => item.value === true));
+    fixture.enqueueQuickPick((items) => items.find((item) => item.value === "private"));
+
+    delete require.cache[require.resolve("../out/services/projectCreationService")];
+    delete require.cache[require.resolve("../out/services/templateService")];
+    delete require.cache[require.resolve("../out/services/gitService")];
+    delete require.cache[require.resolve("../out/services/githubService")];
+    delete require.cache[require.resolve("../out/services/statusFileService")];
+
+    const { ProjectCreationService } = require("../out/services/projectCreationService");
+    const { TemplateService } = require("../out/services/templateService");
+    const { GitService } = require("../out/services/gitService");
+    const { GitHubService } = require("../out/services/githubService");
+    const { StatusFileService } = require("../out/services/statusFileService");
+
+    const service = new ProjectCreationService(
+      fixture.context,
+      fixture.projectStore,
+      new StatusFileService(),
+      {},
+      new TemplateService(),
+      new GitService(),
+      new GitHubService()
+    );
+
+    const project = await service.createProject(fixture.settings);
+
+    assert.equal(project.name, "ShipOne App");
+    assert.equal(fixture.projectStore.createdProjects.length, 1);
+    assert.ok(
+      fixture.execCalls.some(
+        (call) =>
+          call.command === "gh" &&
+          call.args[0] === "repo" &&
+          call.args[1] === "create"
+      )
+    );
+    assert.ok(
+      fixture.execCalls.some(
+        (call) =>
+          call.command === "gh" &&
+          call.args[0] === "repo" &&
+          call.args[1] === "view"
+      )
+    );
+    assert.ok(fixture.files.has("C:\\tmp\\shipone-projects\\ShipOne-App\\STATUS.md"));
+    assert.ok(fixture.execCalls.some((call) => call.command === "git" && call.args[0] === "init"));
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
+test("Open project flow abre la carpeta y marca acceso", async () => {
+  const fixture = createIntegrationFixture();
+
+  try {
+    delete require.cache[require.resolve("../out/commands/projects/registerProjectCommands")];
+    const { registerProjectCommands } = require("../out/commands/projects/registerProjectCommands");
+
+    fixture.projectStore.projectsById.set("p1", {
+      id: "p1",
+      name: "ShipOne",
+      description: "Test",
+      type: "blank",
+      status: "active",
+      path: "C:\\tmp\\shipone-projects\\ShipOne",
+      createdAt: "2026-05-15T00:00:00.000Z",
+    });
+
+    registerProjectCommands({
+      context: fixture.context,
+      projectStore: fixture.projectStore,
+      settingsService: { getSettings: () => fixture.settings },
+      treeDataProvider: { refresh: () => fixture.calls.refresh.push(true) },
+      getSelectedProjectId: () => undefined,
+    });
+
+    await fixture.commandHandlers.get("shipone.openProject")("p1");
+
+    assert.deepEqual(fixture.projectStore.markProjectOpenedCalls, ["p1"]);
+    assert.ok(
+      fixture.commandExecCalls.some((call) => call.name === "vscode.openFolder")
+    );
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
+test("Focus mode flow activa y desactiva modo foco", async () => {
+  const fixture = createIntegrationFixture();
+
+  try {
+    delete require.cache[require.resolve("../out/commands/focus/registerFocusCommands")];
+    const { registerFocusCommands } = require("../out/commands/focus/registerFocusCommands");
+
+    const focusCalls = [];
+    registerFocusCommands({
+      setFocusMode: async (enabled) => {
+        focusCalls.push(enabled);
+      },
+    });
+
+    await fixture.commandHandlers.get("shipone.focusMode")();
+    await fixture.commandHandlers.get("shipone.exitFocusMode")();
+
+    assert.deepEqual(focusCalls, [true, false]);
+    assert.equal(fixture.messages.info.length, 2);
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
+test("Weekly review flow pide next action y resume resumen", async () => {
+  const fixture = createIntegrationFixture();
+
+  try {
+    delete require.cache[require.resolve("../out/commands/review/registerReviewCommands")];
+    const { registerReviewCommands } = require("../out/commands/review/registerReviewCommands");
+
+    fixture.projectStore.projects = [
+      {
+        id: "p1",
+        name: "ShipOne",
+        description: "Test",
+        type: "blank",
+        status: "active",
+        path: "C:\\tmp\\shipone-projects\\ShipOne",
+        createdAt: "2026-05-15T00:00:00.000Z",
+        lastOpenedAt: "2026-05-15T00:00:00.000Z",
+      },
+      {
+        id: "p2",
+        name: "Pause",
+        description: "Test",
+        type: "blank",
+        status: "paused",
+        path: "C:\\tmp\\shipone-projects\\Pause",
+        createdAt: "2026-05-15T00:00:00.000Z",
+      },
+    ];
+
+    fixture.enqueueInput("Crear login");
+
+    registerReviewCommands({
+      projectStore: fixture.projectStore,
+      settingsService: { getSettings: () => fixture.settings },
+      projectCreationService: {},
+      todoScannerService: {},
+      treeRefresh: () => fixture.calls.refresh.push(true),
+    });
+
+    await fixture.commandHandlers.get("shipone.weeklyReview")();
+
+    assert.deepEqual(fixture.projectStore.setNextActionCalls, [["p1", "Crear login"]]);
+    assert.equal(fixture.projectStore.setProjectStatusCalls.length, 0);
+  } finally {
+    fixture.restoreLoad();
+  }
 });
