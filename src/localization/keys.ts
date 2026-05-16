@@ -99,6 +99,7 @@ export const translationKeys = {
     privateOrPublic: "Privado o público?",
     projectNamePlaceholder: "my-saas-app",
     projectDescriptionPlaceholder: "Proyecto simple para ShipOne",
+    nextActionPlaceholder: "Escribe el siguiente paso",
     searchNamePlaceholder: "my-saas-app",
     tagPlaceholder: "frontend",
     typeOrAllPlaceholder: "Elige un tipo o deja todo",

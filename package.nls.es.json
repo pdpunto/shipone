@@ -132,6 +132,7 @@
   "Nombre del proyecto": "Nombre del proyecto",
   "Descripcion": "Descripción",
   "Proyecto simple para ShipOne": "Proyecto simple para ShipOne",
+  "Escribe el siguiente paso": "Escribe el siguiente paso",
   "GitHub no esta autenticado. Se omitira la creacion del repo.": "GitHub no esta autenticado. Se omitira la creacion del repo.",
   "Ya existe una carpeta con ese nombre. Prueba otro nombre o elige otra carpeta.": "Ya existe una carpeta con ese nombre. Prueba otro nombre o elige otra carpeta.",
   "No se pudo inicializar Git, pero el proyecto fue creado. Puedes hacerlo luego.": "No se pudo inicializar Git, pero el proyecto fue creado. Puedes hacerlo luego.",

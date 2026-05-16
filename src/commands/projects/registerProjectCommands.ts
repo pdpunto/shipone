@@ -173,7 +173,7 @@ export function registerProjectCommands(options: {
       const nextAction = await vscode.window.showInputBox({
         title: t("Siguiente accion"),
         prompt: t("Que hay que hacer ahora"),
-        placeHolder: t(k.common.createLoginPlaceholder),
+        placeHolder: t(k.common.nextActionPlaceholder),
         value: project.nextAction ?? "",
       });
 

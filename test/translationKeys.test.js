@@ -111,6 +111,12 @@ test("package.nls.es.json traduce claves estructuradas de creacion", () => {
   assert.equal(es["Carpeta destino"], "Carpeta destino");
 });
 
+test("package.nls.es.json traduce next action", () => {
+  const es = readJson("package.nls.es.json");
+
+  assert.equal(es["Escribe el siguiente paso"], "Escribe el siguiente paso");
+});
+
 test("package.nls.es.json traduce acentos rotos", () => {
   const es = readJson("package.nls.es.json");
 
