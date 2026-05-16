@@ -910,6 +910,68 @@ test("TodoScannerService cachea scans repetidos", async () => {
   }
 });
 
+test("TodoScannerService ignora carpetas pesadas", async () => {
+  const fixture = createTodoScannerFixture();
+
+  try {
+    fixture.directories.set("C:\\repo", [
+      ["src", fixture.vscode.FileType.Directory],
+      [".git", fixture.vscode.FileType.Directory],
+      ["node_modules", fixture.vscode.FileType.Directory],
+      ["out", fixture.vscode.FileType.Directory],
+      ["dist", fixture.vscode.FileType.Directory],
+    ]);
+    fixture.directories.set("C:\\repo\\src", [
+      ["app.ts", fixture.vscode.FileType.File],
+    ]);
+    fixture.directories.set("C:\\repo\\.git", [
+      ["ignored.ts", fixture.vscode.FileType.File],
+    ]);
+    fixture.directories.set("C:\\repo\\node_modules", [
+      ["ignored.ts", fixture.vscode.FileType.File],
+    ]);
+    fixture.directories.set("C:\\repo\\out", [
+      ["ignored.ts", fixture.vscode.FileType.File],
+    ]);
+    fixture.directories.set("C:\\repo\\dist", [
+      ["ignored.ts", fixture.vscode.FileType.File],
+    ]);
+    fixture.files.set(
+      "C:\\repo\\src\\app.ts",
+      Buffer.from("TODO: revisar", "utf8")
+    );
+    fixture.files.set(
+      "C:\\repo\\.git\\ignored.ts",
+      Buffer.from("TODO: no contar", "utf8")
+    );
+    fixture.files.set(
+      "C:\\repo\\node_modules\\ignored.ts",
+      Buffer.from("TODO: no contar", "utf8")
+    );
+    fixture.files.set(
+      "C:\\repo\\out\\ignored.ts",
+      Buffer.from("TODO: no contar", "utf8")
+    );
+    fixture.files.set(
+      "C:\\repo\\dist\\ignored.ts",
+      Buffer.from("TODO: no contar", "utf8")
+    );
+
+    delete require.cache[require.resolve("../out/services/todoScannerService")];
+    const { TodoScannerService } = require("../out/services/todoScannerService");
+    const service = new TodoScannerService();
+
+    const tasks = await service.scanProjectTodoTasks("C:\\repo");
+
+    assert.equal(tasks.length, 1);
+    assert.equal(tasks[0].fileName, "app.ts");
+    assert.equal(fixture.counters.readDirectory, 2);
+    assert.equal(fixture.counters.readFile, 1);
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
 test("ProjectHealthService detecta README faltante", async () => {
   const fixture = createHealthServiceFixture({
     readmeExists: false,

@@ -325,7 +325,7 @@ Core features:
 Keep simple:
 
 - [x] AI Context
-- [ ] TODO Scanner
+- [x] TODO Scanner
 - [ ] Templates
 - [ ] GitHub Integration
 - [ ] Metrics
