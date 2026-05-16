@@ -326,7 +326,7 @@ Keep simple:
 
 - [x] AI Context
 - [x] TODO Scanner
-- [ ] Templates
+- [x] Templates
 - [ ] GitHub Integration
 - [ ] Metrics
 

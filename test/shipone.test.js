@@ -841,6 +841,49 @@ test("TemplateService resuelve plantilla personalizada", async () => {
   }
 });
 
+test("TemplateService prefiere la plantilla custom del tipo", async () => {
+  const fixture = createTemplateServiceFixture();
+
+  try {
+    delete require.cache[require.resolve("../out/services/templateService")];
+    const { TemplateService } = require("../out/services/templateService");
+
+    fixture.files.set(
+      "C:\\templates\\react-vite\\react-vite\\src\\App.tsx",
+      Buffer.from("console.log(\"typed\");", "utf8")
+    );
+    fixture.directories.set("C:\\templates\\react-vite\\react-vite", [
+      ["src", fixture.vscode.FileType.Directory],
+    ]);
+    fixture.directories.set("C:\\templates\\react-vite\\react-vite\\src", [
+      ["App.tsx", fixture.vscode.FileType.File],
+    ]);
+    await fixture.vscode.workspace.fs.createDirectory(
+      fixture.vscode.Uri.file("C:\\templates\\react-vite\\react-vite")
+    );
+    await fixture.vscode.workspace.fs.createDirectory(
+      fixture.vscode.Uri.file("C:\\templates\\react-vite\\react-vite\\src")
+    );
+
+    const service = new TemplateService();
+    await service.createSelectedTemplate(
+      fixture.vscode.Uri.file("C:\\dest"),
+      "ShipOne App",
+      "Test",
+      "react-vite",
+      "npm",
+      "C:\\templates\\react-vite"
+    );
+
+    assert.equal(
+      fixture.files.get("C:\\dest\\src\\App.tsx").toString("utf8"),
+      "console.log(\"typed\");"
+    );
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
 test("TodoScannerService encuentra TODO y FIXME", async () => {
   const fixture = createTodoScannerFixture();
 
