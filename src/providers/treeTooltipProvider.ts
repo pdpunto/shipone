@@ -21,6 +21,7 @@ export class TreeTooltipProvider {
       t("**{0}**", project.name),
       "",
       t("Ruta: {0}", project.path),
+      project.nextAction ? t("Siguiente: {0}", project.nextAction) : t(k.tree.noNextAction),
       t("Salud: {0}", renderHealthLabel(health.label)),
       health.issues.length > 0
         ? t("Problemas: {0}", health.issues.map(renderIssueLabel).join(", "))

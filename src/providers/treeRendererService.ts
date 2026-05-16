@@ -66,20 +66,20 @@ export class TreeRendererService {
         settings.inactiveWarningDays,
         settings.staleWarningDays
       );
+      const warning = describeInactivityWarning(
+        activeProject.lastOpenedAt,
+        settings.inactiveWarningDays,
+        settings.staleWarningDays
+      );
 
       return [
         new FocusNode(
           activeProject,
           health,
+          warning,
           this.iconProvider,
-          this.tooltipProvider
-        ),
-        new GroupNode(
-          "active",
-          t(k.tree.active),
-          1,
-          this.iconProvider,
-          this.tooltipProvider
+          this.tooltipProvider,
+          this.healthRenderer
         ),
       ];
     }

@@ -243,6 +243,96 @@ test("buildProjectDescription muestra la salud visible", () => {
   }
 });
 
+test("getRootNodes en focus mode muestra un unico nodo", async () => {
+  const originalLoad = Module._load;
+
+  try {
+    Module._load = function patchedLoad(request, parent, isMain) {
+      if (request === "vscode") {
+        return createMockVscode();
+      }
+
+      return originalLoad.call(this, request, parent, isMain);
+    };
+
+    delete require.cache[require.resolve("../out/providers/treeRendererService")];
+    delete require.cache[require.resolve("../out/providers/treeNodes/focusNode")];
+
+    const { TreeRendererService } = require("../out/providers/treeRendererService");
+
+    const renderer = new TreeRendererService(
+      {
+        loadProjects: async () => [
+          {
+            id: "p1",
+            name: "ShipOne",
+            description: "Test",
+            type: "blank",
+            status: "active",
+            path: "/tmp/shipone",
+            createdAt: "2026-05-15T00:00:00.000Z",
+            lastOpenedAt: "2026-05-01T00:00:00.000Z",
+            nextAction: "Crear login",
+          },
+        ],
+        getProjectsByStatus: async () => ({}),
+      },
+      {
+        getSettings: () => ({
+          inactiveWarningDays: 7,
+          staleWarningDays: 30,
+          showFinishedProjects: true,
+        }),
+      },
+      {
+        buildProjectHealth: async () => ({
+          label: "warning",
+          issues: ["missing-next-action"],
+        }),
+        getMetrics: () => ({
+          total: 1,
+          idea: 0,
+          active: 1,
+          paused: 0,
+          finished: 0,
+          finishRatio: 0,
+        }),
+        getInactivityWarning: () => null,
+      },
+      {
+        getFocusIcon: () => "eye",
+        getGroupIcon: () => "play",
+        getMetricsIcon: () => "graph",
+        getMetricItemIcon: () => "symbol-numeric",
+        getEmptyStateIcon: () => "info",
+        getWarningIcon: () => "alert",
+        getProjectIcon: () => "eye",
+      },
+      {
+        buildFocusTooltip: () => "tooltip",
+        buildGroupTooltip: () => "tooltip",
+        buildEmptyStateTooltip: () => "tooltip",
+        buildWarningTooltip: () => "tooltip",
+        buildProjectTooltip: () => "tooltip",
+      },
+      {
+        buildProjectDescription: () => "Modo foco: ShipOne · Siguiente: Crear login",
+      }
+    );
+
+    const nodes = await renderer.getRootNodes(true);
+
+    assert.equal(nodes.length, 1);
+    assert.equal(nodes[0].label, "Focus mode: ShipOne");
+    assert.equal(
+      nodes[0].description,
+      "Modo foco: ShipOne · Siguiente: Crear login"
+    );
+  } finally {
+    Module._load = originalLoad;
+  }
+});
+
 test("buildPausedProjectDescription muestra contexto de pausa", () => {
   const originalLoad = Module._load;
 
@@ -277,6 +367,35 @@ test("buildPausedProjectDescription muestra contexto de pausa", () => {
     Module._load = originalLoad;
   }
 });
+
+function createMockVscode() {
+  return {
+    l10n: {
+      t: formatMessage,
+    },
+    TreeItem: class {
+      constructor(label, collapsibleState) {
+        this.label = label;
+        this.collapsibleState = collapsibleState;
+      }
+    },
+    TreeItemCollapsibleState: {
+      None: 0,
+    },
+    ThemeIcon: class {
+      constructor(id) {
+        this.id = id;
+      }
+    },
+  };
+}
+
+function formatMessage(message, ...values) {
+  return message.replace(/\{(\d+)\}/g, (_match, index) => {
+    const value = values[Number(index)];
+    return value === undefined ? _match : String(value);
+  });
+}
 
 test("getFinishedThisWeek devuelve solo recientes", () => {
   const recent = new Date(Date.now() - 2 * 86_400_000).toISOString();

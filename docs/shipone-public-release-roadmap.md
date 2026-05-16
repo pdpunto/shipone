@@ -205,11 +205,11 @@ Goal: make ShipOne feel simple, modern, and professional.
 
 ### 3.3 Focus UX
 
-- [ ] Improve Focus Mode visuals
-- [ ] Highlight next action better
-- [ ] Improve active project visibility
-- [ ] Reduce distraction in focus mode
-- [ ] Improve health summaries
+- [x] Improve Focus Mode visuals
+- [x] Highlight next action better
+- [x] Improve active project visibility
+- [x] Reduce distraction in focus mode
+- [x] Improve health summaries
 
 ### 3.4 Empty States
 
