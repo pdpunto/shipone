@@ -598,6 +598,87 @@ test("getInactivityWarning detecta proyectos inactivos", () => {
   assert.equal(getInactivityWarning(undefined, 7, 30), null);
 });
 
+test("ProjectHealthService detecta README faltante", async () => {
+  const fixture = createHealthServiceFixture({
+    readmeExists: false,
+    gitTimestamp: Date.now(),
+  });
+
+  try {
+    const project = fixture.buildProject({
+      id: "p1",
+      name: "ShipOne",
+      description: "Test",
+      type: "blank",
+      status: "active",
+      path: "C:\\tmp\\shipone",
+      createdAt: "2026-05-15T00:00:00.000Z",
+      nextAction: "Crear login",
+    });
+
+    const health = await fixture.service.buildProjectHealth(project, 7, 30);
+
+    assert.equal(health.label, "warning");
+    assert.ok(health.issues.includes("no-readme"));
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
+test("ProjectHealthService detecta Git viejo", async () => {
+  const oldTimestamp = Date.now() - 40 * 86_400_000;
+  const fixture = createHealthServiceFixture({
+    readmeExists: true,
+    gitTimestamp: oldTimestamp,
+  });
+
+  try {
+    const project = fixture.buildProject({
+      id: "p1",
+      name: "ShipOne",
+      description: "Test",
+      type: "blank",
+      status: "active",
+      path: "C:\\tmp\\shipone",
+      createdAt: "2026-05-15T00:00:00.000Z",
+      nextAction: "Crear login",
+    });
+
+    const health = await fixture.service.buildProjectHealth(project, 7, 30);
+
+    assert.equal(health.label, "warning");
+    assert.deepEqual(health.issues, ["no-recent-commits"]);
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
+test("ProjectHealthService detecta next action faltante", async () => {
+  const fixture = createHealthServiceFixture({
+    readmeExists: true,
+    gitTimestamp: Date.now(),
+  });
+
+  try {
+    const project = fixture.buildProject({
+      id: "p1",
+      name: "ShipOne",
+      description: "Test",
+      type: "blank",
+      status: "idea",
+      path: "C:\\tmp\\shipone",
+      createdAt: "2026-05-15T00:00:00.000Z",
+    });
+
+    const health = await fixture.service.buildProjectHealth(project, 7, 30);
+
+    assert.equal(health.label, "warning");
+    assert.ok(health.issues.includes("missing-next-action"));
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
 test("buildProjectDescription muestra la salud visible", () => {
   const originalLoad = Module._load;
 
@@ -885,9 +966,81 @@ function createMockVscodeForStorage(fsState) {
   };
 }
 
+function createMockVscodeForHealth(readmeExists) {
+  const uriApi = {
+    file: (value) => ({
+      fsPath: value,
+      toString: () => value,
+    }),
+    joinPath: (base, ...parts) => {
+      const joined = require("node:path").win32.join(base.fsPath, ...parts);
+      return uriApi.file(joined);
+    },
+  };
+
+  return {
+    l10n: {
+      t: formatMessage,
+    },
+    Uri: uriApi,
+    workspace: {
+      fs: {
+        stat: async (uri) => {
+          if (readmeExists && uri.fsPath.endsWith("README.md")) {
+            return true;
+          }
+
+          throw new Error("ENOENT");
+        },
+      },
+    },
+  };
+}
+
 function createMemoryFs() {
   return {
     files: new Map(),
+  };
+}
+
+function createHealthServiceFixture(options) {
+  const vscodeApi = createMockVscodeForHealth(options.readmeExists);
+  const originalLoad = Module._load;
+
+  Module._load = function patchedLoad(request, parent, isMain) {
+    if (request === "vscode") {
+      return vscodeApi;
+    }
+
+    if (request === "child_process") {
+      return {
+        execFile: (_command, _args, execOptions, callback) => {
+          if (typeof execOptions === "function") {
+            callback = execOptions;
+          }
+
+          if (typeof options.gitTimestamp === "number") {
+            callback(null, `${Math.floor(options.gitTimestamp / 1000)}\n`, "");
+            return;
+          }
+
+          callback(new Error("git error"));
+        },
+      };
+    }
+
+    return originalLoad.call(this, request, parent, isMain);
+  };
+
+  delete require.cache[require.resolve("../out/services/projectHealthService")];
+  const { ProjectHealthService } = require("../out/services/projectHealthService");
+
+  return {
+    service: new ProjectHealthService(),
+    restoreLoad: () => {
+      Module._load = originalLoad;
+    },
+    buildProject: (project) => project,
   };
 }
 
