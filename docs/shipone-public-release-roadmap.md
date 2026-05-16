@@ -315,7 +315,7 @@ Core features:
 
 - [x] One Active Project
 - [x] Next Action
-- [ ] Focus Mode
+- [x] Focus Mode
 - [ ] STATUS.md
 - [ ] Project Health
 - [ ] Weekly Review

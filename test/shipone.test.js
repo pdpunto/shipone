@@ -2369,6 +2369,28 @@ test("Focus mode flow activa y desactiva modo foco", async () => {
   }
 });
 
+test("ShipOneApp no repite focus mode igual", async () => {
+  const fixture = createIntegrationFixture();
+
+  try {
+    delete require.cache[require.resolve("../out/bootstrap/shiponeApp")];
+    const { ShipOneApp } = require("../out/bootstrap/shiponeApp");
+    const app = new ShipOneApp(fixture.context);
+
+    await app.setFocusMode(true);
+    await app.setFocusMode(true);
+    await app.setFocusMode(false);
+
+    assert.equal(fixture.context.workspaceState.get("shipone.focusMode"), false);
+    assert.equal(
+      fixture.commandExecCalls.filter((call) => call.name === "setContext").length,
+      2
+    );
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
 test("Weekly review flow pide next action y resume resumen", async () => {
   const fixture = createIntegrationFixture();
 

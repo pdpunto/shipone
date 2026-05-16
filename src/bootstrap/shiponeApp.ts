@@ -185,6 +185,10 @@ export class ShipOneApp {
   }
 
   private async setFocusMode(enabled: boolean): Promise<void> {
+    if (this.focusModeEnabled === enabled) {
+      return;
+    }
+
     this.focusModeEnabled = enabled;
     await this.context.workspaceState.update(FOCUS_MODE_STATE_KEY, enabled);
     await vscode.commands.executeCommand(
