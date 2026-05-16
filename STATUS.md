@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `5.2 Secondary Features`, empezando por `GitHub Integration`.
+Seguir con `5.2 Secondary Features`, empezando por `Metrics`.
 
 ## Bloqueos
 - Ninguno por ahora

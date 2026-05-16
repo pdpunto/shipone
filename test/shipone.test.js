@@ -2362,6 +2362,23 @@ test("GitHubService avisa si falta GitHub CLI", async () => {
   }
 });
 
+test("GitHubService confirma conexion cuando ya esta autenticado", async () => {
+  const fixture = createIntegrationFixture();
+
+  try {
+    delete require.cache[require.resolve("../out/services/githubService")];
+    const { GitHubService } = require("../out/services/githubService");
+    const service = new GitHubService();
+
+    await service.connectGitHub();
+
+    assert.equal(fixture.messages.info.length, 1);
+    assert.equal(fixture.messages.warning.length, 0);
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
 test("Create project flow sin red sigue creando local", async () => {
   const fixture = createIntegrationFixtureWithOptions({
     failGitHubRepoCreate: true,
