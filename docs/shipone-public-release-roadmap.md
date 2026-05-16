@@ -291,7 +291,7 @@ Scenarios:
 - [x] Offline mode
 - [x] Paths with spaces
 - [x] Unicode paths
-- [ ] Corrupted metadata
+- [x] Corrupted metadata
 - [ ] Empty workspace
 
 ### 4.4 Performance
