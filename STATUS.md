@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `4.3 Manual QA`, empezando por `Empty workspace`.
+Seguir con `4.4 Performance`, empezando por `Reduce unnecessary refreshes`.
 
 ## Bloqueos
 - Ninguno por ahora

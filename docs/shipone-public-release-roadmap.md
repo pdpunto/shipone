@@ -292,7 +292,7 @@ Scenarios:
 - [x] Paths with spaces
 - [x] Unicode paths
 - [x] Corrupted metadata
-- [ ] Empty workspace
+- [x] Empty workspace
 
 ### 4.4 Performance
 
