@@ -1669,6 +1669,78 @@ function createIntegrationFixtureWithOptions(options = {}) {
   };
 }
 
+function createGitHubCliFixture() {
+  const originalLoad = Module._load;
+  const messages = {
+    warning: [],
+    info: [],
+  };
+  const commandsExecuted = [];
+
+  const vscodeApi = {
+    l10n: {
+      t: formatMessage,
+    },
+    window: {
+      createOutputChannel: () => ({
+        appendLine: () => {},
+      }),
+      showWarningMessage: async (...args) => {
+        messages.warning.push(args);
+        return args[1];
+      },
+      showInformationMessage: async (...args) => {
+        messages.info.push(args);
+        return undefined;
+      },
+      createTerminal: () => ({
+        show: () => {},
+        sendText: () => {},
+      }),
+    },
+    commands: {
+      executeCommand: async (...args) => {
+        commandsExecuted.push(args);
+      },
+    },
+  };
+
+  Module._load = function patchedLoad(request, parent, isMain) {
+    if (request === "vscode") {
+      return vscodeApi;
+    }
+
+    if (request === "child_process") {
+      return {
+        execFile: (command, args, options, callback) => {
+          let cb = callback;
+
+          if (typeof options === "function") {
+            cb = options;
+          }
+
+          if (command === "gh" && args[0] === "--version") {
+            cb(new Error("gh missing"), "", "");
+            return;
+          }
+
+          cb(null, "", "");
+        },
+      };
+    }
+
+    return originalLoad.call(this, request, parent, isMain);
+  };
+
+  return {
+    messages,
+    commandsExecuted,
+    restoreLoad: () => {
+      Module._load = originalLoad;
+    },
+  };
+}
+
 function formatMessage(message, ...values) {
   return message.replace(/\{(\d+)\}/g, (_match, index) => {
     const value = values[Number(index)];
@@ -1788,6 +1860,26 @@ test("Create project flow sin Git muestra aviso y sigue", async () => {
     assert.equal(fixture.projectStore.createdProjects.length, 1);
     assert.ok(fixture.messages.warning.length > 0);
     assert.equal(project.repoUrl, null);
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
+test("GitHubService avisa si falta GitHub CLI", async () => {
+  const fixture = createGitHubCliFixture();
+
+  try {
+    delete require.cache[require.resolve("../out/services/githubService")];
+    const { GitHubService } = require("../out/services/githubService");
+    const service = new GitHubService();
+
+    await service.connectGitHub();
+
+    assert.equal(fixture.messages.warning.length, 1);
+    assert.equal(fixture.messages.info.length, 0);
+    assert.deepEqual(fixture.commandsExecuted, [
+      ["workbench.action.openSettings", "GitHub"],
+    ]);
   } finally {
     fixture.restoreLoad();
   }

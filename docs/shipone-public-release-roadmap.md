@@ -287,7 +287,7 @@ Platforms:
 Scenarios:
 
 - [x] Without Git
-- [ ] Without GitHub CLI
+- [x] Without GitHub CLI
 - [ ] Offline mode
 - [ ] Paths with spaces
 - [ ] Unicode paths
