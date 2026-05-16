@@ -947,6 +947,34 @@ test("ProjectHealthService cachea comprobaciones de salud", async () => {
   }
 });
 
+test("ProjectHealthService resume salud del conjunto", async () => {
+  const fixture = createHealthServiceFixture({
+    readmeExists: true,
+    gitTimestamp: Date.now(),
+  });
+
+  try {
+    const projects = [
+      { id: "p1", health: "healthy" },
+      { id: "p2", health: "warning" },
+      { id: "p3", health: "bad" },
+    ];
+
+    fixture.service.buildProjectHealth = async (project) => ({
+      label: project.health,
+      issues: [],
+    });
+
+    const summary = await fixture.service.getHealthSummary(projects, 7, 30);
+
+    assert.equal(summary.healthy, 1);
+    assert.equal(summary.warning, 1);
+    assert.equal(summary.bad, 1);
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
 test("buildProjectDescription muestra la salud visible", () => {
   const originalLoad = Module._load;
 

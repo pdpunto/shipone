@@ -20,6 +20,12 @@ export type ProjectMetrics = {
   finishRatio: number;
 };
 
+export type ProjectHealthSummary = {
+  healthy: number;
+  warning: number;
+  bad: number;
+};
+
 export class ProjectHealthService {
   private readonly healthCache = new Map<string, Promise<ProjectHealth>>();
 
@@ -57,6 +63,24 @@ export class ProjectHealthService {
       inactiveWarningDays,
       staleWarningDays
     );
+  }
+
+  async getHealthSummary(
+    projects: ProjectMetadata[],
+    inactiveWarningDays: number,
+    staleWarningDays: number
+  ): Promise<ProjectHealthSummary> {
+    const healths = await Promise.all(
+      projects.map((project) =>
+        this.buildProjectHealth(project, inactiveWarningDays, staleWarningDays)
+      )
+    );
+
+    return {
+      healthy: healths.filter((health) => health.label === "healthy").length,
+      warning: healths.filter((health) => health.label === "warning").length,
+      bad: healths.filter((health) => health.label === "bad").length,
+    };
   }
 
   async buildProjectHealth(
