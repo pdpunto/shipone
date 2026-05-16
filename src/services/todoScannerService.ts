@@ -9,18 +9,33 @@ export type TodoTask = {
 };
 
 export class TodoScannerService {
-  async scanProjectTodoTasks(projectPath: string): Promise<TodoTask[]> {
-    const rootUri = vscode.Uri.file(projectPath);
-    const tasks: TodoTask[] = [];
+  private readonly scanCache = new Map<string, Promise<TodoTask[]>>();
 
-    await this.walkTodoFiles(rootUri, tasks);
-    return tasks;
+  async scanProjectTodoTasks(projectPath: string): Promise<TodoTask[]> {
+    const cached = this.scanCache.get(projectPath);
+    if (cached) {
+      return cached;
+    }
+
+    const rootUri = vscode.Uri.file(projectPath);
+    const promise = this.walkTodoFiles(rootUri, []).then((tasks) => tasks);
+    this.scanCache.set(projectPath, promise);
+    return promise;
+  }
+
+  clearCache(projectPath?: string): void {
+    if (projectPath) {
+      this.scanCache.delete(projectPath);
+      return;
+    }
+
+    this.scanCache.clear();
   }
 
   private async walkTodoFiles(
     dirUri: vscode.Uri,
     tasks: TodoTask[]
-  ): Promise<void> {
+  ): Promise<TodoTask[]> {
     const entries = await vscode.workspace.fs.readDirectory(dirUri);
 
     for (const [name, type] of entries) {
@@ -47,6 +62,8 @@ export class TodoScannerService {
       const fileTasks = await this.readTodoTasksFromFile(childUri);
       tasks.push(...fileTasks);
     }
+
+    return tasks;
   }
 
   private async readTodoTasksFromFile(uri: vscode.Uri): Promise<TodoTask[]> {

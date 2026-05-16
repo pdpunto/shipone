@@ -728,6 +728,41 @@ test("TodoScannerService encuentra TODO y FIXME", async () => {
   }
 });
 
+test("TodoScannerService cachea scans repetidos", async () => {
+  const fixture = createTodoScannerFixture();
+
+  try {
+    fixture.directories.set("C:\\repo", [
+      ["README.md", fixture.vscode.FileType.File],
+      ["src", fixture.vscode.FileType.Directory],
+    ]);
+    fixture.directories.set("C:\\repo\\src", [
+      ["app.ts", fixture.vscode.FileType.File],
+    ]);
+    fixture.files.set(
+      "C:\\repo\\README.md",
+      Buffer.from("TODO: revisar\ntexto\nFIXME arreglar", "utf8")
+    );
+    fixture.files.set(
+      "C:\\repo\\src\\app.ts",
+      Buffer.from("const x = 1; // FIXME ajustar", "utf8")
+    );
+
+    delete require.cache[require.resolve("../out/services/todoScannerService")];
+    const { TodoScannerService } = require("../out/services/todoScannerService");
+    const service = new TodoScannerService();
+
+    const first = await service.scanProjectTodoTasks("C:\\repo");
+    const second = await service.scanProjectTodoTasks("C:\\repo");
+
+    assert.deepEqual(first, second);
+    assert.equal(fixture.counters.readDirectory, 2);
+    assert.equal(fixture.counters.readFile, 2);
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
 test("ProjectHealthService detecta README faltante", async () => {
   const fixture = createHealthServiceFixture({
     readmeExists: false,
@@ -1311,7 +1346,8 @@ function createTemplateServiceFixture() {
 function createTodoScannerFixture() {
   const fsState = createMemoryFs();
   const originalLoad = Module._load;
-  const vscodeApi = createMockVscodeForGenericFs(fsState);
+  const counters = { readDirectory: 0, readFile: 0 };
+  const vscodeApi = createMockVscodeForGenericFs(fsState, counters);
 
   fsState.dirs.add("C:\\repo");
   fsState.dirs.add("C:\\repo\\src");
@@ -1330,6 +1366,7 @@ function createTodoScannerFixture() {
   };
 
   return {
+    counters,
     files: fsState.files,
     directories: fsState.directories,
     restoreLoad: () => {
@@ -1339,7 +1376,7 @@ function createTodoScannerFixture() {
   };
 }
 
-function createMockVscodeForGenericFs(fsState) {
+function createMockVscodeForGenericFs(fsState, counters) {
   const uriApi = {
     file: (value) => ({
       fsPath: value,
@@ -1369,6 +1406,9 @@ function createMockVscodeForGenericFs(fsState) {
           fsState.dirs.add(uri.fsPath);
         },
         readFile: async (uri) => {
+          if (counters) {
+            counters.readFile += 1;
+          }
           const file = fsState.files.get(uri.fsPath);
           if (!file) {
             throw new Error("ENOENT");
@@ -1408,6 +1448,9 @@ function createMockVscodeForGenericFs(fsState) {
           fsState.dirs.delete(uri.fsPath);
         },
         readDirectory: async (uri) => {
+          if (counters) {
+            counters.readDirectory += 1;
+          }
           return fsState.directories.get(uri.fsPath) ?? [];
         },
       },

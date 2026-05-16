@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `4.4 Performance`, empezando por `Cache TODO scans`.
+Seguir con `4.4 Performance`, empezando por `Lazy-load heavy operations`.
 
 ## Bloqueos
 - Ninguno por ahora
