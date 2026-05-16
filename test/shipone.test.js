@@ -1569,6 +1569,16 @@ function createIntegrationFixtureWithOptions(options = {}) {
         return;
       }
 
+      if (
+        options.failGitHubRepoCreate &&
+        command === "gh" &&
+        args[0] === "repo" &&
+        args[1] === "create"
+      ) {
+        cb(new Error("offline"), "", "offline");
+        return;
+      }
+
       cb(null, "", "");
     },
   };
@@ -1880,6 +1890,61 @@ test("GitHubService avisa si falta GitHub CLI", async () => {
     assert.deepEqual(fixture.commandsExecuted, [
       ["workbench.action.openSettings", "GitHub"],
     ]);
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
+test("Create project flow sin red sigue creando local", async () => {
+  const fixture = createIntegrationFixtureWithOptions({
+    failGitHubRepoCreate: true,
+  });
+
+  try {
+    fixture.enqueueInput("ShipOne App");
+    fixture.enqueueInput("Proyecto web");
+    fixture.enqueueQuickPick((items) => items.find((item) => item.value === "react-vite"));
+    fixture.enqueueQuickPick((items) => items.find((item) => item.value === true));
+    fixture.enqueueQuickPick((items) => items.find((item) => item.value === true));
+    fixture.enqueueQuickPick((items) => items.find((item) => item.value === "private"));
+    fixture.enqueueQuickPick((items) => items.find((item) => item === "openFolder"));
+
+    delete require.cache[require.resolve("../out/services/projectCreationService")];
+    delete require.cache[require.resolve("../out/services/templateService")];
+    delete require.cache[require.resolve("../out/services/gitService")];
+    delete require.cache[require.resolve("../out/services/githubService")];
+    delete require.cache[require.resolve("../out/services/statusFileService")];
+
+    const { ProjectCreationService } = require("../out/services/projectCreationService");
+    const { TemplateService } = require("../out/services/templateService");
+    const { GitService } = require("../out/services/gitService");
+    const { GitHubService } = require("../out/services/githubService");
+    const { StatusFileService } = require("../out/services/statusFileService");
+
+    const service = new ProjectCreationService(
+      fixture.context,
+      fixture.projectStore,
+      new StatusFileService(),
+      {},
+      new TemplateService(),
+      new GitService(),
+      new GitHubService()
+    );
+
+    const project = await service.createProject(fixture.settings);
+
+    assert.equal(project.name, "ShipOne App");
+    assert.equal(project.repoUrl, null);
+    assert.equal(fixture.projectStore.createdProjects.length, 1);
+    assert.ok(fixture.messages.warning.length > 0);
+    assert.ok(
+      fixture.execCalls.some(
+        (call) =>
+          call.command === "gh" &&
+          call.args[0] === "repo" &&
+          call.args[1] === "create"
+      )
+    );
   } finally {
     fixture.restoreLoad();
   }

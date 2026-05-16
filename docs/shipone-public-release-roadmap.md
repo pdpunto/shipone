@@ -288,7 +288,7 @@ Scenarios:
 
 - [x] Without Git
 - [x] Without GitHub CLI
-- [ ] Offline mode
+- [x] Offline mode
 - [ ] Paths with spaces
 - [ ] Unicode paths
 - [ ] Corrupted metadata

@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `4.3 Manual QA`, empezando por `Offline mode`.
+Seguir con `4.3 Manual QA`, empezando por `Paths with spaces`.
 
 ## Bloqueos
 - Ninguno por ahora
