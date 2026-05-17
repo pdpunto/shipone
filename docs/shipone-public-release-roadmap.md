@@ -346,11 +346,11 @@ Goal: prepare ShipOne for open-source collaboration.
 
 ### 6.1 Repository Structure
 
-- [ ] Add `.github/`
-- [ ] Add issue templates
-- [ ] Add bug report template
-- [ ] Add feature request template
-- [ ] Add pull request template
+- [x] Add `.github/`
+- [x] Add issue templates
+- [x] Add bug report template
+- [x] Add feature request template
+- [x] Add pull request template
 
 ### 6.2 Community Files
 
