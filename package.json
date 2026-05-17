@@ -51,8 +51,8 @@
         "icon": "$(folder-library)"
       },
       {
-        "command": "shipone.openProjectQuickPick",
-        "title": "%command.openProjectQuickPick.title%",
+        "command": "shipone.chooseProject",
+        "title": "%command.chooseProject.title%",
         "category": "ShipOne",
         "icon": "$(folder-opened)"
       },
@@ -209,7 +209,7 @@
           "group": "navigation"
         },
         {
-          "command": "shipone.openProjectQuickPick",
+          "command": "shipone.chooseProject",
           "when": "view == shipone.projectsView",
           "group": "navigation"
         },

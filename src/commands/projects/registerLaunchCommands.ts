@@ -16,7 +16,7 @@ const COMMAND_QUICK_CREATE_PROJECT = "shipone.quickCreateProject";
 const COMMAND_CREATE_SAMPLE_IDEA = "shipone.createSampleIdea";
 const COMMAND_SET_PROJECTS_ROOT = "shipone.setProjectsRoot";
 const COMMAND_OPEN_PROJECTS_ROOT = "shipone.openProjectsRoot";
-const COMMAND_OPEN_PROJECT_QUICK_PICK = "shipone.openProjectQuickPick";
+const COMMAND_CHOOSE_PROJECT = "shipone.chooseProject";
 const COMMAND_SEARCH_PROJECT = "shipone.searchProject";
 const COMMAND_OPEN_PROJECT = "shipone.openProject";
 
@@ -267,8 +267,8 @@ export function registerLaunchCommands(options: {
     }
   );
 
-  const openProjectQuickPickCommand = vscode.commands.registerCommand(
-    COMMAND_OPEN_PROJECT_QUICK_PICK,
+  const chooseProjectCommand = vscode.commands.registerCommand(
+    COMMAND_CHOOSE_PROJECT,
     async () => {
       const projects = await projectStore.loadProjects();
 
@@ -320,7 +320,7 @@ export function registerLaunchCommands(options: {
     createProjectCommand,
     quickCreateProjectCommand,
     createSampleIdeaCommand,
-    openProjectQuickPickCommand,
+    chooseProjectCommand,
   ];
 }
 

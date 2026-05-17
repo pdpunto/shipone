@@ -5,7 +5,7 @@
   "command.createProject.title": "ShipOne: Advanced create",
   "command.quickCreateProject.title": "ShipOne: Quick create",
   "command.openProjectsRoot.title": "ShipOne: Open projects root",
-  "command.openProjectQuickPick.title": "ShipOne: Open project",
+  "command.chooseProject.title": "ShipOne: Choose project",
   "command.editMvpChecklist.title": "ShipOne: Edit MVP checklist",
   "command.markMvpItemDone.title": "ShipOne: Mark MVP task done",
   "command.syncStatusFile.title": "ShipOne: Sync STATUS.md",

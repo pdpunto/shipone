@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `5.3 Feature Review`, empezando por `Simplify command names`.
+Seguir con `5.3 Feature Review`, empezando por `Review feature necessity`.
 
 ## Bloqueos
 - Ninguno por ahora

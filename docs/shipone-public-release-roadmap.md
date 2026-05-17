@@ -334,7 +334,7 @@ Keep simple:
 
 - [x] Remove confusing commands
 - [x] Reduce duplicated actions
-- [ ] Simplify command names
+- [x] Simplify command names
 - [ ] Review feature necessity
 - [ ] Remove unnecessary complexity
 
