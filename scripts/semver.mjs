@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process';
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
@@ -100,6 +101,21 @@ async function main() {
     const nextVersion = formatVersion(bumpVersion(version, level));
     await writePackageVersion(nextVersion);
     console.log(nextVersion);
+    return;
+  }
+
+  if (command === 'create-tag') {
+    const expectedTag = `v${formatVersion(version)}`;
+
+    try {
+      execFileSync('git', ['tag', '-a', expectedTag, '-m', `Release ${expectedTag}`], {
+        stdio: 'pipe',
+      });
+    } catch (error) {
+      throw new Error(`Unable to create tag ${expectedTag}.`);
+    }
+
+    console.log(expectedTag);
     return;
   }
 
