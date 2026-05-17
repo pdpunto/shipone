@@ -359,7 +359,7 @@ Goal: prepare ShipOne for open-source collaboration.
 - [x] Add `SECURITY.md`
 - [x] Add `CHANGELOG.md`
 - [x] Add final `LICENSE`
-- [ ] Add release notes template
+- [x] Add release notes template
 
 ### 6.3 Documentation
 

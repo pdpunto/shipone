@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `6.2 Community Files`, empezando por `release notes template`.
+Seguir con `7.1 CI/CD and Automation`, empezando por `GitHub Actions`.
 
 ## Bloqueos
 - Ninguno por ahora
