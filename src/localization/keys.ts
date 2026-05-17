@@ -92,7 +92,6 @@ export const translationKeys = {
     noProjectsYetToStart: "Todavia no hay proyectos. Crea uno para empezar.",
     noProjectsWithFilters: "No hay proyectos con esos filtros. Prueba otra busqueda.",
     noProjectsWithTag: "No hay proyectos con esa etiqueta. Prueba otra etiqueta.",
-    chooseNewStatus: "Elige el nuevo estado",
     chooseTask: "Elige una tarea",
     chooseStarter: "Elige un starter",
     chooseOption: "Elige una opcion",

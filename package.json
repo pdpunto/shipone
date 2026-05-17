@@ -153,11 +153,6 @@
         "icon": "$(folder-opened)"
       },
       {
-        "command": "shipone.changeProjectStatus",
-        "title": "%command.changeProjectStatus.title%",
-        "category": "ShipOne"
-      },
-      {
         "command": "shipone.markProjectIdea",
         "title": "%command.markProjectIdea.title%",
         "category": "ShipOne"

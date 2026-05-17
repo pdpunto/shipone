@@ -9,7 +9,6 @@ import type { ShipOneProjectsTreeDataProvider } from "../../providers/shiponePro
 import { confirmCanActivateProject, pickProject } from "./projectOpsHelpers";
 
 const COMMAND_OPEN_PROJECT = "shipone.openProject";
-const COMMAND_CHANGE_PROJECT_STATUS = "shipone.changeProjectStatus";
 const COMMAND_MARK_PROJECT_IDEA = "shipone.markProjectIdea";
 const COMMAND_MARK_PROJECT_ACTIVE = "shipone.markProjectActive";
 const COMMAND_MARK_PROJECT_PAUSED = "shipone.markProjectPaused";
@@ -17,13 +16,6 @@ const COMMAND_MARK_PROJECT_FINISHED = "shipone.markProjectFinished";
 const COMMAND_EDIT_NEXT_ACTION = "shipone.editNextAction";
 const COMMAND_CLEAR_NEXT_ACTION = "shipone.clearNextAction";
 const COMMAND_TOGGLE_FAVORITE = "shipone.toggleFavorite";
-
-const STATUS_PICKERS: Array<{ label: string; value: ProjectStatus }> = [
-  { label: t(k.projectStatus.idea), value: "idea" },
-  { label: t(k.projectStatus.active), value: "active" },
-  { label: t(k.projectStatus.paused), value: "paused" },
-  { label: t(k.projectStatus.finished), value: "finished" },
-];
 
 export function registerProjectCommands(options: {
   context: vscode.ExtensionContext;
@@ -59,40 +51,6 @@ export function registerProjectCommands(options: {
         "vscode.openFolder",
         vscode.Uri.file(project.path),
         false
-      );
-    }
-  );
-
-  const changeStatusCommand = vscode.commands.registerCommand(
-    COMMAND_CHANGE_PROJECT_STATUS,
-    async (projectArg?: unknown) => {
-      const settings = settingsService.getSettings();
-      const project = await resolveProject(
-        projectStore,
-        projectArg,
-        getSelectedProjectId()
-      );
-
-      if (!project) {
-        return;
-      }
-
-      const statusChoice = await vscode.window.showQuickPick(STATUS_PICKERS, {
-        title: t("Estado"),
-        placeHolder: t(k.common.chooseNewStatus),
-      });
-
-      if (!statusChoice) {
-        return;
-      }
-
-      await updateProjectStatus(
-        projectStore,
-        treeDataProvider,
-        settings,
-        project,
-        statusChoice.value,
-        statusChoice.label
       );
     }
   );
@@ -239,7 +197,6 @@ export function registerProjectCommands(options: {
 
   context.subscriptions.push(
     openProjectCommand,
-    changeStatusCommand,
     markProjectIdeaCommand,
     markProjectActiveCommand,
     markProjectPausedCommand,
@@ -251,7 +208,6 @@ export function registerProjectCommands(options: {
 
   return [
     openProjectCommand,
-    changeStatusCommand,
     markProjectIdeaCommand,
     markProjectActiveCommand,
     markProjectPausedCommand,

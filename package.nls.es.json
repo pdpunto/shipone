@@ -22,7 +22,6 @@
   "command.toggleFavorite.title": "ShipOne: Alternar favorito",
   "command.searchProject.title": "ShipOne: Buscar proyecto",
   "command.openProject.title": "ShipOne: Abrir proyecto",
-  "command.changeProjectStatus.title": "ShipOne: Cambiar estado",
   "command.markProjectIdea.title": "ShipOne: Marcar como idea",
   "command.markProjectActive.title": "ShipOne: Marcar como active",
   "command.markProjectPaused.title": "ShipOne: Marcar como paused",
