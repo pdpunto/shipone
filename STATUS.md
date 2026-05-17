@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `2.1 Encoding Cleanup`, empezando por `Convert all files to UTF-8`.
+Seguir con `2.1 Encoding Cleanup`, empezando por `Validate JSON encoding`.
 
 ## Bloqueos
 - Ninguno por ahora

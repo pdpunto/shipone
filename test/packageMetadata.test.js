@@ -39,6 +39,13 @@ test("package.json configura prettier", () => {
   );
 });
 
+test("package.json valida utf8", () => {
+  const manifest = readJson("package.json");
+
+  assert.equal(manifest.scripts["validate:utf8"], "node scripts/validate-utf8.mjs");
+  assert.ok(manifest.scripts["test"].includes("test/utf8Encoding.test.js"));
+});
+
 test("package.json evita acciones duplicadas en la barra superior", () => {
   const manifest = readJson("package.json");
   const titleCommands = manifest.contributes.menus["view/title"].map(
