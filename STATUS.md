@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `1.7 Code Quality`, empezando por `Configure Prettier`.
+Seguir con `2.1 Encoding Cleanup`, empezando por `Convert all files to UTF-8`.
 
 ## Bloqueos
 - Ninguno por ahora

@@ -109,7 +109,7 @@ Goal: reduce technical debt and make the extension easier to maintain.
 ### 1.7 Code Quality
 
 - [x] Configure strict ESLint rules
-- [ ] Configure Prettier
+- [x] Configure Prettier
 - [x] Remove dead code
 - [x] Remove duplicate logic
 - [x] Fix inconsistent naming

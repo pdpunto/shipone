@@ -26,6 +26,19 @@ test("package.json publica metadatos para marketplace", () => {
   assert.equal(manifest.engines.vscode, "^1.90.0");
 });
 
+test("package.json configura prettier", () => {
+  const manifest = readJson("package.json");
+
+  assert.equal(
+    manifest.scripts["format"],
+    "prettier --check \"src/**/*.ts\" \"*.json\" \"docs/**/*.md\""
+  );
+  assert.equal(
+    manifest.scripts["format:write"],
+    "prettier --write \"src/**/*.ts\" \"*.json\" \"docs/**/*.md\""
+  );
+});
+
 test("package.json evita acciones duplicadas en la barra superior", () => {
   const manifest = readJson("package.json");
   const titleCommands = manifest.contributes.menus["view/title"].map(
