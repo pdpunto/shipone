@@ -5,10 +5,11 @@ import type { ProjectMetadata } from "../models/project";
 import type { ProjectHealth } from "../services/projectHealthService";
 
 export class TreeTooltipProvider {
-  buildGroupTooltip(label: string): vscode.MarkdownString {
+  buildGroupTooltip(label: string, count?: number): vscode.MarkdownString {
     return buildMarkdownTooltip([
       t("**{0}**", label),
       "",
+      typeof count === "number" ? t("Proyectos: {0}", count) : "",
       t("Abre el grupo de proyectos {0}.", label.toLowerCase()),
     ]);
   }

@@ -215,15 +215,17 @@
         "icon": "$(refresh)"
       }
     ],
+    "submenus": [
+      {
+        "id": "shipone.moreActions",
+        "label": "%menu.moreActions.title%",
+        "icon": "$(ellipsis)"
+      }
+    ],
     "menus": {
       "view/title": [
         {
           "command": "shipone.createProject",
-          "when": "view == shipone.projectsView",
-          "group": "navigation"
-        },
-        {
-          "command": "shipone.openProjectsRoot",
           "when": "view == shipone.projectsView",
           "group": "navigation"
         },
@@ -238,79 +240,52 @@
           "group": "navigation"
         },
         {
-          "command": "shipone.editMvpChecklist",
+          "submenu": "shipone.moreActions",
           "when": "view == shipone.projectsView",
           "group": "navigation"
+        }
+      ],
+      "shipone.moreActions": [
+        {
+          "command": "shipone.openProjectsRoot"
         },
         {
-          "command": "shipone.markMvpItemDone",
-          "when": "view == shipone.projectsView",
-          "group": "navigation"
+          "command": "shipone.editMvpChecklist"
         },
         {
-          "command": "shipone.syncStatusFile",
-          "when": "view == shipone.projectsView",
-          "group": "navigation"
+          "command": "shipone.markMvpItemDone"
         },
         {
-          "command": "shipone.recoverStorage",
-          "when": "view == shipone.projectsView",
-          "group": "navigation"
+          "command": "shipone.syncStatusFile"
         },
         {
-          "command": "shipone.connectGithub",
-          "when": "view == shipone.projectsView",
-          "group": "navigation"
+          "command": "shipone.recoverStorage"
         },
         {
-          "command": "shipone.detectBlockers",
-          "when": "view == shipone.projectsView",
-          "group": "navigation"
+          "command": "shipone.connectGithub"
         },
         {
-          "command": "shipone.generateAiContext",
-          "when": "view == shipone.projectsView",
-          "group": "navigation"
+          "command": "shipone.detectBlockers"
+        },
+        {
+          "command": "shipone.generateAiContext"
         },
         {
           "command": "shipone.focusMode",
-          "when": "view == shipone.projectsView && !shipone.focusMode",
-          "group": "navigation"
+          "when": "view == shipone.projectsView && !shipone.focusMode"
         },
         {
           "command": "shipone.exitFocusMode",
-          "when": "view == shipone.projectsView && shipone.focusMode",
-          "group": "navigation"
+          "when": "view == shipone.projectsView && shipone.focusMode"
         },
         {
-          "command": "shipone.weeklyReview",
-          "when": "view == shipone.projectsView",
-          "group": "navigation"
+          "command": "shipone.weeklyReview"
         },
         {
-          "command": "shipone.freezeProject",
-          "when": "view == shipone.projectsView",
-          "group": "navigation"
+          "command": "shipone.openStatusFile"
         },
         {
-          "command": "shipone.resumeProject",
-          "when": "view == shipone.projectsView",
-          "group": "navigation"
-        },
-        {
-          "command": "shipone.toggleFavorite",
-          "when": "view == shipone.projectsView",
-          "group": "navigation"
-        },
-        {
-          "command": "shipone.openStatusFile",
-          "when": "view == shipone.projectsView",
-          "group": "navigation"
-        },
-        {
-          "command": "shipone.refreshProjects",
-          "when": "view == shipone.projectsView",
-          "group": "navigation"
+          "command": "shipone.refreshProjects"
         }
       ],
       "view/item/context": [
@@ -343,10 +318,6 @@
         },
         {
           "command": "shipone.markProjectFinished",
-          "when": "view == shipone.projectsView && viewItem == shipone.project"
-        },
-        {
-          "command": "shipone.editNextAction",
           "when": "view == shipone.projectsView && viewItem == shipone.project"
         },
         {

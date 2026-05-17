@@ -30,6 +30,7 @@
   "command.clearNextAction.title": "ShipOne: Clear next action",
   "command.openStatusFile.title": "ShipOne: Open STATUS.md",
   "command.refreshProjects.title": "ShipOne: Refresh",
+  "menu.moreActions.title": "ShipOne: More actions",
   "view.projects.name": "ShipOne",
   "configuration.title": "ShipOne",
   "configuration.projectsRoot.description": "Base folder where ShipOne creates and finds projects.",

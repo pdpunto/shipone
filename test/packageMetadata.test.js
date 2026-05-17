@@ -25,3 +25,26 @@ test("package.json publica metadatos para marketplace", () => {
   assert.equal(manifest.license, "MIT");
   assert.equal(manifest.engines.vscode, "^1.90.0");
 });
+
+test("package.json evita acciones duplicadas en la barra superior", () => {
+  const manifest = readJson("package.json");
+  const titleCommands = manifest.contributes.menus["view/title"].map(
+    (entry) => entry.command ?? entry.submenu
+  );
+  const submenus = manifest.contributes.submenus.map((item) => item.id);
+  const itemCommands = manifest.contributes.menus["view/item/context"].map(
+    (entry) => entry.command
+  );
+
+  assert.deepEqual(titleCommands, [
+    "shipone.createProject",
+    "shipone.chooseProject",
+    "shipone.searchProject",
+    "shipone.moreActions",
+  ]);
+  assert.deepEqual(submenus, ["shipone.moreActions"]);
+  assert.equal(
+    itemCommands.filter((command) => command === "shipone.editNextAction").length,
+    1
+  );
+});

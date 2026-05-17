@@ -107,6 +107,12 @@ test("package.nls.es.json traduce claves estructuradas de creacion", () => {
   assert.equal(es["Carpeta destino"], "Carpeta destino");
 });
 
+test("package.nls.es.json traduce mas acciones", () => {
+  const es = readJson("package.nls.es.json");
+
+  assert.equal(es["menu.moreActions.title"], "ShipOne: Más acciones");
+});
+
 test("package.nls.es.json traduce next action", () => {
   const es = readJson("package.nls.es.json");
 

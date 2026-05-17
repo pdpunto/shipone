@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `8.4 Public Release Strategy`, empezando por `Publish stable release`.
+Seguir con `1.7 Code Quality`, empezando por `Configure Prettier`.
 
 ## Bloqueos
 - Ninguno por ahora

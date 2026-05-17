@@ -84,7 +84,7 @@ Goal: reduce technical debt and make the extension easier to maintain.
 - [x] Keep tooltip provider
 - [x] Keep health renderer
 - [x] Reduce duplicated tooltip content
-- [ ] Reduce sidebar density
+- [x] Reduce sidebar density
 
 ### 1.5 Models
 
