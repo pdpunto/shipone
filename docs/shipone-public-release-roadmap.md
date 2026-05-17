@@ -419,14 +419,14 @@ Goal: publish ShipOne professionally.
 
 ### 8.2 package.json Metadata
 
-- [ ] Add keywords
-- [ ] Add categories
-- [ ] Add repository URL
-- [ ] Add homepage URL
-- [ ] Add bugs URL
-- [ ] Add icon
-- [ ] Add license
-- [ ] Add engines.vscode
+- [x] Add keywords
+- [x] Add categories
+- [x] Add repository URL
+- [x] Add homepage URL
+- [x] Add bugs URL
+- [x] Add icon
+- [x] Add license
+- [x] Add engines.vscode
 
 ### 8.3 VS Code Publisher
 

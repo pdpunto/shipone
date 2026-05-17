@@ -8,13 +8,32 @@
     "theme": "dark",
     "image": "media/branding/banner.png"
   },
+  "keywords": [
+    "vscode",
+    "productivity",
+    "projects",
+    "focus",
+    "roadmap",
+    "ship"
+  ],
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.90.0"
   },
   "categories": [
+    "Productivity",
     "Other"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pdpunto/shipone.git"
+  },
+  "homepage": "https://github.com/pdpunto/shipone#readme",
+  "bugs": {
+    "url": "https://github.com/pdpunto/shipone/issues"
+  },
+  "license": "MIT",
+  "publisher": "pdpunto",
   "activationEvents": [
     "onView:shipone.projectsView",
     "onCommand:shipone.showWelcome",
@@ -477,7 +496,7 @@
     "release:tag": "node scripts/semver.mjs create-tag",
     "release:beta": "node scripts/semver.mjs create-beta-tag",
     "release:notes": "node scripts/build-release-notes.mjs",
-    "test": "npm run compile && node --test test/shipone.test.js test/localization.test.js test/translationKeys.test.js test/walkthrough.test.js test/semver.test.js test/releaseNotes.test.js",
+    "test": "npm run compile && node --test test/shipone.test.js test/localization.test.js test/translationKeys.test.js test/walkthrough.test.js test/semver.test.js test/releaseNotes.test.js test/packageMetadata.test.js",
     "lint": "eslint \"src/**/*.ts\"",
     "format": "prettier --check \"src/**/*.ts\" \"*.json\" \"docs/**/*.md\""
   },
