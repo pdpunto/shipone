@@ -392,7 +392,7 @@ Goal: automate quality control and releases.
 - [x] Test workflow
 - [x] Package VSIX workflow
 - [x] Release workflow
-- [ ] Changelog workflow
+- [x] Changelog workflow
 
 ### 7.2 Release Management
 
