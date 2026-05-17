@@ -396,7 +396,7 @@ Goal: automate quality control and releases.
 
 ### 7.2 Release Management
 
-- [ ] Semantic versioning
+- [x] Semantic versioning
 - [ ] Release tagging
 - [ ] Beta release flow
 - [ ] Stable release flow

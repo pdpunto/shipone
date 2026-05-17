@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `7.2 Release Management`, empezando por `Semantic versioning`.
+Seguir con `7.2 Release Management`, empezando por `Release tagging`.
 
 ## Bloqueos
 - Ninguno por ahora

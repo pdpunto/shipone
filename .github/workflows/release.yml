@@ -37,6 +37,9 @@ jobs:
             echo "RELEASE_TAG=${{ github.ref_name }}" >> "$GITHUB_ENV"
           fi
 
+      - name: Validate release tag
+        run: node scripts/semver.mjs validate-tag "$RELEASE_TAG"
+
       - name: Install
         run: npm ci
 

@@ -471,7 +471,10 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "validate:translations": "node scripts/validate-translations.mjs",
-    "test": "npm run compile && node --test test/shipone.test.js test/localization.test.js test/translationKeys.test.js test/walkthrough.test.js",
+    "version:current": "node scripts/semver.mjs current",
+    "version:tag": "node scripts/semver.mjs tag",
+    "version:validate": "node scripts/semver.mjs validate-tag",
+    "test": "npm run compile && node --test test/shipone.test.js test/localization.test.js test/translationKeys.test.js test/walkthrough.test.js test/semver.test.js",
     "lint": "eslint \"src/**/*.ts\"",
     "format": "prettier --check \"src/**/*.ts\" \"*.json\" \"docs/**/*.md\""
   },
