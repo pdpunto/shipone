@@ -51,6 +51,14 @@ npm install
 npm.cmd run compile
 ```
 
+## Publicacion
+
+Para publicar en VS Code Marketplace:
+
+1. Crea un secreto de GitHub llamado `VSCE_PAT`.
+2. Guarda ahi el token personal del marketplace.
+3. Usa el workflow `Publish Marketplace`.
+
 ## Notas
 
 - Los assets de marca estan en `media/branding/`.
