@@ -195,18 +195,7 @@ export function registerProjectCommands(options: {
     }
   );
 
-  context.subscriptions.push(
-    openProjectCommand,
-    markProjectIdeaCommand,
-    markProjectActiveCommand,
-    markProjectPausedCommand,
-    markProjectFinishedCommand,
-    editNextActionCommand,
-    clearNextActionCommand,
-    toggleFavoriteCommand
-  );
-
-  return [
+  const projectCommands = [
     openProjectCommand,
     markProjectIdeaCommand,
     markProjectActiveCommand,
@@ -216,6 +205,10 @@ export function registerProjectCommands(options: {
     clearNextActionCommand,
     toggleFavoriteCommand,
   ];
+
+  context.subscriptions.push(...projectCommands);
+
+  return projectCommands;
 }
 
 async function markProjectStatus(

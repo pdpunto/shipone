@@ -333,7 +333,7 @@ Keep simple:
 ### 5.3 Feature Review
 
 - [x] Remove confusing commands
-- [ ] Reduce duplicated actions
+- [x] Reduce duplicated actions
 - [ ] Simplify command names
 - [ ] Review feature necessity
 - [ ] Remove unnecessary complexity
