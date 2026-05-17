@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `8.1 Marketplace Assets`, empezando por `Final logo`.
+Seguir con `8.1 Marketplace Assets`, empezando por `Final banner`.
 
 ## Bloqueos
 - Ninguno por ahora

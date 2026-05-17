@@ -410,7 +410,7 @@ Goal: publish ShipOne professionally.
 
 ### 8.1 Marketplace Assets
 
-- [ ] Final logo
+- [x] Final logo
 - [ ] Final banner
 - [ ] Screenshots
 - [ ] Demo GIF
