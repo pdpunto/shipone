@@ -391,7 +391,7 @@ Goal: automate quality control and releases.
 - [x] Lint workflow
 - [x] Test workflow
 - [x] Package VSIX workflow
-- [ ] Release workflow
+- [x] Release workflow
 - [ ] Changelog workflow
 
 ### 7.2 Release Management
