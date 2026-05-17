@@ -431,7 +431,7 @@ Goal: publish ShipOne professionally.
 ### 8.3 VS Code Publisher
 
 - [ ] Create publisher account
-- [ ] Configure `vsce`
+- [x] Configure `vsce`
 - [ ] Configure PAT token
 - [ ] Validate package
 - [ ] Generate VSIX package

@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `8.3 VS Code Publisher`, empezando por `Create publisher account`.
+Seguir con `8.3 VS Code Publisher`, empezando por `Configure PAT token`.
 
 ## Bloqueos
 - Ninguno por ahora
