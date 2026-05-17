@@ -399,7 +399,7 @@ Goal: automate quality control and releases.
 - [x] Semantic versioning
 - [x] Release tagging
 - [x] Beta release flow
-- [ ] Stable release flow
+- [x] Stable release flow
 - [ ] Marketplace publish workflow
 
 ---

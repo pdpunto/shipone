@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `7.2 Release Management`, empezando por `Stable release flow`.
+Seguir con `7.2 Release Management`, empezando por `Marketplace publish workflow`.
 
 ## Bloqueos
 - Ninguno por ahora

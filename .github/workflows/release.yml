@@ -1,4 +1,4 @@
-name: Release
+name: Stable Release
 
 on:
   push:
@@ -46,6 +46,9 @@ jobs:
       - name: Compile
         run: npm run compile
 
+      - name: Prepare release notes
+        run: node scripts/build-release-notes.mjs --write release-notes.md
+
       - name: Package extension
         run: npx @vscode/vsce package
 
@@ -53,5 +56,5 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.RELEASE_TAG }}
-          generate_release_notes: true
+          body_path: release-notes.md
           files: "*.vsix"
