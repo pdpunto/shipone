@@ -387,9 +387,9 @@ Goal: automate quality control and releases.
 
 ### 7.1 GitHub Actions
 
-- [ ] Build workflow
-- [ ] Lint workflow
-- [ ] Test workflow
+- [x] Build workflow
+- [x] Lint workflow
+- [x] Test workflow
 - [ ] Package VSIX workflow
 - [ ] Release workflow
 - [ ] Changelog workflow

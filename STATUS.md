@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `7.1 CI/CD and Automation`, empezando por `GitHub Actions`.
+Seguir con `7.1 CI/CD and Automation`, empezando por `Package VSIX workflow`.
 
 ## Bloqueos
 - Ninguno por ahora
