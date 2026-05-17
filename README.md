@@ -64,6 +64,7 @@ Para publicar una beta:
 1. Crea un tag `vX.Y.Z-beta.N`.
 2. Usa el workflow `Beta Release`.
 3. Comparte la beta antes de la version estable.
+4. Recoge feedback con `Issues` y el template de bug report.
 
 ## Notas
 
