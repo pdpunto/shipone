@@ -1,7 +1,9 @@
 import type { MvpTask, ProjectMetadata, ProjectStatus } from "./project";
-
-type ProjectMetadataInput = Record<string, unknown>;
-const PROJECT_SCHEMA_VERSION = 2;
+import {
+  applyProjectMetadataMigrations,
+  PROJECT_SCHEMA_VERSION,
+  type ProjectMetadataInput,
+} from "./projectMigrations";
 
 export function isProjectStatus(value: unknown): value is ProjectStatus {
   return (
@@ -63,7 +65,7 @@ export function normalizeProjectMetadata(
   }
 
   const project = value as unknown as ProjectMetadataInput;
-  const migrated = migrateProjectMetadata(project);
+  const migrated = applyProjectMetadataMigrations(project);
 
   return {
     schemaVersion: PROJECT_SCHEMA_VERSION,
@@ -241,29 +243,10 @@ function hasLegacyProjectMetadataSchema(
   );
 }
 
-function normalizeSchemaVersion(value: unknown): number {
-  return isValidSchemaVersion(value) ? value : 1;
-}
-
 function isSchemaVersion(value: unknown): value is number | undefined {
   return value === undefined || isValidSchemaVersion(value);
 }
 
 function isValidSchemaVersion(value: unknown): value is number {
   return typeof value === "number" && Number.isInteger(value) && value >= 1;
-}
-
-function migrateProjectMetadata(project: ProjectMetadataInput): ProjectMetadataInput {
-  const schemaVersion = normalizeSchemaVersion(project.schemaVersion);
-
-  if (schemaVersion >= PROJECT_SCHEMA_VERSION) {
-    return project;
-  }
-
-  return {
-    ...project,
-    schemaVersion: PROJECT_SCHEMA_VERSION,
-    tags: normalizeStringArray(project.tags),
-    mvpTasks: normalizeMvpTasks(project.mvpTasks),
-  };
 }

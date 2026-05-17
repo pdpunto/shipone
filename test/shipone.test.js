@@ -19,6 +19,9 @@ const {
   normalizeProjectListWithDiagnostics,
 } = require("../out/models/projectValidation");
 const {
+  applyProjectMetadataMigrations,
+} = require("../out/models/projectMigrations");
+const {
   describeInactivityWarning,
   getInactivityWarning,
 } = require("../out/utils/inactivityWarning");
@@ -222,6 +225,30 @@ test("normalizeProjectMetadata migra schema viejo", () => {
   assert.ok(project);
   assert.equal(project.schemaVersion, 2);
   assert.deepEqual(project.tags, ["ui"]);
+});
+
+test("applyProjectMetadataMigrations migra versiones encadenadas", () => {
+  const project = applyProjectMetadataMigrations({
+    schemaVersion: 1,
+    id: "p1",
+    name: "ShipOne",
+    description: "Test",
+    type: "blank",
+    status: "idea",
+    path: "/tmp/shipone",
+    createdAt: "2026-05-15T00:00:00.000Z",
+    tags: ["ui", "ui", "  docs  "],
+    mvpTasks: [
+      { id: "1", text: "Login", done: false },
+      { id: "2", text: "Deploy", done: true },
+      { id: "broken", text: 123, done: true },
+    ],
+  });
+
+  assert.equal(project.schemaVersion, 2);
+  assert.deepEqual(project.tags, ["ui", "docs"]);
+  assert.equal(project.mvpTasks.length, 2);
+  assert.equal(project.mvpTasks[0].text, "Login");
 });
 
 test("createProjectMetadata fija valores base", () => {
