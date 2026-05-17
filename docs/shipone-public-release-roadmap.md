@@ -358,7 +358,7 @@ Goal: prepare ShipOne for open-source collaboration.
 - [ ] Add `CODE_OF_CONDUCT.md`
 - [ ] Add `SECURITY.md`
 - [ ] Add `CHANGELOG.md`
-- [ ] Add final `LICENSE`
+- [x] Add final `LICENSE`
 - [ ] Add release notes template
 
 ### 6.3 Documentation
