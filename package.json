@@ -475,6 +475,7 @@
     "version:tag": "node scripts/semver.mjs tag",
     "version:validate": "node scripts/semver.mjs validate-tag",
     "release:tag": "node scripts/semver.mjs create-tag",
+    "release:beta": "node scripts/semver.mjs create-beta-tag",
     "test": "npm run compile && node --test test/shipone.test.js test/localization.test.js test/translationKeys.test.js test/walkthrough.test.js test/semver.test.js",
     "lint": "eslint \"src/**/*.ts\"",
     "format": "prettier --check \"src/**/*.ts\" \"*.json\" \"docs/**/*.md\""

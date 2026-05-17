@@ -20,3 +20,11 @@ test("semver tag devuelve la release tag", () => {
 test("semver validate-tag acepta el tag actual", () => {
   assert.equal(runSemver(["validate-tag", "v0.0.1"]), "v0.0.1");
 });
+
+test("semver beta-tag genera un prerelease", () => {
+  assert.equal(runSemver(["create-beta-tag", "2"]), "v0.0.1-beta.2");
+});
+
+test("semver validate-beta-tag acepta un prerelease", () => {
+  assert.equal(runSemver(["validate-beta-tag", "v0.0.1-beta.1"]), "v0.0.1-beta.1");
+});

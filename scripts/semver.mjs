@@ -1,4 +1,3 @@
-import { execFileSync } from 'node:child_process';
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
@@ -49,6 +48,18 @@ function bumpVersion(version, level) {
   return next;
 }
 
+function createBetaVersion(version, betaNumber) {
+  if (!Number.isInteger(betaNumber) || betaNumber < 1) {
+    throw new Error(`Invalid beta number: ${betaNumber}`);
+  }
+
+  return {
+    ...version,
+    prerelease: `beta.${betaNumber}`,
+    build: '',
+  };
+}
+
 async function readPackageVersion() {
   const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf8'));
   return packageJson.version;
@@ -91,6 +102,29 @@ async function main() {
     return;
   }
 
+  if (command === 'validate-beta-tag') {
+    const tag = (process.argv[3] || process.env.RELEASE_TAG || '').trim();
+    const betaTagPattern = /^v\d+\.\d+\.\d+-beta\.\d+$/;
+
+    if (!tag) {
+      throw new Error('Release tag is required.');
+    }
+
+    if (!betaTagPattern.test(tag)) {
+      throw new Error(`Tag ${tag} is not a valid beta release tag.`);
+    }
+
+    const packageVersion = formatVersion(version);
+    const expectedPrefix = `v${packageVersion}-beta.`;
+
+    if (!tag.startsWith(expectedPrefix)) {
+      throw new Error(`Tag ${tag} does not match package version ${expectedPrefix}N.`);
+    }
+
+    console.log(tag);
+    return;
+  }
+
   if (command === 'bump') {
     const level = (process.argv[3] || 'patch').trim();
 
@@ -107,15 +141,16 @@ async function main() {
   if (command === 'create-tag') {
     const expectedTag = `v${formatVersion(version)}`;
 
-    try {
-      execFileSync('git', ['tag', '-a', expectedTag, '-m', `Release ${expectedTag}`], {
-        stdio: 'pipe',
-      });
-    } catch (error) {
-      throw new Error(`Unable to create tag ${expectedTag}.`);
-    }
-
     console.log(expectedTag);
+    return;
+  }
+
+  if (command === 'create-beta-tag') {
+    const betaNumber = Number.parseInt(process.argv[3] || process.env.BETA_NUMBER || '1', 10);
+    const betaVersion = createBetaVersion(version, betaNumber);
+    const betaTag = `v${formatVersion(betaVersion)}`;
+
+    console.log(betaTag);
     return;
   }
 
