@@ -496,6 +496,7 @@
     "release:tag": "node scripts/semver.mjs create-tag",
     "release:beta": "node scripts/semver.mjs create-beta-tag",
     "release:notes": "node scripts/build-release-notes.mjs",
+    "package:vsix": "npx @vscode/vsce package",
     "validate:package": "node scripts/validate-package.mjs",
     "test": "npm run compile && node --test test/shipone.test.js test/localization.test.js test/translationKeys.test.js test/walkthrough.test.js test/semver.test.js test/releaseNotes.test.js test/packageMetadata.test.js test/readme.test.js test/vsceIgnore.test.js test/packageValidation.test.js",
     "lint": "eslint \"src/**/*.ts\"",

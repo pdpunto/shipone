@@ -10,3 +10,9 @@ test("validate-package.mjs no falla", () => {
     });
   });
 });
+
+test("package.json expone package:vsix", () => {
+  const manifest = JSON.parse(require("node:fs").readFileSync(require("node:path").join(__dirname, "..", "package.json"), "utf8"));
+
+  assert.equal(manifest.scripts["package:vsix"], "npx @vscode/vsce package");
+});
