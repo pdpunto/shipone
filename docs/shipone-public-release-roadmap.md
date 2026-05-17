@@ -355,7 +355,7 @@ Goal: prepare ShipOne for open-source collaboration.
 ### 6.2 Community Files
 
 - [x] Add `CONTRIBUTING.md`
-- [ ] Add `CODE_OF_CONDUCT.md`
+- [x] Add `CODE_OF_CONDUCT.md`
 - [ ] Add `SECURITY.md`
 - [ ] Add `CHANGELOG.md`
 - [x] Add final `LICENSE`
