@@ -390,7 +390,7 @@ Goal: automate quality control and releases.
 - [x] Build workflow
 - [x] Lint workflow
 - [x] Test workflow
-- [ ] Package VSIX workflow
+- [x] Package VSIX workflow
 - [ ] Release workflow
 - [ ] Changelog workflow
 
