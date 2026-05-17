@@ -440,7 +440,7 @@ Goal: publish ShipOne professionally.
 
 Beta:
 
-- [ ] Publish beta release
+- [x] Publish beta release
 - [ ] Gather feedback
 - [ ] Fix critical issues
 - [ ] Improve onboarding

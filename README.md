@@ -59,6 +59,12 @@ Para publicar en VS Code Marketplace:
 2. Guarda ahi el token personal del marketplace.
 3. Usa el workflow `Publish Marketplace`.
 
+Para publicar una beta:
+
+1. Crea un tag `vX.Y.Z-beta.N`.
+2. Usa el workflow `Beta Release`.
+3. Comparte la beta antes de la version estable.
+
 ## Notas
 
 - Los assets de marca estan en `media/branding/`.
