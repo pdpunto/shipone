@@ -498,7 +498,7 @@
     "release:notes": "node scripts/build-release-notes.mjs",
     "package:vsix": "npx @vscode/vsce package",
     "validate:package": "node scripts/validate-package.mjs",
-    "test": "npm run compile && node --test test/shipone.test.js test/localization.test.js test/translationKeys.test.js test/walkthrough.test.js test/semver.test.js test/releaseNotes.test.js test/packageMetadata.test.js test/readme.test.js test/vsceIgnore.test.js test/packageValidation.test.js test/betaReleaseWorkflow.test.js test/betaFeedback.test.js",
+    "test": "npm run compile && node --test test/shipone.test.js test/localization.test.js test/translationKeys.test.js test/walkthrough.test.js test/semver.test.js test/releaseNotes.test.js test/packageMetadata.test.js test/readme.test.js test/vsceIgnore.test.js test/packageValidation.test.js test/betaReleaseWorkflow.test.js test/betaFeedback.test.js test/onboarding.test.js",
     "lint": "eslint \"src/**/*.ts\"",
     "format": "prettier --check \"src/**/*.ts\" \"*.json\" \"docs/**/*.md\""
   },

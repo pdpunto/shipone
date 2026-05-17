@@ -22,6 +22,7 @@ export async function showFirstRunOnboarding(
     ),
     t(k.common.createProject),
     t("Elegir carpeta base"),
+    t(k.common.openGuide),
     t(k.common.connectGitHub),
     t(k.common.openSettings),
     t(k.common.okay)
@@ -34,6 +35,14 @@ export async function showFirstRunOnboarding(
 
   if (choice === t("Elegir carpeta base")) {
     await vscode.commands.executeCommand("shipone.setProjectsRoot");
+    return;
+  }
+
+  if (choice === t(k.common.openGuide)) {
+    await vscode.commands.executeCommand(
+      "vscode.open",
+      vscode.Uri.joinPath(context.extensionUri, "README.md")
+    );
     return;
   }
 

@@ -443,7 +443,7 @@ Beta:
 - [x] Publish beta release
 - [x] Gather feedback
 - [ ] Fix critical issues
-- [ ] Improve onboarding
+- [x] Improve onboarding
 
 Stable:
 

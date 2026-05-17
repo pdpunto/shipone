@@ -76,6 +76,7 @@ export const translationKeys = {
     okay: "Entendido",
     cancel: "Cancelar",
     retry: "Reintentar",
+    openGuide: "Abrir guia rapida",
     followWithoutGitHub: "Seguir sin GitHub",
     followWithoutGit: "Seguir sin Git",
     followWithoutCommit: "Seguir sin commit",
