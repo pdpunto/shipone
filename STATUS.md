@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `5.3 Feature Review`, empezando por `Remove unnecessary complexity`.
+Seguir con `6.1 Repository Structure`, empezando por `.github/`.
 
 ## Bloqueos
 - Ninguno por ahora
