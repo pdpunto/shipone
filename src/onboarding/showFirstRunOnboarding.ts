@@ -21,7 +21,6 @@ export async function showFirstRunOnboarding(
       settings.projectsRoot
     ),
     t(k.common.createProject),
-    t(k.common.createExample),
     t("Elegir carpeta base"),
     t(k.common.connectGitHub),
     t(k.common.openSettings),
@@ -30,11 +29,6 @@ export async function showFirstRunOnboarding(
 
   if (choice === t(k.common.createProject)) {
     await vscode.commands.executeCommand("shipone.createProject");
-    return;
-  }
-
-  if (choice === t(k.common.createExample)) {
-    await vscode.commands.executeCommand("shipone.createSampleIdea");
     return;
   }
 

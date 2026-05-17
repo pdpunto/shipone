@@ -194,56 +194,6 @@ export class ProjectCreationService {
     });
   }
 
-  async createSampleIdea(
-    settings: ShipOneSettings
-  ): Promise<ProjectMetadata | undefined> {
-    const name = t(k.projectCreation.sampleIdeaName);
-    const description = t(k.projectCreation.sampleIdeaDescription);
-    const type: ShipOneSettings["defaultProjectType"] = "blank";
-    const packageManager = settings.defaultPackageManager;
-
-    const destinationFolder = vscode.Uri.file(settings.projectsRoot);
-    const baseFolderName = sanitizeFolderName(name);
-    const folderUri = await this.findAvailableFolderUri(
-      destinationFolder,
-      baseFolderName
-    );
-
-    await this.projectStore.createProjectFolder(folderUri);
-
-    // La idea de ejemplo usa la misma forma que un proyecto real para que el resto del flujo no cambie.
-    const project = createProjectMetadata({
-      id: randomUUID(),
-      name,
-      description,
-      type,
-      status: "idea" as ProjectStatus,
-      path: folderUri.fsPath,
-      repoUrl: null,
-      createdAt: new Date().toISOString(),
-      lastOpenedAt: new Date().toISOString(),
-    });
-
-    if (settings.createStatusFileByDefault) {
-      await this.statusFileService.syncStatusFile(project);
-    }
-
-    await this.templateService.createSelectedTemplate(
-      folderUri,
-      name,
-      description,
-      type,
-      packageManager,
-      settings.customTemplateFolder
-    );
-
-    await this.projectStore.createProject(
-      project,
-      settings.enforceOneActiveProject
-    );
-    return project;
-  }
-
   private async pickProjectType(
     defaultProjectType: ShipOneSettings["defaultProjectType"]
   ): Promise<ShipOneSettings["defaultProjectType"] | undefined> {

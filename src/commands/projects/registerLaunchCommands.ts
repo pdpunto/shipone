@@ -13,7 +13,6 @@ import {
 
 const COMMAND_CREATE_PROJECT = "shipone.createProject";
 const COMMAND_QUICK_CREATE_PROJECT = "shipone.quickCreateProject";
-const COMMAND_CREATE_SAMPLE_IDEA = "shipone.createSampleIdea";
 const COMMAND_SET_PROJECTS_ROOT = "shipone.setProjectsRoot";
 const COMMAND_OPEN_PROJECTS_ROOT = "shipone.openProjectsRoot";
 const COMMAND_CHOOSE_PROJECT = "shipone.chooseProject";
@@ -99,14 +98,11 @@ export function registerLaunchCommands(options: {
       if (projects.length === 0) {
         const choice = await vscode.window.showInformationMessage(
           t(k.common.noProjectsYet),
-          t(k.common.createProject),
-          t(k.common.createExample)
+          t(k.common.createProject)
         );
 
         if (choice === t(k.common.createProject)) {
           await vscode.commands.executeCommand(COMMAND_CREATE_PROJECT);
-        } else if (choice === t(k.common.createExample)) {
-          await vscode.commands.executeCommand(COMMAND_CREATE_SAMPLE_IDEA);
         }
         return;
       }
@@ -243,30 +239,6 @@ export function registerLaunchCommands(options: {
     }
   );
 
-  const createSampleIdeaCommand = vscode.commands.registerCommand(
-    COMMAND_CREATE_SAMPLE_IDEA,
-    async () => {
-      const project = await vscode.window.withProgress(
-        {
-          location: vscode.ProgressLocation.Notification,
-          title: t("ShipOne: creando idea de ejemplo"),
-          cancellable: false,
-        },
-        async () => {
-          const settings = settingsService.getSettings();
-          return projectCreationService.createSampleIdea(settings);
-        }
-      );
-
-      if (project) {
-        treeRefresh();
-        vscode.window.showInformationMessage(
-          t("Idea creada: {0}. Ya la tienes en ShipOne.", project.name)
-        );
-      }
-    }
-  );
-
   const chooseProjectCommand = vscode.commands.registerCommand(
     COMMAND_CHOOSE_PROJECT,
     async () => {
@@ -275,14 +247,11 @@ export function registerLaunchCommands(options: {
       if (projects.length === 0) {
         const choice = await vscode.window.showInformationMessage(
           t(k.common.noProjectsYet),
-          t(k.common.createProject),
-          t(k.common.createExample)
+          t(k.common.createProject)
         );
 
         if (choice === t(k.common.createProject)) {
           await vscode.commands.executeCommand(COMMAND_CREATE_PROJECT);
-        } else if (choice === t(k.common.createExample)) {
-          await vscode.commands.executeCommand(COMMAND_CREATE_SAMPLE_IDEA);
         }
         return;
       }
@@ -319,7 +288,6 @@ export function registerLaunchCommands(options: {
     searchProjectCommand,
     createProjectCommand,
     quickCreateProjectCommand,
-    createSampleIdeaCommand,
     chooseProjectCommand,
   ];
 }

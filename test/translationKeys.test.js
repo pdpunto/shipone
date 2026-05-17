@@ -103,11 +103,6 @@ test("package.nls.es.json traduce claves estructuradas de creacion", () => {
     es["Ya existe una carpeta con ese nombre. Prueba otro nombre o elige otra carpeta."],
     "Ya existe una carpeta con ese nombre. Prueba otro nombre o elige otra carpeta."
   );
-  assert.equal(es["Mi primera idea"], "Mi primera idea");
-  assert.equal(
-    es["Describe la idea principal aqui."],
-    "Describe la idea principal aqui."
-  );
   assert.equal(es["Git local"], "Git local");
   assert.equal(es["Carpeta destino"], "Carpeta destino");
 });
