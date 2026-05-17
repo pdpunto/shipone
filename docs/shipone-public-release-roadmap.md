@@ -433,7 +433,7 @@ Goal: publish ShipOne professionally.
 - [ ] Create publisher account
 - [x] Configure `vsce`
 - [x] Configure PAT token
-- [ ] Validate package
+- [x] Validate package
 - [ ] Generate VSIX package
 
 ### 8.4 Public Release Strategy

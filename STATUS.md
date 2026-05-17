@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `8.3 VS Code Publisher`, empezando por `Validate package`.
+Seguir con `8.3 VS Code Publisher`, empezando por `Generate VSIX package`.
 
 ## Bloqueos
 - Ninguno por ahora
