@@ -400,7 +400,7 @@ Goal: automate quality control and releases.
 - [x] Release tagging
 - [x] Beta release flow
 - [x] Stable release flow
-- [ ] Marketplace publish workflow
+- [x] Marketplace publish workflow
 
 ---
 

@@ -1,0 +1,57 @@
+name: Publish Marketplace
+
+on:
+  workflow_dispatch:
+    inputs:
+      publisher:
+        description: "VS Code marketplace publisher"
+        required: true
+        default: "shipone"
+      tag_name:
+        description: "Release tag to publish"
+        required: true
+        default: "v0.0.1"
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Resolve release tag
+        run: echo "RELEASE_TAG=${{ inputs.tag_name }}" >> "$GITHUB_ENV"
+
+      - name: Validate release tag
+        run: node scripts/semver.mjs validate-tag "$RELEASE_TAG"
+
+      - name: Install
+        run: npm ci
+
+      - name: Compile
+        run: npm run compile
+
+      - name: Package extension
+        run: npx @vscode/vsce package
+
+      - name: Publish to marketplace
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+          PUBLISHER: ${{ inputs.publisher }}
+        run: |
+          if [ -z "$VSCE_PAT" ]; then
+            echo "VSCE_PAT secret is required."
+            exit 1
+          fi
+
+          npx @vscode/vsce publish --packagePath "*.vsix" --pat "$VSCE_PAT" --publisher "$PUBLISHER"
