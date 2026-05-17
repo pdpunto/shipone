@@ -442,7 +442,7 @@ Beta:
 
 - [x] Publish beta release
 - [x] Gather feedback
-- [ ] Fix critical issues
+- [x] Fix critical issues
 - [x] Improve onboarding
 
 Stable:

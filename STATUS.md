@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `8.4 Public Release Strategy`, empezando por `Fix critical issues`.
+Seguir con `8.4 Public Release Strategy`, empezando por `Publish stable release`.
 
 ## Bloqueos
 - Ninguno por ahora
@@ -18,4 +18,4 @@ Seguir con `8.4 Public Release Strategy`, empezando por `Fix critical issues`.
 shipone
 
 ## Actualizado
-2026-05-15
+2026-05-17

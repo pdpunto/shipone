@@ -12,8 +12,6 @@ export async function showFirstRunOnboarding(
     return;
   }
 
-  await context.globalState.update("shipone.firstRunSeen", true);
-
   const settings = settingsService.getSettings();
   const choice = await vscode.window.showInformationMessage(
     t(
@@ -27,6 +25,12 @@ export async function showFirstRunOnboarding(
     t(k.common.openSettings),
     t(k.common.okay)
   );
+
+  if (!choice) {
+    return;
+  }
+
+  await context.globalState.update("shipone.firstRunSeen", true);
 
   if (choice === t(k.common.createProject)) {
     await vscode.commands.executeCommand("shipone.createProject");
