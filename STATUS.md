@@ -9,7 +9,7 @@ Preparar ShipOne para release publica estable, simple y mantenible.
 - [x] Reducir densidad visual de sidebar
 
 ## Proximo paso
-Seguir con `6.2 Community Files`, empezando por `CHANGELOG.md`.
+Seguir con `6.2 Community Files`, empezando por `release notes template`.
 
 ## Bloqueos
 - Ninguno por ahora
