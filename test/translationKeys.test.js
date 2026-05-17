@@ -1,4 +1,4 @@
-﻿const test = require("node:test");
+const test = require("node:test");
 const assert = require("node:assert/strict");
 const { execFileSync } = require("node:child_process");
 const fs = require("node:fs");
@@ -50,7 +50,7 @@ test("package.nls.es.json traduce revision semanal", () => {
 
   assert.equal(
     es["command.weeklyReview.title"],
-    `ShipOne: Revisi${oAcute}n semanal`
+    `Revisi${oAcute}n semanal`
   );
   assert.equal(es["Weekly review"], `Revisi${oAcute}n semanal`);
   assert.equal(
@@ -66,8 +66,8 @@ test("package.nls.es.json traduce congelar y reanudar", () => {
   const aAcute = String.fromCharCode(0x00e1);
   const eAcute = String.fromCharCode(0x00e9);
 
-  assert.equal(es["command.freezeProject.title"], "ShipOne: Congelar proyecto");
-  assert.equal(es["command.resumeProject.title"], "ShipOne: Reanudar proyecto");
+  assert.equal(es["command.freezeProject.title"], "Congelar proyecto");
+  assert.equal(es["command.resumeProject.title"], "Reanudar proyecto");
   assert.equal(es["Congelar proyecto"], "Congelar proyecto");
   assert.equal(es["Motivo de la pausa"], "Motivo de la pausa");
   assert.equal(es["Que haras al volver"], "Que haras al volver");
@@ -89,11 +89,10 @@ test("package.nls.es.json traduce confirmaciones de continuar", () => {
 test("package.nls.es.json traduce claves estructuradas de creacion", () => {
   const es = readJson("package.nls.es.json");
 
-  assert.equal(es["command.createProject.title"], "ShipOne: Crear avanzado");
+  assert.equal(es["command.createProject.title"], "Crear avanzado");
   assert.equal(es["Nombre del proyecto"], "Nombre del proyecto");
-  assert.equal(es["Descripcion"], "Descripci\u00f3n");
-  assert.equal(es["command.quickCreateProject.title"], "ShipOne: Crear rapido");
-  assert.equal(es["command.chooseProject.title"], "ShipOne: Elegir proyecto");
+  assert.equal(es["command.quickCreateProject.title"], "Crear rapido");
+  assert.equal(es["command.chooseProject.title"], "Elegir proyecto");
   assert.equal(es["Starting point for any project."], "Punto de partida para cualquier proyecto.");
   assert.equal(es["Frontend app with Vite."], "Aplicacion frontend con Vite.");
   assert.equal(es["Full app with routing and backend-friendly setup."], "Aplicacion completa con rutas y base lista para backend.");
@@ -107,10 +106,17 @@ test("package.nls.es.json traduce claves estructuradas de creacion", () => {
   assert.equal(es["Carpeta destino"], "Carpeta destino");
 });
 
-test("package.nls.es.json traduce mas acciones", () => {
+test("package.nls.es.json traduce estados de proyecto", () => {
   const es = readJson("package.nls.es.json");
+  const aAcute = String.fromCharCode(0x00e1);
 
-  assert.equal(es["menu.moreActions.title"], "ShipOne: Más acciones");
+  assert.equal(es["command.markProjectActive.title"], "Marcar como activo");
+  assert.equal(es["command.markProjectPaused.title"], "Marcar como pausado");
+  assert.equal(es["command.markProjectFinished.title"], "Marcar como terminado");
+  assert.equal(es.Active, "Activo");
+  assert.equal(es.Paused, "Pausado");
+  assert.equal(es.Finished, "Terminado");
+  assert.equal(es["menu.moreActions.title"], "M" + aAcute + "s acciones");
 });
 
 test("package.nls.es.json traduce next action", () => {
