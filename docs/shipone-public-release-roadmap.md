@@ -412,10 +412,10 @@ Goal: publish ShipOne professionally.
 
 - [x] Final logo
 - [x] Final banner
-- [ ] Screenshots
-- [ ] Demo GIF
-- [ ] Marketplace preview image
-- [ ] Consistent branding
+- [x] Screenshots
+- [x] Demo GIF
+- [x] Marketplace preview image
+- [x] Consistent branding
 
 ### 8.2 package.json Metadata
 
