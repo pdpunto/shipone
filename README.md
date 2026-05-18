@@ -111,6 +111,17 @@ npm.cmd run compile
 - Si `F5` no abre la extension, verifica que el workspace sea este repo y que no haya errores de compilacion.
 - Si GitHub no conecta, comprueba `gh auth status` y el secreto `VSCE_PAT`.
 
+## FAQ
+
+**ShipOne requiere GitHub?**
+No. Puede trabajar solo con Git local.
+
+**Necesito usar `STATUS.md`?**
+No. ShipOne lo crea y sincroniza, pero no te obliga a tocarlo.
+
+**Puedo tener varios proyectos activos?**
+No si tienes activada la regla de un solo `Active`.
+
 ## Publicacion
 
 Flujo simple:

@@ -375,7 +375,7 @@ README:
 - [x] Workflow explanation
 - [x] Configuration guide
 - [x] Troubleshooting
-- [ ] FAQ
+- [x] FAQ
 - [ ] Roadmap
 - [ ] Contributing guide
 
