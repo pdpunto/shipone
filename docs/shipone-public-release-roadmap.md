@@ -371,7 +371,7 @@ README:
 - [x] Quick start
 - [x] Screenshots
 - [x] GIF demo
-- [ ] Commands
+- [x] Commands
 - [ ] Workflow explanation
 - [ ] Configuration guide
 - [ ] Troubleshooting

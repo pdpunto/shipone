@@ -70,13 +70,13 @@ Demo en movimiento:
 
 ## Comandos utiles
 
-- `ShipOne: Crear`
-- `ShipOne: Abrir`
-- `ShipOne: Buscar`
-- `ShipOne: Focus`
-- `ShipOne: Weekly review`
-- `ShipOne: STATUS.md`
-- `ShipOne: Conectar GitHub`
+- `ShipOne: Crear` - crea proyecto nuevo
+- `ShipOne: Abrir` - abre un proyecto
+- `ShipOne: Buscar` - filtra proyectos por nombre o etiqueta
+- `ShipOne: Focus` - entra en focus mode
+- `ShipOne: Weekly review` - revisa el estado semanal
+- `ShipOne: STATUS.md` - sincroniza el archivo de estado
+- `ShipOne: Conectar GitHub` - conecta GitHub para publicar repos
 
 ## Configuracion
 
