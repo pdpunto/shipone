@@ -148,7 +148,7 @@ Goal: make ShipOne render correctly in every supported environment.
 
 ### 2.3 Runtime UI Localization
 
-- [ ] Keep `t()` helper
+- [x] Keep `t()` helper
 - [x] Remove hardcoded UI strings
 - [x] Translate QuickPick labels
 - [x] Translate placeholders
