@@ -376,7 +376,7 @@ README:
 - [x] Configuration guide
 - [x] Troubleshooting
 - [x] FAQ
-- [ ] Roadmap
+- [x] Roadmap
 - [ ] Contributing guide
 
 ---

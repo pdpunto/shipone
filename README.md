@@ -122,6 +122,14 @@ No. ShipOne lo crea y sincroniza, pero no te obliga a tocarlo.
 **Puedo tener varios proyectos activos?**
 No si tienes activada la regla de un solo `Active`.
 
+## Roadmap
+
+Lo siguiente que queremos cerrar:
+
+- grabar el GIF demo;
+- pulir capturas y texto publico;
+- preparar la publicacion estable.
+
 ## Publicacion
 
 Flujo simple:
