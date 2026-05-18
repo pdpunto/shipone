@@ -130,7 +130,7 @@ Goal: make ShipOne render correctly in every supported environment.
 - [ ] Fix broken accents
 - [x] Fix broken separators
 - [ ] Validate JSON encoding
-- [ ] Validate markdown encoding
+- [x] Validate markdown encoding
 - [ ] Validate TypeScript encoding
 
 ### 2.2 VS Code Localization
