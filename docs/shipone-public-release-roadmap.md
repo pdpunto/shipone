@@ -127,7 +127,7 @@ Goal: make ShipOne render correctly in every supported environment.
 
 - [x] Convert all files to UTF-8
 - [x] Fix mojibake
-- [ ] Fix broken accents
+- [x] Fix broken accents
 - [x] Fix broken separators
 - [x] Validate JSON encoding
 - [x] Validate markdown encoding
