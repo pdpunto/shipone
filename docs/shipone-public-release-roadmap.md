@@ -369,7 +369,7 @@ README:
 - [x] Product philosophy
 - [x] Problem explanation
 - [x] Quick start
-- [ ] Screenshots
+- [x] Screenshots
 - [ ] GIF demo
 - [ ] Commands
 - [ ] Workflow explanation

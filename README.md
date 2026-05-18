@@ -47,6 +47,12 @@ ShipOne junta esa informacion en un solo sitio para que volver al trabajo sea ma
 - Muestra `nextAction`, favoritos, salud, pausas y metricas.
 - Genera `STATUS.md` y plantillas minimas por tipo de proyecto.
 
+## Screenshots
+
+Vista principal de ShipOne:
+
+![ShipOne preview](media/branding/marketplace-preview.png)
+
 ## Flujo rapido
 
 1. Pulsa `F5` en VS Code.
