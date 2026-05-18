@@ -373,7 +373,7 @@ README:
 - [x] GIF demo
 - [x] Commands
 - [x] Workflow explanation
-- [ ] Configuration guide
+- [x] Configuration guide
 - [ ] Troubleshooting
 - [ ] FAQ
 - [ ] Roadmap

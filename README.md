@@ -80,18 +80,23 @@ Demo en movimiento:
 
 ## Configuracion
 
-- `shipone.projectsRoot`
-- `shipone.defaultProjectType`
-- `shipone.defaultVisibility`
-- `shipone.defaultPackageManager`
-- `shipone.createGitRepoByDefault`
-- `shipone.createGitHubRepoByDefault`
-- `shipone.enforceOneActiveProject`
-- `shipone.createStatusFileByDefault`
-- `shipone.openAfterCreate`
-- `shipone.showFinishedProjects`
-- `shipone.inactiveWarningDays`
-- `shipone.staleWarningDays`
+Empieza por estos:
+
+- `shipone.projectsRoot` - carpeta base de tus proyectos
+- `shipone.defaultProjectType` - tipo que ShipOne propone primero
+- `shipone.defaultVisibility` - repo privado o publico por defecto
+- `shipone.defaultPackageManager` - npm, pnpm o yarn
+- `shipone.openAfterCreate` - abre el proyecto al terminar
+
+Si trabajas con un flujo mas estricto:
+
+- `shipone.createGitRepoByDefault` - crea Git local por defecto
+- `shipone.createGitHubRepoByDefault` - crea repo en GitHub por defecto
+- `shipone.enforceOneActiveProject` - mantiene un solo proyecto `Active`
+- `shipone.createStatusFileByDefault` - genera `STATUS.md`
+- `shipone.showFinishedProjects` - muestra proyectos terminados
+- `shipone.inactiveWarningDays` - dias para avisar inactividad
+- `shipone.staleWarningDays` - dias para aviso fuerte de stale
 
 ## Desarrollo
 
