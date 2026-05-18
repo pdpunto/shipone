@@ -21,6 +21,17 @@ Su idea es simple:
 - un siguiente paso claro;
 - un flujo que ayude a terminar.
 
+## Problema
+
+Muchos proyectos se quedan dispersos:
+
+- no hay un siguiente paso claro;
+- el contexto vive en notas sueltas;
+- el estado real del proyecto se olvida;
+- el foco se pierde cuando hay demasiadas cosas abiertas.
+
+ShipOne junta esa informacion en un solo sitio para que volver al trabajo sea mas rapido.
+
 ## Que hace
 
 - Crea proyectos nuevos desde una vista propia.
