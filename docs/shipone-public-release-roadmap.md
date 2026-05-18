@@ -365,7 +365,7 @@ Goal: prepare ShipOne for open-source collaboration.
 
 README:
 
-- [ ] Hero section
+- [x] Hero section
 - [ ] Product philosophy
 - [ ] Problem explanation
 - [ ] Quick start
