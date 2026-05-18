@@ -32,6 +32,13 @@ Muchos proyectos se quedan dispersos:
 
 ShipOne junta esa informacion en un solo sitio para que volver al trabajo sea mas rapido.
 
+## Quick start
+
+1. Clona o abre este repo en VS Code.
+2. Ejecuta `npm.cmd run compile`.
+3. Pulsa `F5` para abrir Extension Development Host.
+4. Abre la vista `ShipOne` y prueba `Crear rapido`.
+
 ## Que hace
 
 - Crea proyectos nuevos desde una vista propia.

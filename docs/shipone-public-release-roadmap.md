@@ -368,7 +368,7 @@ README:
 - [x] Hero section
 - [x] Product philosophy
 - [x] Problem explanation
-- [ ] Quick start
+- [x] Quick start
 - [ ] Screenshots
 - [ ] GIF demo
 - [ ] Commands
