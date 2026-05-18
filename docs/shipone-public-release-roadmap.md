@@ -129,7 +129,7 @@ Goal: make ShipOne render correctly in every supported environment.
 - [x] Fix mojibake
 - [ ] Fix broken accents
 - [x] Fix broken separators
-- [ ] Validate JSON encoding
+- [x] Validate JSON encoding
 - [x] Validate markdown encoding
 - [ ] Validate TypeScript encoding
 

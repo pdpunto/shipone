@@ -20,3 +20,15 @@ test("roadmap markdown tiene utf8 valido", () => {
     new TextDecoder("utf-8", { fatal: true }).decode(content);
   });
 });
+
+test("json del repo tiene utf8 valido", () => {
+  const files = ["package.json", "package-lock.json", "package.nls.json", "package.nls.es.json", "tsconfig.json"];
+  for (const relativePath of files) {
+    const filePath = path.join(__dirname, "..", relativePath);
+    const content = fs.readFileSync(filePath);
+    assert.doesNotThrow(() => {
+      const text = new TextDecoder("utf-8", { fatal: true }).decode(content);
+      JSON.parse(text);
+    }, relativePath);
+  }
+});
