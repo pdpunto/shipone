@@ -102,18 +102,13 @@ npm.cmd run compile
 
 ## Publicacion
 
-Para publicar en VS Code Marketplace:
+Flujo simple:
 
-1. Crea un secreto de GitHub llamado `VSCE_PAT`.
-2. Guarda ahi el token personal del marketplace.
-3. Usa el workflow `Publish Marketplace`.
-
-Para publicar una beta:
-
-1. Crea un tag `vX.Y.Z-beta.N`.
-2. Usa el workflow `Beta Release`.
-3. Comparte la beta antes de la version estable.
-4. Recoge feedback con `Issues` y el template de bug report.
+1. Publica una beta con `vX.Y.Z-beta.N`.
+2. Comparte la beta y recoge feedback.
+3. Corrige lo importante.
+4. Sube la version estable con el workflow `Publish Marketplace`.
+5. Usa `VSCE_PAT` como secreto de GitHub para publicar.
 
 ## Notas
 

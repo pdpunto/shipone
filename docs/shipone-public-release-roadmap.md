@@ -372,7 +372,7 @@ README:
 - [x] Screenshots
 - [x] GIF demo
 - [x] Commands
-- [ ] Workflow explanation
+- [x] Workflow explanation
 - [ ] Configuration guide
 - [ ] Troubleshooting
 - [ ] FAQ
