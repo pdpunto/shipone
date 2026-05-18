@@ -374,7 +374,7 @@ README:
 - [x] Commands
 - [x] Workflow explanation
 - [x] Configuration guide
-- [ ] Troubleshooting
+- [x] Troubleshooting
 - [ ] FAQ
 - [ ] Roadmap
 - [ ] Contributing guide

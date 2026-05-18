@@ -105,6 +105,12 @@ npm install
 npm.cmd run compile
 ```
 
+## Troubleshooting
+
+- Si falla `npm.cmd run compile`, revisa que Node y TypeScript esten instalados.
+- Si `F5` no abre la extension, verifica que el workspace sea este repo y que no haya errores de compilacion.
+- Si GitHub no conecta, comprueba `gh auth status` y el secreto `VSCE_PAT`.
+
 ## Publicacion
 
 Flujo simple:
