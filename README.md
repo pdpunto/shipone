@@ -140,6 +140,10 @@ Flujo simple:
 4. Sube la version estable con el workflow `Publish Marketplace`.
 5. Usa `VSCE_PAT` como secreto de GitHub para publicar.
 
+## Contributing
+
+Lee [CONTRIBUTING.md](CONTRIBUTING.md) antes de abrir un PR.
+
 ## Notas
 
 - Los assets de marca estan en `media/branding/`.

@@ -377,7 +377,7 @@ README:
 - [x] Troubleshooting
 - [x] FAQ
 - [x] Roadmap
-- [ ] Contributing guide
+- [x] Contributing guide
 
 ---
 
