@@ -32,3 +32,21 @@ test("json del repo tiene utf8 valido", () => {
     }, relativePath);
   }
 });
+
+test("typescript del repo tiene utf8 valido", () => {
+  const root = path.join(__dirname, "..");
+  const files = execFileSync("git", ["ls-files", "*.ts"], {
+    cwd: root,
+    encoding: "utf8",
+  })
+    .split(/\r?\n/)
+    .filter(Boolean);
+
+  for (const relativePath of files) {
+    const filePath = path.join(root, relativePath);
+    const content = fs.readFileSync(filePath);
+    assert.doesNotThrow(() => {
+      new TextDecoder("utf-8", { fatal: true }).decode(content);
+    }, relativePath);
+  }
+});
