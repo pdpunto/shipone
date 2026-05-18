@@ -370,7 +370,7 @@ README:
 - [x] Problem explanation
 - [x] Quick start
 - [x] Screenshots
-- [ ] GIF demo
+- [x] GIF demo
 - [ ] Commands
 - [ ] Workflow explanation
 - [ ] Configuration guide

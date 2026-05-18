@@ -53,6 +53,14 @@ Vista principal de ShipOne:
 
 ![ShipOne preview](media/branding/marketplace-preview.png)
 
+## GIF demo
+
+Demo en movimiento:
+
+- pendiente de grabar
+- mostrara crear, abrir y revisar un proyecto
+- para la publicacion estable
+
 ## Flujo rapido
 
 1. Pulsa `F5` en VS Code.
