@@ -10,6 +10,17 @@ Convierte ideas sueltas en proyectos con contexto, siguiente paso y estado claro
 
 ![ShipOne preview](media/branding/marketplace-preview.png)
 
+## Filosofia
+
+ShipOne no intenta ser una herramienta mas para empezar cosas y dejarlas a medias.
+
+Su idea es simple:
+
+- menos proyectos abiertos;
+- mas contexto visible;
+- un siguiente paso claro;
+- un flujo que ayude a terminar.
+
 ## Que hace
 
 - Crea proyectos nuevos desde una vista propia.
