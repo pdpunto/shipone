@@ -16,6 +16,8 @@ Sirve para:
 - mantener contexto sin abrir mil notas;
 - trabajar con una sola prioridad visible.
 
+ShipOne hace más fácil terminar porque mantiene el siguiente paso, el estado y el foco en un mismo lugar.
+
 ![ShipOne preview](media/branding/marketplace-preview.png)
 
 ## Filosofia
