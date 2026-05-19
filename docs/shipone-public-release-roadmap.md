@@ -459,7 +459,7 @@ Stable:
 ShipOne is ready for public release when:
 
 - [ ] The extension is stable across platforms
-- [ ] All visible UI supports localization
+- [x] All visible UI supports localization
 - [x] No broken encoding exists
 - [x] Core workflows are tested
 - [x] README is professional
