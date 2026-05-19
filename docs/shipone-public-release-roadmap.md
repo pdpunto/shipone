@@ -463,7 +463,7 @@ ShipOne is ready for public release when:
 - [x] No broken encoding exists
 - [x] Core workflows are tested
 - [x] README is professional
-- [ ] GitHub repository is public-ready
+- [x] GitHub repository is public-ready
 - [ ] Marketplace assets are polished
 - [ ] Users understand the product quickly
 - [ ] ShipOne still feels simple
