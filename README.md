@@ -24,6 +24,8 @@ ShipOne no intenta ser una herramienta mas para empezar cosas y dejarlas a media
 
 Su idea es simple:
 
+- una vista clara;
+- pocas acciones;
 - menos proyectos abiertos;
 - mas contexto visible;
 - un siguiente paso claro;
