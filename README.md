@@ -1,6 +1,6 @@
 # ShipOne
 
-ShipOne es una extension de VS Code para crear, organizar y terminar proyectos sin perder el foco.
+ShipOne es una extensión de VS Code para crear, organizar y terminar proyectos sin perder el foco.
 
 Convierte ideas sueltas en proyectos con contexto, siguiente paso y estado claro.
 
@@ -39,12 +39,12 @@ ShipOne junta esa informacion en un solo sitio para que volver al trabajo sea ma
 3. Pulsa `F5` para abrir Extension Development Host.
 4. Abre la vista `ShipOne` y prueba `Crear rapido`.
 
-## Que hace
+## Qué hace
 
 - Crea proyectos nuevos desde una vista propia.
 - Guarda metadata local de cada proyecto.
-- Mantiene un solo proyecto `Active` si lo quieres.
-- Muestra `nextAction`, favoritos, salud, pausas y metricas.
+- Mantiene un solo proyecto `Active` si activas esa regla.
+- Muestra `nextAction`, favoritos, salud, pausas y métricas.
 - Genera `STATUS.md` y plantillas minimas por tipo de proyecto.
 
 ## Screenshots
@@ -78,9 +78,9 @@ Demo en movimiento:
 - `ShipOne: STATUS.md` - sincroniza el archivo de estado
 - `ShipOne: Conectar GitHub` - conecta GitHub para publicar repos
 
-## Configuracion
+## Configuración
 
-Empieza por estos:
+Empieza por estos ajustes:
 
 - `shipone.projectsRoot` - carpeta base de tus proyectos
 - `shipone.defaultProjectType` - tipo que ShipOne propone primero
@@ -88,15 +88,15 @@ Empieza por estos:
 - `shipone.defaultPackageManager` - npm, pnpm o yarn
 - `shipone.openAfterCreate` - abre el proyecto al terminar
 
-Si trabajas con un flujo mas estricto:
+Si trabajas con un flujo más estricto:
 
 - `shipone.createGitRepoByDefault` - crea Git local por defecto
 - `shipone.createGitHubRepoByDefault` - crea repo en GitHub por defecto
 - `shipone.enforceOneActiveProject` - mantiene un solo proyecto `Active`
 - `shipone.createStatusFileByDefault` - genera `STATUS.md`
 - `shipone.showFinishedProjects` - muestra proyectos terminados
-- `shipone.inactiveWarningDays` - dias para avisar inactividad
-- `shipone.staleWarningDays` - dias para aviso fuerte de stale
+- `shipone.inactiveWarningDays` - días para avisar inactividad
+- `shipone.staleWarningDays` - días para aviso fuerte de stale
 
 ## Desarrollo
 
@@ -105,9 +105,9 @@ npm install
 npm.cmd run compile
 ```
 
-## Troubleshooting
+## Solución de problemas
 
-- Si falla `npm.cmd run compile`, revisa que Node y TypeScript esten instalados.
+- Si falla `npm.cmd run compile`, revisa que Node y TypeScript estén instalados.
 - Si `F5` no abre la extension, verifica que el workspace sea este repo y que no haya errores de compilacion.
 - Si GitHub no conecta, comprueba `gh auth status` y el secreto `VSCE_PAT`.
 
@@ -130,7 +130,7 @@ Lo siguiente que queremos cerrar:
 - pulir capturas y texto publico;
 - preparar la publicacion estable.
 
-## Publicacion
+## Publicación
 
 Flujo simple:
 
@@ -140,7 +140,7 @@ Flujo simple:
 4. Sube la version estable con el workflow `Publish Marketplace`.
 5. Usa `VSCE_PAT` como secreto de GitHub para publicar.
 
-## Contributing
+## Contribuir
 
 Lee [CONTRIBUTING.md](CONTRIBUTING.md) antes de abrir un PR.
 
