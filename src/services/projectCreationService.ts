@@ -282,15 +282,10 @@ export class ProjectCreationService {
     draft: ProjectCreationDraft
   ): Promise<ProjectMetadata | undefined> {
     const folderName = sanitizeFolderName(draft.name);
-    const folderUri = vscode.Uri.joinPath(draft.destinationFolder, folderName);
-    const projectExists = await this.pathExists(folderUri);
-
-    if (projectExists) {
-      vscode.window.showErrorMessage(
-        t(k.projectCreation.projectFolderExists)
-      );
-      return undefined;
-    }
+    const folderUri = await this.findAvailableFolderUri(
+      draft.destinationFolder,
+      folderName
+    );
 
     await this.projectStore.createProjectFolder(folderUri);
 

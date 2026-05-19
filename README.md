@@ -148,9 +148,10 @@ Flujo simple:
 
 1. Publica una beta con `vX.Y.Z-beta.N`.
 2. Comparte la beta y recoge feedback.
-3. Corrige lo importante.
-4. Sube la version estable con el workflow `Publish Marketplace`.
-5. Usa `VSCE_PAT` como secreto de GitHub para publicar.
+3. Recoge feedback con `Issues` y el template de `bug report`.
+4. Corrige lo importante.
+5. Sube la version estable con el workflow `Publish Marketplace`.
+6. Usa `VSCE_PAT` como secreto de GitHub para publicar.
 
 ## Contribuir
 

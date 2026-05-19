@@ -357,9 +357,7 @@ export class ProjectStoreService {
           source: this.formatLocation(this.backupFileUri),
         });
         await vscode.window.showWarningMessage(
-          t("El almacenamiento principal fallo y el backup tampoco pudo leerse."),
-          t("Abrir carpeta"),
-          t("Crear proyecto")
+          t("El almacenamiento principal fallo y el backup tampoco pudo leerse.")
         );
         return { projects: [], version: STORAGE_VERSION };
       }
