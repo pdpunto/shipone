@@ -1,6 +1,9 @@
 .vscode/**
 .github/**
-docs/**
+docs/internal/**
+docs/technical/**
+docs/user/**
+docs/assets/**
 scripts/**
 test/**
 src/**
@@ -9,7 +12,8 @@ out/**/*.map
 *.js
 !out/extension.js
 !out/**/*
-!media/**
+!media/branding/**
+!media/walkthrough/**
 !README.md
 !CHANGELOG.md
 !LICENSE

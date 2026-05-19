@@ -5,14 +5,27 @@ title: "[Bug]: "
 labels: bug
 ---
 
+## Resumen
+
 ## Que paso
 
 ## Que esperabas
 
-## Como reproducirlo
+## Pasos para reproducir
+
+1.
+2.
+3.
 
 ## Entorno
 
 - VS Code:
 - ShipOne:
-- Sistema:
+- Sistema operativo:
+- Git:
+- GitHub CLI:
+
+## Notas
+
+- Logs:
+- Capturas:

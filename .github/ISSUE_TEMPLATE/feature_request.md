@@ -10,3 +10,7 @@ labels: enhancement
 ## Propuesta
 
 ## Beneficio esperado
+
+## Alternativas consideradas
+
+## Notas

@@ -370,7 +370,6 @@ README:
 - [x] Problem explanation
 - [x] Quick start
 - [x] Screenshots
-- [x] GIF demo
 - [x] Commands
 - [x] Workflow explanation
 - [x] Configuration guide
@@ -413,7 +412,6 @@ Goal: publish ShipOne professionally.
 - [x] Final logo
 - [x] Final banner
 - [x] Screenshots
-- [x] Demo GIF
 - [x] Marketplace preview image
 - [x] Consistent branding
 

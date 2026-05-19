@@ -356,9 +356,7 @@ export class ProjectStoreService {
         this.logError("Fallo tambien la lectura del backup.", backupError, {
           source: this.formatLocation(this.backupFileUri),
         });
-        await vscode.window.showWarningMessage(
-          t("El almacenamiento principal fallo y el backup tampoco pudo leerse.")
-        );
+        vscode.window.showWarningMessage(t(k.warning.storageRecoveryFailed));
         return { projects: [], version: STORAGE_VERSION };
       }
     }
