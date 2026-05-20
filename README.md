@@ -1,8 +1,4 @@
-<p align="center">
-  <img src="media/branding/logo-transparent.png" alt="ShipOne logo" width="140" />
-</p>
-
-# ShipOne
+# <img src="media/branding/icon-32.png" alt="ShipOne icon" width="28" /> ShipOne
 
 ShipOne es una extension de VS Code para crear, organizar y terminar proyectos con contexto claro.
 
@@ -60,21 +56,15 @@ Estas imagenes muestran el flujo real de ShipOne dentro de VS Code:
 - Muestra `nextAction`, favoritos, salud, pausas y metricas.
 - Genera `STATUS.md` y plantillas minimas por tipo de proyecto.
 
-## Como se usa
+## Como empezar
 
 1. Abre el repo en VS Code o instala ShipOne cuando este publicado.
 2. Ejecuta `npm.cmd run compile` para desarrollo local.
 3. Pulsa `F5` para abrir Extension Development Host.
 4. Abre la vista `ShipOne` en la barra lateral.
-5. Usa `ShipOne: Crear` para crear un proyecto o `ShipOne: Abrir` para abrir uno existente.
+5. Usa `ShipOne: Cargar datos de captura` para ver la demo o `ShipOne: Crear` para crear un proyecto.
 6. Escribe `nextAction` y trabaja desde la misma vista.
-
-## Flujo rapido
-
-1. Pulsa `F5` en VS Code.
-2. Abre la vista `ShipOne`.
-3. Usa `Crear rapido`, `Crear avanzado`, `Abrir proyecto` o `Buscar proyecto`.
-4. Si un proyecto se queda atascado, usa `Congelar proyecto` o `Weekly review`.
+7. Si un proyecto se queda atascado, usa `Congelar proyecto` o `Weekly review`.
 
 ## Comandos utiles
 
