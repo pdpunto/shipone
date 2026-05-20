@@ -21,3 +21,8 @@ Indice general de la documentacion de ShipOne.
 - [Project creation](technical/project-creation.md)
 - [Localization](technical/localization.md)
 - [Release](technical/release.md)
+
+## Activos
+
+- [Branding](assets/branding/README.md)
+- [Walkthrough](assets/walkthrough/README.md)
