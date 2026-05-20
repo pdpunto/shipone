@@ -29,14 +29,14 @@
 - Comprueba `gh auth status`.
 - Verifica que GitHub CLI este instalado.
 - Revisa `VSCE_PAT` si vas a publicar.
-- Si quieres crear repos remotos, confirma que Git local ya exista.
+- Para crear repos remotos, confirma que Git local ya exista.
 - Revisa que la cuenta autenticada tenga permisos suficientes.
 
 ## La carpeta ya existe
 
 ShipOne intenta evitar colisiones usando un nombre alternativo.
 
-- Si querias usar una carpeta exacta, revisa el nombre final creado.
+- Si necesitabas una carpeta exacta, revisa el nombre final creado.
 - Si hay varias versiones del mismo nombre, confirma cual es la correcta.
 
 ## Storage roto

@@ -58,11 +58,11 @@ Estas imagenes muestran el flujo real de ShipOne dentro de VS Code:
 
 ## Como empezar
 
-1. Abre el repo en VS Code o instala ShipOne cuando este publicado.
+1. Abre el repo en VS Code o instala ShipOne desde Marketplace.
 2. Ejecuta `npm.cmd run compile` para desarrollo local.
 3. Pulsa `F5` para abrir Extension Development Host.
 4. Abre la vista `ShipOne` en la barra lateral.
-5. Usa `ShipOne: Cargar datos de captura` para ver la demo o `ShipOne: Crear` para crear un proyecto.
+5. Usa la vista `ShipOne` para revisar la demo o `ShipOne: Crear` para crear un proyecto.
 6. Escribe `nextAction` y trabaja desde la misma vista.
 7. Si un proyecto se queda atascado, usa `Congelar proyecto` o `Weekly review`.
 
@@ -110,9 +110,9 @@ Los ajustes mas utiles son estos:
 
 - VS Code
 - Node.js y npm para desarrollo local
-- Git si quieres usar repos locales
-- GitHub CLI si quieres crear repos en GitHub desde la extension
-- `VSCE_PAT` si vas a publicar en Marketplace
+- Git para usar repos locales
+- GitHub CLI para crear repos en GitHub desde la extension
+- `VSCE_PAT` para publicar en Marketplace
 
 ## Desarrollo local
 

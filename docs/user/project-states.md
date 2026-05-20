@@ -30,6 +30,6 @@ Si activas otro proyecto como `Active`, ShipOne puede pasar el anterior a `pause
 ## Como elegir estado
 
 - Usa `idea` si solo estas definiendo la idea.
-- Usa `active` si estas trabajando ahora.
+- Usa `active` cuando el proyecto este en trabajo real.
 - Usa `paused` si lo dejas para mas tarde.
 - Usa `finished` si ya esta terminado.
