@@ -2,11 +2,11 @@
 
 ## ShipOne requiere GitHub?
 
-No. Puede trabajar solo con Git local.
+No. Funciona solo con Git local.
 
 ## ShipOne requiere Git?
 
-No para explorar la extension. Si necesitas repos locales o health checks basadas en Git, si.
+No para explorar la extension. Si necesitas repos locales o health checks basadas en Git, usa Git local.
 
 ## Puedo usarlo offline?
 
@@ -46,7 +46,7 @@ ShipOne sigue funcionando para uso local, pero no podras crear repos GitHub desd
 
 ## Que pasa si falla un proyecto a mitad de crearse?
 
-Puede quedar una carpeta parcial. Revisa `troubleshooting.md` para recuperarlo.
+Puede quedar una carpeta parcial. Usa `troubleshooting.md` para recuperarlo.
 
 ## ShipOne funciona en macOS y Linux?
 
@@ -54,4 +54,4 @@ ShipOne debe probarse en esas plataformas antes de darlo por totalmente validado
 
 ## Puedo contribuir?
 
-Si. Revisa `CONTRIBUTING.md` antes de abrir un PR.
+Si. Consulta `CONTRIBUTING.md` antes de abrir un PR.

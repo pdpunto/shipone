@@ -29,4 +29,4 @@ Las capturas del [README principal](../../README.md) muestran una vista real ant
 
 ## Si algo falla
 
-Consulta `troubleshooting.md` para ver los problemas mas comunes.
+Abre `troubleshooting.md` para ver los problemas mas comunes.

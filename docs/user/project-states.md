@@ -13,7 +13,7 @@ Proyecto pensado, pero sin foco activo.
 
 ## `active`
 
-Proyecto en trabajo real. Si la opcion esta activa, solo puede haber uno.
+Proyecto en trabajo real. Con la opcion activa, solo puede haber uno.
 
 ## `paused`
 
@@ -31,5 +31,5 @@ Si activas otro proyecto como `Active`, ShipOne puede pasar el anterior a `pause
 
 - Usa `idea` si solo estas definiendo la idea.
 - Usa `active` cuando el proyecto este en trabajo real.
-- Usa `paused` si lo dejas para mas tarde.
+- Usa `paused` para dejarlo para mas tarde.
 - Usa `finished` si ya esta terminado.

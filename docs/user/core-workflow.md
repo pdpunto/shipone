@@ -5,7 +5,7 @@
 1. Abre ShipOne en la barra lateral.
 2. Crea un proyecto nuevo.
 3. Elige tipo, carpeta y opciones Git/GitHub.
-4. Revisa que el proyecto quede en `active` o en el estado que toque.
+4. Verifica que el proyecto quede en `active` o en el estado correcto.
 5. Escribe un `nextAction`.
 6. Trabaja desde la misma vista.
 7. Si pierdes foco, usa `Focus` o `Weekly review`.
@@ -26,4 +26,4 @@
 3. Activar Git.
 4. Escribir `nextAction: crear login`.
 5. Trabajar hasta terminar esa parte.
-6. Marcar el proyecto como `finished` cuando quede listo.
+6. Marca el proyecto como `finished` cuando este listo.

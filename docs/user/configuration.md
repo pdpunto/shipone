@@ -62,37 +62,37 @@ Valores:
 
 Abre el proyecto automaticamente al terminar de crearlo.
 
-Si lo desactivas, ShipOne creara el proyecto pero no cambiara de ventana.
+Desactivado: ShipOne crea el proyecto pero no cambia de ventana.
 
 ### `shipone.createGitRepoByDefault`
 
 Crea un repositorio Git local al crear un proyecto.
 
-Si lo desactivas, la creacion sera solo local.
+Desactivado: la creacion sera solo local.
 
 ### `shipone.createGitHubRepoByDefault`
 
 Crea un repositorio GitHub si Git local ya existe.
 
-Si lo desactivas, ShipOne no intentara crear repo remoto.
+Desactivado: ShipOne no intenta crear repo remoto.
 
 ### `shipone.enforceOneActiveProject`
 
 Mantiene un solo proyecto `Active`.
 
-Si lo desactivas, podras tener mas de un proyecto activo.
+Desactivado: puedes tener mas de un proyecto activo.
 
 ### `shipone.createStatusFileByDefault`
 
 Genera `STATUS.md` de forma automatica.
 
-Si lo desactivas, ShipOne no creara el archivo de estado.
+Desactivado: ShipOne no crea el archivo de estado.
 
 ### `shipone.showFinishedProjects`
 
 Muestra o oculta proyectos terminados.
 
-Si lo desactivas, la vista queda mas limpia.
+Desactivado: la vista queda mas limpia.
 
 ### `shipone.inactiveWarningDays`
 
