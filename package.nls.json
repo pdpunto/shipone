@@ -10,7 +10,6 @@
   "command.markMvpItemDone.title": "Mark MVP task done",
   "command.syncStatusFile.title": "Sync STATUS.md",
   "command.recoverStorage.title": "Recover storage",
-  "command.loadScreenshotData.title": "Load screenshot data",
   "command.connectGithub.title": "Connect GitHub",
   "command.detectBlockers.title": "Detect blockers",
   "command.generateAiContext.title": "Generate AI context",

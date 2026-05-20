@@ -41,8 +41,7 @@
     "onCommand:shipone.searchProject",
     "onCommand:shipone.scanTodos",
     "onCommand:shipone.generateAiContext",
-    "onCommand:shipone.recoverStorage",
-    "onCommand:shipone.loadScreenshotData"
+    "onCommand:shipone.recoverStorage"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -99,12 +98,6 @@
         "title": "%command.recoverStorage.title%",
         "category": "ShipOne",
         "icon": "$(database)"
-      },
-      {
-        "command": "shipone.loadScreenshotData",
-        "title": "%command.loadScreenshotData.title%",
-        "category": "ShipOne",
-        "icon": "$(beaker)"
       },
       {
         "command": "shipone.connectGithub",
@@ -267,9 +260,6 @@
         },
         {
           "command": "shipone.recoverStorage"
-        },
-        {
-          "command": "shipone.loadScreenshotData"
         },
         {
           "command": "shipone.connectGithub"

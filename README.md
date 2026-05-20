@@ -44,10 +44,6 @@ Estas imagenes muestran el flujo real de ShipOne dentro de VS Code:
 
 ![ShipOne focus mode](docs/assets/screenshots/04-focus-mode.png)
 
-### Demo
-
-![ShipOne demo gif](docs/assets/gifs/shipone-demo.gif)
-
 ## Que hace
 
 - Crea proyectos nuevos desde una vista propia.
@@ -62,7 +58,7 @@ Estas imagenes muestran el flujo real de ShipOne dentro de VS Code:
 2. Ejecuta `npm.cmd run compile` para desarrollo local.
 3. Pulsa `F5` para abrir Extension Development Host.
 4. Abre la vista `ShipOne` en la barra lateral.
-5. Usa la vista `ShipOne` para revisar la demo o `ShipOne: Crear` para crear un proyecto.
+5. Usa la vista `ShipOne` o `ShipOne: Crear` para crear un proyecto.
 6. Escribe `nextAction` y trabaja desde la misma vista.
 7. Si un proyecto se queda atascado, usa `Congelar proyecto` o `Weekly review`.
 

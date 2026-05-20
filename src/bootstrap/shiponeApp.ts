@@ -9,12 +9,10 @@ import { registerGithubCommands } from "../commands/github/registerGithubCommand
 import { registerOnboardingCommands } from "../commands/onboarding/registerOnboardingCommands";
 import { registerReviewCommands } from "../commands/review/registerReviewCommands";
 import { registerStatusCommands } from "../commands/status/registerStatusCommands";
-import { registerScreenshotSeedCommands } from "../commands/demo/registerScreenshotSeedCommands";
 import { ProjectCreationService } from "../services/projectCreationService";
 import { ProjectContextService } from "../services/projectContextService";
 import { ProjectHealthService } from "../services/projectHealthService";
 import { ProjectRecoveryService } from "../services/projectRecoveryService";
-import { ScreenshotSeedService } from "../services/screenshotSeedService";
 import { StatusFileService } from "../services/statusFileService";
 import { TodoScannerService } from "../services/todoScannerService";
 import { ShipOneProjectsTreeDataProvider } from "../providers/shiponeProjectsTreeDataProvider";
@@ -40,7 +38,6 @@ export class ShipOneApp {
   private readonly treeTooltipProvider = new TreeTooltipProvider();
   private readonly healthRenderer = new ProjectHealthRenderer();
   private readonly statusFileService = new StatusFileService();
-  private readonly screenshotSeedService: ScreenshotSeedService;
   private readonly projectCreationService: ProjectCreationService;
   private todoScannerService: TodoScannerService | undefined;
 
@@ -57,12 +54,6 @@ export class ShipOneApp {
       this.projectContextService
     );
     this.projectRecoveryService = new ProjectRecoveryService(this.projectStore);
-    this.screenshotSeedService = new ScreenshotSeedService(
-      context,
-      this.projectStore,
-      this.statusFileService,
-      this.projectContextService
-    );
   }
 
   async init(): Promise<vscode.Disposable[]> {
@@ -158,11 +149,6 @@ export class ShipOneApp {
       statusFileService: this.statusFileService,
     });
 
-    const screenshotSeedCommands = registerScreenshotSeedCommands({
-      screenshotSeedService: this.screenshotSeedService,
-      treeRefresh: () => this.treeDataProvider?.refresh(),
-    });
-
     const focusCommands = registerFocusCommands({
       setFocusMode: (enabled: boolean) => this.setFocusMode(enabled),
     });
@@ -190,7 +176,6 @@ export class ShipOneApp {
       ...githubCommands,
       ...onboardingCommands,
       ...statusCommands,
-      ...screenshotSeedCommands,
       ...focusCommands,
       ...reviewCommands,
       ...launchCommands,
