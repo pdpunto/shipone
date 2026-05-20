@@ -13,14 +13,6 @@ test("validate-utf8.mjs no falla", () => {
   });
 });
 
-test("roadmap markdown tiene utf8 valido", () => {
-  const filePath = path.join(__dirname, "..", "docs", "shipone-public-release-roadmap.md");
-  const content = fs.readFileSync(filePath);
-  assert.doesNotThrow(() => {
-    new TextDecoder("utf-8", { fatal: true }).decode(content);
-  });
-});
-
 test("json del repo tiene utf8 valido", () => {
   const files = ["package.json", "package-lock.json", "package.nls.json", "package.nls.es.json", "tsconfig.json"];
   for (const relativePath of files) {

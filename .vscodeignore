@@ -1,6 +1,7 @@
 .vscode/**
 .github/**
 .shipone-private/**
+docs/**
 docs/internal/**
 docs/technical/**
 docs/user/**
@@ -14,6 +15,7 @@ out/**/*.map
 *.js
 !out/extension.js
 !out/**/*
+!media/**
 !media/branding/**
 media/branding/*.md
 !media/walkthrough/**

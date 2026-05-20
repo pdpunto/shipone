@@ -12,6 +12,6 @@ function runReleaseNotes(args = []) {
 test("build-release-notes devuelve el bloque unreleased", () => {
   const notes = runReleaseNotes();
 
-  assert.ok(notes.includes("Initial public release work in progress."));
-  assert.ok(notes.includes("Community files and contribution guides added."));
+  assert.ok(notes.includes("README public polished."));
+  assert.ok(notes.includes("Release documentation prepared."));
 });
