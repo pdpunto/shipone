@@ -16,6 +16,10 @@ Recursos visuales y de apoyo de ShipOne.
 - `06-weekly-review.png` - revision semanal.
 - `07-status-md.png` - STATUS.md abierto en un proyecto demo.
 
+## GIFs
+
+- `shipone-demo.gif` - demo corta del flujo principal dentro de VS Code.
+
 ## Walkthrough
 
 - [Walkthrough notes](walkthrough/README.md)

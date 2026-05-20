@@ -48,6 +48,10 @@ Estas imagenes muestran el flujo real de ShipOne dentro de VS Code:
 
 ![ShipOne focus mode](docs/assets/screenshots/04-focus-mode.png)
 
+### Demo
+
+![ShipOne demo gif](docs/assets/gifs/shipone-demo.gif)
+
 ## Que hace
 
 - Crea proyectos nuevos desde una vista propia.
