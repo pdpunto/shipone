@@ -2,9 +2,9 @@
 
 ShipOne es una extension de VS Code para crear, organizar y terminar proyectos con contexto claro.
 
-Ayuda a mantener un siguiente paso visible, un estado preciso y menos friccion al volver a trabajar.
+Mantiene un siguiente paso visible, un estado preciso y menos friccion al volver a trabajar.
 
-## Por que ShipOne
+## Proposito
 
 Muchos proyectos se empiezan rapido y se abandonan igual de rapido.
 
@@ -23,12 +23,6 @@ ShipOne junta en un solo sitio lo que normalmente queda repartido entre notas, c
 - Mantiene un solo proyecto `Active` si activas esa regla.
 - Muestra `nextAction`, favoritos, salud, pausas y metricas.
 - Genera `STATUS.md` y plantillas minimas por tipo de proyecto.
-
-## Captura
-
-Vista principal de ShipOne:
-
-![ShipOne preview](media/branding/marketplace-preview.png)
 
 ## Como se usa
 
@@ -148,8 +142,3 @@ Lee [CONTRIBUTING.md](CONTRIBUTING.md) antes de abrir un PR.
 ## Licencia
 
 Consulta `LICENSE`.
-
-## Notas
-
-- Los assets de marca estan en `media/branding/`.
-- ShipOne usa `STATUS.md` como apoyo, pero no obliga a usarlo.
