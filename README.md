@@ -32,6 +32,22 @@ ShipOne usa una identidad visual simple y consistente:
 - banner para Marketplace;
 - preview visual para la pagina del producto.
 
+## Capturas
+
+Estas imagenes muestran el flujo real de ShipOne dentro de VS Code:
+
+### Vista general
+
+![ShipOne vista general](docs/assets/screenshots/01-overview.png)
+
+### Proyecto activo
+
+![ShipOne proyecto activo](docs/assets/screenshots/02-active-project.png)
+
+### Focus mode
+
+![ShipOne focus mode](docs/assets/screenshots/04-focus-mode.png)
+
 ## Que hace
 
 - Crea proyectos nuevos desde una vista propia.

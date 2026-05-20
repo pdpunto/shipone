@@ -25,7 +25,7 @@ export class FocusNode extends vscode.TreeItem {
       health,
       warning
     );
-    this.iconPath = new vscode.ThemeIcon(iconProvider.getFocusIcon());
+    this.iconPath = iconProvider.getFocusIcon();
     this.tooltip = tooltipProvider.buildFocusTooltip(project, health);
     this.command = {
       command: "shipone.openProject",

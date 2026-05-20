@@ -122,6 +122,9 @@ export class ProjectHealthService {
     staleWarningDays: number
   ): Promise<ProjectHealth> {
     const issues: string[] = [];
+    const isDemoProject = await pathExists(
+      vscode.Uri.joinPath(vscode.Uri.file(project.path), ".shipone-demo")
+    );
     const warning = this.getInactivityWarning(
       project.lastOpenedAt,
       inactiveWarningDays,
@@ -143,9 +146,11 @@ export class ProjectHealthService {
       issues.push("no-readme");
     }
 
-    const hasRecentCommits = await this.hasRecentGitCommit(project.path);
-    if (!hasRecentCommits) {
-      issues.push("no-recent-commits");
+    if (!isDemoProject) {
+      const hasRecentCommits = await this.hasRecentGitCommit(project.path);
+      if (!hasRecentCommits) {
+        issues.push("no-recent-commits");
+      }
     }
 
     if (issues.length === 0) {

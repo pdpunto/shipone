@@ -111,6 +111,13 @@ export class ProjectStoreService {
     }
   }
 
+  async replaceProjects(
+    projects: ProjectMetadata[],
+    createBackup = true
+  ): Promise<void> {
+    await this.saveProjects(projects, createBackup);
+  }
+
   async upsertProject(project: ProjectMetadata): Promise<void> {
     const projects = await this.loadProjects();
     const index = projects.findIndex((existing) => existing.id === project.id);

@@ -13,7 +13,7 @@ export class EmptyStateNode extends vscode.TreeItem {
     super(label, vscode.TreeItemCollapsibleState.None);
     this.contextValue = "shipone.emptyState";
     this.description = detail;
-    this.iconPath = new vscode.ThemeIcon(iconProvider.getEmptyStateIcon());
+    this.iconPath = iconProvider.getEmptyStateIcon();
     this.tooltip = tooltipProvider.buildEmptyStateTooltip(
       label,
       detail,

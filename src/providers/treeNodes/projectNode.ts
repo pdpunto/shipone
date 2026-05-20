@@ -33,7 +33,7 @@ export class ProjectNode extends vscode.TreeItem {
     );
 
     this.contextValue = "shipone.project";
-    this.iconPath = new vscode.ThemeIcon(iconProvider.getProjectIcon(project));
+    this.iconPath = iconProvider.getProjectIcon(project);
     this.command = {
       command: "shipone.openProject",
       title: t(k.common.openProject),

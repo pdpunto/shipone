@@ -1097,6 +1097,36 @@ test("ProjectHealthService detecta Git viejo", async () => {
   }
 });
 
+test("ProjectHealthService ignora Git en proyectos demo", async () => {
+  const oldTimestamp = Date.now() - 40 * 86_400_000;
+  const fixture = createHealthServiceFixture({
+    readmeExists: true,
+    demoExists: true,
+    gitTimestamp: oldTimestamp,
+  });
+
+  try {
+    const project = fixture.buildProject({
+      id: "p1",
+      name: "ShipOne Demo",
+      description: "Test",
+      type: "blank",
+      status: "active",
+      path: "C:\\tmp\\shipone-demo",
+      createdAt: "2026-05-15T00:00:00.000Z",
+      nextAction: "Crear login",
+    });
+
+    const health = await fixture.service.buildProjectHealth(project, 7, 30);
+
+    assert.equal(health.label, "healthy");
+    assert.deepEqual(health.issues, []);
+    assert.equal(fixture.counters.git, 0);
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
 test("ProjectHealthService detecta next action faltante", async () => {
   const fixture = createHealthServiceFixture({
     readmeExists: true,
@@ -1768,7 +1798,7 @@ function createMockVscodeForStorage(fsState) {
   };
 }
 
-function createMockVscodeForHealth(readmeExists, counters) {
+function createMockVscodeForHealth(readmeExists, demoExists, counters) {
   const uriApi = {
     file: (value) => ({
       fsPath: value,
@@ -1790,6 +1820,9 @@ function createMockVscodeForHealth(readmeExists, counters) {
         stat: async (uri) => {
           if (counters) {
             counters.readme += 1;
+          }
+          if (demoExists && uri.fsPath.endsWith(".shipone-demo")) {
+            return true;
           }
           if (readmeExists && uri.fsPath.endsWith("README.md")) {
             return true;
@@ -1979,7 +2012,11 @@ function createMockVscodeForGenericFs(fsState, counters) {
 
 function createHealthServiceFixture(options) {
   const counters = options.counters ?? { readme: 0, git: 0 };
-  const vscodeApi = createMockVscodeForHealth(options.readmeExists, counters);
+  const vscodeApi = createMockVscodeForHealth(
+    options.readmeExists,
+    options.demoExists ?? false,
+    counters
+  );
   const originalLoad = Module._load;
 
   Module._load = function patchedLoad(request, parent, isMain) {

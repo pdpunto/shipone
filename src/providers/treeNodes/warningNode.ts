@@ -15,7 +15,7 @@ export class WarningNode extends vscode.TreeItem {
   ) {
     super(label, vscode.TreeItemCollapsibleState.None);
     this.description = detail;
-    this.iconPath = new vscode.ThemeIcon(iconProvider.getWarningIcon());
+    this.iconPath = iconProvider.getWarningIcon();
     this.tooltip = tooltipProvider.buildWarningTooltip(
       label,
       tooltipDetail ?? detail

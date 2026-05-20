@@ -12,7 +12,7 @@ export class GroupNode extends vscode.TreeItem {
     tooltipProvider: TreeTooltipProvider
   ) {
     super(label, vscode.TreeItemCollapsibleState.Collapsed);
-    this.iconPath = new vscode.ThemeIcon(iconProvider.getGroupIcon(status));
+    this.iconPath = iconProvider.getGroupIcon(status);
     this.contextValue = "shipone.group";
     this.tooltip = tooltipProvider.buildGroupTooltip(label, count);
   }

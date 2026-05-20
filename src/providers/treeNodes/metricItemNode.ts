@@ -9,7 +9,7 @@ export class MetricItemNode extends vscode.TreeItem {
   ) {
     super(label, vscode.TreeItemCollapsibleState.None);
     this.description = String(value);
-    this.iconPath = new vscode.ThemeIcon(iconProvider.getMetricItemIcon(label));
+    this.iconPath = iconProvider.getMetricItemIcon(label);
     this.contextValue = "shipone.metric";
   }
 }

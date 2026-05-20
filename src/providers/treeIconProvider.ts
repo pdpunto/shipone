@@ -1,53 +1,58 @@
+import * as vscode from "vscode";
 import type { ProjectMetadata, ProjectStatus } from "../models/project";
 
 export class TreeIconProvider {
-  getGroupIcon(status: ProjectStatus): string {
+  getGroupIcon(status: ProjectStatus): vscode.ThemeIcon {
     switch (status) {
       case "active":
-        return "play";
+        return new vscode.ThemeIcon("play", new vscode.ThemeColor("charts.green"));
       case "idea":
-        return "lightbulb";
+        return new vscode.ThemeIcon("lightbulb", new vscode.ThemeColor("charts.blue"));
       case "paused":
-        return "debug-pause";
+        return new vscode.ThemeIcon("debug-pause", new vscode.ThemeColor("charts.orange"));
       case "finished":
-        return "check";
+        return new vscode.ThemeIcon("check", new vscode.ThemeColor("charts.purple"));
     }
   }
 
-  getMetricsIcon(): string {
-    return "graph";
+  getMetricsIcon(): vscode.ThemeIcon {
+    return new vscode.ThemeIcon("graph", new vscode.ThemeColor("charts.blue"));
   }
 
-  getMetricItemIcon(name: string): string {
+  getMetricItemIcon(name: string): vscode.ThemeIcon {
     switch (name.toLowerCase()) {
       case "ideas":
-        return "lightbulb";
+        return new vscode.ThemeIcon("lightbulb", new vscode.ThemeColor("charts.blue"));
       case "active":
-        return "play";
+        return new vscode.ThemeIcon("play", new vscode.ThemeColor("charts.green"));
       case "paused":
-        return "debug-pause";
+        return new vscode.ThemeIcon("debug-pause", new vscode.ThemeColor("charts.orange"));
       case "finished":
-        return "check";
+        return new vscode.ThemeIcon("check", new vscode.ThemeColor("charts.purple"));
       case "finish ratio":
-        return "pie-chart";
+        return new vscode.ThemeIcon("pie-chart", new vscode.ThemeColor("charts.green"));
       default:
-        return "symbol-numeric";
+        return new vscode.ThemeIcon("symbol-numeric", new vscode.ThemeColor("foreground"));
     }
   }
 
-  getEmptyStateIcon(): string {
-    return "info";
+  getEmptyStateIcon(): vscode.ThemeIcon {
+    return new vscode.ThemeIcon("info", new vscode.ThemeColor("charts.blue"));
   }
 
-  getWarningIcon(): string {
-    return "alert";
+  getWarningIcon(): vscode.ThemeIcon {
+    return new vscode.ThemeIcon("alert", new vscode.ThemeColor("charts.orange"));
   }
 
-  getFocusIcon(): string {
-    return "eye";
+  getFocusIcon(): vscode.ThemeIcon {
+    return new vscode.ThemeIcon("eye", new vscode.ThemeColor("charts.green"));
   }
 
-  getProjectIcon(project: ProjectMetadata): string {
-    return project.favorite ? "star-full" : this.getGroupIcon(project.status);
+  getProjectIcon(project: ProjectMetadata): vscode.ThemeIcon {
+    if (project.favorite) {
+      return new vscode.ThemeIcon("star-full", new vscode.ThemeColor("charts.yellow"));
+    }
+
+    return this.getGroupIcon(project.status);
   }
 }

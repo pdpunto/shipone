@@ -10,6 +10,7 @@
   "command.markMvpItemDone.title": "Marcar tarea MVP",
   "command.syncStatusFile.title": "Sincronizar STATUS.md",
   "command.recoverStorage.title": "Recuperar almacenamiento",
+  "command.loadScreenshotData.title": "Cargar datos de captura",
   "command.connectGithub.title": "Conectar GitHub",
   "command.detectBlockers.title": "Detectar bloqueadores",
   "command.generateAiContext.title": "Generar AI context",

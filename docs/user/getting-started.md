@@ -3,6 +3,7 @@
 ## Que es ShipOne
 
 ShipOne es una extension de VS Code para crear, organizar y terminar proyectos con contexto claro.
+Si quieres ver una vista real antes de empezar, mira las capturas del [README principal](../../README.md).
 
 ## Primer arranque
 
