@@ -1,5 +1,6 @@
 .vscode/**
 .github/**
+.shipone-private/**
 docs/internal/**
 docs/technical/**
 docs/user/**
@@ -8,11 +9,13 @@ scripts/**
 test/**
 src/**
 out/**/*.map
+*.code-workspace
 *.ts
 *.js
 !out/extension.js
 !out/**/*
 !media/branding/**
+media/branding/*.md
 !media/walkthrough/**
 !README.md
 !CHANGELOG.md
