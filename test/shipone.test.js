@@ -2688,6 +2688,10 @@ test("Create project flow sin red sigue creando local", async () => {
     assert.equal(project.repoUrl, null);
     assert.equal(fixture.projectStore.createdProjects.length, 1);
     assert.ok(fixture.messages.warning.length > 0);
+    assert.equal(
+      fixture.messages.warning[0][0].includes("nombre del repo"),
+      true
+    );
     assert.ok(
       fixture.execCalls.some(
         (call) =>

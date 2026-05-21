@@ -33,7 +33,8 @@ export const translationKeys = {
     storageRecoveryFailed: "No se pudo recuperar el almacenamiento de ShipOne.",
     gitInitFailed: "No se pudo inicializar Git, pero el proyecto ya existe.",
     gitCommitFailed: "Git se inicializo, pero fallo el commit inicial.",
-    githubRepoFailed: "No se pudo crear el repo de GitHub, pero el proyecto local ya existe.",
+    githubRepoFailed:
+      "No se pudo crear el repo de GitHub. Revisa autenticacion, nombre del repo y permisos. El proyecto local ya existe.",
   },
   tree: {
     metrics: "Metrics",
@@ -121,7 +122,7 @@ export const translationKeys = {
   github: {
     notAuthenticated: "GitHub no esta autenticado. Puedes conectarlo ahora o seguir sin GitHub.",
     notAuthenticatedSkipped: "GitHub no esta autenticado. Se omitira la creacion del repo.",
-    noCli: "No se encontro GitHub CLI. Instala 'gh' y vuelve a intentarlo.",
+    noCli: "No se encontro GitHub CLI. Instala `gh` y vuelve a intentarlo.",
     connected: "GitHub ya esta conectado.",
     connectInTerminal: "Abre la terminal para conectar GitHub.",
   },
