@@ -17,8 +17,6 @@ Mantiene un siguiente paso visible, un estado preciso y menos friccion al volver
   </a>
 </p>
 
-Codigo fuente: https://github.com/pdpunto/shipone
-
 ## Proposito
 
 Muchos proyectos se empiezan rapido y se abandonan igual de rapido.
