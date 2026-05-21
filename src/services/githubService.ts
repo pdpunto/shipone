@@ -72,7 +72,7 @@ export class GitHubService {
           "--remote",
           "origin",
           "--push",
-          "--confirm",
+          "--yes",
         ],
         { cwd: folderUri.fsPath }
       );
