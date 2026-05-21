@@ -110,6 +110,15 @@ Los ajustes mas utiles son estos:
 - GitHub CLI para crear repos en GitHub desde la extension
 - `VSCE_PAT` para publicar en Marketplace
 
+## Plataformas probadas
+
+ShipOne ya se ha probado en:
+
+- Windows
+- macOS
+
+Linux queda pendiente de validacion.
+
 ## Desarrollo local
 
 ```powershell

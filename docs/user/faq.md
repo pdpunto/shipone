@@ -50,7 +50,8 @@ Puede quedar una carpeta parcial. Usa `troubleshooting.md` para recuperarlo.
 
 ## ShipOne funciona en macOS y Linux?
 
-ShipOne debe probarse en esas plataformas antes de darlo por totalmente validado.
+ShipOne ya quedo confirmado en macOS.
+En Linux sigue pendiente la validacion.
 
 ## Puedo contribuir?
 
