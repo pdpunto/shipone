@@ -1,27 +1,36 @@
-# Release Notes
+# ShipOne Release Notes
 
 ## Summary
 
-Describe what changed in this release in one short paragraph.
+Escribe un resumen corto de la version.
 
-## Changes
+## Added
 
-- Added:
-- Changed:
-- Fixed:
-- Removed:
+- Que nueva capacidad llega en esta version.
 
-## Testing
+## Changed
 
-- `npm.cmd run test`
-- `npm.cmd run lint`
+- Que comportamiento mejora o cambia.
+
+## Fixed
+
+- Que error concreto se corrige.
+
+## Removed
+
+- Que deja de estar disponible, si aplica.
+
+## Validation
+
 - `npm.cmd run compile`
+- `npm.cmd run test`
+- `npx.cmd @vscode/vsce package`
 
 ## Breaking changes
 
-- None
+- Ninguno, salvo que se indique lo contrario.
 
 ## Notes
 
-- Link related issues or pull requests here.
-- Mention any publishing or compatibility notes here.
+- Enlaza issues o PRs relacionadas.
+- Añade notas de publicacion, compatibilidad o marketplace.

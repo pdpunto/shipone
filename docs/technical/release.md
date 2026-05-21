@@ -16,6 +16,13 @@
 - build the VSIX if needed;
 - keep secrets out of the repo.
 
+## Release notes
+
+- Keep `CHANGELOG.md` as the source of truth for published notes.
+- Use the GitHub release template for a version-specific summary.
+- Keep the summary short and concrete.
+- Mention validation and compatibility only if they matter for that release.
+
 ## Suggested flow
 
 1. Verify docs and assets.
