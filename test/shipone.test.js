@@ -911,6 +911,39 @@ test("TemplateService prefiere la plantilla custom del tipo", async () => {
   }
 });
 
+test("TemplateService genera un node-api ejecutable", async () => {
+  const fixture = createTemplateServiceFixture();
+
+  try {
+    delete require.cache[require.resolve("../out/services/templateService")];
+    const { TemplateService } = require("../out/services/templateService");
+
+    const service = new TemplateService();
+    await service.createSelectedTemplate(
+      fixture.vscode.Uri.file("C:\\dest"),
+      "ShipOne API",
+      "API demo",
+      "node-api",
+      "npm",
+      "C:\\templates"
+    );
+
+    const packageJson = JSON.parse(
+      fixture.files.get("C:\\dest\\package.json").toString("utf8")
+    );
+
+    assert.equal(packageJson.scripts.dev, "node --watch src/index.js");
+    assert.equal(packageJson.scripts.start, "node src/index.js");
+    assert.equal(
+      fixture.files.get("C:\\dest\\src\\index.js").toString("utf8").includes('const http = require("http");'),
+      true
+    );
+    assert.equal(fixture.files.has("C:\\dest\\src\\index.ts"), false);
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
 test("TodoScannerService encuentra TODO y FIXME", async () => {
   const fixture = createTodoScannerFixture();
 

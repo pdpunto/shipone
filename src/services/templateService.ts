@@ -215,8 +215,8 @@ export default function RootLayout({
             version: "0.0.0",
             packageManager: formatPackageManager(context.packageManager),
             scripts: {
-              dev: "node --watch src/index.ts",
-              start: "node src/index.ts",
+              dev: "node --watch src/index.js",
+              start: "node src/index.js",
             },
           },
           null,
@@ -224,8 +224,8 @@ export default function RootLayout({
         ),
       },
       {
-        uri: vscode.Uri.joinPath(context.folderUri, "src", "index.ts"),
-        content: `import http from "http";
+        uri: vscode.Uri.joinPath(context.folderUri, "src", "index.js"),
+        content: `const http = require("http");
 
 const port = Number(process.env.PORT ?? 3000);
 
