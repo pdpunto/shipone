@@ -10,4 +10,7 @@ All notable changes to ShipOne will be documented here.
 
 ## Unreleased
 
-- Sin cambios por ahora.
+- Fixed the `node-api` template so it runs with plain Node.js.
+- Improved GitHub CLI flow and error messages.
+- Polished contributor docs, issue templates and PR templates.
+- Improved command palette icons and release notes templates.
