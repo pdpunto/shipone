@@ -8,6 +8,17 @@ Mantiene un siguiente paso visible, un estado preciso y menos friccion al volver
   <img src="media/branding/banner.png" alt="ShipOne banner" />
 </p>
 
+<p align="center">
+  <a href="https://marketplace.visualstudio.com/items?itemName=pdpunto.shipone">
+    <img src="https://img.shields.io/visual-studio-marketplace/v/pdpunto.shipone?color=0f172a&label=Marketplace" alt="Marketplace badge" />
+  </a>
+  <a href="https://github.com/pdpunto/shipone">
+    <img src="https://img.shields.io/badge/GitHub-pdpunto%2Fshipone-111827?logo=github" alt="GitHub badge" />
+  </a>
+</p>
+
+Codigo fuente: https://github.com/pdpunto/shipone
+
 ## Proposito
 
 Muchos proyectos se empiezan rapido y se abandonan igual de rapido.
