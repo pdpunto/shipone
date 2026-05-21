@@ -9,7 +9,7 @@ labels: bug
 
 ## Que paso
 
-## Que esperabas
+## Que esperabas que pasara
 
 ## Pasos para reproducir
 
@@ -24,8 +24,10 @@ labels: bug
 - Sistema operativo:
 - Git:
 - GitHub CLI:
+- Extension Development Host o VS Code normal:
 
 ## Notas
 
-- Logs:
+- Logs relevantes:
 - Capturas:
+- Cambios recientes:

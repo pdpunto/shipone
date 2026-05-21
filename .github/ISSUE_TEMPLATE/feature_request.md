@@ -14,3 +14,6 @@ labels: enhancement
 ## Alternativas consideradas
 
 ## Notas
+
+- Capturas o ejemplos:
+- Relacionado con una issue:
