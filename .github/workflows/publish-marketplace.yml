@@ -6,11 +6,11 @@ on:
       publisher:
         description: "VS Code marketplace publisher"
         required: true
-        default: "shipone"
+        default: "pdpunto"
       tag_name:
         description: "Release tag to publish"
         required: true
-        default: "v0.0.1"
+        default: "v0.0.3"
 
 permissions:
   contents: read
