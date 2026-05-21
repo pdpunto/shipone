@@ -2646,6 +2646,35 @@ test("GitHubService confirma conexion cuando ya esta autenticado", async () => {
   }
 });
 
+test("GitHubService devuelve null si falla la creacion del repo", async () => {
+  const fixture = createIntegrationFixture();
+
+  try {
+    delete require.cache[require.resolve("../out/services/githubService")];
+    const { GitHubService } = require("../out/services/githubService");
+    const service = new GitHubService();
+
+    const url = await service.createGitHubRepo(
+      fixture.vscode.Uri.file("C:\\tmp\\shipone-projects\\ShipOne-App"),
+      "ShipOne-App",
+      "private"
+    );
+
+    assert.equal(url, null);
+    assert.ok(
+      fixture.execCalls.some(
+        (call) =>
+          call.command === "gh" &&
+          call.args[0] === "repo" &&
+          call.args[1] === "create" &&
+          call.args.includes("--yes")
+      )
+    );
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
 test("Create project flow sin red sigue creando local", async () => {
   const fixture = createIntegrationFixtureWithOptions({
     failGitHubRepoCreate: true,
