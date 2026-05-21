@@ -173,22 +173,26 @@
       {
         "command": "shipone.markProjectIdea",
         "title": "%command.markProjectIdea.title%",
-        "category": "ShipOne"
+        "category": "ShipOne",
+        "icon": "$(light-bulb)"
       },
       {
         "command": "shipone.markProjectActive",
         "title": "%command.markProjectActive.title%",
-        "category": "ShipOne"
+        "category": "ShipOne",
+        "icon": "$(play)"
       },
       {
         "command": "shipone.markProjectPaused",
         "title": "%command.markProjectPaused.title%",
-        "category": "ShipOne"
+        "category": "ShipOne",
+        "icon": "$(debug-pause)"
       },
       {
         "command": "shipone.markProjectFinished",
         "title": "%command.markProjectFinished.title%",
-        "category": "ShipOne"
+        "category": "ShipOne",
+        "icon": "$(check)"
       },
       {
         "command": "shipone.editNextAction",
@@ -199,7 +203,8 @@
       {
         "command": "shipone.clearNextAction",
         "title": "%command.clearNextAction.title%",
-        "category": "ShipOne"
+        "category": "ShipOne",
+        "icon": "$(trash)"
       },
       {
         "command": "shipone.openStatusFile",
