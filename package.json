@@ -16,12 +16,11 @@
     "roadmap",
     "ship"
   ],
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
-    "vscode": "^1.120.0"
+    "vscode": "^1.115.0"
   },
   "categories": [
-    "Productivity",
     "Other"
   ],
   "repository": {
@@ -480,6 +479,7 @@
     "@types/vscode": "1.120.0",
     "@typescript-eslint/eslint-plugin": "^8.59.3",
     "@typescript-eslint/parser": "^8.59.3",
+    "@vscode/vsce": "^3.9.1",
     "eslint": "^10.3.0",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.8.3",

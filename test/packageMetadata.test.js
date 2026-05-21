@@ -18,12 +18,12 @@ test("package.json publica metadatos para marketplace", () => {
     "roadmap",
     "ship",
   ]);
-  assert.deepEqual(manifest.categories, ["Productivity", "Other"]);
+  assert.deepEqual(manifest.categories, ["Other"]);
   assert.equal(manifest.repository.url, "https://github.com/pdpunto/shipone.git");
   assert.equal(manifest.homepage, "https://github.com/pdpunto/shipone#readme");
   assert.equal(manifest.bugs.url, "https://github.com/pdpunto/shipone/issues");
   assert.equal(manifest.license, "MIT");
-  assert.equal(manifest.engines.vscode, "^1.90.0");
+  assert.equal(manifest.engines.vscode, "^1.115.0");
 });
 
 test("package.json configura prettier", () => {
