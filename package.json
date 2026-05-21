@@ -16,7 +16,7 @@
     "roadmap",
     "ship"
   ],
-  "version": "0.0.2",
+  "version": "0.0.3",
   "engines": {
     "vscode": "^1.115.0"
   },
@@ -476,7 +476,7 @@
   },
   "devDependencies": {
     "@types/node": "latest",
-    "@types/vscode": "1.120.0",
+    "@types/vscode": "^1.115.0",
     "@typescript-eslint/eslint-plugin": "^8.59.3",
     "@typescript-eslint/parser": "^8.59.3",
     "@vscode/vsce": "^3.9.1",
