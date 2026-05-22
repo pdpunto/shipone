@@ -17,4 +17,8 @@ All notable changes to ShipOne will be documented here.
 
 ## Unreleased
 
-- Sin cambios por ahora.
+- Mejorado el contexto de IA con resumen de Git.
+- Mejorada la salud del proyecto con descripciones mas utiles.
+- Mejorado el resumen semanal para retomar trabajo mas rapido.
+- Anadido borrado seguro de proyectos desde la vista.
+- Alineada la documentacion publica con los nuevos flujos.
