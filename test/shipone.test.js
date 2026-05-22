@@ -939,6 +939,7 @@ test("TemplateService genera un node-api ejecutable", async () => {
       true
     );
     assert.equal(fixture.files.has("C:\\dest\\src\\index.ts"), false);
+    assert.equal(fixture.files.has("C:\\dest\\tsconfig.json"), false);
   } finally {
     fixture.restoreLoad();
   }

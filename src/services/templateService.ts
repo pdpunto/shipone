@@ -240,23 +240,6 @@ server.listen(port, () => {
 `,
       },
       {
-        uri: vscode.Uri.joinPath(context.folderUri, "tsconfig.json"),
-        content: JSON.stringify(
-          {
-            compilerOptions: {
-              target: "ES2020",
-              module: "NodeNext",
-              moduleResolution: "NodeNext",
-              outDir: "dist",
-              rootDir: "src",
-            },
-            include: ["src"],
-          },
-          null,
-          2
-        ),
-      },
-      {
         uri: vscode.Uri.joinPath(context.folderUri, ".gitignore"),
         content: context.gitignore,
       },
