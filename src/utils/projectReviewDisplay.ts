@@ -17,11 +17,13 @@ export function buildPausedProjectDescription(
 
 export function buildWeeklyReviewSummaryLines(summary: {
   activeName: string | null;
+  activeNextAction: string | null;
   pausedCount: number;
   finishedThisWeekCount: number;
 }): string {
   return [
     t("Activo: {0}", summary.activeName ?? t("ninguno")),
+    t("Siguiente: {0}", summary.activeNextAction ?? t("sin next action")),
     t("Pausados: {0}", summary.pausedCount),
     t("Terminados esta semana: {0}", summary.finishedThisWeekCount),
   ].join(" | ");

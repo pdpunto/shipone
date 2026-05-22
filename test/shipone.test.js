@@ -171,13 +171,14 @@ test("buildWeeklyReviewSummaryLines genera el resumen", () => {
 
     const summary = buildWeeklyReviewSummaryLines({
       activeName: "ShipOne",
+      activeNextAction: "Crear login",
       pausedCount: 2,
       finishedThisWeekCount: 1,
     });
 
     assert.equal(
       summary,
-      "Activo: ShipOne | Pausados: 2 | Terminados esta semana: 1"
+      "Activo: ShipOne | Siguiente: Crear login | Pausados: 2 | Terminados esta semana: 1"
     );
   } finally {
     Module._load = originalLoad;

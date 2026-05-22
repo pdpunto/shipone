@@ -100,6 +100,9 @@ export function registerReviewCommands(options: {
 
       const summaryLines = buildWeeklyReviewSummaryLines({
         activeName: summary.active ? summary.active.name : null,
+        activeNextAction: summary.active
+          ? (summary.active.nextAction ?? null)
+          : null,
         pausedCount: pausedProjects.length,
         finishedThisWeekCount: finishedThisWeek.length,
       });
