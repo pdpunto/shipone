@@ -207,6 +207,12 @@
         "icon": "$(trash)"
       },
       {
+        "command": "shipone.deleteProject",
+        "title": "%command.deleteProject.title%",
+        "category": "ShipOne",
+        "icon": "$(trash)"
+      },
+      {
         "command": "shipone.openStatusFile",
         "title": "%command.openStatusFile.title%",
         "category": "ShipOne",
@@ -327,6 +333,11 @@
         {
           "command": "shipone.clearNextAction",
           "when": "view == shipone.projectsView && viewItem == shipone.project"
+        },
+        {
+          "command": "shipone.deleteProject",
+          "when": "view == shipone.projectsView && viewItem == shipone.project",
+          "group": "inline"
         },
         {
           "command": "shipone.openStatusFile",

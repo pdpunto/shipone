@@ -336,6 +336,63 @@ test("ProjectStoreService guarda y carga metadata", async () => {
   }
 });
 
+test("ProjectStoreService elimina proyecto local", async () => {
+  const fsState = createMemoryFs();
+  const vscodeApi = createMockVscodeForStorage(fsState);
+  const originalLoad = Module._load;
+
+  try {
+    Module._load = function patchedLoad(request, parent, isMain) {
+      if (request === "vscode") {
+        return vscodeApi;
+      }
+
+      return originalLoad.call(this, request, parent, isMain);
+    };
+
+    delete require.cache[require.resolve("../out/services/projectStoreService")];
+    const { ProjectStoreService } = require("../out/services/projectStoreService");
+    const service = new ProjectStoreService({
+      globalStorageUri: vscodeApi.Uri.file(STORAGE_ROOT),
+    });
+    const storageFile = storageFilePath(STORAGE_ROOT);
+
+    const project = createProjectMetadata({
+      id: "p1",
+      name: "ShipOne",
+      description: "Test",
+      type: "blank",
+      status: "idea",
+      path: "C:\\tmp\\shipone-projects\\ShipOne",
+      createdAt: "2026-05-15T00:00:00.000Z",
+    });
+
+    fsState.dirs.add(project.path);
+    fsState.dirs.add(`${project.path}\\src`);
+    fsState.files.set(
+      `${project.path}\\src\\index.ts`,
+      Buffer.from("console.log('x');", "utf8")
+    );
+    fsState.files.set(
+      storageFile,
+      Buffer.from(
+        JSON.stringify({ version: 2, projects: [project] }, null, 2),
+        "utf8"
+      )
+    );
+
+    await service.deleteProject("p1");
+    const projects = await service.loadProjects();
+
+    assert.equal(projects.length, 0);
+    assert.equal(fsState.dirs.has(project.path), false);
+    assert.equal(fsState.dirs.has(`${project.path}\\src`), false);
+    assert.equal(fsState.files.has(`${project.path}\\src\\index.ts`), false);
+  } finally {
+    Module._load = originalLoad;
+  }
+});
+
 test("ProjectStoreService recupera desde backup", async () => {
   const fsState = createMemoryFs();
   const vscodeApi = createMockVscodeForStorage(fsState);
@@ -1790,12 +1847,33 @@ function createMockVscodeForStorage(fsState) {
           fsState.files.set(to.fsPath, Buffer.from(data));
         },
         stat: async (uri) => {
-          if (!fsState.files.has(uri.fsPath)) {
+          if (!fsState.files.has(uri.fsPath) && !fsState.dirs.has(uri.fsPath)) {
             throw new Error("ENOENT");
           }
         },
-        delete: async (uri) => {
+        delete: async (uri, options) => {
+          if (options?.recursive) {
+            const prefix = uri.fsPath.endsWith("\\")
+              ? uri.fsPath
+              : `${uri.fsPath}\\`;
+
+            for (const filePath of Array.from(fsState.files.keys())) {
+              if (filePath === uri.fsPath || filePath.startsWith(prefix)) {
+                fsState.files.delete(filePath);
+              }
+            }
+
+            for (const dirPath of Array.from(fsState.dirs)) {
+              if (dirPath === uri.fsPath || dirPath.startsWith(prefix)) {
+                fsState.dirs.delete(dirPath);
+              }
+            }
+
+            return;
+          }
+
           fsState.files.delete(uri.fsPath);
+          fsState.dirs.delete(uri.fsPath);
         },
       },
     },
@@ -2125,6 +2203,7 @@ function createIntegrationFixtureWithOptions(options = {}) {
   const quickPickQueue = [];
   const infoQueue = [];
   const warningQueue = [];
+  const warningChoiceQueue = [];
   const errorQueue = [];
   const execCalls = [];
   const commandExecCalls = [];
@@ -2209,7 +2288,8 @@ function createIntegrationFixtureWithOptions(options = {}) {
       },
       showWarningMessage: async (...args) => {
         warningQueue.push(args);
-        return undefined;
+        const next = warningChoiceQueue.shift();
+        return typeof next === "function" ? next(args) : next;
       },
       showErrorMessage: async (...args) => {
         errorQueue.push(args);
@@ -2337,6 +2417,7 @@ function createIntegrationFixtureWithOptions(options = {}) {
     markProjectOpenedCalls: [],
     setNextActionCalls: [],
     setProjectStatusCalls: [],
+    deleteProjectCalls: [],
     createProjectFolder: async (uri) => {
       fsState.dirs.add(uri.fsPath);
     },
@@ -2355,6 +2436,13 @@ function createIntegrationFixtureWithOptions(options = {}) {
     },
     setProjectStatus: async (projectId, status) => {
       projectStore.setProjectStatusCalls.push([projectId, status]);
+    },
+    deleteProject: async (projectId) => {
+      projectStore.deleteProjectCalls.push(projectId);
+      projectStore.projects = projectStore.projects.filter(
+        (project) => project.id !== projectId
+      );
+      projectStore.projectsById.delete(projectId);
     },
     toggleFavorite: async () => {},
     setMvpTasks: async () => {},
@@ -2408,6 +2496,7 @@ function createIntegrationFixtureWithOptions(options = {}) {
     calls,
     enqueueInput: (value) => inputQueue.push(value),
     enqueueQuickPick: (value) => quickPickQueue.push(value),
+    enqueueWarningChoice: (value) => warningChoiceQueue.push(value),
     restoreLoad: () => {
       Module._load = originalLoad;
     },
@@ -3017,6 +3106,44 @@ test("Edit next action flow actualiza la accion", async () => {
     assert.deepEqual(fixture.projectStore.setNextActionCalls, [["p1", "Mejorar onboarding"]]);
     assert.equal(fixture.calls.refresh.length, 1);
     assert.equal(fixture.messages.info.length, 1);
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
+test("Delete project flow confirma y borra local", async () => {
+  const fixture = createIntegrationFixture();
+
+  try {
+    delete require.cache[require.resolve("../out/commands/projects/registerProjectCommands")];
+    const { registerProjectCommands } = require("../out/commands/projects/registerProjectCommands");
+
+    fixture.projectStore.projectsById.set("p1", {
+      id: "p1",
+      name: "ShipOne",
+      description: "Test",
+      type: "blank",
+      status: "active",
+      path: "C:\\tmp\\shipone-projects\\ShipOne",
+      createdAt: "2026-05-15T00:00:00.000Z",
+    });
+
+    fixture.enqueueWarningChoice((args) => args[1]);
+
+    registerProjectCommands({
+      context: fixture.context,
+      projectStore: fixture.projectStore,
+      settingsService: { getSettings: () => fixture.settings },
+      treeDataProvider: { refresh: () => fixture.calls.refresh.push(true) },
+      getSelectedProjectId: () => undefined,
+    });
+
+    await fixture.commandHandlers.get("shipone.deleteProject")("p1");
+
+    assert.deepEqual(fixture.projectStore.deleteProjectCalls, ["p1"]);
+    assert.equal(fixture.calls.refresh.length, 1);
+    assert.equal(fixture.messages.info.length, 1);
+    assert.equal(fixture.messages.warning.length, 1);
   } finally {
     fixture.restoreLoad();
   }

@@ -203,6 +203,26 @@ export class ProjectStoreService {
     await this.saveProjects(projects);
   }
 
+  async deleteProject(projectId: string): Promise<void> {
+    const projects = await this.loadProjects();
+    const index = projects.findIndex((project) => project.id === projectId);
+
+    if (index < 0) {
+      throw new Error(t(k.error.projectNotFound));
+    }
+
+    const [target] = projects.splice(index, 1);
+    const projectFolderUri = vscode.Uri.file(target.path);
+
+    if (await this.pathExists(projectFolderUri)) {
+      await vscode.workspace.fs.delete(projectFolderUri, {
+        recursive: true,
+      });
+    }
+
+    await this.saveProjects(projects);
+  }
+
   async setMvpTasks(
     projectId: string,
     tasks: ProjectMetadata["mvpTasks"]
@@ -447,9 +467,12 @@ export class ProjectStoreService {
     }
   }
 
-  private async deleteIfExists(uri: vscode.Uri): Promise<void> {
+  private async deleteIfExists(
+    uri: vscode.Uri,
+    options?: { recursive?: boolean; useTrash?: boolean }
+  ): Promise<void> {
     try {
-      await vscode.workspace.fs.delete(uri);
+      await vscode.workspace.fs.delete(uri, options);
     } catch {
       // Ignoramos: el objetivo es no dejar temporal huérfano si ya no existe.
     }

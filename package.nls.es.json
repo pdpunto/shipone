@@ -28,6 +28,7 @@
   "command.markProjectFinished.title": "Marcar como terminado",
   "command.editNextAction.title": "Editar siguiente paso",
   "command.clearNextAction.title": "Limpiar siguiente paso",
+  "command.deleteProject.title": "Eliminar proyecto",
   "command.openStatusFile.title": "Abrir STATUS.md",
   "command.refreshProjects.title": "Refrescar",
   "menu.moreActions.title": "Más acciones",

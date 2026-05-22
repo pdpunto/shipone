@@ -16,6 +16,7 @@ const COMMAND_MARK_PROJECT_FINISHED = "shipone.markProjectFinished";
 const COMMAND_EDIT_NEXT_ACTION = "shipone.editNextAction";
 const COMMAND_CLEAR_NEXT_ACTION = "shipone.clearNextAction";
 const COMMAND_TOGGLE_FAVORITE = "shipone.toggleFavorite";
+const COMMAND_DELETE_PROJECT = "shipone.deleteProject";
 
 export function registerProjectCommands(options: {
   context: vscode.ExtensionContext;
@@ -195,6 +196,37 @@ export function registerProjectCommands(options: {
     }
   );
 
+  const deleteProjectCommand = vscode.commands.registerCommand(
+    COMMAND_DELETE_PROJECT,
+    async (projectArg?: unknown) => {
+      const project = await resolveProject(
+        projectStore,
+        projectArg,
+        getSelectedProjectId()
+      );
+
+      if (!project) {
+        return;
+      }
+
+      const choice = await vscode.window.showWarningMessage(
+        t("Eliminar el proyecto {0}?", project.name),
+        t(k.common.yes),
+        t(k.common.cancel)
+      );
+
+      if (choice !== t(k.common.yes)) {
+        return;
+      }
+
+      await projectStore.deleteProject(project.id);
+      treeDataProvider.refresh();
+      vscode.window.showInformationMessage(
+        t("Proyecto eliminado: {0}.", project.name)
+      );
+    }
+  );
+
   const projectCommands = [
     openProjectCommand,
     markProjectIdeaCommand,
@@ -204,6 +236,7 @@ export function registerProjectCommands(options: {
     editNextActionCommand,
     clearNextActionCommand,
     toggleFavoriteCommand,
+    deleteProjectCommand,
   ];
 
   context.subscriptions.push(...projectCommands);
