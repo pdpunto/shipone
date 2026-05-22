@@ -10,6 +10,7 @@
 6. Trabaja desde la misma vista.
 7. Si pierdes foco, usa `Focus` o `Weekly review`.
 8. Si el proyecto se detiene, usa `paused` o `finished`.
+9. Si el proyecto ya no sirve, elimínalo desde la papelera con confirmacion.
 
 ## Lo importante
 
@@ -18,6 +19,7 @@
 - `STATUS.md` refuerza el contexto.
 - `Focus` recorta ruido.
 - `Weekly review` ayuda a retomar.
+- `Eliminar proyecto` limpia lo que ya no aporta.
 
 ## Ejemplo
 

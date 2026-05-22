@@ -85,6 +85,8 @@ Estas imagenes muestran el flujo real de ShipOne dentro de VS Code:
 - `ShipOne: Buscar` - filtra proyectos por nombre o etiqueta
 - `ShipOne: Focus` - entra en focus mode
 - `ShipOne: Weekly review` - revisa el estado semanal
+- `ShipOne: Generar contexto de IA` - crea un resumen listo para retomar
+- `ShipOne: Eliminar proyecto` - borra un proyecto con confirmacion
 - `ShipOne: STATUS.md` - sincroniza el archivo de estado
 - `ShipOne: Conectar GitHub` - conecta GitHub para publicar repos
 
