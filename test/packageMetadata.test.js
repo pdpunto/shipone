@@ -24,6 +24,8 @@ test("package.json publica metadatos para marketplace", () => {
   assert.equal(manifest.bugs.url, "https://github.com/pdpunto/shipone/issues");
   assert.equal(manifest.license, "MIT");
   assert.equal(manifest.engines.vscode, "^1.115.0");
+  assert.equal(manifest.devDependencies["@types/node"], "25.7.0");
+  assert.equal(manifest.devDependencies.typescript, "6.0.3");
 });
 
 test("package.json configura prettier", () => {

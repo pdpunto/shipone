@@ -480,7 +480,7 @@
     "format:write": "prettier --write \"src/**/*.ts\" \"*.json\" \"docs/**/*.md\""
   },
   "devDependencies": {
-    "@types/node": "latest",
+    "@types/node": "25.7.0",
     "@types/vscode": "^1.115.0",
     "@typescript-eslint/eslint-plugin": "^8.59.3",
     "@typescript-eslint/parser": "^8.59.3",
@@ -488,6 +488,6 @@
     "eslint": "^10.3.0",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.8.3",
-    "typescript": "latest"
+    "typescript": "6.0.3"
   }
 }
