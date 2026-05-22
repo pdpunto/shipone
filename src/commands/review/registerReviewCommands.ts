@@ -164,26 +164,28 @@ export function registerReviewCommands(options: {
         }
       }
 
+      const footerParts: string[] = [];
+
       if (pausedProjects.length > 0) {
-        vscode.window.showInformationMessage(
+        footerParts.push(
           t(
             "Pausados: {0}",
             pausedProjects.map((project) => project.name).join(", ")
           )
         );
-      } else {
-        vscode.window.showInformationMessage(
-          t(k.notification.noPausedProjects)
-        );
       }
 
       if (finishedThisWeek.length > 0) {
-        vscode.window.showInformationMessage(
+        footerParts.push(
           t(
             "Terminados esta semana: {0}",
             finishedThisWeek.map((project) => project.name).join(", ")
           )
         );
+      }
+
+      if (footerParts.length > 0) {
+        vscode.window.showInformationMessage(footerParts.join(" | "));
       }
     }
   );
