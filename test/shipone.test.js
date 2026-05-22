@@ -145,6 +145,31 @@ test("buildAiContextContent genera AI_CONTEXT.md", () => {
     assert.ok(content.includes("## Git"));
     assert.ok(content.includes("main"));
     assert.ok(content.includes("abc123 Init"));
+
+    const emptyContent = buildAiContextContent(
+      {
+        name: "ShipOne",
+        status: "idea",
+        type: "blank",
+        path: "C:\\tmp\\shipone",
+        favorite: false,
+        description: "",
+        nextAction: "",
+        mvpTasks: [],
+      },
+      []
+    );
+
+    assert.ok(
+      emptyContent.includes(
+        "Sin next action. Define una accion concreta para retomar."
+      )
+    );
+    assert.ok(
+      emptyContent.includes(
+        "Todavia no hay tareas. Anade 3 pasos pequenos y claros."
+      )
+    );
   } finally {
     Module._load = originalLoad;
   }

@@ -132,19 +132,26 @@ export function buildAiContextContent(
     t("- Favorito: {0}", project.favorite ? t("si") : t("no")),
     "",
     t("## Objetivo"),
-    project.description || t("Sin descripcion"),
+    project.description ||
+      t("Sin descripcion. Define el objetivo principal en una frase."),
     "",
     t("## Next action"),
-    project.nextAction || t(k.tree.noNextAction),
+    project.nextAction ||
+      t("Sin next action. Define una accion concreta para retomar."),
     "",
     t("## MVP"),
     t("- Progreso: {0}", mvpProgress),
-    ...mvpTasks.map((task) => `- [${task.done ? "x" : " "}] ${task.text}`),
+    ...(mvpTasks.length > 0
+      ? mvpTasks.map((task) => `- [${task.done ? "x" : " "}] ${task.text}`)
+      : [
+          t("- Todavia no hay tareas. Anade 3 pasos pequenos y claros."),
+          t("- Empieza por el trabajo minimo para avanzar."),
+        ]),
     "",
     t("## Bloqueos"),
     ...(blockers.length > 0
       ? blockers.map((blocker) => t("- {0}", blocker))
-      : [t("- Ninguno")]),
+      : [t("- Ninguno. Todo listo para seguir.")]),
     "",
     ...(hasGitSummary
       ? [
