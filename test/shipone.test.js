@@ -2394,6 +2394,16 @@ function createIntegrationFixtureWithOptions(options = {}) {
         return;
       }
 
+      if (
+        options.failGitHubRepoDelete &&
+        command === "gh" &&
+        args[0] === "repo" &&
+        args[1] === "delete"
+      ) {
+        cb(new Error("offline"), "", "offline");
+        return;
+      }
+
       cb(null, "", "");
     },
   };
@@ -2765,6 +2775,34 @@ test("GitHubService devuelve null si falla la creacion del repo", async () => {
   }
 });
 
+test("GitHubService borra repo por slug o URL", async () => {
+  const fixture = createIntegrationFixture();
+
+  try {
+    delete require.cache[require.resolve("../out/services/githubService")];
+    const { GitHubService } = require("../out/services/githubService");
+    const service = new GitHubService();
+
+    const deleted = await service.deleteGitHubRepo(
+      "https://github.com/pdpunto/shipone"
+    );
+
+    assert.equal(deleted, true);
+    assert.ok(
+      fixture.execCalls.some(
+        (call) =>
+          call.command === "gh" &&
+          call.args[0] === "repo" &&
+          call.args[1] === "delete" &&
+          call.args.includes("pdpunto/shipone") &&
+          call.args.includes("--yes")
+      )
+    );
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
 test("Create project flow sin red sigue creando local", async () => {
   const fixture = createIntegrationFixtureWithOptions({
     failGitHubRepoCreate: true,
@@ -3117,6 +3155,7 @@ test("Delete project flow confirma y borra local", async () => {
   try {
     delete require.cache[require.resolve("../out/commands/projects/registerProjectCommands")];
     const { registerProjectCommands } = require("../out/commands/projects/registerProjectCommands");
+    const { GitHubService } = require("../out/services/githubService");
 
     fixture.projectStore.projectsById.set("p1", {
       id: "p1",
@@ -3125,14 +3164,17 @@ test("Delete project flow confirma y borra local", async () => {
       type: "blank",
       status: "active",
       path: "C:\\tmp\\shipone-projects\\ShipOne",
+      repoUrl: "https://github.com/pdpunto/shipone",
       createdAt: "2026-05-15T00:00:00.000Z",
     });
 
+    fixture.enqueueWarningChoice((args) => args[1]);
     fixture.enqueueWarningChoice((args) => args[1]);
 
     registerProjectCommands({
       context: fixture.context,
       projectStore: fixture.projectStore,
+      githubService: new GitHubService(),
       settingsService: { getSettings: () => fixture.settings },
       treeDataProvider: { refresh: () => fixture.calls.refresh.push(true) },
       getSelectedProjectId: () => undefined,
@@ -3142,8 +3184,8 @@ test("Delete project flow confirma y borra local", async () => {
 
     assert.deepEqual(fixture.projectStore.deleteProjectCalls, ["p1"]);
     assert.equal(fixture.calls.refresh.length, 1);
-    assert.equal(fixture.messages.info.length, 1);
-    assert.equal(fixture.messages.warning.length, 1);
+    assert.equal(fixture.messages.info.length, 2);
+    assert.equal(fixture.messages.warning.length, 2);
   } finally {
     fixture.restoreLoad();
   }

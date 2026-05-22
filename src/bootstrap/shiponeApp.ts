@@ -15,6 +15,7 @@ import { ProjectHealthService } from "../services/projectHealthService";
 import { ProjectRecoveryService } from "../services/projectRecoveryService";
 import { StatusFileService } from "../services/statusFileService";
 import { TodoScannerService } from "../services/todoScannerService";
+import { GitHubService } from "../services/githubService";
 import { ShipOneProjectsTreeDataProvider } from "../providers/shiponeProjectsTreeDataProvider";
 import { ProjectHealthRenderer } from "../providers/projectHealthRenderer";
 import { TreeIconProvider } from "../providers/treeIconProvider";
@@ -38,6 +39,7 @@ export class ShipOneApp {
   private readonly treeTooltipProvider = new TreeTooltipProvider();
   private readonly healthRenderer = new ProjectHealthRenderer();
   private readonly statusFileService = new StatusFileService();
+  private readonly githubService = new GitHubService();
   private readonly projectCreationService: ProjectCreationService;
   private todoScannerService: TodoScannerService | undefined;
 
@@ -111,6 +113,7 @@ export class ShipOneApp {
     const projectCommands = registerProjectCommands({
       context: this.context,
       projectStore: this.projectStore,
+      githubService: this.githubService,
       settingsService: this.settingsService,
       treeDataProvider: this.treeDataProvider,
       getSelectedProjectId: () => this.selectedProjectId,

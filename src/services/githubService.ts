@@ -88,6 +88,25 @@ export class GitHubService {
     }
   }
 
+  async deleteGitHubRepo(repoUrl: string): Promise<boolean> {
+    const repoSlug = this.parseRepoSlug(repoUrl);
+    if (!repoSlug) {
+      this.logError(
+        "No se pudo resolver el nombre del repo de GitHub para borrar.",
+        repoUrl
+      );
+      return false;
+    }
+
+    try {
+      await execFileAsync("gh", ["repo", "delete", repoSlug, "--yes"]);
+      return true;
+    } catch (error) {
+      this.logError("No se pudo borrar el repo de GitHub.", error);
+      return false;
+    }
+  }
+
   async isGitHubCliInstalled(): Promise<boolean> {
     try {
       await execFileAsync("gh", ["--version"]);
@@ -102,5 +121,20 @@ export class GitHubService {
     const detail = error instanceof Error ? error.message : String(error);
     this.outputChannel.appendLine(`[error] ${message}`);
     this.outputChannel.appendLine(detail);
+  }
+
+  private parseRepoSlug(repoUrl: string): string | undefined {
+    try {
+      const parsed = new URL(repoUrl);
+      const segments = parsed.pathname.split("/").filter(Boolean);
+
+      if (segments.length < 2) {
+        return undefined;
+      }
+
+      return `${segments[0]}/${segments[1].replace(/\.git$/i, "")}`;
+    } catch {
+      return undefined;
+    }
   }
 }

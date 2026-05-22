@@ -4,6 +4,7 @@ import { translationKeys as k } from "../../localization/keys";
 import type { ProjectMetadata, ProjectStatus } from "../../models/project";
 import type { ShipOneSettings } from "../../models/settings";
 import type { ProjectStoreService } from "../../services/projectStoreService";
+import type { GitHubService } from "../../services/githubService";
 import type { SettingsService } from "../../services/settingsService";
 import type { ShipOneProjectsTreeDataProvider } from "../../providers/shiponeProjectsTreeDataProvider";
 import { confirmCanActivateProject, pickProject } from "./projectOpsHelpers";
@@ -21,6 +22,7 @@ const COMMAND_DELETE_PROJECT = "shipone.deleteProject";
 export function registerProjectCommands(options: {
   context: vscode.ExtensionContext;
   projectStore: ProjectStoreService;
+  githubService?: GitHubService;
   settingsService: SettingsService;
   treeDataProvider: ShipOneProjectsTreeDataProvider;
   getSelectedProjectId: () => string | undefined;
@@ -28,6 +30,7 @@ export function registerProjectCommands(options: {
   const {
     context,
     projectStore,
+    githubService,
     settingsService,
     treeDataProvider,
     getSelectedProjectId,
@@ -220,6 +223,31 @@ export function registerProjectCommands(options: {
       }
 
       await projectStore.deleteProject(project.id);
+
+      if (project.repoUrl && githubService) {
+        const deleteRemoteChoice = await vscode.window.showWarningMessage(
+          t("Borrar tambien el repo de GitHub {0}?", project.name),
+          t(k.common.yes),
+          t(k.common.no)
+        );
+
+        if (deleteRemoteChoice === t(k.common.yes)) {
+          const deletedRemote = await githubService.deleteGitHubRepo(
+            project.repoUrl
+          );
+
+          if (deletedRemote) {
+            vscode.window.showInformationMessage(
+              t("Repo de GitHub eliminado: {0}.", project.name)
+            );
+          } else {
+            vscode.window.showWarningMessage(
+              t("No se pudo borrar el repo de GitHub de {0}.", project.name)
+            );
+          }
+        }
+      }
+
       treeDataProvider.refresh();
       vscode.window.showInformationMessage(
         t("Proyecto eliminado: {0}.", project.name)
