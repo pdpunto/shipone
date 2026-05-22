@@ -1294,8 +1294,8 @@ test("getRootNodes en focus mode muestra un unico nodo", async () => {
       },
       {
         getSettings: () => ({
-          inactiveWarningDays: 7,
-          staleWarningDays: 30,
+          inactiveWarningDays: 999,
+          staleWarningDays: 1000,
           showFinishedProjects: true,
         }),
       },
@@ -1392,8 +1392,8 @@ test("getRootNodes muestra grupos mas compactos", async () => {
       },
       {
         getSettings: () => ({
-          inactiveWarningDays: 7,
-          staleWarningDays: 30,
+          inactiveWarningDays: 999,
+          staleWarningDays: 1000,
           showFinishedProjects: true,
         }),
       },

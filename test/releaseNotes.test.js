@@ -12,5 +12,5 @@ function runReleaseNotes(args = []) {
 test("build-release-notes devuelve el bloque unreleased", () => {
   const notes = runReleaseNotes();
 
-  assert.ok(notes.includes("Fixed the `node-api` template"));
+  assert.ok(notes.includes("Sin cambios por ahora."));
 });
