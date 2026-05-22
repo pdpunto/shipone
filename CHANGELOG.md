@@ -11,4 +11,6 @@ All notable changes to ShipOne will be documented here.
 
 ## Unreleased
 
-- Sin cambios por ahora.
+- Added safe project deletion from the project list.
+- Added optional GitHub repo deletion with confirmation.
+- Reduced noise when GitHub is not authenticated.
