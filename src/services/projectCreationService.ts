@@ -136,7 +136,9 @@ export class ProjectCreationService {
           return undefined;
         }
       } else {
-        vscode.window.showWarningMessage(t(k.github.notAuthenticatedSkipped));
+        vscode.window.showInformationMessage(
+          t(k.github.notAuthenticatedSkipped)
+        );
       }
     }
 
