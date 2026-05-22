@@ -102,14 +102,26 @@ export function buildStatusFileContent(project: ProjectMetadata): string {
 
 export function buildAiContextContent(
   project: ProjectMetadata,
-  blockers: string[]
+  blockers: string[],
+  gitSummary?: {
+    branch?: string;
+    statusLines?: string[];
+    recentCommits?: string[];
+  }
 ): string {
   const mvpTasks = project.mvpTasks ?? [];
   const doneTasks = mvpTasks.filter((task) => task.done).length;
   const mvpProgress =
     mvpTasks.length > 0 ? `${doneTasks}/${mvpTasks.length}` : t("sin tareas");
+  const hasGitSummary =
+    gitSummary &&
+    Boolean(
+      gitSummary.branch ||
+      (gitSummary.statusLines && gitSummary.statusLines.length > 0) ||
+      (gitSummary.recentCommits && gitSummary.recentCommits.length > 0)
+    );
 
-  return [
+  const content = [
     t("# ShipOne AI Context"),
     "",
     t("## Proyecto"),
@@ -134,11 +146,33 @@ export function buildAiContextContent(
       ? blockers.map((blocker) => t("- {0}", blocker))
       : [t("- Ninguno")]),
     "",
+    ...(hasGitSummary
+      ? [
+          t("## Git"),
+          ...(gitSummary?.branch ? [t("- Rama: {0}", gitSummary.branch)] : []),
+          ...(gitSummary?.statusLines && gitSummary.statusLines.length > 0
+            ? [
+                t("- Estado:"),
+                ...gitSummary.statusLines.map((line) => t("  - {0}", line)),
+              ]
+            : [t("- Estado: limpio")]),
+          ...(gitSummary?.recentCommits && gitSummary.recentCommits.length > 0
+            ? [
+                t("- Commits recientes:"),
+                ...gitSummary.recentCommits.map((line) => t("  - {0}", line)),
+              ]
+            : []),
+          "",
+        ]
+      : []),
+    "",
     t("## Notas"),
     t("- Generado por ShipOne para ayudar a una IA a entender el proyecto."),
     t("- Mantener simple."),
     "",
-  ].join("\n");
+  ];
+
+  return content.join("\n");
 }
 
 export function buildWeeklyReviewSummary(projects: ProjectMetadata[]) {

@@ -129,7 +129,12 @@ test("buildAiContextContent genera AI_CONTEXT.md", () => {
         nextAction: "Crear login",
         mvpTasks: [{ id: "1", text: "Login", done: true }],
       },
-      ["README faltante"]
+      ["README faltante"],
+      {
+        branch: "main",
+        statusLines: ["M src/app.ts"],
+        recentCommits: ["abc123 Init"],
+      }
     );
 
     assert.ok(content.includes("# ShipOne AI Context"));
@@ -137,6 +142,9 @@ test("buildAiContextContent genera AI_CONTEXT.md", () => {
     assert.ok(content.includes("## Next action"));
     assert.ok(content.includes("Crear login"));
     assert.ok(content.includes("- README faltante"));
+    assert.ok(content.includes("## Git"));
+    assert.ok(content.includes("main"));
+    assert.ok(content.includes("abc123 Init"));
   } finally {
     Module._load = originalLoad;
   }
