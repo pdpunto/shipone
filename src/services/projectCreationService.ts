@@ -136,9 +136,7 @@ export class ProjectCreationService {
           return undefined;
         }
       } else {
-        vscode.window.showWarningMessage(
-          t(k.github.notAuthenticatedSkipped)
-        );
+        vscode.window.showWarningMessage(t(k.github.notAuthenticatedSkipped));
       }
     }
 
@@ -217,8 +215,16 @@ export class ProjectCreationService {
   ): Promise<GitChoice | undefined> {
     return vscode.window.showQuickPick<GitChoice>(
       [
-        { label: t(k.common.yes), value: true, picked: defaultGitRepoByDefault },
-        { label: t(k.common.no), value: false, picked: !defaultGitRepoByDefault },
+        {
+          label: t(k.common.yes),
+          value: true,
+          picked: defaultGitRepoByDefault,
+        },
+        {
+          label: t(k.common.no),
+          value: false,
+          picked: !defaultGitRepoByDefault,
+        },
       ],
       {
         title: t(k.projectCreation.gitLocal),
@@ -411,16 +417,12 @@ export class ProjectCreationService {
     packageManager: ShipOneSettings["defaultPackageManager"];
   } {
     return {
-      projectType:
-        this.context.workspaceState.get<ShipOneSettings["defaultProjectType"]>(
-          LAST_PROJECT_TYPE_KEY,
-          settings.defaultProjectType
-        ),
-      packageManager:
-        this.context.workspaceState.get<ShipOneSettings["defaultPackageManager"]>(
-          LAST_PACKAGE_MANAGER_KEY,
-          settings.defaultPackageManager
-        ),
+      projectType: this.context.workspaceState.get<
+        ShipOneSettings["defaultProjectType"]
+      >(LAST_PROJECT_TYPE_KEY, settings.defaultProjectType),
+      packageManager: this.context.workspaceState.get<
+        ShipOneSettings["defaultPackageManager"]
+      >(LAST_PACKAGE_MANAGER_KEY, settings.defaultPackageManager),
     };
   }
 

@@ -42,7 +42,11 @@ export function registerStatusCommands(options: {
         if (choice === t("Crear archivo")) {
           await vscode.commands.executeCommand("shipone.syncStatusFile");
         } else if (choice === t(k.common.openFolder)) {
-          await vscode.commands.executeCommand("vscode.openFolder", vscode.Uri.file(project.path), false);
+          await vscode.commands.executeCommand(
+            "vscode.openFolder",
+            vscode.Uri.file(project.path),
+            false
+          );
         }
       }
     }
@@ -58,9 +62,7 @@ export function registerStatusCommands(options: {
       }
 
       await statusFileService.syncStatusFile(project);
-      vscode.window.showInformationMessage(
-        t(k.status.syncDone, project.name)
-      );
+      vscode.window.showInformationMessage(t(k.status.syncDone, project.name));
     }
   );
 

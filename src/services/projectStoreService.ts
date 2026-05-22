@@ -55,9 +55,13 @@ export class ProjectStoreService {
       });
       return true;
     } catch (error) {
-      this.logError("No se pudo recuperar el almacenamiento desde backup.", error, {
-        source: this.formatLocation(this.backupFileUri),
-      });
+      this.logError(
+        "No se pudo recuperar el almacenamiento desde backup.",
+        error,
+        {
+          source: this.formatLocation(this.backupFileUri),
+        }
+      );
       await vscode.window.showWarningMessage(
         t(k.warning.storageRestoreFailed),
         t("Abrir carpeta"),
@@ -396,7 +400,9 @@ export class ProjectStoreService {
       };
       const version =
         typeof snapshot.version === "number" ? snapshot.version : 1;
-      const diagnostics = normalizeProjectListWithDiagnostics(snapshot.projects);
+      const diagnostics = normalizeProjectListWithDiagnostics(
+        snapshot.projects
+      );
       if (diagnostics.corrupted) {
         throw new Error(t(k.error.corruptedProjectSnapshot));
       }

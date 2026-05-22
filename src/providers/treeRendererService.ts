@@ -121,7 +121,8 @@ export class TreeRendererService {
           new GroupNode(
             group.status,
             group.label,
-            projects.filter((project) => project.status === group.status).length,
+            projects.filter((project) => project.status === group.status)
+              .length,
             this.iconProvider,
             this.tooltipProvider
           )
@@ -161,8 +162,16 @@ export class TreeRendererService {
         `${summary.finishRatio}%`,
         this.iconProvider
       ),
-      new MetricItemNode(t(k.health.healthy), healthSummary.healthy, this.iconProvider),
-      new MetricItemNode(t(k.health.warning), healthSummary.warning, this.iconProvider),
+      new MetricItemNode(
+        t(k.health.healthy),
+        healthSummary.healthy,
+        this.iconProvider
+      ),
+      new MetricItemNode(
+        t(k.health.warning),
+        healthSummary.warning,
+        this.iconProvider
+      ),
       new MetricItemNode(t(k.health.bad), healthSummary.bad, this.iconProvider),
     ];
   }

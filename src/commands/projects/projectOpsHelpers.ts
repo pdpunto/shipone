@@ -17,9 +17,7 @@ export async function pickProject(projectStore: {
   const projects = Object.values(groupedProjects).flat();
 
   if (projects.length === 0) {
-    vscode.window.showInformationMessage(
-      t(k.common.noProjectsYetToStart)
-    );
+    vscode.window.showInformationMessage(t(k.common.noProjectsYetToStart));
     return undefined;
   }
 
@@ -47,9 +45,12 @@ export function buildNoActiveProjectDetail(): string {
   return t(k.tree.noActiveProjectDetail);
 }
 
-export async function confirmCanActivateProject(projectStore: {
-  loadProjects(): Promise<ProjectMetadata[]>;
-}, projectId: string): Promise<boolean> {
+export async function confirmCanActivateProject(
+  projectStore: {
+    loadProjects(): Promise<ProjectMetadata[]>;
+  },
+  projectId: string
+): Promise<boolean> {
   // Regla central: solo un proyecto puede quedar Active a la vez.
   const activeProjects = await projectStore.loadProjects();
   const otherActive = activeProjects.find(

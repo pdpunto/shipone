@@ -28,7 +28,8 @@ export const translationKeys = {
     projectNotFound: "No se encontró el proyecto.",
   },
   warning: {
-    storageRestoreFailed: "No se pudo recuperar el almacenamiento desde el backup.",
+    storageRestoreFailed:
+      "No se pudo recuperar el almacenamiento desde el backup.",
     storageSaveFailed: "No se pudo guardar el almacenamiento.",
     storageRecoveryFailed: "No se pudo recuperar el almacenamiento de ShipOne.",
     gitInitFailed: "No se pudo inicializar Git, pero el proyecto ya existe.",
@@ -58,7 +59,8 @@ export const translationKeys = {
     pausedLabel: "pausados",
     finishedLabel: "terminados",
     noProjectsDetail: "Crea un proyecto nuevo para empezar.",
-    noActiveProjectDetail: "Abre un proyecto activo o crea uno nuevo para entrar en focus.",
+    noActiveProjectDetail:
+      "Abre un proyecto activo o crea uno nuevo para entrar en focus.",
     groupProjects: "Abre el grupo de proyectos {0}.",
     appearsInGroup: "Aqui apareceran los proyectos de {0}.",
     activeNoNextAction: "Define el siguiente paso para avanzar",
@@ -68,7 +70,8 @@ export const translationKeys = {
     taskNotFound: "No se encontró la tarea.",
     invalidJson: "JSON invalido en {0}.",
     corruptedProjectList: "Metadata corrupta detectada en lista de proyectos.",
-    corruptedProjectSnapshot: "Metadata corrupta detectada en snapshot de proyectos.",
+    corruptedProjectSnapshot:
+      "Metadata corrupta detectada en snapshot de proyectos.",
   },
   common: {
     yes: "Si",
@@ -91,8 +94,10 @@ export const translationKeys = {
     openProject: "Abrir proyecto",
     noProjectsYet: "Todavia no hay proyectos",
     noProjectsYetToStart: "Todavia no hay proyectos. Crea uno para empezar.",
-    noProjectsWithFilters: "No hay proyectos con esos filtros. Prueba otra busqueda.",
-    noProjectsWithTag: "No hay proyectos con esa etiqueta. Prueba otra etiqueta.",
+    noProjectsWithFilters:
+      "No hay proyectos con esos filtros. Prueba otra busqueda.",
+    noProjectsWithTag:
+      "No hay proyectos con esa etiqueta. Prueba otra etiqueta.",
     chooseTask: "Elige una tarea",
     chooseStarter: "Elige un starter",
     chooseOption: "Elige una opcion",
@@ -120,8 +125,10 @@ export const translationKeys = {
     yarn: "yarn",
   },
   github: {
-    notAuthenticated: "GitHub no esta autenticado. Puedes conectarlo ahora o seguir sin GitHub.",
-    notAuthenticatedSkipped: "GitHub no esta autenticado. Se omitira la creacion del repo.",
+    notAuthenticated:
+      "GitHub no esta autenticado. Puedes conectarlo ahora o seguir sin GitHub.",
+    notAuthenticatedSkipped:
+      "GitHub no esta autenticado. Se omitira la creacion del repo.",
     noCli: "No se encontro GitHub CLI. Instala `gh` y vuelve a intentarlo.",
     connected: "GitHub ya esta conectado.",
     connectInTerminal: "Abre la terminal para conectar GitHub.",

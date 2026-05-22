@@ -39,9 +39,7 @@ export class GitHubService {
     const terminal = vscode.window.createTerminal("ShipOne GitHub");
     terminal.show(true);
     terminal.sendText("gh auth login -h github.com");
-    vscode.window.showInformationMessage(
-      t(k.github.connectInTerminal)
-    );
+    vscode.window.showInformationMessage(t(k.github.connectInTerminal));
   }
 
   async isGitHubAuthenticated(): Promise<boolean> {

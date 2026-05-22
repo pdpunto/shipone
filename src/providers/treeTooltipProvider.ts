@@ -22,7 +22,9 @@ export class TreeTooltipProvider {
       t("**{0}**", project.name),
       "",
       t("Ruta: {0}", project.path),
-      project.nextAction ? t("Siguiente: {0}", project.nextAction) : t(k.tree.noNextAction),
+      project.nextAction
+        ? t("Siguiente: {0}", project.nextAction)
+        : t(k.tree.noNextAction),
       t("Salud: {0}", renderHealthLabel(health.label)),
       health.issues.length > 0
         ? t("Problemas: {0}", health.issues.map(renderIssueLabel).join(", "))
@@ -59,9 +61,7 @@ export class TreeTooltipProvider {
       t("Ruta: {0}", project.path),
       t(k.tree.lastOpened, project.lastOpenedAt ?? t("sin registro")),
       project.repoUrl ? t("Repo: {0}", project.repoUrl) : "",
-      project.tags?.length
-        ? t("Etiquetas: {0}", project.tags.join(", "))
-        : "",
+      project.tags?.length ? t("Etiquetas: {0}", project.tags.join(", ")) : "",
       project.favorite ? t("Favorito: si") : "",
       project.pauseReason ? t("Pausa: {0}", project.pauseReason) : "",
       project.pauseNote ? t("Nota de pausa: {0}", project.pauseNote) : "",
@@ -74,7 +74,9 @@ export class TreeTooltipProvider {
   }
 }
 
-function buildMarkdownTooltip(lines: Array<string | undefined>): vscode.MarkdownString {
+function buildMarkdownTooltip(
+  lines: Array<string | undefined>
+): vscode.MarkdownString {
   return new vscode.MarkdownString(
     lines.filter((line): line is string => Boolean(line)).join("\n")
   );

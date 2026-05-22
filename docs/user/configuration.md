@@ -4,20 +4,20 @@
 
 ### Resumen rapido
 
-| Setting | Valor por defecto | Para que sirve |
-| --- | --- | --- |
-| `shipone.projectsRoot` | `C:\dev\proyectos` | Carpeta base donde ShipOne crea y abre proyectos |
-| `shipone.defaultProjectType` | `blank` | Tipo que se propone primero al crear un proyecto |
-| `shipone.defaultVisibility` | `private` | Visibilidad por defecto para repos GitHub |
-| `shipone.defaultPackageManager` | `npm` | Gestor de paquetes por defecto |
-| `shipone.openAfterCreate` | `true` | Abre el proyecto al terminar |
-| `shipone.createGitRepoByDefault` | `true` | Crea un repositorio Git local |
-| `shipone.createGitHubRepoByDefault` | `true` | Crea un repositorio GitHub si Git local ya existe |
-| `shipone.enforceOneActiveProject` | `true` | Mantiene un solo proyecto `Active` |
-| `shipone.createStatusFileByDefault` | `true` | Genera `STATUS.md` automaticamente |
-| `shipone.showFinishedProjects` | `true` | Muestra o oculta proyectos terminados |
-| `shipone.inactiveWarningDays` | `7` | Dias para avisar inactividad |
-| `shipone.staleWarningDays` | `30` | Dias para aviso fuerte de stale |
+| Setting                             | Valor por defecto  | Para que sirve                                    |
+| ----------------------------------- | ------------------ | ------------------------------------------------- |
+| `shipone.projectsRoot`              | `C:\dev\proyectos` | Carpeta base donde ShipOne crea y abre proyectos  |
+| `shipone.defaultProjectType`        | `blank`            | Tipo que se propone primero al crear un proyecto  |
+| `shipone.defaultVisibility`         | `private`          | Visibilidad por defecto para repos GitHub         |
+| `shipone.defaultPackageManager`     | `npm`              | Gestor de paquetes por defecto                    |
+| `shipone.openAfterCreate`           | `true`             | Abre el proyecto al terminar                      |
+| `shipone.createGitRepoByDefault`    | `true`             | Crea un repositorio Git local                     |
+| `shipone.createGitHubRepoByDefault` | `true`             | Crea un repositorio GitHub si Git local ya existe |
+| `shipone.enforceOneActiveProject`   | `true`             | Mantiene un solo proyecto `Active`                |
+| `shipone.createStatusFileByDefault` | `true`             | Genera `STATUS.md` automaticamente                |
+| `shipone.showFinishedProjects`      | `true`             | Muestra o oculta proyectos terminados             |
+| `shipone.inactiveWarningDays`       | `7`                | Dias para avisar inactividad                      |
+| `shipone.staleWarningDays`          | `30`               | Dias para aviso fuerte de stale                   |
 
 ### `shipone.projectsRoot`
 

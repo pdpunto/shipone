@@ -80,7 +80,8 @@ export function normalizeProjectMetadata(
     lastOpenedAt: normalizeOptionalString(migrated.lastOpenedAt),
     finishedAt: normalizeNullableString(migrated.finishedAt),
     nextAction: normalizeNullableString(migrated.nextAction),
-    favorite: typeof migrated.favorite === "boolean" ? migrated.favorite : false,
+    favorite:
+      typeof migrated.favorite === "boolean" ? migrated.favorite : false,
     tags: normalizeStringArray(migrated.tags),
     mvpTasks: normalizeMvpTasks(migrated.mvpTasks),
     pauseReason: normalizeNullableString(migrated.pauseReason),
@@ -194,7 +195,9 @@ function isStringArray(value: unknown): value is string[] | undefined {
 }
 
 function isMvpTaskArray(value: unknown): value is MvpTask[] | undefined {
-  return value === undefined || (Array.isArray(value) && value.every(isMvpTask));
+  return (
+    value === undefined || (Array.isArray(value) && value.every(isMvpTask))
+  );
 }
 
 function hasProjectMetadataSchema(project: unknown): boolean {

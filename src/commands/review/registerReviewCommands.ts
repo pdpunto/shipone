@@ -31,12 +31,8 @@ export function registerReviewCommands(options: {
   getTodoScannerService: () => TodoScannerService;
   treeRefresh: () => void;
 }): vscode.Disposable[] {
-  const {
-    projectStore,
-    settingsService,
-    getTodoScannerService,
-    treeRefresh,
-  } = options;
+  const { projectStore, settingsService, getTodoScannerService, treeRefresh } =
+    options;
 
   const scanTodosCommand = vscode.commands.registerCommand(
     COMMAND_SCAN_TODOS,
@@ -173,7 +169,9 @@ export function registerReviewCommands(options: {
           )
         );
       } else {
-        vscode.window.showInformationMessage(t(k.notification.noPausedProjects));
+        vscode.window.showInformationMessage(
+          t(k.notification.noPausedProjects)
+        );
       }
 
       if (finishedThisWeek.length > 0) {
@@ -251,7 +249,9 @@ export function registerReviewCommands(options: {
       );
 
       if (pausedProjects.length === 0) {
-        vscode.window.showInformationMessage(t(k.notification.noPausedProjects));
+        vscode.window.showInformationMessage(
+          t(k.notification.noPausedProjects)
+        );
         return;
       }
 

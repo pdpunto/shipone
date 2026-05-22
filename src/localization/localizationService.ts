@@ -6,7 +6,8 @@ export class LocalizationService {
     ...args: Array<string | number | boolean | null | undefined>
   ): string {
     const values = args.filter(
-      (value): value is string | number | boolean => value !== null && value !== undefined
+      (value): value is string | number | boolean =>
+        value !== null && value !== undefined
     );
 
     try {

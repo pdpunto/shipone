@@ -14,10 +14,7 @@ export async function showFirstRunOnboarding(
 
   const settings = settingsService.getSettings();
   const choice = await vscode.window.showInformationMessage(
-    t(
-      k.onboarding.ready,
-      settings.projectsRoot
-    ),
+    t(k.onboarding.ready, settings.projectsRoot),
     t(k.common.createProject),
     t("Elegir carpeta base"),
     t(k.common.openGuide),

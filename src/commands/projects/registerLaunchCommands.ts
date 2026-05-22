@@ -140,9 +140,7 @@ export function registerLaunchCommands(options: {
       );
 
       if (filteredByType.length === 0) {
-        vscode.window.showInformationMessage(
-          t(k.common.noProjectsWithFilters)
-        );
+        vscode.window.showInformationMessage(t(k.common.noProjectsWithFilters));
         return;
       }
 
@@ -159,9 +157,7 @@ export function registerLaunchCommands(options: {
       const filteredByTag = filterProjectsByTag(filteredByType, tagChoice);
 
       if (filteredByTag.length === 0) {
-        vscode.window.showInformationMessage(
-          t(k.common.noProjectsWithTag)
-        );
+        vscode.window.showInformationMessage(t(k.common.noProjectsWithTag));
         return;
       }
 
