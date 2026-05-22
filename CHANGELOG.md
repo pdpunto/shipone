@@ -15,10 +15,14 @@ All notable changes to ShipOne will be documented here.
 - Added optional GitHub repo deletion with confirmation.
 - Reduced noise when GitHub is not authenticated.
 
+## 0.0.6 - 2026-05-22
+
+- Improved AI context with Git summary.
+- Improved project health details with clearer issue summaries.
+- Improved weekly review with the active project's next action and a simpler footer.
+- Aligned public docs and FAQ with the current workflows.
+- Updated release notes handling for versioned sections.
+
 ## Unreleased
 
-- Mejorado el contexto de IA con resumen de Git.
-- Mejorada la salud del proyecto con descripciones mas utiles.
-- Mejorado el resumen semanal para retomar trabajo mas rapido.
-- Anadido borrado seguro de proyectos desde la vista.
-- Alineada la documentacion publica con los nuevos flujos.
+- Sin cambios por ahora.
