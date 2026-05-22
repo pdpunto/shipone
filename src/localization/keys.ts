@@ -36,6 +36,8 @@ export const translationKeys = {
     gitCommitFailed: "Git se inicializo, pero fallo el commit inicial.",
     githubRepoFailed:
       "No se pudo crear el repo de GitHub. Revisa autenticacion, nombre del repo y permisos. El proyecto local ya existe.",
+    deleteProjectDiskConfirm:
+      "Esto borrara la carpeta local del disco. ¿Eliminar el proyecto {0}?",
   },
   tree: {
     metrics: "Metrics",

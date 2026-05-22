@@ -12,5 +12,11 @@ function runReleaseNotes(args = []) {
 test("build-release-notes devuelve el bloque unreleased", () => {
   const notes = runReleaseNotes();
 
+  assert.ok(notes.includes("Sin cambios por ahora."));
+});
+
+test("build-release-notes puede leer una seccion concreta", () => {
+  const notes = runReleaseNotes(["--section", "0.0.5"]);
+
   assert.ok(notes.includes("safe project deletion"));
 });

@@ -47,7 +47,7 @@ jobs:
         run: npm run compile
 
       - name: Prepare release notes
-        run: node scripts/build-release-notes.mjs --write release-notes.md
+        run: node scripts/build-release-notes.mjs --section "${RELEASE_TAG#v}" --write release-notes.md
 
       - name: Package extension
         run: npx @vscode/vsce package

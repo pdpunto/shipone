@@ -213,7 +213,7 @@ export function registerProjectCommands(options: {
       }
 
       const choice = await vscode.window.showWarningMessage(
-        t("Eliminar el proyecto {0}?", project.name),
+        t(k.warning.deleteProjectDiskConfirm, project.name),
         t(k.common.yes),
         t(k.common.cancel)
       );

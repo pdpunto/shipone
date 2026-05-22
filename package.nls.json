@@ -139,6 +139,7 @@
   "No se pudo inicializar Git, pero el proyecto fue creado. Puedes hacerlo luego.": "Could not initialize Git, but the project was created. You can do it later.",
   "Git se inicializo, pero no se pudo crear el commit inicial.": "Git was initialized, but the initial commit could not be created.",
   "No se pudo crear el repo de GitHub, pero el proyecto local si fue creado.": "Could not create the GitHub repo, but the local project was created.",
+  "Esto borrara la carpeta local del disco. ¿Eliminar el proyecto {0}?": "This will delete the local folder from disk. Delete project {0}?",
   "Tipo de proyecto": "Project type",
   "Elige un starter": "Choose a starter",
   "Si": "Yes",
