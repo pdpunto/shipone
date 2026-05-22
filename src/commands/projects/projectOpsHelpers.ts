@@ -107,6 +107,14 @@ export function buildAiContextContent(
     branch?: string;
     statusLines?: string[];
     recentCommits?: string[];
+  },
+  extra?: {
+    createdAt?: string;
+    lastOpenedAt?: string;
+    pauseReason?: string | null;
+    pauseNote?: string | null;
+    todoSummary?: string[];
+    stackSummary?: string[];
   }
 ): string {
   const mvpTasks = project.mvpTasks ?? [];
@@ -131,6 +139,18 @@ export function buildAiContextContent(
     t("- Ruta: {0}", project.path),
     t("- Favorito: {0}", project.favorite ? t("si") : t("no")),
     "",
+    t("## Estado"),
+    t("- Creado: {0}", formatContextDate(extra?.createdAt)),
+    t("- Ultima apertura: {0}", formatContextDate(extra?.lastOpenedAt)),
+    ...(project.status === "paused" || extra?.pauseReason || extra?.pauseNote
+      ? [
+          t("- Pausa: {0}", extra?.pauseReason || t("Sin motivo registrado")),
+          ...(extra?.pauseNote
+            ? [t("- Nota de pausa: {0}", extra.pauseNote)]
+            : []),
+        ]
+      : [t("- Pausa: ninguna")]),
+    "",
     t("## Objetivo"),
     project.description ||
       t("Sin descripcion. Define el objetivo principal en una frase."),
@@ -147,6 +167,16 @@ export function buildAiContextContent(
           t("- Todavia no hay tareas. Anade 3 pasos pequenos y claros."),
           t("- Empieza por el trabajo minimo para avanzar."),
         ]),
+    "",
+    t("## Stack"),
+    ...(extra?.stackSummary && extra.stackSummary.length > 0
+      ? extra.stackSummary.map((line) => t("- {0}", line))
+      : [t("- No detectado")]),
+    "",
+    t("## TODOs"),
+    ...(extra?.todoSummary && extra.todoSummary.length > 0
+      ? extra.todoSummary.map((line) => t("- {0}", line))
+      : [t("- Ninguno detectado.")]),
     "",
     t("## Bloqueos"),
     ...(blockers.length > 0
@@ -180,6 +210,20 @@ export function buildAiContextContent(
   ];
 
   return content.join("\n");
+}
+
+function formatContextDate(value?: string): string {
+  if (!value) {
+    return t("Sin registrar");
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return date.toISOString().slice(0, 10);
 }
 
 export function buildWeeklyReviewSummary(projects: ProjectMetadata[]) {

@@ -32,7 +32,10 @@ export class ShipOneApp {
   private readonly outputChannel = vscode.window.createOutputChannel("ShipOne");
   private readonly settingsService = new SettingsService();
   private readonly projectStore: ProjectStoreService;
-  private readonly projectContextService = new ProjectContextService();
+  private readonly todoScannerService = new TodoScannerService();
+  private readonly projectContextService = new ProjectContextService(
+    this.todoScannerService
+  );
   private readonly projectHealthService = new ProjectHealthService();
   private readonly projectRecoveryService: ProjectRecoveryService;
   private readonly treeIconProvider = new TreeIconProvider();
@@ -41,8 +44,6 @@ export class ShipOneApp {
   private readonly statusFileService = new StatusFileService();
   private readonly githubService = new GitHubService();
   private readonly projectCreationService: ProjectCreationService;
-  private todoScannerService: TodoScannerService | undefined;
-
   private treeDataProvider: ShipOneProjectsTreeDataProvider | undefined;
   private focusModeEnabled = false;
   private selectedProjectId: string | undefined;
@@ -160,7 +161,7 @@ export class ShipOneApp {
       projectStore: this.projectStore,
       settingsService: this.settingsService,
       projectCreationService: this.projectCreationService,
-      getTodoScannerService: () => this.getTodoScannerService(),
+      getTodoScannerService: () => this.todoScannerService,
       treeRefresh: () => this.treeDataProvider?.refresh(),
     });
 
@@ -200,14 +201,6 @@ export class ShipOneApp {
       enabled
     );
     this.treeDataProvider?.refresh();
-  }
-
-  private getTodoScannerService(): TodoScannerService {
-    if (!this.todoScannerService) {
-      this.todoScannerService = new TodoScannerService();
-    }
-
-    return this.todoScannerService;
   }
 
   private logError(message: string, error: unknown): void {

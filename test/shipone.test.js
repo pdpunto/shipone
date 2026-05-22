@@ -127,6 +127,10 @@ test("buildAiContextContent genera PROJECT_CONTEXT.md", () => {
         favorite: false,
         description: "Test",
         nextAction: "Crear login",
+        createdAt: "2026-05-22T10:00:00.000Z",
+        lastOpenedAt: "2026-05-23T10:00:00.000Z",
+        pauseReason: null,
+        pauseNote: null,
         mvpTasks: [{ id: "1", text: "Login", done: true }],
       },
       ["README faltante"],
@@ -134,6 +138,12 @@ test("buildAiContextContent genera PROJECT_CONTEXT.md", () => {
         branch: "main",
         statusLines: ["M src/app.ts"],
         recentCommits: ["abc123 Init"],
+      },
+      {
+        createdAt: "2026-05-22T10:00:00.000Z",
+        lastOpenedAt: "2026-05-23T10:00:00.000Z",
+        todoSummary: ["TODO src/app.ts: revisar auth"],
+        stackSummary: ["Node.js", "Tipo base: blank"],
       }
     );
 
@@ -145,6 +155,13 @@ test("buildAiContextContent genera PROJECT_CONTEXT.md", () => {
     assert.ok(content.includes("## Git"));
     assert.ok(content.includes("main"));
     assert.ok(content.includes("abc123 Init"));
+    assert.ok(content.includes("## Estado"));
+    assert.ok(content.includes("2026-05-22"));
+    assert.ok(content.includes("2026-05-23"));
+    assert.ok(content.includes("## Stack"));
+    assert.ok(content.includes("Node.js"));
+    assert.ok(content.includes("## TODOs"));
+    assert.ok(content.includes("revisar auth"));
 
     const emptyContent = buildAiContextContent(
       {
