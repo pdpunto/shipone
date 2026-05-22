@@ -42,7 +42,7 @@ ShipOne usa una identidad visual simple y consistente:
 - Version actual: `0.0.6`
 - Estado: `beta publica`
 - Publico: repo abierto, extension publicada y docs listas para uso real
-- Ritmo: cambios pequeños, versionados y faciles de seguir
+- Ritmo: cambios pequeños, versionados y fáciles de seguir
 
 ## Capturas
 
@@ -85,7 +85,7 @@ Estas imagenes muestran el flujo real de ShipOne dentro de VS Code:
 - `ShipOne: Buscar` - filtra proyectos por nombre o etiqueta
 - `ShipOne: Focus` - entra en focus mode
 - `ShipOne: Weekly review` - revisa el estado semanal
-- `ShipOne: Generar contexto de IA` - crea un resumen listo para retomar
+- `ShipOne: Generar contexto del proyecto` - crea un resumen listo para retomar
 - `ShipOne: Eliminar proyecto` - borra un proyecto con confirmacion
 - `ShipOne: STATUS.md` - sincroniza el archivo de estado
 - `ShipOne: Conectar GitHub` - conecta GitHub para publicar repos

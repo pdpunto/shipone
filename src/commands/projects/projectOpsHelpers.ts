@@ -122,7 +122,7 @@ export function buildAiContextContent(
     );
 
   const content = [
-    t("# ShipOne AI Context"),
+    t("# ShipOne Project Context"),
     "",
     t("## Proyecto"),
     t("- Nombre: {0}", project.name),

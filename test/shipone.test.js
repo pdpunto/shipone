@@ -99,7 +99,7 @@ test("buildStatusFileContent genera STATUS.md", () => {
   }
 });
 
-test("buildAiContextContent genera AI_CONTEXT.md", () => {
+test("buildAiContextContent genera PROJECT_CONTEXT.md", () => {
   const originalLoad = Module._load;
 
   try {
@@ -137,7 +137,7 @@ test("buildAiContextContent genera AI_CONTEXT.md", () => {
       }
     );
 
-    assert.ok(content.includes("# ShipOne AI Context"));
+    assert.ok(content.includes("# ShipOne Project Context"));
     assert.ok(content.includes("## Proyecto"));
     assert.ok(content.includes("## Next action"));
     assert.ok(content.includes("Crear login"));

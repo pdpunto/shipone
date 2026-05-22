@@ -23,7 +23,7 @@ export function registerAiCommands(options: {
 
       await projectContextService.generateAiContext(project);
       vscode.window.showInformationMessage(
-        t("AI_CONTEXT.md generado en {0}.", project.name)
+        t("PROJECT_CONTEXT.md generado en {0}.", project.name)
       );
     }
   );

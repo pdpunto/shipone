@@ -21,7 +21,7 @@ export class ProjectContextService {
     const gitSummary = await this.getGitSummary(project.path);
     const contextFileUri = vscode.Uri.joinPath(
       vscode.Uri.file(project.path),
-      "AI_CONTEXT.md"
+      "PROJECT_CONTEXT.md"
     );
     const content = buildAiContextContent(project, blockers, gitSummary);
     await vscode.workspace.fs.writeFile(

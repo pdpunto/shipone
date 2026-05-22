@@ -28,7 +28,7 @@ Solo si desactivas la regla de un solo `Active`.
 
 Sirve como resumen de estado y apoyo para el contexto del proyecto.
 
-## Para que sirve `AI_CONTEXT.md`?
+## Para que sirve `PROJECT_CONTEXT.md`?
 
 Sirve para reconstruir contexto rapido con apoyo de IA.
 
