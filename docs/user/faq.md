@@ -48,6 +48,10 @@ ShipOne sigue funcionando para uso local, pero no podras crear repos GitHub desd
 
 Puede quedar una carpeta parcial. Usa `troubleshooting.md` para recuperarlo.
 
+## Puedo borrar un proyecto desde ShipOne?
+
+Si. La vista muestra una papelera para borrar el proyecto local y, si existe, el repo GitHub con confirmacion.
+
 ## ShipOne funciona en macOS y Linux?
 
 ShipOne ya quedo confirmado en macOS.
