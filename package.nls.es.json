@@ -12,7 +12,7 @@
   "command.recoverStorage.title": "Recuperar almacenamiento",
   "command.connectGithub.title": "Conectar GitHub",
   "command.detectBlockers.title": "Detectar bloqueadores",
-  "command.generateAiContext.title": "Generar AI context",
+  "command.generateAiContext.title": "Generar contexto de IA",
   "command.scanTodos.title": "Detectar TODOs",
   "command.focusMode.title": "Focus mode",
   "command.exitFocusMode.title": "Salir de focus",
