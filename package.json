@@ -93,6 +93,12 @@
         "icon": "$(sync)"
       },
       {
+        "command": "shipone.createReadme",
+        "title": "%command.createReadme.title%",
+        "category": "ShipOne",
+        "icon": "$(markdown)"
+      },
+      {
         "command": "shipone.recoverStorage",
         "title": "%command.recoverStorage.title%",
         "category": "ShipOne",
@@ -267,6 +273,9 @@
         },
         {
           "command": "shipone.syncStatusFile"
+        },
+        {
+          "command": "shipone.createReadme"
         },
         {
           "command": "shipone.recoverStorage"

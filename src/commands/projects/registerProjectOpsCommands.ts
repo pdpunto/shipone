@@ -4,9 +4,14 @@ import { translationKeys as k } from "../../localization/keys";
 import type { ProjectContextService } from "../../services/projectContextService";
 import type { ProjectRecoveryService } from "../../services/projectRecoveryService";
 import type { ProjectStoreService } from "../../services/projectStoreService";
-import { parseMvpTasks, pickProject } from "./projectOpsHelpers";
+import {
+  buildReadmeContent,
+  parseMvpTasks,
+  pickProject,
+} from "./projectOpsHelpers";
 
 const COMMAND_EDIT_MVP_CHECKLIST = "shipone.editMvpChecklist";
+const COMMAND_CREATE_README = "shipone.createReadme";
 const COMMAND_MARK_MVP_ITEM_DONE = "shipone.markMvpItemDone";
 const COMMAND_RECOVER_STORAGE = "shipone.recoverStorage";
 const COMMAND_DETECT_BLOCKERS = "shipone.detectBlockers";
@@ -51,6 +56,44 @@ export function registerProjectOpsCommands(options: {
       treeRefresh();
       vscode.window.showInformationMessage(
         t("Checklist MVP actualizada en {0}.", project.name)
+      );
+    }
+  );
+
+  const createReadmeCommand = vscode.commands.registerCommand(
+    COMMAND_CREATE_README,
+    async () => {
+      const project = await pickProject(projectStore);
+
+      if (!project) {
+        return;
+      }
+
+      const readmeUri = vscode.Uri.joinPath(
+        vscode.Uri.file(project.path),
+        "README.md"
+      );
+      const exists = await pathExists(readmeUri);
+      if (exists) {
+        const choice = await vscode.window.showWarningMessage(
+          t("README ya existe en {0}.", project.name),
+          t("Sobrescribir"),
+          t("Cancelar")
+        );
+
+        if (choice !== t("Sobrescribir")) {
+          return;
+        }
+      }
+
+      const content = buildReadmeContent(project);
+      await vscode.workspace.fs.writeFile(
+        readmeUri,
+        new TextEncoder().encode(content)
+      );
+      treeRefresh();
+      vscode.window.showInformationMessage(
+        t("README creado en {0}.", project.name)
       );
     }
   );
@@ -154,8 +197,18 @@ export function registerProjectOpsCommands(options: {
 
   return [
     editMvpChecklistCommand,
+    createReadmeCommand,
     markMvpItemDoneCommand,
     recoverStorageCommand,
     detectBlockersCommand,
   ];
+}
+
+async function pathExists(uri: vscode.Uri): Promise<boolean> {
+  try {
+    await vscode.workspace.fs.stat(uri);
+    return true;
+  } catch {
+    return false;
+  }
 }

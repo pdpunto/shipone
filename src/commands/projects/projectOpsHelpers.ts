@@ -100,6 +100,21 @@ export function buildStatusFileContent(project: ProjectMetadata): string {
   ].join("\n");
 }
 
+export function buildReadmeContent(project: ProjectMetadata): string {
+  return [
+    t("# {0}", project.name),
+    "",
+    project.description || t("Proyecto creado con ShipOne."),
+    "",
+    t("## Proximo paso"),
+    project.nextAction || t("Define el siguiente paso aqui."),
+    "",
+    t("## Objetivo"),
+    project.description || t("Describe el objetivo principal aqui."),
+    "",
+  ].join("\n");
+}
+
 export function buildAiContextContent(
   project: ProjectMetadata,
   blockers: string[],

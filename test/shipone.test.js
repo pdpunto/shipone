@@ -3434,6 +3434,60 @@ test("Generate project context flow usa el proyecto del warning", async () => {
   }
 });
 
+test("Create README flow crea un readme base", async () => {
+  const fixture = createIntegrationFixture();
+
+  try {
+    delete require.cache[
+      require.resolve("../out/commands/projects/registerProjectOpsCommands")
+    ];
+    const { registerProjectOpsCommands } = require("../out/commands/projects/registerProjectOpsCommands");
+
+    const project = {
+      id: "p1",
+      name: "ShipOne",
+      description: "Test project",
+      type: "blank",
+      status: "active",
+      path: "C:\\tmp\\shipone-projects\\ShipOne",
+      createdAt: "2026-05-15T00:00:00.000Z",
+      nextAction: "Crear login",
+    };
+
+    fixture.projectStore.projects = [project];
+    fixture.projectStore.getProjectsByStatus = async () => ({
+      idea: [],
+      active: [project],
+      paused: [],
+      finished: [],
+    });
+    fixture.enqueueQuickPick((items) => items[0]);
+
+    registerProjectOpsCommands({
+      projectStore: fixture.projectStore,
+      projectRecoveryService: {
+        recoverFromBackup: async () => false,
+      },
+      projectContextService: {
+        getBlockers: async () => [],
+      },
+      treeRefresh: () => fixture.calls.refresh.push(true),
+    });
+
+    await fixture.commandHandlers.get("shipone.createReadme")();
+
+    const readmePath = "C:\\tmp\\shipone-projects\\ShipOne\\README.md";
+    assert.ok(fixture.files.has(readmePath));
+    assert.ok(
+      fixture.files.get(readmePath).toString("utf8").includes("ShipOne")
+    );
+    assert.equal(fixture.calls.refresh.length, 1);
+    assert.equal(fixture.messages.info.length, 1);
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
 test("Edit next action flow actualiza la accion", async () => {
   const fixture = createIntegrationFixture();
 

@@ -9,6 +9,7 @@
   "command.editMvpChecklist.title": "Editar checklist MVP",
   "command.markMvpItemDone.title": "Marcar tarea MVP",
   "command.syncStatusFile.title": "Sincronizar STATUS.md",
+  "command.createReadme.title": "Crear README",
   "command.recoverStorage.title": "Recuperar almacenamiento",
   "command.connectGithub.title": "Conectar GitHub",
   "command.detectBlockers.title": "Detectar bloqueadores",
