@@ -65,6 +65,7 @@ test("package.json evita acciones duplicadas en la barra superior", () => {
     "shipone.moreActions",
   ]);
   assert.deepEqual(submenus, ["shipone.moreActions"]);
+  assert.ok(manifest.contributes.menus["shipone.moreActions"].some((entry) => entry.command === "shipone.editNextAction"));
   assert.equal(
     itemCommands.filter((command) => command === "shipone.editNextAction").length,
     1
