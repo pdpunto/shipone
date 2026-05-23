@@ -541,6 +541,45 @@ test("ProjectStoreService recupera desde backup", async () => {
   }
 });
 
+test("ProjectStoreService rechaza backup vacio", async () => {
+  const fsState = createMemoryFs();
+  const vscodeApi = createMockVscodeForStorage(fsState);
+  const originalLoad = Module._load;
+
+  try {
+    Module._load = function patchedLoad(request, parent, isMain) {
+      if (request === "vscode") {
+        return vscodeApi;
+      }
+
+      return originalLoad.call(this, request, parent, isMain);
+    };
+
+    delete require.cache[
+      require.resolve("../out/services/projectStoreService")
+    ];
+    const {
+      ProjectStoreService,
+    } = require("../out/services/projectStoreService");
+    const service = new ProjectStoreService({
+      globalStorageUri: vscodeApi.Uri.file(STORAGE_ROOT),
+    });
+    const storageFile = storageFilePath(STORAGE_ROOT);
+    const backupFile = storageBackupPath(STORAGE_ROOT);
+
+    fsState.files.set(storageFile, Buffer.from("{bad json", "utf8"));
+    fsState.files.set(backupFile, Buffer.from("", "utf8"));
+
+    const restored = await service.recoverFromBackup();
+
+    assert.equal(restored, false);
+    assert.equal(vscodeApi.__messages.warning.length > 0, true);
+    assert.equal(fsState.files.get(storageFile).toString("utf8"), "{bad json");
+  } finally {
+    Module._load = originalLoad;
+  }
+});
+
 test("ProjectStoreService migra metadata vieja", async () => {
   const fsState = createMemoryFs();
   const vscodeApi = createMockVscodeForStorage(fsState);

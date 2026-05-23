@@ -48,7 +48,9 @@ export class ProjectStoreService {
 
   async recoverFromBackup(): Promise<boolean> {
     try {
-      const recovered = await this.readProjectsFromUri(this.backupFileUri);
+      const recovered = await this.readProjectsFromUri(this.backupFileUri, {
+        allowEmptyFile: false,
+      });
       await this.saveProjects(recovered.projects, false);
       this.logInfo("Recuperacion completada desde backup.", {
         source: this.formatLocation(this.backupFileUri),
@@ -377,7 +379,9 @@ export class ProjectStoreService {
         fallback: this.formatLocation(this.backupFileUri),
       });
       try {
-        const recovered = await this.readProjectsFromUri(this.backupFileUri);
+        const recovered = await this.readProjectsFromUri(this.backupFileUri, {
+          allowEmptyFile: false,
+        });
         await this.saveProjects(recovered.projects, false);
         this.logInfo("Se recupero el almacenamiento desde el backup.", {
           source: this.formatLocation(this.backupFileUri),
@@ -394,10 +398,15 @@ export class ProjectStoreService {
   }
 
   private async readProjectsFromUri(
-    uri: vscode.Uri
+    uri: vscode.Uri,
+    options?: { allowEmptyFile?: boolean }
   ): Promise<{ projects: ProjectMetadata[]; version: number }> {
     const raw = await vscode.workspace.fs.readFile(uri);
     if (raw.length === 0) {
+      if (options?.allowEmptyFile === false) {
+        throw new Error(t(k.error.corruptedProjectSnapshot));
+      }
+
       return { projects: [], version: STORAGE_VERSION };
     }
 
