@@ -3394,6 +3394,46 @@ test("Sync status file flow escribe STATUS.md", async () => {
   }
 });
 
+test("Generate project context flow usa el proyecto del warning", async () => {
+  const fixture = createIntegrationFixture();
+
+  try {
+    delete require.cache[require.resolve("../out/commands/ai/registerAiCommands")];
+    const { registerAiCommands } = require("../out/commands/ai/registerAiCommands");
+
+    const project = {
+      id: "p1",
+      name: "ShipOne",
+      description: "Test",
+      type: "blank",
+      status: "active",
+      path: "C:\\tmp\\shipone-projects\\ShipOne",
+      createdAt: "2026-05-15T00:00:00.000Z",
+      nextAction: "Crear login",
+    };
+
+    fixture.projectStore.projects = [project];
+    fixture.projectStore.projectsById.set(project.id, project);
+
+    const generated = [];
+    registerAiCommands({
+      projectStore: fixture.projectStore,
+      projectContextService: {
+        generateAiContext: async (resolvedProject) => {
+          generated.push(resolvedProject);
+        },
+      },
+    });
+
+    await fixture.commandHandlers.get("shipone.generateAiContext")(project.id);
+
+    assert.equal(generated.length, 1);
+    assert.equal(generated[0].id, project.id);
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
 test("Edit next action flow actualiza la accion", async () => {
   const fixture = createIntegrationFixture();
 

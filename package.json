@@ -315,6 +315,11 @@
           "group": "inline"
         },
         {
+          "command": "shipone.generateAiContext",
+          "when": "view == shipone.projectsView && viewItem == shipone.warning",
+          "group": "inline"
+        },
+        {
           "command": "shipone.markProjectIdea",
           "when": "view == shipone.projectsView && viewItem == shipone.project"
         },
