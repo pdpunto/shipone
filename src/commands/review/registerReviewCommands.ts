@@ -8,6 +8,7 @@ import type { TodoScannerService } from "../../services/todoScannerService";
 import { type TodoTask } from "../../services/todoScannerService";
 import {
   buildWeeklyReviewSummary,
+  buildWeeklyReviewMarkdownSummary,
   confirmCanActivateProject,
   getFinishedThisWeek,
   isStaleProject,
@@ -21,6 +22,8 @@ import {
 const COMMAND_OPEN_PROJECT = "shipone.openProject";
 const COMMAND_SCAN_TODOS = "shipone.scanTodos";
 const COMMAND_WEEKLY_REVIEW = "shipone.weeklyReview";
+const COMMAND_EXPORT_WEEKLY_REVIEW_SUMMARY =
+  "shipone.exportWeeklyReviewSummary";
 const COMMAND_FREEZE_PROJECT = "shipone.freezeProject";
 const COMMAND_RESUME_PROJECT = "shipone.resumeProject";
 
@@ -110,6 +113,12 @@ export function registerReviewCommands(options: {
         (project) => project.status === "paused"
       );
       const finishedThisWeek = getFinishedThisWeek(projects);
+      const staleProjects = projects.filter((project) =>
+        isStaleProject(project)
+      );
+      const missingNextActionProjects = projects.filter(
+        (project) => !project.nextAction?.trim()
+      );
 
       const summaryLines = buildWeeklyReviewSummaryLines({
         activeName: summary.active ? summary.active.name : null,
@@ -121,11 +130,25 @@ export function registerReviewCommands(options: {
       });
 
       if (activeProject) {
-        const actions = [t("Ver activo"), t("Salir")];
+        const exportSummaryLabel = t("Export summary");
+        const actions = [t("Ver activo"), exportSummaryLabel, t("Salir")];
         const choice = await vscode.window.showInformationMessage(
           summaryLines,
           ...actions
         );
+
+        if (choice === exportSummaryLabel) {
+          await exportWeeklyReviewSummary(
+            summary.active?.name ?? null,
+            summary.active?.nextAction ?? null,
+            pausedProjects,
+            finishedThisWeek,
+            staleProjects,
+            missingNextActionProjects,
+            settingsService.getSettings().projectsRoot
+          );
+          return;
+        }
 
         if (choice === t("Salir")) {
           return;
@@ -200,6 +223,34 @@ export function registerReviewCommands(options: {
       if (footerParts.length > 0) {
         vscode.window.showInformationMessage(footerParts.join(" | "));
       }
+    }
+  );
+
+  const exportWeeklyReviewSummaryCommand = vscode.commands.registerCommand(
+    COMMAND_EXPORT_WEEKLY_REVIEW_SUMMARY,
+    async () => {
+      const projects = await projectStore.loadProjects();
+      const summary = buildWeeklyReviewSummary(projects);
+      const pausedProjects = projects.filter(
+        (project) => project.status === "paused"
+      );
+      const finishedThisWeek = getFinishedThisWeek(projects);
+      const staleProjects = projects.filter((project) =>
+        isStaleProject(project)
+      );
+      const missingNextActionProjects = projects.filter(
+        (project) => !project.nextAction?.trim()
+      );
+
+      await exportWeeklyReviewSummary(
+        summary.active?.name ?? null,
+        summary.active?.nextAction ?? null,
+        pausedProjects,
+        finishedThisWeek,
+        staleProjects,
+        missingNextActionProjects,
+        settingsService.getSettings().projectsRoot
+      );
     }
   );
 
@@ -323,7 +374,44 @@ export function registerReviewCommands(options: {
   return [
     scanTodosCommand,
     weeklyReviewCommand,
+    exportWeeklyReviewSummaryCommand,
     freezeProjectCommand,
     resumeProjectCommand,
   ];
+}
+
+async function exportWeeklyReviewSummary(
+  activeName: string | null,
+  activeNextAction: string | null,
+  pausedProjects: Awaited<ReturnType<ProjectStoreService["loadProjects"]>>,
+  finishedThisWeek: Awaited<ReturnType<ProjectStoreService["loadProjects"]>>,
+  staleProjects: Awaited<ReturnType<ProjectStoreService["loadProjects"]>>,
+  missingNextActionProjects: Awaited<
+    ReturnType<ProjectStoreService["loadProjects"]>
+  >,
+  projectsRoot: string
+): Promise<void> {
+  const content = buildWeeklyReviewMarkdownSummary({
+    activeName,
+    activeNextAction,
+    pausedProjects,
+    finishedThisWeekProjects: finishedThisWeek,
+    staleProjects,
+    missingNextActionProjects,
+  });
+
+  const targetUri = vscode.Uri.joinPath(
+    vscode.Uri.file(projectsRoot),
+    "SHIPONE_WEEKLY_REVIEW.md"
+  );
+
+  await vscode.workspace.fs.createDirectory(vscode.Uri.file(projectsRoot));
+  await vscode.workspace.fs.writeFile(
+    targetUri,
+    new TextEncoder().encode(content)
+  );
+
+  vscode.window.showInformationMessage(
+    t("Resumen weekly review exportado en {0}.", targetUri.fsPath)
+  );
 }

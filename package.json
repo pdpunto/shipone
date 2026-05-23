@@ -40,6 +40,7 @@
     "onCommand:shipone.searchProject",
     "onCommand:shipone.scanTodos",
     "onCommand:shipone.generateAiContext",
+    "onCommand:shipone.exportWeeklyReviewSummary",
     "onCommand:shipone.recoverStorage",
     "onCommand:shipone.initializeGit"
   ],
@@ -152,6 +153,12 @@
         "title": "%command.weeklyReview.title%",
         "category": "ShipOne",
         "icon": "$(calendar)"
+      },
+      {
+        "command": "shipone.exportWeeklyReviewSummary",
+        "title": "%command.exportWeeklyReviewSummary.title%",
+        "category": "ShipOne",
+        "icon": "$(markdown)"
       },
       {
         "command": "shipone.freezeProject",
@@ -312,6 +319,9 @@
         },
         {
           "command": "shipone.weeklyReview"
+        },
+        {
+          "command": "shipone.exportWeeklyReviewSummary"
         },
         {
           "command": "shipone.openStatusFile"

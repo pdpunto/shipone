@@ -4055,6 +4055,79 @@ test("Weekly review flow pide next action y resume resumen", async () => {
   }
 });
 
+test("Export weekly review summary crea el markdown", async () => {
+  const fixture = createIntegrationFixture();
+
+  try {
+    delete require.cache[
+      require.resolve("../out/commands/review/registerReviewCommands")
+    ];
+    const {
+      registerReviewCommands,
+    } = require("../out/commands/review/registerReviewCommands");
+
+    fixture.projectStore.projects = [
+      {
+        id: "p1",
+        name: "ShipOne",
+        description: "Test",
+        type: "blank",
+        status: "active",
+        path: "C:\\tmp\\shipone-projects\\ShipOne",
+        createdAt: "2026-05-15T00:00:00.000Z",
+        lastOpenedAt: "2026-05-15T00:00:00.000Z",
+        nextAction: "Crear login",
+      },
+      {
+        id: "p2",
+        name: "Pause",
+        description: "Test",
+        type: "blank",
+        status: "paused",
+        path: "C:\\tmp\\shipone-projects\\Pause",
+        createdAt: "2026-05-15T00:00:00.000Z",
+        pauseReason: "Esperando feedback",
+        pauseNote: "Bloqueado por dependencias externas",
+      },
+      {
+        id: "p3",
+        name: "Done",
+        description: "Test",
+        type: "blank",
+        status: "finished",
+        path: "C:\\tmp\\shipone-projects\\Done",
+        createdAt: "2026-05-15T00:00:00.000Z",
+        finishedAt: new Date().toISOString(),
+      },
+    ];
+
+    registerReviewCommands({
+      projectStore: fixture.projectStore,
+      settingsService: { getSettings: () => fixture.settings },
+      projectCreationService: {},
+      getTodoScannerService: () => ({
+        scanProjectTodoTasks: async () => [],
+      }),
+      treeRefresh: () => fixture.calls.refresh.push(true),
+    });
+
+    await fixture.commandHandlers.get("shipone.exportWeeklyReviewSummary")();
+
+    const summaryPath =
+      "C:\\tmp\\shipone-projects\\SHIPONE_WEEKLY_REVIEW.md";
+    const summary = fixture.files.get(summaryPath)?.toString("utf8");
+
+    assert.ok(summary);
+    assert.ok(summary.includes("# ShipOne Weekly Review"));
+    assert.ok(summary.includes("Active project: ShipOne"));
+    assert.ok(summary.includes("Next action: Crear login"));
+    assert.ok(summary.includes("Paused projects: 1"));
+    assert.ok(summary.includes("Finished this week: 1"));
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
 test("Scan TODOs usa el scanner solo al ejecutar el comando", async () => {
   const fixture = createIntegrationFixture();
 

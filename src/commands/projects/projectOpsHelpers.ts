@@ -247,6 +247,76 @@ export function buildWeeklyReviewSummary(projects: ProjectMetadata[]) {
   };
 }
 
+export function buildWeeklyReviewMarkdownSummary(options: {
+  generatedAt?: string;
+  activeName: string | null;
+  activeNextAction: string | null;
+  pausedProjects: ProjectMetadata[];
+  finishedThisWeekProjects: ProjectMetadata[];
+  staleProjects: ProjectMetadata[];
+  missingNextActionProjects: ProjectMetadata[];
+}): string {
+  const generatedAt =
+    options.generatedAt ?? new Date().toISOString().slice(0, 10);
+
+  return [
+    t("# ShipOne Weekly Review"),
+    "",
+    t("Generated: {0}", generatedAt),
+    "",
+    t("## Overview"),
+    t("- Active project: {0}", options.activeName ?? t("None")),
+    t(
+      "- Next action: {0}",
+      options.activeNextAction ?? t("No next action yet")
+    ),
+    t("- Paused projects: {0}", options.pausedProjects.length),
+    t("- Finished this week: {0}", options.finishedThisWeekProjects.length),
+    t("- Stale projects: {0}", options.staleProjects.length),
+    t("- Missing next action: {0}", options.missingNextActionProjects.length),
+    "",
+    t("## Active project"),
+    ...(options.activeName
+      ? [
+          t("- {0}", options.activeName),
+          t(
+            "  - Next action: {0}",
+            options.activeNextAction ?? t("No next action yet")
+          ),
+        ]
+      : [t("- None")]),
+    "",
+    t("## Paused projects"),
+    ...(options.pausedProjects.length > 0
+      ? options.pausedProjects.map((project) =>
+          buildWeeklyReviewProjectLine(project)
+        )
+      : [t("- None")]),
+    "",
+    t("## Finished this week"),
+    ...(options.finishedThisWeekProjects.length > 0
+      ? options.finishedThisWeekProjects.map((project) =>
+          buildWeeklyReviewProjectLine(project)
+        )
+      : [t("- None")]),
+    "",
+    t("## Stale projects"),
+    ...(options.staleProjects.length > 0
+      ? options.staleProjects.map((project) =>
+          buildWeeklyReviewProjectLine(project)
+        )
+      : [t("- None")]),
+    "",
+    t("## Missing next action"),
+    ...(options.missingNextActionProjects.length > 0
+      ? options.missingNextActionProjects.map((project) =>
+          buildWeeklyReviewProjectLine(project)
+        )
+      : [t("- None")]),
+    "",
+  ].join("\n");
+}
+
 export async function readStatusBlockers(
   projectPath: string
 ): Promise<string[]> {
@@ -286,4 +356,24 @@ export async function readStatusBlockers(
   } catch {
     return [];
   }
+}
+
+function buildWeeklyReviewProjectLine(project: ProjectMetadata): string {
+  const details: string[] = [];
+
+  if (project.nextAction) {
+    details.push(t("Next: {0}", project.nextAction));
+  }
+
+  if (project.pauseReason) {
+    details.push(t("Pause: {0}", project.pauseReason));
+  }
+
+  if (project.pauseNote) {
+    details.push(t("Note: {0}", project.pauseNote));
+  }
+
+  const suffix =
+    details.length > 0 ? ` \u00b7 ${details.join(" \u00b7 ")}` : "";
+  return t("- {0}{1}", project.name, suffix);
 }
