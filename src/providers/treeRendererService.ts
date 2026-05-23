@@ -1,3 +1,4 @@
+import type * as vscode from "vscode";
 import type { ProjectMetadata, ProjectStatus } from "../models/project";
 import type { SettingsService } from "../services/settingsService";
 import type { ProjectStoreService } from "../services/projectStoreService";
@@ -252,9 +253,29 @@ export class TreeRendererService {
         project.id,
         this.iconProvider,
         this.tooltipProvider,
+        this.buildWarningAction(project, warnings),
         warnings.join("\n")
       ),
     ];
+  }
+
+  private buildWarningAction(
+    project: ProjectMetadata,
+    warnings: string[]
+  ): vscode.Command {
+    if (warnings.some((warning) => warning === t(k.tree.activeNoNextAction))) {
+      return {
+        command: "shipone.editNextAction",
+        title: t("Editar siguiente paso"),
+        arguments: [project.id],
+      };
+    }
+
+    return {
+      command: "shipone.openProject",
+      title: t(k.common.openProject),
+      arguments: [project.id],
+    };
   }
 }
 
