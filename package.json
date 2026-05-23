@@ -245,6 +245,43 @@
         "icon": "$(refresh)"
       }
     ],
+    "keybindings": [
+      {
+        "command": "shipone.weeklyReview",
+        "key": "ctrl+alt+w",
+        "when": "view == shipone.projectsView"
+      },
+      {
+        "command": "shipone.exportWeeklyReviewSummary",
+        "key": "ctrl+alt+shift+w",
+        "when": "view == shipone.projectsView"
+      },
+      {
+        "command": "shipone.generateAiContext",
+        "key": "ctrl+alt+c",
+        "when": "view == shipone.projectsView"
+      },
+      {
+        "command": "shipone.syncStatusFile",
+        "key": "ctrl+alt+s",
+        "when": "view == shipone.projectsView"
+      },
+      {
+        "command": "shipone.createReadme",
+        "key": "ctrl+alt+r",
+        "when": "view == shipone.projectsView"
+      },
+      {
+        "command": "shipone.initializeGit",
+        "key": "ctrl+alt+i",
+        "when": "view == shipone.projectsView"
+      },
+      {
+        "command": "shipone.editNextAction",
+        "key": "ctrl+alt+n",
+        "when": "view == shipone.projectsView"
+      }
+    ],
     "submenus": [
       {
         "id": "shipone.moreActions",

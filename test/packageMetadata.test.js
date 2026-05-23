@@ -71,3 +71,28 @@ test("package.json evita acciones duplicadas en la barra superior", () => {
     1
   );
 });
+
+test("package.json expone atajos keyboard-first", () => {
+  const manifest = readJson("package.json");
+  const keybindings = manifest.contributes.keybindings;
+
+  assert.deepEqual(
+    keybindings.map((binding) => binding.command),
+    [
+      "shipone.weeklyReview",
+      "shipone.exportWeeklyReviewSummary",
+      "shipone.generateAiContext",
+      "shipone.syncStatusFile",
+      "shipone.createReadme",
+      "shipone.initializeGit",
+      "shipone.editNextAction",
+    ]
+  );
+  assert.equal(keybindings[0].key, "ctrl+alt+w");
+  assert.equal(keybindings[1].key, "ctrl+alt+shift+w");
+  assert.equal(keybindings[2].key, "ctrl+alt+c");
+  assert.equal(keybindings[3].key, "ctrl+alt+s");
+  assert.equal(keybindings[4].key, "ctrl+alt+r");
+  assert.equal(keybindings[5].key, "ctrl+alt+i");
+  assert.equal(keybindings[6].key, "ctrl+alt+n");
+});
