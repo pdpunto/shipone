@@ -329,6 +329,11 @@
           "group": "inline"
         },
         {
+          "command": "shipone.syncStatusFile",
+          "when": "view == shipone.projectsView && viewItem == shipone.warning",
+          "group": "inline"
+        },
+        {
           "command": "shipone.markProjectIdea",
           "when": "view == shipone.projectsView && viewItem == shipone.project"
         },

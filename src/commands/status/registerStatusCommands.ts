@@ -17,8 +17,8 @@ export function registerStatusCommands(options: {
 
   const openStatusFileCommand = vscode.commands.registerCommand(
     COMMAND_OPEN_STATUS_FILE,
-    async () => {
-      const project = await pickProject(projectStore);
+    async (projectArg?: unknown) => {
+      const project = await resolveProject(projectStore, projectArg);
 
       if (!project) {
         return;
@@ -54,8 +54,8 @@ export function registerStatusCommands(options: {
 
   const syncStatusFileCommand = vscode.commands.registerCommand(
     COMMAND_SYNC_STATUS_FILE,
-    async () => {
-      const project = await pickProject(projectStore);
+    async (projectArg?: unknown) => {
+      const project = await resolveProject(projectStore, projectArg);
 
       if (!project) {
         return;
@@ -67,4 +67,31 @@ export function registerStatusCommands(options: {
   );
 
   return [openStatusFileCommand, syncStatusFileCommand];
+}
+
+async function resolveProject(
+  projectStore: ProjectStoreService,
+  projectArg?: unknown
+) {
+  if (typeof projectArg === "string") {
+    const projectById = await projectStore.getProject(projectArg);
+    if (projectById) {
+      return projectById;
+    }
+  }
+
+  const directProject = unwrapProjectArg(projectArg);
+  if (directProject) {
+    return directProject;
+  }
+
+  return pickProject(projectStore);
+}
+
+function unwrapProjectArg(projectArg?: unknown) {
+  if (projectArg && typeof projectArg === "object" && "id" in projectArg) {
+    return projectArg as Awaited<ReturnType<ProjectStoreService["getProject"]>>;
+  }
+
+  return undefined;
 }

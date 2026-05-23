@@ -3434,6 +3434,46 @@ test("Generate project context flow usa el proyecto del warning", async () => {
   }
 });
 
+test("Sync status file flow usa el proyecto del warning", async () => {
+  const fixture = createIntegrationFixture();
+
+  try {
+    delete require.cache[require.resolve("../out/commands/status/registerStatusCommands")];
+    const { registerStatusCommands } = require("../out/commands/status/registerStatusCommands");
+
+    const project = {
+      id: "p1",
+      name: "ShipOne",
+      description: "Test",
+      type: "blank",
+      status: "active",
+      path: "C:\\tmp\\shipone-projects\\ShipOne",
+      createdAt: "2026-05-15T00:00:00.000Z",
+      nextAction: "Crear login",
+    };
+
+    fixture.projectStore.projects = [project];
+    fixture.projectStore.projectsById.set(project.id, project);
+
+    const synced = [];
+    registerStatusCommands({
+      projectStore: fixture.projectStore,
+      statusFileService: {
+        syncStatusFile: async (resolvedProject) => {
+          synced.push(resolvedProject);
+        },
+      },
+    });
+
+    await fixture.commandHandlers.get("shipone.syncStatusFile")(project.id);
+
+    assert.equal(synced.length, 1);
+    assert.equal(synced[0].id, project.id);
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
 test("Create README flow crea un readme base", async () => {
   const fixture = createIntegrationFixture();
 
