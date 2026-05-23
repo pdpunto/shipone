@@ -154,5 +154,7 @@ test("package.nls.es.json traduce metricas", () => {
   assert.equal(es["Active projects"], activeProjects);
   assert.equal(es["Paused projects"], pausedProjects);
   assert.equal(es["Finished projects"], finishedProjects);
+  assert.equal(es["Stale projects"], "Proyectos obsoletos");
+  assert.equal(es["Missing next action"], "Sin siguiente paso");
   assert.equal(es["Finish ratio"], finishRatio);
 });

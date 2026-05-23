@@ -17,6 +17,8 @@ export type ProjectMetrics = {
   active: number;
   paused: number;
   finished: number;
+  stale: number;
+  missingNextAction: number;
   finishRatio: number;
 };
 
@@ -29,7 +31,11 @@ export type ProjectHealthSummary = {
 export class ProjectHealthService {
   private readonly healthCache = new Map<string, Promise<ProjectHealth>>();
 
-  getMetrics(projects: ProjectMetadata[]): ProjectMetrics {
+  getMetrics(
+    projects: ProjectMetadata[],
+    inactiveWarningDays = 14,
+    staleWarningDays = 30
+  ): ProjectMetrics {
     const total = projects.length;
     const idea = projects.filter((project) => project.status === "idea").length;
     const active = projects.filter(
@@ -41,6 +47,17 @@ export class ProjectHealthService {
     const finished = projects.filter(
       (project) => project.status === "finished"
     ).length;
+    const stale = projects.filter(
+      (project) =>
+        this.getInactivityWarning(
+          project.lastOpenedAt,
+          inactiveWarningDays,
+          staleWarningDays
+        )?.startsWith("stale") ?? false
+    ).length;
+    const missingNextAction = projects.filter(
+      (project) => !project.nextAction
+    ).length;
     const finishRatio = total === 0 ? 0 : Math.round((finished / total) * 100);
 
     return {
@@ -49,6 +66,8 @@ export class ProjectHealthService {
       active,
       paused,
       finished,
+      stale,
+      missingNextAction,
       finishRatio,
     };
   }

@@ -35,6 +35,8 @@
   "command.refreshProjects.title": "Refresh",
   "menu.moreActions.title": "More actions",
   "view.projects.name": "ShipOne",
+  "Stale projects": "Stale projects",
+  "Missing next action": "Missing next action",
   "configuration.title": "ShipOne",
   "configuration.projectsRoot.description": "Base folder where ShipOne creates and finds projects.",
   "configuration.defaultVisibility.description": "Default visibility for new GitHub repositories.",

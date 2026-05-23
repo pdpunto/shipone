@@ -1377,6 +1377,46 @@ test("ProjectHealthService detecta next action faltante", async () => {
   }
 });
 
+test("ProjectHealthService cuenta stale y next action faltante", async () => {
+  const fixture = createHealthServiceFixture({
+    readmeExists: true,
+    gitTimestamp: Date.now() - 40 * 86_400_000,
+  });
+
+  try {
+    const projects = [
+      fixture.buildProject({
+        id: "p1",
+        name: "Stale",
+        description: "Test",
+        type: "blank",
+        status: "active",
+        path: "C:\\tmp\\shipone-1",
+        createdAt: "2026-05-15T00:00:00.000Z",
+        nextAction: "Crear login",
+        lastOpenedAt: "2026-04-01T00:00:00.000Z",
+      }),
+      fixture.buildProject({
+        id: "p2",
+        name: "Missing",
+        description: "Test",
+        type: "blank",
+        status: "idea",
+        path: "C:\\tmp\\shipone-2",
+        createdAt: "2026-05-15T00:00:00.000Z",
+      }),
+    ];
+
+    const metrics = fixture.service.getMetrics(projects, 7, 30);
+
+    assert.equal(metrics.stale, 1);
+    assert.equal(metrics.missingNextAction, 1);
+    assert.equal(metrics.total, 2);
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
 test("ProjectHealthService cachea comprobaciones de salud", async () => {
   const fixture = createHealthServiceFixture({
     readmeExists: true,
@@ -1626,6 +1666,8 @@ test("getRootNodes muestra grupos mas compactos", async () => {
           active: 1,
           paused: 1,
           finished: 0,
+          stale: 1,
+          missingNextAction: 1,
           finishRatio: 0,
         }),
         getInactivityWarning: () => null,
@@ -1845,13 +1887,17 @@ test("getMetricsNodes muestra salud y resumen", async () => {
 
     const nodes = await renderer.getMetricsNodes();
 
-    assert.equal(nodes.length, 9);
+    assert.equal(nodes.length, 11);
     assert.equal(nodes[0].label, "Total");
     assert.equal(nodes[0].description, "2");
-    assert.equal(nodes[6].label, "healthy");
-    assert.equal(nodes[6].description, "1");
-    assert.equal(nodes[7].label, "warning");
-    assert.equal(nodes[7].description, "1");
+    assert.equal(nodes[5].label, "Stale projects");
+    assert.equal(nodes[6].label, "Missing next action");
+    assert.equal(nodes[7].label, "Finish ratio");
+    assert.equal(nodes[7].description, "0%");
+    assert.equal(nodes[8].label, "healthy");
+    assert.equal(nodes[8].description, "1");
+    assert.equal(nodes[9].label, "warning");
+    assert.equal(nodes[9].description, "1");
   } finally {
     Module._load = originalLoad;
   }

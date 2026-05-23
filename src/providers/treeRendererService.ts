@@ -133,8 +133,12 @@ export class TreeRendererService {
 
   async getMetricsNodes(): Promise<ShipOneTreeNode[]> {
     const projects = await this.projectStore.loadProjects();
-    const summary = this.projectHealthService.getMetrics(projects);
     const settings = this.settingsService.getSettings();
+    const summary = this.projectHealthService.getMetrics(
+      projects,
+      settings.inactiveWarningDays,
+      settings.staleWarningDays
+    );
     const healthSummary = await this.projectHealthService.getHealthSummary(
       projects,
       settings.inactiveWarningDays,
@@ -156,6 +160,16 @@ export class TreeRendererService {
       new MetricItemNode(
         t(k.tree.metricsFinished),
         summary.finished,
+        this.iconProvider
+      ),
+      new MetricItemNode(
+        t(k.tree.metricsStale),
+        summary.stale,
+        this.iconProvider
+      ),
+      new MetricItemNode(
+        t(k.tree.metricsMissingNextAction),
+        summary.missingNextAction,
         this.iconProvider
       ),
       new MetricItemNode(

@@ -61,6 +61,8 @@ export const translationKeys = {
     metricsActive: "Active projects",
     metricsPaused: "Paused projects",
     metricsFinished: "Finished projects",
+    metricsStale: "Stale projects",
+    metricsMissingNextAction: "Missing next action",
     finishRatio: "Finish ratio",
     noProjectsYet: "Sin proyectos todavia",
     noActiveProject: "Sin proyecto activo",
