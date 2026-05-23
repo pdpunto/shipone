@@ -78,6 +78,17 @@ These images show the real ShipOne flow inside VS Code:
 6. Write a `nextAction` and keep working from the same view.
 7. If a project gets stuck, use `Freeze project` or `Weekly review`.
 
+## Codex Workflow Example
+
+ShipOne works well with a simple, repeatable flow:
+
+1. Create or open a project.
+2. Run `ShipOne: Generate project context`.
+3. Keep `PROJECT_CONTEXT.md` and `STATUS.md` current.
+4. Use `ShipOne: Weekly review` to check the current state.
+5. Export a summary with `ShipOne: Export weekly review summary`.
+6. Resume work from `nextAction` instead of starting from zero.
+
 ## Useful Commands
 
 - `ShipOne: Create` - create a new project
