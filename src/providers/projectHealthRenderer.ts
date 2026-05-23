@@ -3,6 +3,7 @@ import { translationKeys as k } from "../localization/keys";
 import type { ProjectMetadata } from "../models/project";
 import type { ProjectHealth } from "../services/projectHealthService";
 import { formatProjectType } from "./treeNodes/shared";
+import { formatGroupedHealthIssues } from "../utils/healthIssueGrouping";
 
 export class ProjectHealthRenderer {
   buildProjectDescription(
@@ -11,7 +12,7 @@ export class ProjectHealthRenderer {
     warning: string | null
   ): string {
     const projectType = formatProjectType(project.type);
-    const issueSummary = buildIssueSummary(health.issues);
+    const issueSummary = formatGroupedHealthIssues(health.issues);
 
     return [
       projectType,
@@ -25,17 +26,6 @@ export class ProjectHealthRenderer {
   }
 }
 
-function buildIssueSummary(issues: string[]): string | undefined {
-  if (issues.length === 0) {
-    return undefined;
-  }
-
-  const labels = issues.map((issue) => renderIssueLabel(issue));
-  return labels.length === 1
-    ? t("Problema: {0}", labels[0])
-    : t("Problemas: {0}", labels.join(", "));
-}
-
 function renderHealthLabel(health: ProjectHealth["label"]): string {
   switch (health) {
     case "healthy":
@@ -44,28 +34,5 @@ function renderHealthLabel(health: ProjectHealth["label"]): string {
       return t(k.health.warning);
     case "bad":
       return t(k.health.bad);
-  }
-}
-
-function renderIssueLabel(issue: string): string {
-  switch (issue) {
-    case "empty-readme":
-      return t(k.issue.emptyReadme);
-    case "missing-next-action":
-      return t(k.issue.missingNextAction);
-    case "inactive-active":
-      return t(k.issue.inactiveActive);
-    case "no-readme":
-      return t(k.issue.noReadme);
-    case "no-status":
-      return t(k.issue.noStatus);
-    case "no-package-json":
-      return t(k.issue.noPackageJson);
-    case "no-requirements":
-      return t(k.issue.noRequirements);
-    case "no-recent-commits":
-      return t(k.issue.noRecentCommits);
-    default:
-      return issue;
   }
 }

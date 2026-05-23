@@ -1472,7 +1472,7 @@ test("buildProjectDescription muestra la salud visible", () => {
 
     assert.equal(
       description,
-      "Blank · Salud: warning · Siguiente: Crear login · Problema: Falta el siguiente paso · Inactivo hace 15 días"
+      "Blank · Salud: warning · Siguiente: Crear login · Problema: Planificacion: Falta el siguiente paso · Inactivo hace 15 días"
     );
   } finally {
     Module._load = originalLoad;
@@ -3620,3 +3620,4 @@ test("Scan TODOs usa el scanner solo al ejecutar el comando", async () => {
     fixture.restoreLoad();
   }
 });
+

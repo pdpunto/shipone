@@ -3,6 +3,7 @@ import { t } from "../localization";
 import { translationKeys as k } from "../localization/keys";
 import type { ProjectMetadata } from "../models/project";
 import type { ProjectHealth } from "../services/projectHealthService";
+import { formatGroupedHealthIssues } from "../utils/healthIssueGrouping";
 
 export class TreeTooltipProvider {
   buildGroupTooltip(label: string, count?: number): vscode.MarkdownString {
@@ -26,9 +27,7 @@ export class TreeTooltipProvider {
         ? t("Siguiente: {0}", project.nextAction)
         : t(k.tree.noNextAction),
       t("Salud: {0}", renderHealthLabel(health.label)),
-      health.issues.length > 0
-        ? t("Problemas: {0}", health.issues.map(renderIssueLabel).join(", "))
-        : "",
+      formatGroupedHealthIssues(health.issues) ?? "",
     ]);
   }
 
@@ -65,9 +64,7 @@ export class TreeTooltipProvider {
       project.favorite ? t("Favorito: si") : "",
       project.pauseReason ? t("Pausa: {0}", project.pauseReason) : "",
       project.pauseNote ? t("Nota de pausa: {0}", project.pauseNote) : "",
-      health.issues.length > 0
-        ? t("Problemas: {0}", health.issues.map(renderIssueLabel).join(", "))
-        : "",
+      formatGroupedHealthIssues(health.issues) ?? "",
       mvpProgress ? t("MVP: {0}", mvpProgress) : "",
       warning ? t("Aviso: {0}", warning) : "",
     ]);
@@ -90,20 +87,5 @@ function renderHealthLabel(label: ProjectHealth["label"]): string {
       return t(k.health.warning);
     case "bad":
       return t(k.health.bad);
-  }
-}
-
-function renderIssueLabel(issue: string): string {
-  switch (issue) {
-    case "missing-next-action":
-      return t(k.issue.missingNextAction);
-    case "inactive-active":
-      return t(k.issue.inactiveActive);
-    case "no-readme":
-      return t(k.issue.noReadme);
-    case "no-recent-commits":
-      return t(k.issue.noRecentCommits);
-    default:
-      return issue;
   }
 }

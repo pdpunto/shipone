@@ -19,6 +19,12 @@ export const translationKeys = {
     noRequirements: "Falta requirements.txt",
     noRecentCommits: "Sin commits recientes",
   },
+  issueGroup: {
+    documentation: "Documentacion",
+    planning: "Planificacion",
+    activity: "Actividad",
+    other: "Otros",
+  },
   projectStatus: {
     idea: "Idea",
     active: "Activo",
