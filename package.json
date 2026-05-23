@@ -40,7 +40,8 @@
     "onCommand:shipone.searchProject",
     "onCommand:shipone.scanTodos",
     "onCommand:shipone.generateAiContext",
-    "onCommand:shipone.recoverStorage"
+    "onCommand:shipone.recoverStorage",
+    "onCommand:shipone.initializeGit"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -97,6 +98,12 @@
         "title": "%command.createReadme.title%",
         "category": "ShipOne",
         "icon": "$(markdown)"
+      },
+      {
+        "command": "shipone.initializeGit",
+        "title": "%command.initializeGit.title%",
+        "category": "ShipOne",
+        "icon": "$(source-control)"
       },
       {
         "command": "shipone.recoverStorage",
@@ -278,6 +285,9 @@
           "command": "shipone.createReadme"
         },
         {
+          "command": "shipone.initializeGit"
+        },
+        {
           "command": "shipone.recoverStorage"
         },
         {
@@ -357,6 +367,10 @@
           "command": "shipone.deleteProject",
           "when": "view == shipone.projectsView && viewItem == shipone.project",
           "group": "inline"
+        },
+        {
+          "command": "shipone.initializeGit",
+          "when": "view == shipone.projectsView && viewItem == shipone.project"
         },
         {
           "command": "shipone.openStatusFile",

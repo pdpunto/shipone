@@ -3324,6 +3324,11 @@ test("Open project flow abre la carpeta y marca acceso", async () => {
     registerProjectCommands({
       context: fixture.context,
       projectStore: fixture.projectStore,
+      gitService: {
+        isGitRepository: async () => false,
+        initializeGit: async () => true,
+        createInitialCommit: async () => true,
+      },
       settingsService: { getSettings: () => fixture.settings },
       treeDataProvider: { refresh: () => fixture.calls.refresh.push(true) },
       getSelectedProjectId: () => undefined,
@@ -3551,6 +3556,11 @@ test("Edit next action flow actualiza la accion", async () => {
     registerProjectCommands({
       context: fixture.context,
       projectStore: fixture.projectStore,
+      gitService: {
+        isGitRepository: async () => false,
+        initializeGit: async () => true,
+        createInitialCommit: async () => true,
+      },
       settingsService: { getSettings: () => fixture.settings },
       treeDataProvider: { refresh: () => fixture.calls.refresh.push(true) },
       getSelectedProjectId: () => undefined,
@@ -3591,6 +3601,11 @@ test("Delete project flow confirma y borra local", async () => {
     registerProjectCommands({
       context: fixture.context,
       projectStore: fixture.projectStore,
+      gitService: {
+        isGitRepository: async () => false,
+        initializeGit: async () => true,
+        createInitialCommit: async () => true,
+      },
       githubService: new GitHubService(),
       settingsService: { getSettings: () => fixture.settings },
       treeDataProvider: { refresh: () => fixture.calls.refresh.push(true) },
@@ -3603,6 +3618,59 @@ test("Delete project flow confirma y borra local", async () => {
     assert.equal(fixture.calls.refresh.length, 1);
     assert.equal(fixture.messages.info.length, 2);
     assert.equal(fixture.messages.warning.length, 2);
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
+test("Initialize git flow crea repo y commit inicial", async () => {
+  const fixture = createIntegrationFixture();
+
+  try {
+    delete require.cache[require.resolve("../out/commands/projects/registerProjectCommands")];
+    const { registerProjectCommands } = require("../out/commands/projects/registerProjectCommands");
+
+    fixture.projectStore.projectsById.set("p1", {
+      id: "p1",
+      name: "ShipOne",
+      description: "Test",
+      type: "blank",
+      status: "active",
+      path: "C:\\tmp\\shipone-projects\\ShipOne",
+      createdAt: "2026-05-15T00:00:00.000Z",
+    });
+
+    fixture.enqueueWarningChoice((args) => args[1]);
+
+    const gitCalls = [];
+    registerProjectCommands({
+      context: fixture.context,
+      projectStore: fixture.projectStore,
+      gitService: {
+        isGitRepository: async () => false,
+        initializeGit: async (folderUri) => {
+          gitCalls.push(["init", folderUri.fsPath]);
+          return true;
+        },
+        createInitialCommit: async (folderUri) => {
+          gitCalls.push(["commit", folderUri.fsPath]);
+          return true;
+        },
+      },
+      settingsService: { getSettings: () => fixture.settings },
+      treeDataProvider: { refresh: () => fixture.calls.refresh.push(true) },
+      getSelectedProjectId: () => undefined,
+    });
+
+    await fixture.commandHandlers.get("shipone.initializeGit")("p1");
+
+    assert.deepEqual(gitCalls, [
+      ["init", "C:\\tmp\\shipone-projects\\ShipOne"],
+      ["commit", "C:\\tmp\\shipone-projects\\ShipOne"],
+    ]);
+    assert.equal(fixture.calls.refresh.length, 1);
+    assert.equal(fixture.messages.info.length, 1);
+    assert.equal(fixture.messages.warning.length, 1);
   } finally {
     fixture.restoreLoad();
   }

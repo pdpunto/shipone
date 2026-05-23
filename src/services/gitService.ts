@@ -5,6 +5,19 @@ import type * as vscode from "vscode";
 const execFileAsync = promisify(execFile);
 
 export class GitService {
+  async isGitRepository(folderUri: vscode.Uri): Promise<boolean> {
+    try {
+      const { stdout } = await execFileAsync(
+        "git",
+        ["rev-parse", "--is-inside-work-tree"],
+        { cwd: folderUri.fsPath }
+      );
+      return stdout.trim() === "true";
+    } catch {
+      return false;
+    }
+  }
+
   async initializeGit(folderUri: vscode.Uri): Promise<boolean> {
     try {
       await execFileAsync("git", ["init"], { cwd: folderUri.fsPath });

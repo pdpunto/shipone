@@ -11,6 +11,7 @@ import { registerReviewCommands } from "../commands/review/registerReviewCommand
 import { registerStatusCommands } from "../commands/status/registerStatusCommands";
 import { ProjectCreationService } from "../services/projectCreationService";
 import { ProjectContextService } from "../services/projectContextService";
+import { GitService } from "../services/gitService";
 import { ProjectHealthService } from "../services/projectHealthService";
 import { ProjectRecoveryService } from "../services/projectRecoveryService";
 import { StatusFileService } from "../services/statusFileService";
@@ -42,6 +43,7 @@ export class ShipOneApp {
   private readonly treeTooltipProvider = new TreeTooltipProvider();
   private readonly healthRenderer = new ProjectHealthRenderer();
   private readonly statusFileService = new StatusFileService();
+  private readonly gitService = new GitService();
   private readonly githubService = new GitHubService();
   private readonly projectCreationService: ProjectCreationService;
   private treeDataProvider: ShipOneProjectsTreeDataProvider | undefined;
@@ -114,6 +116,7 @@ export class ShipOneApp {
     const projectCommands = registerProjectCommands({
       context: this.context,
       projectStore: this.projectStore,
+      gitService: this.gitService,
       githubService: this.githubService,
       settingsService: this.settingsService,
       treeDataProvider: this.treeDataProvider,

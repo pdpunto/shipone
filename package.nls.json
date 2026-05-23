@@ -10,6 +10,7 @@
   "command.markMvpItemDone.title": "Mark MVP task done",
   "command.syncStatusFile.title": "Sync STATUS.md",
   "command.createReadme.title": "Create README",
+  "command.initializeGit.title": "Initialize Git",
   "command.recoverStorage.title": "Recover storage",
   "command.connectGithub.title": "Connect GitHub",
   "command.detectBlockers.title": "Detect blockers",

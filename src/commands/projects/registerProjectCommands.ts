@@ -3,6 +3,7 @@ import { t } from "../../localization";
 import { translationKeys as k } from "../../localization/keys";
 import type { ProjectMetadata, ProjectStatus } from "../../models/project";
 import type { ShipOneSettings } from "../../models/settings";
+import type { GitService } from "../../services/gitService";
 import type { ProjectStoreService } from "../../services/projectStoreService";
 import type { GitHubService } from "../../services/githubService";
 import type { SettingsService } from "../../services/settingsService";
@@ -18,10 +19,12 @@ const COMMAND_EDIT_NEXT_ACTION = "shipone.editNextAction";
 const COMMAND_CLEAR_NEXT_ACTION = "shipone.clearNextAction";
 const COMMAND_TOGGLE_FAVORITE = "shipone.toggleFavorite";
 const COMMAND_DELETE_PROJECT = "shipone.deleteProject";
+const COMMAND_INITIALIZE_GIT = "shipone.initializeGit";
 
 export function registerProjectCommands(options: {
   context: vscode.ExtensionContext;
   projectStore: ProjectStoreService;
+  gitService: GitService;
   githubService?: GitHubService;
   settingsService: SettingsService;
   treeDataProvider: ShipOneProjectsTreeDataProvider;
@@ -30,6 +33,7 @@ export function registerProjectCommands(options: {
   const {
     context,
     projectStore,
+    gitService,
     githubService,
     settingsService,
     treeDataProvider,
@@ -255,6 +259,63 @@ export function registerProjectCommands(options: {
     }
   );
 
+  const initializeGitCommand = vscode.commands.registerCommand(
+    COMMAND_INITIALIZE_GIT,
+    async (projectArg?: unknown) => {
+      const project = await resolveProject(
+        projectStore,
+        projectArg,
+        getSelectedProjectId()
+      );
+
+      if (!project) {
+        return;
+      }
+
+      const folderUri = vscode.Uri.file(project.path);
+      const alreadyInitialized = await gitService.isGitRepository(folderUri);
+
+      if (alreadyInitialized) {
+        vscode.window.showInformationMessage(
+          t("Git ya esta inicializado en {0}.", project.name)
+        );
+        return;
+      }
+
+      const choice = await vscode.window.showWarningMessage(
+        t(
+          "Esto inicializara Git y creara un commit inicial en {0}.",
+          project.name
+        ),
+        t(k.common.yes),
+        t(k.common.cancel)
+      );
+
+      if (choice !== t(k.common.yes)) {
+        return;
+      }
+
+      const gitInitialized = await gitService.initializeGit(folderUri);
+
+      if (!gitInitialized) {
+        vscode.window.showWarningMessage(t(k.warning.gitInitFailed));
+        return;
+      }
+
+      const committed = await gitService.createInitialCommit(folderUri);
+
+      if (!committed) {
+        vscode.window.showWarningMessage(t(k.warning.gitCommitFailed));
+        return;
+      }
+
+      treeDataProvider.refresh();
+      vscode.window.showInformationMessage(
+        t("Git inicializado en {0}.", project.name)
+      );
+    }
+  );
+
   const projectCommands = [
     openProjectCommand,
     markProjectIdeaCommand,
@@ -265,6 +326,7 @@ export function registerProjectCommands(options: {
     clearNextActionCommand,
     toggleFavoriteCommand,
     deleteProjectCommand,
+    initializeGitCommand,
   ];
 
   context.subscriptions.push(...projectCommands);
