@@ -33,6 +33,8 @@ const GROUPS: Array<{ status: ProjectStatus; label: string }> = [
 ];
 
 export class TreeRendererService {
+  private projectsCache: ProjectMetadata[] | undefined;
+
   constructor(
     private readonly projectStore: ProjectStoreService,
     private readonly settingsService: SettingsService,
@@ -42,9 +44,13 @@ export class TreeRendererService {
     private readonly healthRenderer: ProjectHealthRenderer
   ) {}
 
+  clearCache(): void {
+    this.projectsCache = undefined;
+  }
+
   async getRootNodes(isFocusModeEnabled: boolean): Promise<ShipOneTreeNode[]> {
     if (isFocusModeEnabled) {
-      const projects = await this.projectStore.loadProjects();
+      const projects = await this.getProjects();
       const activeProject = projects.find(
         (project) => project.status === "active"
       );
@@ -86,7 +92,7 @@ export class TreeRendererService {
     }
 
     const settings = this.settingsService.getSettings();
-    const projects = await this.projectStore.loadProjects();
+    const projects = await this.getProjects();
 
     if (projects.length === 0) {
       return [
@@ -132,7 +138,7 @@ export class TreeRendererService {
   }
 
   async getMetricsNodes(): Promise<ShipOneTreeNode[]> {
-    const projects = await this.projectStore.loadProjects();
+    const projects = await this.getProjects();
     const settings = this.settingsService.getSettings();
     const summary = this.projectHealthService.getMetrics(
       projects,
@@ -192,11 +198,9 @@ export class TreeRendererService {
   }
 
   async getGroupNodes(status: ProjectStatus): Promise<ShipOneTreeNode[]> {
-    const grouped = (await this.projectStore.getProjectsByStatus()) as Record<
-      ProjectStatus,
-      ProjectMetadata[]
-    >;
-    const projects = grouped[status] ?? [];
+    const projects = (await this.getProjects()).filter(
+      (project) => project.status === status
+    );
     const settings = this.settingsService.getSettings();
 
     if (projects.length === 0) {
@@ -234,6 +238,14 @@ export class TreeRendererService {
         );
       })
     );
+  }
+
+  private async getProjects(): Promise<ProjectMetadata[]> {
+    if (!this.projectsCache) {
+      this.projectsCache = await this.projectStore.loadProjects();
+    }
+
+    return this.projectsCache;
   }
 
   private buildActiveWarnings(

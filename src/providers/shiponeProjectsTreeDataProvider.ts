@@ -40,6 +40,7 @@ export class ShipOneProjectsTreeDataProvider implements vscode.TreeDataProvider<
 
   refresh(): void {
     this.projectHealthService.clearCache();
+    this.treeRenderer.clearCache();
     if (this.refreshQueued) {
       return;
     }

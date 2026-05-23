@@ -2140,6 +2140,94 @@ test("ShipOneProjectsTreeDataProvider agrupa refresh seguidos", async () => {
   }
 });
 
+test("TreeRendererService carga proyectos una sola vez por cache", async () => {
+  const originalLoad = Module._load;
+
+  try {
+    Module._load = function patchedLoad(request, parent, isMain) {
+      if (request === "vscode") {
+        return {
+          ...createMockVscode(),
+        };
+      }
+
+      return originalLoad.call(this, request, parent, isMain);
+    };
+
+    delete require.cache[require.resolve("../out/providers/treeRendererService")];
+    const { TreeRendererService } = require("../out/providers/treeRendererService");
+
+    let loadCalls = 0;
+    const service = new TreeRendererService(
+      {
+        loadProjects: async () => {
+          loadCalls += 1;
+          return [
+            {
+              id: "p1",
+              name: "ShipOne",
+              description: "Test",
+              type: "blank",
+              status: "active",
+              path: "C:\\tmp\\shipone",
+              createdAt: "2026-05-15T00:00:00.000Z",
+              nextAction: "Crear login",
+            },
+          ];
+        },
+      },
+      {
+        getSettings: () => ({
+          inactiveWarningDays: 7,
+          staleWarningDays: 30,
+          showFinishedProjects: true,
+        }),
+      },
+      {
+        buildProjectHealth: async () => ({ label: "ok", issues: [] }),
+        clearCache: () => {},
+        getMetrics: () => ({
+          total: 1,
+          idea: 0,
+          active: 1,
+          paused: 0,
+          finished: 0,
+          stale: 0,
+          missingNextAction: 0,
+          finishRatio: 0,
+        }),
+        getHealthSummary: async () => ({
+          healthy: 1,
+          warning: 0,
+          bad: 0,
+        }),
+      },
+      {
+        getMetricsIcon: () => "graph",
+        getMetricItemIcon: () => "graph",
+        getFocusIcon: () => "eye",
+        getGroupIcon: () => "folder",
+        getWarningIcon: () => "warning",
+      },
+      {
+        buildGroupTooltip: () => "",
+        getTooltip: () => "",
+      },
+      {
+        getHealthIcon: () => "check",
+        buildProjectDescription: () => "ok",
+      }
+    );
+
+    await service.getRootNodes(false);
+    await service.getMetricsNodes();
+
+    assert.equal(loadCalls, 1);
+  } finally {
+    Module._load = originalLoad;
+  }
+});
+
 test("buildPausedProjectDescription muestra contexto de pausa", () => {
   const originalLoad = Module._load;
 
