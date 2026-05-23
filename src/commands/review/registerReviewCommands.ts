@@ -46,6 +46,7 @@ export function registerReviewCommands(options: {
       const tasks = await getTodoScannerService().scanProjectTodoTasks(
         project.path
       );
+      const summary = getTodoScannerService().summarizeTodoTasks(tasks);
 
       if (tasks.length === 0) {
         vscode.window.showInformationMessage(
@@ -53,6 +54,18 @@ export function registerReviewCommands(options: {
         );
         return;
       }
+
+      vscode.window.showInformationMessage(
+        t(
+          "Resumen TODO: {0} TODO, {1} FIXME, {2} NOTE, {3} HACK, {4} XXX, {5} BUG.",
+          summary.TODO,
+          summary.FIXME,
+          summary.NOTE,
+          summary.HACK,
+          summary.XXX,
+          summary.BUG
+        )
+      );
 
       const choice = await vscode.window.showQuickPick(
         tasks.map((task: TodoTask) => ({

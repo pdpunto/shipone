@@ -1,11 +1,21 @@
 import * as vscode from "vscode";
 
 export type TodoTask = {
-  kind: "TODO" | "FIXME";
+  kind: "TODO" | "FIXME" | "NOTE" | "HACK" | "XXX" | "BUG";
   fileName: string;
   text: string;
   line: number;
   uri: vscode.Uri;
+};
+
+export type TodoScanSummary = {
+  total: number;
+  TODO: number;
+  FIXME: number;
+  NOTE: number;
+  HACK: number;
+  XXX: number;
+  BUG: number;
 };
 
 export class TodoScannerService {
@@ -21,6 +31,25 @@ export class TodoScannerService {
     const promise = this.walkTodoFiles(rootUri, []).then((tasks) => tasks);
     this.scanCache.set(projectPath, promise);
     return promise;
+  }
+
+  summarizeTodoTasks(tasks: TodoTask[]): TodoScanSummary {
+    return tasks.reduce<TodoScanSummary>(
+      (summary, task) => {
+        summary.total += 1;
+        summary[task.kind] += 1;
+        return summary;
+      },
+      {
+        total: 0,
+        TODO: 0,
+        FIXME: 0,
+        NOTE: 0,
+        HACK: 0,
+        XXX: 0,
+        BUG: 0,
+      }
+    );
   }
 
   clearCache(projectPath?: string): void {
@@ -74,12 +103,14 @@ export class TodoScannerService {
       const tasks: TodoTask[] = [];
 
       lines.forEach((line, index) => {
-        const match = line.match(/\b(TODO|FIXME)\b[:\s-]?(.*)/i);
+        const match = line.match(
+          /\b(TODO|FIXME|NOTE|HACK|XXX|BUG)\b[:\s-]?(.*)/i
+        );
         if (!match) {
           return;
         }
 
-        const kind = match[1].toUpperCase() as "TODO" | "FIXME";
+        const kind = match[1].toUpperCase() as TodoTask["kind"];
         const text = match[2].trim() || line.trim();
 
         tasks.push({

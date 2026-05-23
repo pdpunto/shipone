@@ -81,8 +81,12 @@ test("buildStatusFileContent genera STATUS.md", () => {
       return originalLoad.call(this, request, parent, isMain);
     };
 
-    delete require.cache[require.resolve("../out/commands/projects/projectOpsHelpers")];
-    const { buildStatusFileContent } = require("../out/commands/projects/projectOpsHelpers");
+    delete require.cache[
+      require.resolve("../out/commands/projects/projectOpsHelpers")
+    ];
+    const {
+      buildStatusFileContent,
+    } = require("../out/commands/projects/projectOpsHelpers");
 
     const content = buildStatusFileContent({
       name: "ShipOne",
@@ -115,8 +119,12 @@ test("buildAiContextContent genera PROJECT_CONTEXT.md", () => {
       return originalLoad.call(this, request, parent, isMain);
     };
 
-    delete require.cache[require.resolve("../out/commands/projects/projectOpsHelpers")];
-    const { buildAiContextContent } = require("../out/commands/projects/projectOpsHelpers");
+    delete require.cache[
+      require.resolve("../out/commands/projects/projectOpsHelpers")
+    ];
+    const {
+      buildAiContextContent,
+    } = require("../out/commands/projects/projectOpsHelpers");
 
     const content = buildAiContextContent(
       {
@@ -209,7 +217,9 @@ test("buildWeeklyReviewSummaryLines genera el resumen", () => {
     };
 
     delete require.cache[require.resolve("../out/utils/projectReviewDisplay")];
-    const { buildWeeklyReviewSummaryLines } = require("../out/utils/projectReviewDisplay");
+    const {
+      buildWeeklyReviewSummaryLines,
+    } = require("../out/utils/projectReviewDisplay");
 
     const summary = buildWeeklyReviewSummaryLines({
       activeName: "ShipOne",
@@ -355,8 +365,12 @@ test("ProjectStoreService guarda y carga metadata", async () => {
       return originalLoad.call(this, request, parent, isMain);
     };
 
-    delete require.cache[require.resolve("../out/services/projectStoreService")];
-    const { ProjectStoreService } = require("../out/services/projectStoreService");
+    delete require.cache[
+      require.resolve("../out/services/projectStoreService")
+    ];
+    const {
+      ProjectStoreService,
+    } = require("../out/services/projectStoreService");
     const service = new ProjectStoreService({
       globalStorageUri: vscodeApi.Uri.file(STORAGE_ROOT),
     });
@@ -401,8 +415,12 @@ test("ProjectStoreService elimina proyecto local", async () => {
       return originalLoad.call(this, request, parent, isMain);
     };
 
-    delete require.cache[require.resolve("../out/services/projectStoreService")];
-    const { ProjectStoreService } = require("../out/services/projectStoreService");
+    delete require.cache[
+      require.resolve("../out/services/projectStoreService")
+    ];
+    const {
+      ProjectStoreService,
+    } = require("../out/services/projectStoreService");
     const service = new ProjectStoreService({
       globalStorageUri: vscodeApi.Uri.file(STORAGE_ROOT),
     });
@@ -458,8 +476,12 @@ test("ProjectStoreService recupera desde backup", async () => {
       return originalLoad.call(this, request, parent, isMain);
     };
 
-    delete require.cache[require.resolve("../out/services/projectStoreService")];
-    const { ProjectStoreService } = require("../out/services/projectStoreService");
+    delete require.cache[
+      require.resolve("../out/services/projectStoreService")
+    ];
+    const {
+      ProjectStoreService,
+    } = require("../out/services/projectStoreService");
     const service = new ProjectStoreService({
       globalStorageUri: vscodeApi.Uri.file(STORAGE_ROOT),
     });
@@ -533,8 +555,12 @@ test("ProjectStoreService migra metadata vieja", async () => {
       return originalLoad.call(this, request, parent, isMain);
     };
 
-    delete require.cache[require.resolve("../out/services/projectStoreService")];
-    const { ProjectStoreService } = require("../out/services/projectStoreService");
+    delete require.cache[
+      require.resolve("../out/services/projectStoreService")
+    ];
+    const {
+      ProjectStoreService,
+    } = require("../out/services/projectStoreService");
     const service = new ProjectStoreService({
       globalStorageUri: vscodeApi.Uri.file(STORAGE_ROOT),
     });
@@ -584,8 +610,12 @@ test("ProjectStoreService marca metadata corrupta", async () => {
       return originalLoad.call(this, request, parent, isMain);
     };
 
-    delete require.cache[require.resolve("../out/services/projectStoreService")];
-    const { ProjectStoreService } = require("../out/services/projectStoreService");
+    delete require.cache[
+      require.resolve("../out/services/projectStoreService")
+    ];
+    const {
+      ProjectStoreService,
+    } = require("../out/services/projectStoreService");
     const service = new ProjectStoreService({
       globalStorageUri: vscodeApi.Uri.file(STORAGE_ROOT),
     });
@@ -653,8 +683,9 @@ test("ProjectStoreService aplica una sola activo", async () => {
     assert.equal(paused.length, 1);
     assert.equal(paused[0].id, "p1");
     assert.equal(
-      JSON.parse(fixture.fsState.files.get(fixture.storageFile).toString("utf8"))
-        .projects.length,
+      JSON.parse(
+        fixture.fsState.files.get(fixture.storageFile).toString("utf8")
+      ).projects.length,
       2
     );
   } finally {
@@ -796,9 +827,8 @@ test("confirmCanActivateProject bloquea otro activo", async () => {
   const fixture = createIntegrationFixture();
 
   try {
-    const projectOpsHelpersPath = require.resolve(
-      "../out/commands/projects/projectOpsHelpers"
-    );
+    const projectOpsHelpersPath =
+      require.resolve("../out/commands/projects/projectOpsHelpers");
     delete require.cache[projectOpsHelpersPath];
     const { confirmCanActivateProject } = require(projectOpsHelpersPath);
 
@@ -893,8 +923,12 @@ test("validateProjectName rechaza nombres vacios e invalidos", () => {
       return originalLoad.call(this, request, parent, isMain);
     };
 
-    delete require.cache[require.resolve("../out/services/projectCreationService")];
-    const { validateProjectName } = require("../out/services/projectCreationService");
+    delete require.cache[
+      require.resolve("../out/services/projectCreationService")
+    ];
+    const {
+      validateProjectName,
+    } = require("../out/services/projectCreationService");
 
     assert.equal(validateProjectName(""), "Escribe un nombre.");
     assert.equal(
@@ -920,8 +954,12 @@ test("sanitizeFolderName limpia caracteres raros", () => {
       return originalLoad.call(this, request, parent, isMain);
     };
 
-    delete require.cache[require.resolve("../out/services/projectCreationService")];
-    const { sanitizeFolderName } = require("../out/services/projectCreationService");
+    delete require.cache[
+      require.resolve("../out/services/projectCreationService")
+    ];
+    const {
+      sanitizeFolderName,
+    } = require("../out/services/projectCreationService");
 
     assert.equal(sanitizeFolderName(" Mi proyecto/1 "), "Mi-proyecto-1");
   } finally {
@@ -950,7 +988,7 @@ test("TemplateService resuelve plantilla personalizada", async () => {
     const { TemplateService } = require("../out/services/templateService");
     fixture.files.set(
       "C:\\templates\\react-vite\\src\\App.tsx",
-      Buffer.from("console.log(\"custom\");", "utf8")
+      Buffer.from('console.log("custom");', "utf8")
     );
 
     const service = new TemplateService();
@@ -965,7 +1003,7 @@ test("TemplateService resuelve plantilla personalizada", async () => {
 
     assert.equal(
       fixture.files.get("C:\\dest\\src\\App.tsx").toString("utf8"),
-      "console.log(\"custom\");"
+      'console.log("custom");'
     );
     assert.equal(
       fixture.files.get("C:\\dest\\package.json").includes("shipone-app"),
@@ -985,7 +1023,7 @@ test("TemplateService prefiere la plantilla custom del tipo", async () => {
 
     fixture.files.set(
       "C:\\templates\\react-vite\\react-vite\\src\\App.tsx",
-      Buffer.from("console.log(\"typed\");", "utf8")
+      Buffer.from('console.log("typed");', "utf8")
     );
     fixture.directories.set("C:\\templates\\react-vite\\react-vite", [
       ["src", fixture.vscode.FileType.Directory],
@@ -1012,7 +1050,7 @@ test("TemplateService prefiere la plantilla custom del tipo", async () => {
 
     assert.equal(
       fixture.files.get("C:\\dest\\src\\App.tsx").toString("utf8"),
-      "console.log(\"typed\");"
+      'console.log("typed");'
     );
   } finally {
     fixture.restoreLoad();
@@ -1043,7 +1081,10 @@ test("TemplateService genera un node-api ejecutable", async () => {
     assert.equal(packageJson.scripts.dev, "node --watch src/index.js");
     assert.equal(packageJson.scripts.start, "node src/index.js");
     assert.equal(
-      fixture.files.get("C:\\dest\\src\\index.js").toString("utf8").includes('const http = require("http");'),
+      fixture.files
+        .get("C:\\dest\\src\\index.js")
+        .toString("utf8")
+        .includes('const http = require("http");'),
       true
     );
     assert.equal(fixture.files.has("C:\\dest\\src\\index.ts"), false);
@@ -1053,7 +1094,7 @@ test("TemplateService genera un node-api ejecutable", async () => {
   }
 });
 
-test("TodoScannerService encuentra TODO y FIXME", async () => {
+test("TodoScannerService encuentra TODO, FIXME y mas etiquetas", async () => {
   const fixture = createTodoScannerFixture();
 
   try {
@@ -1066,22 +1107,49 @@ test("TodoScannerService encuentra TODO y FIXME", async () => {
     ]);
     fixture.files.set(
       "C:\\repo\\README.md",
-      Buffer.from("TODO: revisar\ntexto\nFIXME arreglar", "utf8")
+      Buffer.from(
+        "TODO: revisar\ntexto\nFIXME arreglar\nNOTE: documentar",
+        "utf8"
+      )
     );
     fixture.files.set(
       "C:\\repo\\src\\app.ts",
-      Buffer.from("const x = 1; // FIXME ajustar", "utf8")
+      Buffer.from(
+        [
+          "const x = 1; // FIXME ajustar",
+          "const y = 2; // HACK temporal",
+          "const z = 3; // XXX limpiar",
+          "const w = 4; // BUG pendiente",
+        ].join("\n"),
+        "utf8"
+      )
     );
 
     delete require.cache[require.resolve("../out/services/todoScannerService")];
-    const { TodoScannerService } = require("../out/services/todoScannerService");
+    const {
+      TodoScannerService,
+    } = require("../out/services/todoScannerService");
     const service = new TodoScannerService();
     const tasks = await service.scanProjectTodoTasks("C:\\repo");
+    const summary = service.summarizeTodoTasks(tasks);
 
-    assert.equal(tasks.length, 3);
+    assert.equal(tasks.length, 7);
     assert.equal(tasks[0].kind, "TODO");
     assert.equal(tasks[1].kind, "FIXME");
-    assert.equal(tasks[2].kind, "FIXME");
+    assert.equal(tasks[2].kind, "NOTE");
+    assert.equal(tasks[3].kind, "FIXME");
+    assert.equal(tasks[4].kind, "HACK");
+    assert.equal(tasks[5].kind, "XXX");
+    assert.equal(tasks[6].kind, "BUG");
+    assert.deepEqual(summary, {
+      total: 7,
+      TODO: 1,
+      FIXME: 2,
+      NOTE: 1,
+      HACK: 1,
+      XXX: 1,
+      BUG: 1,
+    });
   } finally {
     fixture.restoreLoad();
   }
@@ -1108,7 +1176,9 @@ test("TodoScannerService cachea scans repetidos", async () => {
     );
 
     delete require.cache[require.resolve("../out/services/todoScannerService")];
-    const { TodoScannerService } = require("../out/services/todoScannerService");
+    const {
+      TodoScannerService,
+    } = require("../out/services/todoScannerService");
     const service = new TodoScannerService();
 
     const first = await service.scanProjectTodoTasks("C:\\repo");
@@ -1170,7 +1240,9 @@ test("TodoScannerService ignora carpetas pesadas", async () => {
     );
 
     delete require.cache[require.resolve("../out/services/todoScannerService")];
-    const { TodoScannerService } = require("../out/services/todoScannerService");
+    const {
+      TodoScannerService,
+    } = require("../out/services/todoScannerService");
     const service = new TodoScannerService();
 
     const tasks = await service.scanProjectTodoTasks("C:\\repo");
@@ -1494,11 +1566,17 @@ test("buildProjectDescription muestra la salud visible", () => {
       return originalLoad.call(this, request, parent, isMain);
     };
 
-    delete require.cache[require.resolve("../out/localization/localizationService")];
+    delete require.cache[
+      require.resolve("../out/localization/localizationService")
+    ];
     delete require.cache[require.resolve("../out/localization/index")];
-    delete require.cache[require.resolve("../out/providers/projectHealthRenderer")];
+    delete require.cache[
+      require.resolve("../out/providers/projectHealthRenderer")
+    ];
 
-    const { ProjectHealthRenderer } = require("../out/providers/projectHealthRenderer");
+    const {
+      ProjectHealthRenderer,
+    } = require("../out/providers/projectHealthRenderer");
     const renderer = new ProjectHealthRenderer();
 
     const description = renderer.buildProjectDescription(
@@ -1531,10 +1609,16 @@ test("getRootNodes en focus mode muestra un unico nodo", async () => {
       return originalLoad.call(this, request, parent, isMain);
     };
 
-    delete require.cache[require.resolve("../out/providers/treeRendererService")];
-    delete require.cache[require.resolve("../out/providers/treeNodes/focusNode")];
+    delete require.cache[
+      require.resolve("../out/providers/treeRendererService")
+    ];
+    delete require.cache[
+      require.resolve("../out/providers/treeNodes/focusNode")
+    ];
 
-    const { TreeRendererService } = require("../out/providers/treeRendererService");
+    const {
+      TreeRendererService,
+    } = require("../out/providers/treeRendererService");
 
     const renderer = new TreeRendererService(
       {
@@ -1592,7 +1676,8 @@ test("getRootNodes en focus mode muestra un unico nodo", async () => {
         buildProjectTooltip: () => "tooltip",
       },
       {
-        buildProjectDescription: () => "Modo foco: ShipOne · Siguiente: Crear login",
+        buildProjectDescription: () =>
+          "Modo foco: ShipOne · Siguiente: Crear login",
       }
     );
 
@@ -1621,9 +1706,13 @@ test("getRootNodes muestra grupos mas compactos", async () => {
       return originalLoad.call(this, request, parent, isMain);
     };
 
-    delete require.cache[require.resolve("../out/providers/treeRendererService")];
+    delete require.cache[
+      require.resolve("../out/providers/treeRendererService")
+    ];
 
-    const { TreeRendererService } = require("../out/providers/treeRendererService");
+    const {
+      TreeRendererService,
+    } = require("../out/providers/treeRendererService");
 
     const renderer = new TreeRendererService(
       {
@@ -1721,9 +1810,13 @@ test("warning del proyecto activo ofrece editar next action", async () => {
       return originalLoad.call(this, request, parent, isMain);
     };
 
-    delete require.cache[require.resolve("../out/providers/treeRendererService")];
+    delete require.cache[
+      require.resolve("../out/providers/treeRendererService")
+    ];
 
-    const { TreeRendererService } = require("../out/providers/treeRendererService");
+    const {
+      TreeRendererService,
+    } = require("../out/providers/treeRendererService");
 
     const renderer = new TreeRendererService(
       {
@@ -1809,9 +1902,13 @@ test("getMetricsNodes muestra salud y resumen", async () => {
       return originalLoad.call(this, request, parent, isMain);
     };
 
-    delete require.cache[require.resolve("../out/providers/treeRendererService")];
+    delete require.cache[
+      require.resolve("../out/providers/treeRendererService")
+    ];
 
-    const { TreeRendererService } = require("../out/providers/treeRendererService");
+    const {
+      TreeRendererService,
+    } = require("../out/providers/treeRendererService");
 
     const renderer = new TreeRendererService(
       {
@@ -1933,8 +2030,12 @@ test("ShipOneProjectsTreeDataProvider agrupa refresh seguidos", async () => {
       return originalLoad.call(this, request, parent, isMain);
     };
 
-    delete require.cache[require.resolve("../out/providers/shiponeProjectsTreeDataProvider")];
-    const { ShipOneProjectsTreeDataProvider } = require("../out/providers/shiponeProjectsTreeDataProvider");
+    delete require.cache[
+      require.resolve("../out/providers/shiponeProjectsTreeDataProvider")
+    ];
+    const {
+      ShipOneProjectsTreeDataProvider,
+    } = require("../out/providers/shiponeProjectsTreeDataProvider");
 
     const provider = new ShipOneProjectsTreeDataProvider(
       {
@@ -2016,11 +2117,15 @@ test("buildPausedProjectDescription muestra contexto de pausa", () => {
       return originalLoad.call(this, request, parent, isMain);
     };
 
-    delete require.cache[require.resolve("../out/localization/localizationService")];
+    delete require.cache[
+      require.resolve("../out/localization/localizationService")
+    ];
     delete require.cache[require.resolve("../out/localization/index")];
     delete require.cache[require.resolve("../out/utils/projectReviewDisplay")];
 
-    const { buildPausedProjectDescription } = require("../out/utils/projectReviewDisplay");
+    const {
+      buildPausedProjectDescription,
+    } = require("../out/utils/projectReviewDisplay");
 
     assert.equal(
       buildPausedProjectDescription(
@@ -2277,7 +2382,7 @@ function createTemplateServiceFixture() {
   ]);
   fsState.files.set(
     "C:\\templates\\react-vite\\src\\App.tsx",
-    Buffer.from("console.log(\"custom\");", "utf8")
+    Buffer.from('console.log("custom");', "utf8")
   );
 
   Module._load = function patchedLoad(request, parent, isMain) {
@@ -2457,7 +2562,9 @@ function createHealthServiceFixture(options) {
   };
 
   delete require.cache[require.resolve("../out/services/projectHealthService")];
-  const { ProjectHealthService } = require("../out/services/projectHealthService");
+  const {
+    ProjectHealthService,
+  } = require("../out/services/projectHealthService");
 
   return {
     service: new ProjectHealthService(),
@@ -2498,7 +2605,9 @@ function createStoreServiceFixture(projects) {
   };
 
   delete require.cache[require.resolve("../out/services/projectStoreService")];
-  const { ProjectStoreService } = require("../out/services/projectStoreService");
+  const {
+    ProjectStoreService,
+  } = require("../out/services/projectStoreService");
 
   return {
     service: new ProjectStoreService({
@@ -2940,18 +3049,30 @@ test("Create project flow cubre status, git y GitHub", async () => {
   try {
     fixture.enqueueInput("ShipOne App");
     fixture.enqueueInput("Proyecto web");
-    fixture.enqueueQuickPick((items) => items.find((item) => item.value === "react-vite"));
-    fixture.enqueueQuickPick((items) => items.find((item) => item.value === true));
-    fixture.enqueueQuickPick((items) => items.find((item) => item.value === true));
-    fixture.enqueueQuickPick((items) => items.find((item) => item.value === "private"));
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === "react-vite")
+    );
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === true)
+    );
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === true)
+    );
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === "private")
+    );
 
-    delete require.cache[require.resolve("../out/services/projectCreationService")];
+    delete require.cache[
+      require.resolve("../out/services/projectCreationService")
+    ];
     delete require.cache[require.resolve("../out/services/templateService")];
     delete require.cache[require.resolve("../out/services/gitService")];
     delete require.cache[require.resolve("../out/services/githubService")];
     delete require.cache[require.resolve("../out/services/statusFileService")];
 
-    const { ProjectCreationService } = require("../out/services/projectCreationService");
+    const {
+      ProjectCreationService,
+    } = require("../out/services/projectCreationService");
     const { TemplateService } = require("../out/services/templateService");
     const { GitService } = require("../out/services/gitService");
     const { GitHubService } = require("../out/services/githubService");
@@ -2987,8 +3108,14 @@ test("Create project flow cubre status, git y GitHub", async () => {
           call.args[1] === "view"
       )
     );
-    assert.ok(fixture.files.has("C:\\tmp\\shipone-projects\\ShipOne-App\\STATUS.md"));
-    assert.ok(fixture.execCalls.some((call) => call.command === "git" && call.args[0] === "init"));
+    assert.ok(
+      fixture.files.has("C:\\tmp\\shipone-projects\\ShipOne-App\\STATUS.md")
+    );
+    assert.ok(
+      fixture.execCalls.some(
+        (call) => call.command === "git" && call.args[0] === "init"
+      )
+    );
   } finally {
     fixture.restoreLoad();
   }
@@ -3000,18 +3127,30 @@ test("Create project flow sin Git muestra aviso y sigue", async () => {
   try {
     fixture.enqueueInput("ShipOne App");
     fixture.enqueueInput("Proyecto web");
-    fixture.enqueueQuickPick((items) => items.find((item) => item.value === "react-vite"));
-    fixture.enqueueQuickPick((items) => items.find((item) => item.value === true));
-    fixture.enqueueQuickPick((items) => items.find((item) => item.value === true));
-    fixture.enqueueQuickPick((items) => items.find((item) => item.value === "private"));
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === "react-vite")
+    );
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === true)
+    );
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === true)
+    );
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === "private")
+    );
 
-    delete require.cache[require.resolve("../out/services/projectCreationService")];
+    delete require.cache[
+      require.resolve("../out/services/projectCreationService")
+    ];
     delete require.cache[require.resolve("../out/services/templateService")];
     delete require.cache[require.resolve("../out/services/gitService")];
     delete require.cache[require.resolve("../out/services/githubService")];
     delete require.cache[require.resolve("../out/services/statusFileService")];
 
-    const { ProjectCreationService } = require("../out/services/projectCreationService");
+    const {
+      ProjectCreationService,
+    } = require("../out/services/projectCreationService");
     const { TemplateService } = require("../out/services/templateService");
     const { GitService } = require("../out/services/gitService");
     const { GitHubService } = require("../out/services/githubService");
@@ -3140,19 +3279,33 @@ test("Create project flow sin red sigue creando local", async () => {
   try {
     fixture.enqueueInput("ShipOne App");
     fixture.enqueueInput("Proyecto web");
-    fixture.enqueueQuickPick((items) => items.find((item) => item.value === "react-vite"));
-    fixture.enqueueQuickPick((items) => items.find((item) => item.value === true));
-    fixture.enqueueQuickPick((items) => items.find((item) => item.value === true));
-    fixture.enqueueQuickPick((items) => items.find((item) => item.value === "private"));
-    fixture.enqueueQuickPick((items) => items.find((item) => item === "openFolder"));
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === "react-vite")
+    );
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === true)
+    );
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === true)
+    );
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === "private")
+    );
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item === "openFolder")
+    );
 
-    delete require.cache[require.resolve("../out/services/projectCreationService")];
+    delete require.cache[
+      require.resolve("../out/services/projectCreationService")
+    ];
     delete require.cache[require.resolve("../out/services/templateService")];
     delete require.cache[require.resolve("../out/services/gitService")];
     delete require.cache[require.resolve("../out/services/githubService")];
     delete require.cache[require.resolve("../out/services/statusFileService")];
 
-    const { ProjectCreationService } = require("../out/services/projectCreationService");
+    const {
+      ProjectCreationService,
+    } = require("../out/services/projectCreationService");
     const { TemplateService } = require("../out/services/templateService");
     const { GitService } = require("../out/services/gitService");
     const { GitHubService } = require("../out/services/githubService");
@@ -3199,18 +3352,30 @@ test("Create project flow con ruta con espacios mantiene la carpeta", async () =
   try {
     fixture.enqueueInput("ShipOne App");
     fixture.enqueueInput("Proyecto web");
-    fixture.enqueueQuickPick((items) => items.find((item) => item.value === "react-vite"));
-    fixture.enqueueQuickPick((items) => items.find((item) => item.value === true));
-    fixture.enqueueQuickPick((items) => items.find((item) => item.value === true));
-    fixture.enqueueQuickPick((items) => items.find((item) => item.value === "private"));
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === "react-vite")
+    );
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === true)
+    );
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === true)
+    );
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === "private")
+    );
 
-    delete require.cache[require.resolve("../out/services/projectCreationService")];
+    delete require.cache[
+      require.resolve("../out/services/projectCreationService")
+    ];
     delete require.cache[require.resolve("../out/services/templateService")];
     delete require.cache[require.resolve("../out/services/gitService")];
     delete require.cache[require.resolve("../out/services/githubService")];
     delete require.cache[require.resolve("../out/services/statusFileService")];
 
-    const { ProjectCreationService } = require("../out/services/projectCreationService");
+    const {
+      ProjectCreationService,
+    } = require("../out/services/projectCreationService");
     const { TemplateService } = require("../out/services/templateService");
     const { GitService } = require("../out/services/gitService");
     const { GitHubService } = require("../out/services/githubService");
@@ -3253,18 +3418,30 @@ test("Create project flow evita colision de carpeta", async () => {
   try {
     fixture.enqueueInput("ShipOne App");
     fixture.enqueueInput("Proyecto web");
-    fixture.enqueueQuickPick((items) => items.find((item) => item.value === "react-vite"));
-    fixture.enqueueQuickPick((items) => items.find((item) => item.value === true));
-    fixture.enqueueQuickPick((items) => items.find((item) => item.value === true));
-    fixture.enqueueQuickPick((items) => items.find((item) => item.value === "private"));
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === "react-vite")
+    );
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === true)
+    );
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === true)
+    );
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === "private")
+    );
 
-    delete require.cache[require.resolve("../out/services/projectCreationService")];
+    delete require.cache[
+      require.resolve("../out/services/projectCreationService")
+    ];
     delete require.cache[require.resolve("../out/services/templateService")];
     delete require.cache[require.resolve("../out/services/gitService")];
     delete require.cache[require.resolve("../out/services/githubService")];
     delete require.cache[require.resolve("../out/services/statusFileService")];
 
-    const { ProjectCreationService } = require("../out/services/projectCreationService");
+    const {
+      ProjectCreationService,
+    } = require("../out/services/projectCreationService");
     const { TemplateService } = require("../out/services/templateService");
     const { GitService } = require("../out/services/gitService");
     const { GitHubService } = require("../out/services/githubService");
@@ -3306,18 +3483,30 @@ test("Create project flow con ruta unicode mantiene la carpeta", async () => {
   try {
     fixture.enqueueInput("ShipOne App");
     fixture.enqueueInput("Proyecto web");
-    fixture.enqueueQuickPick((items) => items.find((item) => item.value === "react-vite"));
-    fixture.enqueueQuickPick((items) => items.find((item) => item.value === true));
-    fixture.enqueueQuickPick((items) => items.find((item) => item.value === true));
-    fixture.enqueueQuickPick((items) => items.find((item) => item.value === "private"));
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === "react-vite")
+    );
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === true)
+    );
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === true)
+    );
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === "private")
+    );
 
-    delete require.cache[require.resolve("../out/services/projectCreationService")];
+    delete require.cache[
+      require.resolve("../out/services/projectCreationService")
+    ];
     delete require.cache[require.resolve("../out/services/templateService")];
     delete require.cache[require.resolve("../out/services/gitService")];
     delete require.cache[require.resolve("../out/services/githubService")];
     delete require.cache[require.resolve("../out/services/statusFileService")];
 
-    const { ProjectCreationService } = require("../out/services/projectCreationService");
+    const {
+      ProjectCreationService,
+    } = require("../out/services/projectCreationService");
     const { TemplateService } = require("../out/services/templateService");
     const { GitService } = require("../out/services/gitService");
     const { GitHubService } = require("../out/services/githubService");
@@ -3337,7 +3526,9 @@ test("Create project flow con ruta unicode mantiene la carpeta", async () => {
 
     assert.equal(project.name, "ShipOne App");
     assert.equal(project.path, "C:\\tmp\\proyectos-ñ\\ShipOne-App");
-    assert.ok(fixture.files.has("C:\\tmp\\proyectos-ñ\\ShipOne-App\\STATUS.md"));
+    assert.ok(
+      fixture.files.has("C:\\tmp\\proyectos-ñ\\ShipOne-App\\STATUS.md")
+    );
     assert.ok(
       fixture.commandExecCalls.some(
         (call) =>
@@ -3354,8 +3545,12 @@ test("Open project flow abre la carpeta y marca acceso", async () => {
   const fixture = createIntegrationFixture();
 
   try {
-    delete require.cache[require.resolve("../out/commands/projects/registerProjectCommands")];
-    const { registerProjectCommands } = require("../out/commands/projects/registerProjectCommands");
+    delete require.cache[
+      require.resolve("../out/commands/projects/registerProjectCommands")
+    ];
+    const {
+      registerProjectCommands,
+    } = require("../out/commands/projects/registerProjectCommands");
 
     fixture.projectStore.projectsById.set("p1", {
       id: "p1",
@@ -3395,15 +3590,19 @@ test("Sync status file flow escribe STATUS.md", async () => {
   const fixture = createIntegrationFixture();
 
   try {
-    const projectOpsHelpersPath = require.resolve(
-      "../out/commands/projects/projectOpsHelpers"
-    );
+    const projectOpsHelpersPath =
+      require.resolve("../out/commands/projects/projectOpsHelpers");
     delete require.cache[projectOpsHelpersPath];
     const projectOpsHelpers = require(projectOpsHelpersPath);
-    projectOpsHelpers.pickProject = async () => fixture.projectStore.projects[0];
+    projectOpsHelpers.pickProject = async () =>
+      fixture.projectStore.projects[0];
 
-    delete require.cache[require.resolve("../out/commands/status/registerStatusCommands")];
-    const { registerStatusCommands } = require("../out/commands/status/registerStatusCommands");
+    delete require.cache[
+      require.resolve("../out/commands/status/registerStatusCommands")
+    ];
+    const {
+      registerStatusCommands,
+    } = require("../out/commands/status/registerStatusCommands");
 
     fixture.projectStore.projects = [
       {
@@ -3449,8 +3648,12 @@ test("Generate project context flow usa el proyecto del warning", async () => {
   const fixture = createIntegrationFixture();
 
   try {
-    delete require.cache[require.resolve("../out/commands/ai/registerAiCommands")];
-    const { registerAiCommands } = require("../out/commands/ai/registerAiCommands");
+    delete require.cache[
+      require.resolve("../out/commands/ai/registerAiCommands")
+    ];
+    const {
+      registerAiCommands,
+    } = require("../out/commands/ai/registerAiCommands");
 
     const project = {
       id: "p1",
@@ -3489,8 +3692,12 @@ test("Sync status file flow usa el proyecto del warning", async () => {
   const fixture = createIntegrationFixture();
 
   try {
-    delete require.cache[require.resolve("../out/commands/status/registerStatusCommands")];
-    const { registerStatusCommands } = require("../out/commands/status/registerStatusCommands");
+    delete require.cache[
+      require.resolve("../out/commands/status/registerStatusCommands")
+    ];
+    const {
+      registerStatusCommands,
+    } = require("../out/commands/status/registerStatusCommands");
 
     const project = {
       id: "p1",
@@ -3532,7 +3739,9 @@ test("Create README flow crea un readme base", async () => {
     delete require.cache[
       require.resolve("../out/commands/projects/registerProjectOpsCommands")
     ];
-    const { registerProjectOpsCommands } = require("../out/commands/projects/registerProjectOpsCommands");
+    const {
+      registerProjectOpsCommands,
+    } = require("../out/commands/projects/registerProjectOpsCommands");
 
     const project = {
       id: "p1",
@@ -3583,8 +3792,12 @@ test("Edit next action flow actualiza la accion", async () => {
   const fixture = createIntegrationFixture();
 
   try {
-    delete require.cache[require.resolve("../out/commands/projects/registerProjectCommands")];
-    const { registerProjectCommands } = require("../out/commands/projects/registerProjectCommands");
+    delete require.cache[
+      require.resolve("../out/commands/projects/registerProjectCommands")
+    ];
+    const {
+      registerProjectCommands,
+    } = require("../out/commands/projects/registerProjectCommands");
 
     fixture.projectStore.projectsById.set("p1", {
       id: "p1",
@@ -3614,7 +3827,9 @@ test("Edit next action flow actualiza la accion", async () => {
 
     await fixture.commandHandlers.get("shipone.editNextAction")("p1");
 
-    assert.deepEqual(fixture.projectStore.setNextActionCalls, [["p1", "Mejorar onboarding"]]);
+    assert.deepEqual(fixture.projectStore.setNextActionCalls, [
+      ["p1", "Mejorar onboarding"],
+    ]);
     assert.equal(fixture.calls.refresh.length, 1);
     assert.equal(fixture.messages.info.length, 1);
   } finally {
@@ -3626,8 +3841,12 @@ test("Delete project flow confirma y borra local", async () => {
   const fixture = createIntegrationFixture();
 
   try {
-    delete require.cache[require.resolve("../out/commands/projects/registerProjectCommands")];
-    const { registerProjectCommands } = require("../out/commands/projects/registerProjectCommands");
+    delete require.cache[
+      require.resolve("../out/commands/projects/registerProjectCommands")
+    ];
+    const {
+      registerProjectCommands,
+    } = require("../out/commands/projects/registerProjectCommands");
     const { GitHubService } = require("../out/services/githubService");
 
     fixture.projectStore.projectsById.set("p1", {
@@ -3673,8 +3892,12 @@ test("Initialize git flow crea repo y commit inicial", async () => {
   const fixture = createIntegrationFixture();
 
   try {
-    delete require.cache[require.resolve("../out/commands/projects/registerProjectCommands")];
-    const { registerProjectCommands } = require("../out/commands/projects/registerProjectCommands");
+    delete require.cache[
+      require.resolve("../out/commands/projects/registerProjectCommands")
+    ];
+    const {
+      registerProjectCommands,
+    } = require("../out/commands/projects/registerProjectCommands");
 
     fixture.projectStore.projectsById.set("p1", {
       id: "p1",
@@ -3726,8 +3949,12 @@ test("Focus mode flow activa y desactiva modo foco", async () => {
   const fixture = createIntegrationFixture();
 
   try {
-    delete require.cache[require.resolve("../out/commands/focus/registerFocusCommands")];
-    const { registerFocusCommands } = require("../out/commands/focus/registerFocusCommands");
+    delete require.cache[
+      require.resolve("../out/commands/focus/registerFocusCommands")
+    ];
+    const {
+      registerFocusCommands,
+    } = require("../out/commands/focus/registerFocusCommands");
 
     const focusCalls = [];
     registerFocusCommands({
@@ -3758,9 +3985,13 @@ test("ShipOneApp no repite focus mode igual", async () => {
     await app.setFocusMode(true);
     await app.setFocusMode(false);
 
-    assert.equal(fixture.context.workspaceState.get("shipone.focusMode"), false);
     assert.equal(
-      fixture.commandExecCalls.filter((call) => call.name === "setContext").length,
+      fixture.context.workspaceState.get("shipone.focusMode"),
+      false
+    );
+    assert.equal(
+      fixture.commandExecCalls.filter((call) => call.name === "setContext")
+        .length,
       2
     );
   } finally {
@@ -3772,8 +4003,12 @@ test("Weekly review flow pide next action y resume resumen", async () => {
   const fixture = createIntegrationFixture();
 
   try {
-    delete require.cache[require.resolve("../out/commands/review/registerReviewCommands")];
-    const { registerReviewCommands } = require("../out/commands/review/registerReviewCommands");
+    delete require.cache[
+      require.resolve("../out/commands/review/registerReviewCommands")
+    ];
+    const {
+      registerReviewCommands,
+    } = require("../out/commands/review/registerReviewCommands");
 
     fixture.projectStore.projects = [
       {
@@ -3811,7 +4046,9 @@ test("Weekly review flow pide next action y resume resumen", async () => {
 
     await fixture.commandHandlers.get("shipone.weeklyReview")();
 
-    assert.deepEqual(fixture.projectStore.setNextActionCalls, [["p1", "Crear login"]]);
+    assert.deepEqual(fixture.projectStore.setNextActionCalls, [
+      ["p1", "Crear login"],
+    ]);
     assert.equal(fixture.projectStore.setProjectStatusCalls.length, 0);
   } finally {
     fixture.restoreLoad();
@@ -3822,15 +4059,19 @@ test("Scan TODOs usa el scanner solo al ejecutar el comando", async () => {
   const fixture = createIntegrationFixture();
 
   try {
-    const projectOpsHelpersPath = require.resolve(
-      "../out/commands/projects/projectOpsHelpers"
-    );
+    const projectOpsHelpersPath =
+      require.resolve("../out/commands/projects/projectOpsHelpers");
     delete require.cache[projectOpsHelpersPath];
     const projectOpsHelpers = require(projectOpsHelpersPath);
-    projectOpsHelpers.pickProject = async () => fixture.projectStore.projects[0];
+    projectOpsHelpers.pickProject = async () =>
+      fixture.projectStore.projects[0];
 
-    delete require.cache[require.resolve("../out/commands/review/registerReviewCommands")];
-    const { registerReviewCommands } = require("../out/commands/review/registerReviewCommands");
+    delete require.cache[
+      require.resolve("../out/commands/review/registerReviewCommands")
+    ];
+    const {
+      registerReviewCommands,
+    } = require("../out/commands/review/registerReviewCommands");
 
     fixture.projectStore.projects = [
       {
@@ -3854,8 +4095,46 @@ test("Scan TODOs usa el scanner solo al ejecutar el comando", async () => {
       projectCreationService: {},
       getTodoScannerService: () => {
         scannerCalls += 1;
+        const tasks = [
+          {
+            kind: "TODO",
+            fileName: "README.md",
+            text: "revisar",
+            line: 1,
+            uri: fixture.vscode.Uri.file(
+              "C:\\tmp\\shipone-projects\\ShipOne\\README.md"
+            ),
+          },
+          {
+            kind: "FIXME",
+            fileName: "src/app.ts",
+            text: "ajustar",
+            line: 2,
+            uri: fixture.vscode.Uri.file(
+              "C:\\tmp\\shipone-projects\\ShipOne\\src\\app.ts"
+            ),
+          },
+        ];
+
         return {
-          scanProjectTodoTasks: async () => [],
+          scanProjectTodoTasks: async () => tasks,
+          summarizeTodoTasks: (list) =>
+            list.reduce(
+              (summary, task) => {
+                summary.total += 1;
+                summary[task.kind] += 1;
+                return summary;
+              },
+              {
+                total: 0,
+                TODO: 0,
+                FIXME: 0,
+                NOTE: 0,
+                HACK: 0,
+                XXX: 0,
+                BUG: 0,
+              }
+            ),
         };
       },
       treeRefresh: () => fixture.calls.refresh.push(true),
@@ -3863,9 +4142,16 @@ test("Scan TODOs usa el scanner solo al ejecutar el comando", async () => {
 
     assert.equal(scannerCalls, 0);
     await fixture.commandHandlers.get("shipone.scanTodos")();
-    assert.equal(scannerCalls, 1);
+    assert.equal(scannerCalls, 2);
+    assert.equal(
+      fixture.messages.info.some(
+        (message) =>
+          message[0] ===
+          "Resumen TODO: 1 TODO, 1 FIXME, 0 NOTE, 0 HACK, 0 XXX, 0 BUG."
+      ),
+      true
+    );
   } finally {
     fixture.restoreLoad();
   }
 });
-
