@@ -136,11 +136,39 @@ export class ProjectHealthService {
       issues.push("inactive-active");
     }
 
-    const hasReadme = await pathExists(
-      vscode.Uri.joinPath(vscode.Uri.file(project.path), "README.md")
-    );
+    const projectRootUri = vscode.Uri.file(project.path);
+    const readmeUri = vscode.Uri.joinPath(projectRootUri, "README.md");
+    const statusUri = vscode.Uri.joinPath(projectRootUri, "STATUS.md");
+
+    const hasReadme = await pathExists(readmeUri);
     if (!hasReadme) {
       issues.push("no-readme");
+    } else if (await isEmptyTextFile(readmeUri)) {
+      issues.push("empty-readme");
+    }
+
+    if (!(await pathExists(statusUri))) {
+      issues.push("no-status");
+    }
+
+    if (requiresPackageJson(project.type)) {
+      const packageJsonUri = vscode.Uri.joinPath(
+        projectRootUri,
+        "package.json"
+      );
+      if (!(await pathExists(packageJsonUri))) {
+        issues.push("no-package-json");
+      }
+    }
+
+    if (project.type === "python") {
+      const requirementsUri = vscode.Uri.joinPath(
+        projectRootUri,
+        "requirements.txt"
+      );
+      if (!(await pathExists(requirementsUri))) {
+        issues.push("no-requirements");
+      }
     }
 
     const hasRecentCommits = await this.hasRecentGitCommit(project.path);
@@ -189,4 +217,17 @@ async function pathExists(uri: vscode.Uri): Promise<boolean> {
   } catch {
     return false;
   }
+}
+
+async function isEmptyTextFile(uri: vscode.Uri): Promise<boolean> {
+  try {
+    const raw = await vscode.workspace.fs.readFile(uri);
+    return new TextDecoder().decode(raw).trim().length === 0;
+  } catch {
+    return false;
+  }
+}
+
+function requiresPackageJson(projectType: string): boolean {
+  return projectType === "nextjs" || projectType === "node-api";
 }

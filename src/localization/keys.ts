@@ -10,9 +10,13 @@ export const translationKeys = {
     bad: "bad",
   },
   issue: {
+    emptyReadme: "README vacio",
     missingNextAction: "Falta el siguiente paso",
     inactiveActive: "Proyecto activo inactivo",
     noReadme: "Falta README",
+    noStatus: "Falta STATUS.md",
+    noPackageJson: "Falta package.json",
+    noRequirements: "Falta requirements.txt",
     noRecentCommits: "Sin commits recientes",
   },
   projectStatus: {

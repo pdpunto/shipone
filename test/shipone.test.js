@@ -1211,6 +1211,118 @@ test("ProjectHealthService detecta README faltante", async () => {
   }
 });
 
+test("ProjectHealthService detecta README vacio", async () => {
+  const fixture = createHealthServiceFixture({
+    readmeExists: true,
+    readmeContent: "   \n",
+    gitTimestamp: Date.now(),
+  });
+
+  try {
+    const project = fixture.buildProject({
+      id: "p1",
+      name: "ShipOne",
+      description: "Test",
+      type: "blank",
+      status: "active",
+      path: "C:\\tmp\\shipone",
+      createdAt: "2026-05-15T00:00:00.000Z",
+      nextAction: "Crear login",
+    });
+
+    const health = await fixture.service.buildProjectHealth(project, 7, 30);
+
+    assert.equal(health.label, "warning");
+    assert.ok(health.issues.includes("empty-readme"));
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
+test("ProjectHealthService detecta STATUS faltante", async () => {
+  const fixture = createHealthServiceFixture({
+    readmeExists: true,
+    statusExists: false,
+    gitTimestamp: Date.now(),
+  });
+
+  try {
+    const project = fixture.buildProject({
+      id: "p1",
+      name: "ShipOne",
+      description: "Test",
+      type: "blank",
+      status: "active",
+      path: "C:\\tmp\\shipone",
+      createdAt: "2026-05-15T00:00:00.000Z",
+      nextAction: "Crear login",
+    });
+
+    const health = await fixture.service.buildProjectHealth(project, 7, 30);
+
+    assert.equal(health.label, "warning");
+    assert.ok(health.issues.includes("no-status"));
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
+test("ProjectHealthService detecta package.json faltante", async () => {
+  const fixture = createHealthServiceFixture({
+    readmeExists: true,
+    packageJsonExists: false,
+    gitTimestamp: Date.now(),
+  });
+
+  try {
+    const project = fixture.buildProject({
+      id: "p1",
+      name: "ShipOne",
+      description: "Test",
+      type: "node-api",
+      status: "active",
+      path: "C:\\tmp\\shipone",
+      createdAt: "2026-05-15T00:00:00.000Z",
+      nextAction: "Crear login",
+    });
+
+    const health = await fixture.service.buildProjectHealth(project, 7, 30);
+
+    assert.equal(health.label, "warning");
+    assert.ok(health.issues.includes("no-package-json"));
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
+test("ProjectHealthService detecta requirements.txt faltante", async () => {
+  const fixture = createHealthServiceFixture({
+    readmeExists: true,
+    requirementsExists: false,
+    gitTimestamp: Date.now(),
+  });
+
+  try {
+    const project = fixture.buildProject({
+      id: "p1",
+      name: "ShipOne",
+      description: "Test",
+      type: "python",
+      status: "active",
+      path: "C:\\tmp\\shipone",
+      createdAt: "2026-05-15T00:00:00.000Z",
+      nextAction: "Crear login",
+    });
+
+    const health = await fixture.service.buildProjectHealth(project, 7, 30);
+
+    assert.equal(health.label, "warning");
+    assert.ok(health.issues.includes("no-requirements"));
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
 test("ProjectHealthService detecta Git viejo", async () => {
   const oldTimestamp = Date.now() - 40 * 86_400_000;
   const fixture = createHealthServiceFixture({
@@ -1291,7 +1403,7 @@ test("ProjectHealthService cachea comprobaciones de salud", async () => {
     const second = await fixture.service.buildProjectHealth(project, 7, 30);
 
     assert.deepEqual(first, second);
-    assert.equal(fixture.counters.readme, 1);
+    assert.equal(fixture.counters.readme, 2);
     assert.equal(fixture.counters.git, 1);
   } finally {
     fixture.restoreLoad();
@@ -1931,7 +2043,17 @@ function createMockVscodeForStorage(fsState) {
   };
 }
 
-function createMockVscodeForHealth(readmeExists, demoExists, counters) {
+function createMockVscodeForHealth(options, counters) {
+  const settings = {
+    readmeExists: true,
+    readmeContent: "# ShipOne\n",
+    statusExists: true,
+    packageJsonExists: true,
+    requirementsExists: true,
+    demoExists: false,
+    ...options,
+  };
+
   const uriApi = {
     file: (value) => ({
       fsPath: value,
@@ -1954,14 +2076,40 @@ function createMockVscodeForHealth(readmeExists, demoExists, counters) {
           if (counters) {
             counters.readme += 1;
           }
-          if (demoExists && uri.fsPath.endsWith(".shipone-demo")) {
+          if (settings.demoExists && uri.fsPath.endsWith(".shipone-demo")) {
             return true;
           }
-          if (readmeExists && uri.fsPath.endsWith("README.md")) {
+          if (settings.readmeExists && uri.fsPath.endsWith("README.md")) {
+            return true;
+          }
+          if (settings.statusExists && uri.fsPath.endsWith("STATUS.md")) {
+            return true;
+          }
+          if (
+            settings.packageJsonExists &&
+            uri.fsPath.endsWith("package.json")
+          ) {
+            return true;
+          }
+          if (
+            settings.requirementsExists &&
+            uri.fsPath.endsWith("requirements.txt")
+          ) {
             return true;
           }
 
           throw new Error("ENOENT");
+        },
+        readFile: async (uri) => {
+          if (counters) {
+            counters.readFile += 1;
+          }
+
+          if (!settings.readmeExists || !uri.fsPath.endsWith("README.md")) {
+            throw new Error("ENOENT");
+          }
+
+          return Buffer.from(settings.readmeContent, "utf8");
         },
       },
     },
@@ -2145,11 +2293,7 @@ function createMockVscodeForGenericFs(fsState, counters) {
 
 function createHealthServiceFixture(options) {
   const counters = options.counters ?? { readme: 0, git: 0 };
-  const vscodeApi = createMockVscodeForHealth(
-    options.readmeExists,
-    options.demoExists ?? false,
-    counters
-  );
+  const vscodeApi = createMockVscodeForHealth(options, counters);
   const originalLoad = Module._load;
 
   Module._load = function patchedLoad(request, parent, isMain) {

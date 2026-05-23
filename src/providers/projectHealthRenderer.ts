@@ -49,12 +49,20 @@ function renderHealthLabel(health: ProjectHealth["label"]): string {
 
 function renderIssueLabel(issue: string): string {
   switch (issue) {
+    case "empty-readme":
+      return t(k.issue.emptyReadme);
     case "missing-next-action":
       return t(k.issue.missingNextAction);
     case "inactive-active":
       return t(k.issue.inactiveActive);
     case "no-readme":
       return t(k.issue.noReadme);
+    case "no-status":
+      return t(k.issue.noStatus);
+    case "no-package-json":
+      return t(k.issue.noPackageJson);
+    case "no-requirements":
+      return t(k.issue.noRequirements);
     case "no-recent-commits":
       return t(k.issue.noRecentCommits);
     default:
