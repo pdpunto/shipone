@@ -8,24 +8,24 @@
 - GitHub CLI is required only for GitHub repo creation and publishing flows.
 - `VSCE_PAT` is required only for Marketplace publishing.
 
-## Limitaciones actuales
+## Current limits
 
-- GitHub depende de GitHub CLI.
-- Algunas comprobaciones dependen de Git instalado.
-- La creacion de proyecto puede dejar restos parciales si falla a mitad.
-- La extension no sustituye un gestor de tareas completo.
-- No hay sincronizacion en la nube.
-- No incluye team workflows.
+- GitHub depends on GitHub CLI.
+- Some checks depend on Git being installed.
+- Project creation can leave partial leftovers if it fails halfway through.
+- The extension does not replace a full task manager.
+- There is no cloud sync.
+- There are no team workflows included.
 
-## Que no intenta hacer
+## What it does not try to do
 
-- No intenta ser un Kanban completo.
-- No intenta ser un chat de equipo.
-- No intenta reemplazar Git.
-- No intenta reemplazar GitHub.
-- No intenta ofrecer sincronizacion multi-dispositivo.
-- No intenta ejecutar agentes IA por ti.
+- It does not try to be a full Kanban board.
+- It does not try to be a team chat tool.
+- It does not try to replace Git.
+- It does not try to replace GitHub.
+- It does not try to offer multi-device sync.
+- It does not try to run AI agents for you.
 
-## Notas
+## Notes
 
-Estas limitaciones no son fallos del producto. Son limites del alcance actual.
+These limitations are not product bugs. They are part of the current scope.

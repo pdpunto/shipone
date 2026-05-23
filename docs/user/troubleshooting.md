@@ -1,63 +1,63 @@
 # Troubleshooting
 
-## ShipOne no abre
+## ShipOne does not open
 
-- Comprueba que el workspace sea este repo.
-- Comprueba que no haya errores de compilacion.
-- Ejecuta de nuevo `npm.cmd run compile`.
-- Comprueba que la extension este activada.
-- Abre Developer Tools para ver el error exacto.
+- Check that the workspace is this repo.
+- Check that there are no compile errors.
+- Run `npm.cmd run compile` again.
+- Check that the extension is activated.
+- Open Developer Tools to see the exact error.
 
-## No aparecen proyectos
+## No projects appear
 
-- Comprueba `shipone.projectsRoot`.
-- Comprueba que exista metadata local.
-- Verifica que el storage de VS Code no este corrupto.
-- Comprueba que el proyecto se haya creado dentro de la carpeta correcta.
-- Comprueba si el proyecto fue ocultado por el filtro de estado.
+- Check `shipone.projectsRoot`.
+- Check that local metadata exists.
+- Verify that the VS Code storage is not corrupted.
+- Check that the project was created in the correct folder.
+- Check whether the project was hidden by the status filter.
 
-## Git falla
+## Git fails
 
-- Asegurate de tener Git instalado.
-- Comprueba que la terminal vea `git`.
-- Comprueba permisos y rutas.
-- Comprueba que la ruta no tenga caracteres raros o permisos limitados.
-- Verifica que el repositorio local no este en un estado roto.
+- Make sure Git is installed.
+- Check that the terminal can see `git`.
+- Check permissions and paths.
+- Check that the path has no strange characters or limited permissions.
+- Verify that the local repo is not in a broken state.
 
-## GitHub no conecta
+## GitHub does not connect
 
-- Comprueba `gh auth status`.
-- Verifica que GitHub CLI este instalado.
-- Comprueba `VSCE_PAT` si vas a publicar.
-- Para crear repos remotos, confirma que Git local ya exista.
-- Comprueba que la cuenta autenticada tenga permisos suficientes.
+- Check `gh auth status`.
+- Verify that GitHub CLI is installed.
+- Check `VSCE_PAT` if you are publishing.
+- To create remote repos, confirm that local Git already exists.
+- Check that the authenticated account has enough permissions.
 
-## La carpeta ya existe
+## The folder already exists
 
-ShipOne intenta evitar colisiones usando un nombre alternativo.
+ShipOne tries to avoid collisions by using an alternate name.
 
-- Si necesitas una carpeta exacta, revisa el nombre final creado.
-- Si hay varias versiones del mismo nombre, confirma cual es la correcta.
+- If you need an exact folder name, review the final created name.
+- If there are multiple versions of the same name, confirm which one is correct.
 
-## Storage roto
+## Broken storage
 
-- Comprueba si existe backup.
-- Intenta recuperar desde la copia de seguridad.
-- Si el problema sigue, crea un issue con pasos claros.
-- No borres archivos de storage sin antes guardar una copia.
+- Check whether a backup exists.
+- Try to recover from the backup copy.
+- If the problem remains, open an issue with clear steps.
+- Do not delete storage files before saving a copy.
 
-## Fallo al crear proyecto
+## Project creation failed
 
-- Comprueba si el proyecto quedo a medio crear.
-- Comprueba si el template elegido existe.
-- Verifica que el paquete de herramientas este bien instalado.
-- Si el fallo fue en GitHub, intenta crear solo el proyecto local primero.
+- Check whether the project was left half created.
+- Check whether the chosen template exists.
+- Verify that the toolchain package is installed correctly.
+- If the failure was in GitHub, try creating only the local project first.
 
-## Como reportar el fallo
+## How to report the issue
 
-- Que paso.
-- Que esperabas.
-- Pasos para reproducir.
-- VS Code y sistema operativo.
-- Si usaste Git o GitHub.
-- Captura o log si aplica.
+- What happened.
+- What you expected.
+- Steps to reproduce.
+- VS Code and operating system.
+- Whether you used Git or GitHub.
+- Screenshot or log if relevant.

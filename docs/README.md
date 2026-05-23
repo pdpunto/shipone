@@ -1,10 +1,10 @@
 # ShipOne Documentation
 
-Indice general de la documentacion de ShipOne.
+Main documentation index for ShipOne.
 
-## Publica
+## Public
 
-- [README principal](../README.md)
+- [Main README](../README.md)
 - [Getting started](user/getting-started.md)
 - [Core workflow](user/core-workflow.md)
 - [Configuration](user/configuration.md)
@@ -13,7 +13,7 @@ Indice general de la documentacion de ShipOne.
 - [FAQ](user/faq.md)
 - [Known limitations](user/known-limitations.md)
 
-## Tecnica
+## Technical
 
 - [Architecture](technical/architecture.md)
 - [Data model](technical/data-model.md)
@@ -22,7 +22,7 @@ Indice general de la documentacion de ShipOne.
 - [Localization](technical/localization.md)
 - [Release](technical/release.md)
 
-## Activos
+## Assets
 
 - [Branding](assets/branding/README.md)
 - [Walkthrough](assets/walkthrough/README.md)

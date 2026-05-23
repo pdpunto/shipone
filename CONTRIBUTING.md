@@ -1,47 +1,47 @@
 # Contributing to ShipOne
 
-Gracias por ayudar con ShipOne.
+Thanks for helping with ShipOne.
 
-## Inicio rapido
+## Quick Start
 
-1. Clona el repo.
-2. Ejecuta `npm install`.
-3. Ejecuta `npm.cmd run compile`.
-4. Ejecuta `npm.cmd run test`.
+1. Clone the repo.
+2. Run `npm install`.
+3. Run `npm.cmd run compile`.
+4. Run `npm.cmd run test`.
 
-## Antes de abrir un PR
+## Before Opening a PR
 
-- Trabaja desde una rama propia.
-- Mantén el cambio pequeño y concreto.
-- Ejecuta:
+- Work from a feature branch.
+- Keep the change small and focused.
+- Run:
   - `npm.cmd run test`
   - `npm.cmd run lint`
   - `npm.cmd run compile`
 
-## Buenas PRs
+## Good PRs
 
-- Un solo cambio claro por PR.
-- Descripción breve de lo que cambia.
-- Pasos para probarlo.
-- Capturas si cambia la UI.
+- One clear change per PR.
+- Short description of what changes.
+- Steps to test it.
+- Screenshots if the UI changes.
 
-## Reglas del proyecto
+## Project Rules
 
-- Escribe comentarios y mensajes en español claro cuando sea posible.
-- No subas secretos ni archivos `.env`.
-- No añadas dependencias sin comentarlo antes.
-- No mezcles cambios no relacionados en la misma PR.
-- Prefiere cambios faciles de revisar y faciles de revertir.
+- Write comments and messages in clear Spanish when that helps the team.
+- Do not upload secrets or `.env` files.
+- Do not add dependencies without talking about it first.
+- Do not mix unrelated changes in the same PR.
+- Prefer changes that are easy to review and easy to revert.
 
-## Flujo recomendado
+## Recommended Flow
 
-- Abre una issue primero si el cambio es grande o poco claro.
-- Usa una rama por tarea.
-- Valida en local antes de pedir review.
-- Resume el cambio de forma corta y concreta.
+- Open an issue first if the change is large or unclear.
+- Use one branch per task.
+- Validate locally before asking for review.
+- Summarize the change in a short and concrete way.
 
-## Ayuda
+## Help
 
-- Abre una issue con la plantilla de bug o feature.
-- Incluye el comportamiento esperado y los pasos para reproducir.
-- Si toca release o seguridad, dilo de forma explicita.
+- Open an issue with the bug or feature template.
+- Include the expected behavior and the steps to reproduce it.
+- If the change touches release or security, say it explicitly.

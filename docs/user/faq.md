@@ -1,62 +1,62 @@
 # FAQ
 
-## ShipOne requiere GitHub?
+## Does ShipOne require GitHub?
 
-No. Funciona solo con Git local.
+No. It works with local Git only.
 
-## ShipOne requiere Git?
+## Does ShipOne require Git?
 
-No para explorar la extension. Si necesitas repos locales o health checks basadas en Git, usa Git local.
+No for exploring the extension. If you need local repos or Git-based health checks, use local Git.
 
-## Puedo usarlo offline?
+## Can I use it offline?
 
-Si, para el flujo local.
+Yes, for the local flow.
 
-## Donde guarda los datos?
+## Where does it store data?
 
-En el almacenamiento local de VS Code.
+In the local storage of VS Code.
 
-## Sube mis datos a un servidor?
+## Does it upload my data to a server?
 
-No en el flujo local normal.
+No in the normal local flow.
 
-## Puedo tener mas de un proyecto activo?
+## Can I have more than one active project?
 
-Solo si desactivas la regla de un solo `Active`.
+Only if you disable the single `Active` rule.
 
-## Para que sirve `STATUS.md`?
+## What is `STATUS.md` for?
 
-Sirve como resumen de estado y apoyo para el contexto del proyecto.
+It is a status summary and support file for project context.
 
-## Para que sirve `PROJECT_CONTEXT.md`?
+## What is `PROJECT_CONTEXT.md` for?
 
-Sirve para reconstruir contexto rapido con apoyo de IA.
+It helps rebuild project context quickly with AI support.
 
-## Puedo usar mis propios templates?
+## Can I use my own templates?
 
-Si, si configuras una carpeta de templates compatible.
+Yes, if you configure a compatible template folder.
 
-## Puedo ocultar los proyectos terminados?
+## Can I hide finished projects?
 
-Si, con `shipone.showFinishedProjects`.
+Yes, with `shipone.showFinishedProjects`.
 
-## Que pasa si GitHub CLI no esta instalada?
+## What happens if GitHub CLI is not installed?
 
-ShipOne sigue funcionando para uso local, pero no podras crear repos GitHub desde la extension.
+ShipOne still works for local use, but it cannot create GitHub repos from the extension.
 
-## Que pasa si falla un proyecto a mitad de crearse?
+## What happens if a project fails halfway through creation?
 
-Puede quedar una carpeta parcial. Usa `troubleshooting.md` para recuperarlo.
+It may leave a partial folder. Use `troubleshooting.md` to recover it.
 
-## Puedo borrar un proyecto desde ShipOne?
+## Can I delete a project from ShipOne?
 
-Si. La vista muestra una papelera para borrar el proyecto local y, si existe, el repo GitHub con confirmacion.
+Yes. The view shows a trash icon to delete the local project and, if it exists, the GitHub repo with confirmation.
 
-## ShipOne funciona en macOS y Linux?
+## Does ShipOne work on macOS and Linux?
 
-ShipOne ya quedo confirmado en macOS.
-En Linux sigue pendiente la validacion.
+ShipOne has already been confirmed on macOS.
+Linux validation is still pending.
 
-## Puedo contribuir?
+## Can I contribute?
 
-Si. Consulta `CONTRIBUTING.md` antes de abrir un PR.
+Yes. Read `CONTRIBUTING.md` before opening a PR.

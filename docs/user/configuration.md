@@ -1,29 +1,29 @@
 # Configuration
 
-## Ajustes mas utiles
+## Most useful settings
 
-### Resumen rapido
+### Quick summary
 
-| Setting                             | Valor por defecto  | Para que sirve                                    |
-| ----------------------------------- | ------------------ | ------------------------------------------------- |
-| `shipone.projectsRoot`              | `C:\dev\proyectos` | Carpeta base donde ShipOne crea y abre proyectos  |
-| `shipone.defaultProjectType`        | `blank`            | Tipo que se propone primero al crear un proyecto  |
-| `shipone.defaultVisibility`         | `private`          | Visibilidad por defecto para repos GitHub         |
-| `shipone.defaultPackageManager`     | `npm`              | Gestor de paquetes por defecto                    |
-| `shipone.openAfterCreate`           | `true`             | Abre el proyecto al terminar                      |
-| `shipone.createGitRepoByDefault`    | `true`             | Crea un repositorio Git local                     |
-| `shipone.createGitHubRepoByDefault` | `true`             | Crea un repositorio GitHub si Git local ya existe |
-| `shipone.enforceOneActiveProject`   | `true`             | Mantiene un solo proyecto `Active`                |
-| `shipone.createStatusFileByDefault` | `true`             | Genera `STATUS.md` automaticamente                |
-| `shipone.showFinishedProjects`      | `true`             | Muestra o oculta proyectos terminados             |
-| `shipone.inactiveWarningDays`       | `7`                | Dias para avisar inactividad                      |
-| `shipone.staleWarningDays`          | `30`               | Dias para aviso fuerte de stale                   |
+| Setting                             | Default            | What it does                                         |
+| ----------------------------------- | ------------------ | ---------------------------------------------------- |
+| `shipone.projectsRoot`              | `C:\dev\proyectos` | Base folder where ShipOne creates and opens projects |
+| `shipone.defaultProjectType`        | `blank`            | First type ShipOne suggests when creating a project  |
+| `shipone.defaultVisibility`         | `private`          | Default visibility for GitHub repos                  |
+| `shipone.defaultPackageManager`     | `npm`              | Default package manager                              |
+| `shipone.openAfterCreate`           | `true`             | Opens the project after creation                     |
+| `shipone.createGitRepoByDefault`    | `true`             | Creates a local Git repo                             |
+| `shipone.createGitHubRepoByDefault` | `true`             | Creates a GitHub repo if local Git already exists    |
+| `shipone.enforceOneActiveProject`   | `true`             | Keeps only one `Active` project                      |
+| `shipone.createStatusFileByDefault` | `true`             | Generates `STATUS.md` automatically                  |
+| `shipone.showFinishedProjects`      | `true`             | Shows or hides finished projects                     |
+| `shipone.inactiveWarningDays`       | `7`                | Days before an inactivity warning                    |
+| `shipone.staleWarningDays`          | `30`               | Days before a stronger stale warning                 |
 
 ### `shipone.projectsRoot`
 
-Carpeta base donde ShipOne crea y abre proyectos.
+Base folder where ShipOne creates and opens projects.
 
-Ejemplo:
+Example:
 
 ```json
 "shipone.projectsRoot": "C:\\dev\\proyectos"
@@ -31,9 +31,9 @@ Ejemplo:
 
 ### `shipone.defaultProjectType`
 
-Tipo que se propone primero al crear un proyecto.
+Type suggested first when creating a project.
 
-Ejemplo:
+Example:
 
 ```json
 "shipone.defaultProjectType": "nextjs"
@@ -41,18 +41,18 @@ Ejemplo:
 
 ### `shipone.defaultVisibility`
 
-Visibilidad por defecto para repos GitHub.
+Default visibility for GitHub repos.
 
-Valores:
+Values:
 
 - `private`
 - `public`
 
 ### `shipone.defaultPackageManager`
 
-Gestor de paquetes por defecto.
+Default package manager.
 
-Valores:
+Values:
 
 - `npm`
 - `pnpm`
@@ -60,52 +60,52 @@ Valores:
 
 ### `shipone.openAfterCreate`
 
-Abre el proyecto automaticamente al terminar de crearlo.
+Opens the project automatically after creation.
 
-Desactivado: ShipOne crea el proyecto pero no cambia de ventana.
+Disabled: ShipOne creates the project but does not switch windows.
 
 ### `shipone.createGitRepoByDefault`
 
-Crea un repositorio Git local al crear un proyecto.
+Creates a local Git repository when a project is created.
 
-Desactivado: la creacion sera solo local.
+Disabled: creation stays local only.
 
 ### `shipone.createGitHubRepoByDefault`
 
-Crea un repositorio GitHub si Git local ya existe.
+Creates a GitHub repository if local Git already exists.
 
-Desactivado: ShipOne no intenta crear repo remoto.
+Disabled: ShipOne does not try to create a remote repo.
 
 ### `shipone.enforceOneActiveProject`
 
-Mantiene un solo proyecto `Active`.
+Keeps only one `Active` project.
 
-Desactivado: puedes tener mas de un proyecto activo.
+Disabled: you can have more than one active project.
 
 ### `shipone.createStatusFileByDefault`
 
-Genera `STATUS.md` de forma automatica.
+Generates `STATUS.md` automatically.
 
-Desactivado: ShipOne no crea el archivo de estado.
+Disabled: ShipOne does not create the status file.
 
 ### `shipone.showFinishedProjects`
 
-Muestra o oculta proyectos terminados.
+Shows or hides finished projects.
 
-Desactivado: la vista queda mas limpia.
+Disabled: the view stays cleaner.
 
 ### `shipone.inactiveWarningDays`
 
-Dias para avisar inactividad.
+Days before an inactivity warning.
 
-Valor recomendado: `7`.
+Recommended value: `7`.
 
 ### `shipone.staleWarningDays`
 
-Dias para avisar de forma mas fuerte que un proyecto esta parado.
+Days before a stronger stale warning.
 
-Valor recomendado: `30`.
+Recommended value: `30`.
 
-## Recomendacion
+## Recommendation
 
-Empieza con los valores por defecto y ajusta solo lo que de verdad uses.
+Start with the defaults and change only what you actually use.

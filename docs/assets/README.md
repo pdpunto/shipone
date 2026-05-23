@@ -1,6 +1,6 @@
 # ShipOne Assets
 
-Recursos visuales y de apoyo de ShipOne.
+Visual and support assets for ShipOne.
 
 ## Branding
 
@@ -8,17 +8,17 @@ Recursos visuales y de apoyo de ShipOne.
 
 ## Screenshots
 
-- `01-overview.png` - vista general de ShipOne en VS Code.
-- `02-active-project.png` - proyecto activo con next action visible.
-- `03-project-states.png` - estados del proyecto agrupados.
-- `04-focus-mode.png` - focus mode activo.
-- `05-create-project.png` - flujo de creacion de proyecto.
-- `06-weekly-review.png` - revision semanal.
-- `07-status-md.png` - STATUS.md abierto en un proyecto demo.
+- `01-overview.png` - ShipOne overview in VS Code.
+- `02-active-project.png` - active project with next action visible.
+- `03-project-states.png` - grouped project states.
+- `04-focus-mode.png` - focus mode active.
+- `05-create-project.png` - project creation flow.
+- `06-weekly-review.png` - weekly review.
+- `07-status-md.png` - `STATUS.md` open in a demo project.
 
 ## GIFs
 
-- `shipone-demo.gif` - demo corta del flujo principal dentro de VS Code.
+- `shipone-demo.gif` - short demo of the main flow inside VS Code.
 
 ## Walkthrough
 

@@ -1,13 +1,13 @@
 # Branding
 
-Notas de la identidad visual de ShipOne.
+ShipOne visual identity notes.
 
-## Uso
+## Use
 
-- `banner.png` para Marketplace y cabecera visual.
-- `icon.png` para el icono principal de la extension.
-- `marketplace-preview.png` para vistas promocionales.
+- `banner.png` for Marketplace and visual headers.
+- `icon.png` for the main extension icon.
+- `marketplace-preview.png` for promotional views.
 
-## Objetivo
+## Goal
 
-Mantener una imagen simple, clara y reconocible.
+Keep the image simple, clear, and recognizable.

@@ -1,32 +1,32 @@
 # Getting Started
 
-## Que es ShipOne
+## What ShipOne is
 
-ShipOne es una extension de VS Code para crear, organizar y terminar proyectos con contexto claro.
-Las capturas del [README principal](../../README.md) muestran una vista real antes de empezar.
+ShipOne is a VS Code extension for creating, organizing, and finishing projects with clear context.
+The screenshots in the [main README](../../README.md) show a real view before you start.
 
-## Primer arranque
+## First launch
 
-1. Abre el repo en VS Code o instala ShipOne desde Marketplace.
-2. Ejecuta la extension en modo desarrollo con `F5` al probarla localmente.
-3. Abre la vista `ShipOne` en la barra lateral.
-4. Elige `ShipOne: Crear` para empezar un proyecto nuevo.
+1. Open the repo in VS Code or install ShipOne from Marketplace.
+2. Run the extension in development mode with `F5` when testing locally.
+3. Open the `ShipOne` view in the sidebar.
+4. Use `ShipOne: Create` to start a new project.
 
-## Flujo recomendado
+## Recommended flow
 
-1. Define tu carpeta base en `shipone.projectsRoot`.
-2. Crea un proyecto.
-3. Revisa el estado `idea`, `active`, `paused` o `finished`.
-4. Escribe un `nextAction` claro.
-5. Usa `Focus` para centrarte en un solo proyecto.
+1. Set your base folder in `shipone.projectsRoot`.
+2. Create a project.
+3. Review the `idea`, `active`, `paused`, or `finished` state.
+4. Write a clear `nextAction`.
+5. Use `Focus` to stay on one project.
 
-## Que mirar primero
+## What to look at first
 
 - `nextAction`
-- estado del proyecto
-- salud del proyecto
-- ultimos cambios
+- project state
+- project health
+- recent changes
 
-## Si algo falla
+## If something breaks
 
-Abre `troubleshooting.md` para ver los problemas mas comunes.
+Open `troubleshooting.md` for the most common problems.

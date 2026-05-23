@@ -1,7 +1,7 @@
 # ShipOne
 
-1. Abre la vista de ShipOne en la barra lateral.
-2. Usa **ShipOne: Crear proyecto** para crear tu primer proyecto.
-3. Elige Git y GitHub si quieres publicar desde el principio.
-4. Escribe un `nextAction` claro para el proyecto.
-5. Vuelve a la vista de ShipOne para seguir el estado.
+1. Open the ShipOne view in the sidebar.
+2. Use **ShipOne: Create project** to create your first project.
+3. Choose Git and GitHub if you want to publish from the start.
+4. Write a clear `nextAction` for the project.
+5. Return to the ShipOne view to keep tracking progress.

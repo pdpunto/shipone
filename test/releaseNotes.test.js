@@ -9,14 +9,14 @@ function runReleaseNotes(args = []) {
   }).trim();
 }
 
-test("build-release-notes devuelve el bloque unreleased", () => {
+test("build-release-notes returns the unreleased block", () => {
   const notes = runReleaseNotes();
 
-  assert.ok(notes.includes("Sin cambios por ahora."));
+  assert.ok(notes.includes("No changes yet."));
 });
 
-test("build-release-notes puede leer una seccion concreta", () => {
+test("build-release-notes can read a specific section", () => {
   const notes = runReleaseNotes(["--section", "0.0.6"]);
 
-  assert.ok(notes.includes("AI context with Git summary"));
+  assert.ok(notes.includes("project context with Git summary"));
 });

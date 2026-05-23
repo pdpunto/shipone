@@ -1,8 +1,8 @@
 # <img src="media/branding/icon-32.png" alt="ShipOne icon" width="28" /> ShipOne
 
-ShipOne es una extension de VS Code para crear, organizar y terminar proyectos con contexto claro.
+ShipOne is a VS Code extension for creating, organizing, and finishing projects with clear context.
 
-Mantiene un siguiente paso visible, un estado preciso y menos friccion al volver a trabajar.
+It keeps the next step visible, the project state precise, and the friction low when you return to work.
 
 <p align="center">
   <img src="media/branding/banner.png" alt="ShipOne banner" />
@@ -17,177 +17,177 @@ Mantiene un siguiente paso visible, un estado preciso y menos friccion al volver
   </a>
 </p>
 
-## Proposito
+## Purpose
 
-Muchos proyectos se empiezan rapido y se abandonan igual de rapido.
+Many projects start fast and get abandoned just as fast.
 
-ShipOne junta en un solo sitio lo que normalmente queda repartido entre notas, carpetas sueltas y memoria:
+ShipOne keeps in one place what usually ends up spread across notes, loose folders, and memory:
 
-- un solo proyecto `Active` a la vez;
-- `STATUS.md` y metadata local sincronizados;
-- focus mode, review y salud del proyecto en la misma vista;
-- Git y GitHub opcionales;
-- una lista clara de proyectos por estado.
+- a single `Active` project at a time;
+- synced `STATUS.md` and local metadata;
+- focus mode, review, and project health in one view;
+- optional Git and GitHub;
+- a clear project list by state.
 
-## Identidad visual
+## Visual Identity
 
-ShipOne usa una identidad visual simple y consistente:
+ShipOne uses a simple and consistent visual identity:
 
-- icono propio en la vista de VS Code;
-- banner para Marketplace;
-- preview visual para la pagina del producto.
+- a custom icon in the VS Code view;
+- a banner for Marketplace;
+- a visual preview for the product page.
 
-## Estado del proyecto
+## Project Status
 
-- Version actual: `0.0.6`
-- Estado: `beta publica`
-- Publico: repo abierto, extension publicada y docs listas para uso real
-- Ritmo: cambios pequeños, versionados y fáciles de seguir
+- Current version: `0.0.6`
+- Status: `public beta`
+- Public: open repo, published extension, and docs ready for real use
+- Pace: small, versioned changes that are easy to follow
 
-## Capturas
+## Screenshots
 
-Estas imagenes muestran el flujo real de ShipOne dentro de VS Code:
+These images show the real ShipOne flow inside VS Code:
 
-### Vista general
+### Overview
 
-![ShipOne vista general](docs/assets/screenshots/01-overview.png)
+![ShipOne overview](docs/assets/screenshots/01-overview.png)
 
-### Proyecto activo
+### Active project
 
-![ShipOne proyecto activo](docs/assets/screenshots/02-active-project.png)
+![ShipOne active project](docs/assets/screenshots/02-active-project.png)
 
 ### Focus mode
 
 ![ShipOne focus mode](docs/assets/screenshots/04-focus-mode.png)
 
-## Que hace
+## What it does
 
-- Crea proyectos nuevos desde una vista propia.
-- Guarda metadata local de cada proyecto.
-- Mantiene un solo proyecto `Active` si activas esa regla.
-- Muestra `nextAction`, favoritos, salud, pausas y metricas.
-- Genera `STATUS.md` y plantillas minimas por tipo de proyecto.
+- Creates new projects from a dedicated view.
+- Stores local metadata for each project.
+- Keeps only one `Active` project if that rule is enabled.
+- Shows `nextAction`, favorites, health, pauses, and metrics.
+- Generates `STATUS.md` and minimal templates by project type.
 
-## Como empezar
+## Getting Started
 
-1. Abre el repo en VS Code o instala ShipOne desde Marketplace.
-2. Ejecuta `npm.cmd run compile` para desarrollo local.
-3. Pulsa `F5` para abrir Extension Development Host.
-4. Abre la vista `ShipOne` en la barra lateral.
-5. Usa la vista `ShipOne` o `ShipOne: Crear` para crear un proyecto.
-6. Escribe `nextAction` y trabaja desde la misma vista.
-7. Si un proyecto se queda atascado, usa `Congelar proyecto` o `Weekly review`.
+1. Open the repo in VS Code or install ShipOne from Marketplace.
+2. Run `npm.cmd run compile` for local development.
+3. Press `F5` to open the Extension Development Host.
+4. Open the `ShipOne` view in the sidebar.
+5. Use the `ShipOne` view or `ShipOne: Create` to make a project.
+6. Write a `nextAction` and keep working from the same view.
+7. If a project gets stuck, use `Freeze project` or `Weekly review`.
 
-## Comandos utiles
+## Useful Commands
 
-- `ShipOne: Crear` - crea proyecto nuevo
-- `ShipOne: Abrir` - abre un proyecto
-- `ShipOne: Buscar` - filtra proyectos por nombre o etiqueta
-- `ShipOne: Focus` - entra en focus mode
-- `ShipOne: Weekly review` - revisa el estado semanal
-- `ShipOne: Generar contexto del proyecto` - crea un resumen listo para retomar
-- `ShipOne: Eliminar proyecto` - borra un proyecto con confirmacion
-- `ShipOne: STATUS.md` - sincroniza el archivo de estado
-- `ShipOne: Conectar GitHub` - conecta GitHub para publicar repos
+- `ShipOne: Create` - create a new project
+- `ShipOne: Open` - open a project
+- `ShipOne: Search` - filter projects by name or tag
+- `ShipOne: Focus` - enter focus mode
+- `ShipOne: Weekly review` - review the weekly state
+- `ShipOne: Generate project context` - create a summary ready to resume work
+- `ShipOne: Delete project` - delete a project with confirmation
+- `ShipOne: STATUS.md` - sync the status file
+- `ShipOne: Connect GitHub` - connect GitHub for remote repo publishing
 
-## Estados
+## States
 
-ShipOne trabaja con cuatro estados:
+ShipOne works with four states:
 
 - `idea`
 - `active`
 - `paused`
 - `finished`
 
-Regla principal:
+Main rule:
 
-- solo puede haber un proyecto `Active` si tienes activada esa opcion.
+- only one project can be `Active` if that option is enabled.
 
-## Configuracion
+## Settings
 
-Los ajustes mas utiles son estos:
+The most useful settings are:
 
-- `shipone.projectsRoot` - carpeta base de tus proyectos
-- `shipone.defaultProjectType` - tipo que ShipOne propone primero
-- `shipone.defaultVisibility` - repo privado o publico por defecto
-- `shipone.defaultPackageManager` - npm, pnpm o yarn
-- `shipone.openAfterCreate` - abre el proyecto al terminar
-- `shipone.createGitRepoByDefault` - crea Git local por defecto
-- `shipone.createGitHubRepoByDefault` - crea repo en GitHub por defecto
-- `shipone.enforceOneActiveProject` - mantiene un solo proyecto `Active`
-- `shipone.createStatusFileByDefault` - genera `STATUS.md`
-- `shipone.showFinishedProjects` - muestra proyectos terminados
-- `shipone.inactiveWarningDays` - dias para avisar inactividad
-- `shipone.staleWarningDays` - dias para aviso fuerte de stale
+- `shipone.projectsRoot` - base folder for your projects
+- `shipone.defaultProjectType` - type ShipOne suggests first
+- `shipone.defaultVisibility` - private or public repo by default
+- `shipone.defaultPackageManager` - npm, pnpm, or yarn
+- `shipone.openAfterCreate` - opens the project after creation
+- `shipone.createGitRepoByDefault` - creates a local Git repo by default
+- `shipone.createGitHubRepoByDefault` - creates a GitHub repo by default
+- `shipone.enforceOneActiveProject` - keeps only one `Active` project
+- `shipone.createStatusFileByDefault` - generates `STATUS.md`
+- `shipone.showFinishedProjects` - shows finished projects
+- `shipone.inactiveWarningDays` - days before an inactivity warning
+- `shipone.staleWarningDays` - days before a stronger stale warning
 
-## Requisitos
+## Requirements
 
 - VS Code
-- Node.js y npm para desarrollo local
-- Git para usar repos locales
-- GitHub CLI para crear repos en GitHub desde la extension
-- `VSCE_PAT` para publicar en Marketplace
+- Node.js and npm for local development
+- Git for local repo workflows
+- GitHub CLI for creating GitHub repos from the extension
+- `VSCE_PAT` for Marketplace publishing
 
-## Plataformas probadas
+## Tested Platforms
 
-ShipOne ya se ha probado en:
+ShipOne has been tested on:
 
 - Windows
 - macOS
 
-Linux queda pendiente de validacion.
+Linux is still pending validation.
 
-## Desarrollo local
+## Local Development
 
 ```powershell
 npm install
 npm.cmd run compile
 ```
 
-## Problemas comunes
+## Common Issues
 
-- Si falla `npm.cmd run compile`, revisa que Node y TypeScript esten instalados.
-- Si `F5` no abre la extension, verifica que el workspace sea este repo y que no haya errores de compilacion.
-- Si GitHub no conecta, comprueba `gh auth status` y el secreto `VSCE_PAT`.
-- Si una carpeta ya existe, ShipOne usa un nombre alternativo para evitar colisiones.
+- If `npm.cmd run compile` fails, check that Node and TypeScript are installed.
+- If `F5` does not open the extension, verify that the workspace is this repo and that there are no compile errors.
+- If GitHub does not connect, check `gh auth status` and the `VSCE_PAT` secret.
+- If a folder already exists, ShipOne uses an alternate name to avoid collisions.
 
 ## FAQ
 
-**ShipOne requiere GitHub?**
-No. Puede trabajar solo con Git local.
+**Does ShipOne require GitHub?**
+No. It can work with local Git only.
 
-**Necesito usar `STATUS.md`?**
-No. ShipOne lo crea y sincroniza, pero no te obliga a tocarlo.
+**Do I need to use `STATUS.md`?**
+No. ShipOne creates and syncs it, but you do not have to edit it manually.
 
-**Puedo tener varios proyectos activos?**
-No si tienes activada la regla de un solo `Active`.
+**Can I have multiple active projects?**
+Not if the single `Active` project rule is enabled.
 
-**Guarda datos en la nube?**
-No. ShipOne trabaja con almacenamiento local de VS Code y herramientas locales opcionales.
+**Does it store data in the cloud?**
+No. ShipOne uses local VS Code storage and optional local tools.
 
-## Publicacion
+## Publishing
 
-Flujo simple:
+Simple flow:
 
-1. Publica una beta con `vX.Y.Z-beta.N`.
-2. Comparte la beta y recoge feedback.
-3. Recoge feedback con `Issues` y el template de `bug report`.
-4. Corrige lo importante.
-5. Sube la version estable con el workflow `Publish Marketplace`.
-6. Usa `VSCE_PAT` como secreto de GitHub para publicar.
+1. Publish a beta with `vX.Y.Z-beta.N`.
+2. Share the beta and collect feedback.
+3. Gather feedback with `Issues` and the `bug report` template.
+4. Fix the important stuff.
+5. Ship the stable version with the `Publish Marketplace` workflow.
+6. Use `VSCE_PAT` as the GitHub secret for publishing.
 
-## Privacidad
+## Privacy
 
-- Los datos del proyecto se guardan de forma local.
-- GitHub es opcional.
-- No subas secretos, tokens ni `.env`.
-- Revisa `SECURITY.md` si vas a reportar un problema sensible.
-- `VSCE_PAT` solo se usa para publicar y nunca debe compartirse en publico.
+- Project data is stored locally.
+- GitHub is optional.
+- Never upload secrets, tokens, or `.env` files.
+- Check `SECURITY.md` if you need to report a sensitive issue.
+- `VSCE_PAT` is only for publishing and should never be shared publicly.
 
-## Contribuir
+## Contributing
 
-Lee [CONTRIBUTING.md](CONTRIBUTING.md) antes de abrir un PR.
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a PR.
 
-## Licencia
+## License
 
-Consulta `LICENSE`.
+See `LICENSE`.

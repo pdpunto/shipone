@@ -1,19 +1,19 @@
 ---
 name: Feature request
-about: Pide una mejora para ShipOne
+about: Request an improvement for ShipOne
 title: "[Feature]: "
 labels: enhancement
 ---
 
-## Problema o necesidad
+## Problem or need
 
-## Propuesta
+## Proposal
 
-## Beneficio esperado
+## Expected benefit
 
-## Alternativas consideradas
+## Alternatives considered
 
-## Notas
+## Notes
 
-- Capturas o ejemplos:
-- Relacionado con una issue:
+- Screenshots or examples:
+- Related issue:

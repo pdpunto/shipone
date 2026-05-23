@@ -1,27 +1,27 @@
 # Code of Conduct
 
-ShipOne quiere ser un proyecto amable, claro y seguro para principiantes.
+ShipOne is meant to be a kind, clear, and safe project for beginners.
 
-## Esperamos
+## We Expect
 
-- Respeto en comentarios, issues y pull requests.
-- Crítica sobre ideas, no sobre personas.
-- Lenguaje claro y ayuda paciente.
-- Cuidar que las conversaciones sean útiles para todo el mundo.
+- Respect in comments, issues, and pull requests.
+- Critique ideas, not people.
+- Clear language and patient help.
+- Conversations that stay useful for everyone.
 
-## No aceptamos
+## We Do Not Accept
 
-- Insultos, acoso o desprecio.
-- Spam o mensajes ofensivos.
-- Discriminación por identidad, origen, idioma, religión, género o capacidad.
-- Comportamientos que hagan el espacio menos seguro o menos accesible.
+- Insults, harassment, or disrespect.
+- Spam or offensive messages.
+- Discrimination based on identity, origin, language, religion, gender, or ability.
+- Behavior that makes the space less safe or less accessible.
 
-## Si hay un problema
+## If There Is a Problem
 
-- Explica el problema con calma.
-- Si hace falta, abre un issue privado o contacta a los mantenedores.
-- Vamos a intentar resolverlo de forma respetuosa y rápida.
+- Explain the problem calmly.
+- If needed, open a private issue or contact the maintainers.
+- We will try to resolve it respectfully and quickly.
 
-## Alcance
+## Scope
 
-Este código aplica a issues, PRs, comentarios y conversaciones relacionadas con ShipOne.
+This code applies to issues, PRs, comments, and conversations related to ShipOne.

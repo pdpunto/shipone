@@ -1,6 +1,6 @@
 # Project States
 
-ShipOne usa cuatro estados:
+ShipOne uses four states:
 
 - `idea`
 - `active`
@@ -9,27 +9,27 @@ ShipOne usa cuatro estados:
 
 ## `idea`
 
-Proyecto pensado, pero sin foco activo.
+Project idea exists, but there is no active focus yet.
 
 ## `active`
 
-Proyecto en trabajo real. Con la opcion activa, solo puede haber uno.
+Project in real work. With the rule enabled, only one can be active.
 
 ## `paused`
 
-Proyecto detenido temporalmente.
+Project temporarily stopped.
 
 ## `finished`
 
-Proyecto terminado o cerrado.
+Project done or closed.
 
-## Regla principal
+## Main rule
 
-Si activas otro proyecto como `Active`, ShipOne puede pasar el anterior a `paused` segun la configuracion.
+If you activate another project as `Active`, ShipOne can move the previous one to `paused` depending on the configuration.
 
-## Como elegir estado
+## How to choose a state
 
-- Usa `idea` si solo estas definiendo la idea.
-- Usa `active` cuando el proyecto este en trabajo real.
-- Usa `paused` para dejarlo para mas tarde.
-- Usa `finished` si ya esta terminado.
+- Use `idea` when you are only defining the idea.
+- Use `active` when the project is in real work.
+- Use `paused` to leave it for later.
+- Use `finished` if it is already done.

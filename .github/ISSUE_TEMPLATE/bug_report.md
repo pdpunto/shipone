@@ -1,33 +1,33 @@
 ---
 name: Bug report
-about: Reporta un error en ShipOne
+about: Report a bug in ShipOne
 title: "[Bug]: "
 labels: bug
 ---
 
-## Resumen
+## Summary
 
-## Que paso
+## What happened
 
-## Que esperabas que pasara
+## What you expected
 
-## Pasos para reproducir
+## Steps to reproduce
 
 1.
 2.
 3.
 
-## Entorno
+## Environment
 
 - VS Code:
 - ShipOne:
-- Sistema operativo:
+- Operating system:
 - Git:
 - GitHub CLI:
-- Extension Development Host o VS Code normal:
+- Extension Development Host or normal VS Code:
 
-## Notas
+## Notes
 
-- Logs relevantes:
-- Capturas:
-- Cambios recientes:
+- Relevant logs:
+- Screenshots:
+- Recent changes:

@@ -1,31 +1,31 @@
 # Core Workflow
 
-## Flujo real
+## Real flow
 
-1. Abre ShipOne en la barra lateral.
-2. Crea un proyecto nuevo.
-3. Elige tipo, carpeta y opciones Git/GitHub.
-4. Verifica que el proyecto quede en `active` o en el estado correcto.
-5. Escribe un `nextAction`.
-6. Trabaja desde la misma vista.
-7. Si pierdes foco, usa `Focus` o `Weekly review`.
-8. Si el proyecto se detiene, usa `paused` o `finished`.
-9. Si el proyecto ya no sirve, elimínalo desde la papelera con confirmacion.
+1. Open ShipOne in the sidebar.
+2. Create a new project.
+3. Choose type, folder, and Git/GitHub options.
+4. Check that the project is `active` or in the right state.
+5. Write a `nextAction`.
+6. Work from the same view.
+7. If you lose focus, use `Focus` or `Weekly review`.
+8. If the project slows down, move it to `paused` or `finished`.
+9. If the project no longer helps, delete it from the trash icon with confirmation.
 
-## Lo importante
+## What matters most
 
-- Un proyecto activo a la vez ayuda a concentrarse.
-- `nextAction` debe ser concreto.
-- `STATUS.md` refuerza el contexto.
-- `Focus` recorta ruido.
-- `Weekly review` ayuda a retomar.
-- `Eliminar proyecto` limpia lo que ya no aporta.
+- One active project at a time helps you focus.
+- `nextAction` should be concrete.
+- `STATUS.md` reinforces the context.
+- `Focus` cuts noise.
+- `Weekly review` helps you resume work.
+- `Delete project` clears what no longer adds value.
 
-## Ejemplo
+## Example
 
-1. Crear `my-saas-app`.
-2. Elegir `nextjs`.
-3. Activar Git.
-4. Escribir `nextAction: crear login`.
-5. Trabajar hasta terminar esa parte.
-6. Marca el proyecto como `finished` cuando este listo.
+1. Create `my-saas-app`.
+2. Choose `nextjs`.
+3. Enable Git.
+4. Write `nextAction: create login`.
+5. Work until that part is done.
+6. Mark the project as `finished` when it is ready.

@@ -1,11 +1,11 @@
 # Walkthrough
 
-Notas del material de inicio rapido de ShipOne.
+Quick-start notes for ShipOne.
 
-## Uso
+## Use
 
-- `getting-started.md` explica el primer flujo.
+- `getting-started.md` explains the first flow.
 
-## Objetivo
+## Goal
 
-Guiar al usuario nuevo sin cargar la documentacion principal.
+Guide new users without adding noise to the main documentation.

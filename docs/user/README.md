@@ -1,6 +1,6 @@
 # User Docs
 
-Documentacion para usuarios finales.
+Documentation for end users.
 
 - `getting-started.md`
 - `core-workflow.md`

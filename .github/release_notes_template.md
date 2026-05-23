@@ -2,23 +2,23 @@
 
 ## Summary
 
-Escribe un resumen corto de la version.
+Write a short summary of the version.
 
 ## Added
 
-- Que nueva capacidad llega en esta version.
+- What new capability arrives in this version.
 
 ## Changed
 
-- Que comportamiento mejora o cambia.
+- What behavior improves or changes.
 
 ## Fixed
 
-- Que error concreto se corrige.
+- What specific bug is fixed.
 
 ## Removed
 
-- Que deja de estar disponible, si aplica.
+- What is no longer available, if applicable.
 
 ## Validation
 
@@ -28,9 +28,9 @@ Escribe un resumen corto de la version.
 
 ## Breaking changes
 
-- Ninguno, salvo que se indique lo contrario.
+- None, unless otherwise noted.
 
 ## Notes
 
-- Enlaza issues o PRs relacionadas.
-- Añade notas de publicacion, compatibilidad o marketplace.
+- Link related issues or PRs.
+- Add release, compatibility, or marketplace notes.
