@@ -16,6 +16,7 @@ Main documentation index for ShipOne.
 ## Technical
 
 - [Architecture](technical/architecture.md)
+- [Project health](technical/project-health.md)
 - [Data model](technical/data-model.md)
 - [Persistence](technical/persistence.md)
 - [Project creation](technical/project-creation.md)
