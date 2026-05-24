@@ -36,6 +36,8 @@ Thanks for helping with ShipOne.
 ## Recommended Flow
 
 - Open an issue first if the change is large or unclear.
+- Use [Roadmap](docs/roadmap.md) to see the public direction.
+- Start with [Good first issues](docs/good-first-issues.md) if you want a small task.
 - Use one branch per task.
 - Validate locally before asking for review.
 - Summarize the change in a short and concrete way.

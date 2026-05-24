@@ -5,6 +5,8 @@ Main documentation index for ShipOne.
 ## Public
 
 - [Main README](../README.md)
+- [Roadmap](roadmap.md)
+- [Good first issues](good-first-issues.md)
 - [Getting started](user/getting-started.md)
 - [Core workflow](user/core-workflow.md)
 - [Configuration](user/configuration.md)
