@@ -1,6 +1,6 @@
 # <img src="media/branding/icon-32.png" alt="ShipOne icon" width="28" /> ShipOne
 
-ShipOne is a VS Code extension for creating, organizing, and finishing projects with clear context.
+ShipOne is a VS Code extension for creating new projects, adding existing ones, and finishing work with clear context.
 
 It keeps the next step visible, the project state precise, and the friction low when you return to work.
 
@@ -63,7 +63,7 @@ These images show the real ShipOne flow inside VS Code:
 
 ## What it does
 
-- Creates new projects from a dedicated view.
+- Creates new projects or imports existing folders from a dedicated view.
 - Stores local metadata for each project.
 - Keeps only one `Active` project if that rule is enabled.
 - Shows `nextAction`, favorites, health, pauses, and metrics.
