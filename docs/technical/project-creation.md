@@ -40,7 +40,10 @@ Scan flow:
 3. Ignore hidden and build folders.
 4. Exclude already tracked projects.
 5. Detect a likely project type.
-6. Add the new folders without overwriting files.
+6. Let the user choose the folders to add.
+7. Add the selected folders without overwriting files.
+
+When ShipOne scans the projects root during startup, it can refresh the view silently so the list stays current.
 
 ## Templates
 

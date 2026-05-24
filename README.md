@@ -25,6 +25,7 @@ ShipOne keeps in one place what usually ends up spread across notes, loose folde
 
 - a single `Active` project at a time;
 - new projects and existing folders under the same workflow;
+- existing projects without overwriting their files;
 - synced `STATUS.md` and local metadata;
 - focus mode, review, and project health in one view;
 - optional Git and GitHub;

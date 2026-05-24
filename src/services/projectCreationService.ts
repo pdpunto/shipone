@@ -84,6 +84,8 @@ type ScannedProjectCandidate = {
   type: ImportedProjectType;
   detail: string;
 };
+type ScannedProjectQuickPickItem = ScannedProjectCandidate &
+  vscode.QuickPickItem;
 
 const LAST_PROJECT_TYPE_KEY = "shipone.lastProjectType";
 const LAST_PACKAGE_MANAGER_KEY = "shipone.lastPackageManager";
@@ -248,6 +250,14 @@ export class ProjectCreationService {
       return [];
     }
 
+    const selectedCandidates = options.silent
+      ? candidates
+      : await this.pickScannedProjects(candidates);
+
+    if (!selectedCandidates || selectedCandidates.length === 0) {
+      return [];
+    }
+
     const importedProjectFiles = {
       createStatusFile: options.silent
         ? false
@@ -262,7 +272,7 @@ export class ProjectCreationService {
     };
 
     const addedProjects: ProjectMetadata[] = [];
-    for (const choice of candidates) {
+    for (const choice of selectedCandidates) {
       const project = createProjectMetadata({
         id: randomUUID(),
         name: choice.name,
@@ -707,6 +717,25 @@ export class ProjectCreationService {
     );
 
     return choice === t(k.common.yes);
+  }
+
+  private async pickScannedProjects(
+    candidates: ScannedProjectCandidate[]
+  ): Promise<ScannedProjectCandidate[] | undefined> {
+    const choices: ScannedProjectQuickPickItem[] = candidates.map((choice) => ({
+      ...choice,
+      label: choice.name,
+      description: choice.type,
+      detail: choice.detail,
+    }));
+
+    const selected = await vscode.window.showQuickPick(choices, {
+      canPickMany: true,
+      title: t("Scan projects root"),
+      placeHolder: t("Choose the folders to add"),
+    });
+
+    return selected?.length ? selected : undefined;
   }
 
   private async applyImportedProjectFiles(

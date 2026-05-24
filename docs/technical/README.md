@@ -1,6 +1,6 @@
 # Technical Docs
 
-Documentacion tecnica para contributors y mantenimiento.
+Technical documentation for contributors and maintainers.
 
 - `architecture.md`
 - `project-health.md`

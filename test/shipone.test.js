@@ -3850,12 +3850,21 @@ test("Scan projects root flow importa varias carpetas", async () => {
       Buffer.from("[project]", "utf8")
     );
     fixture.files.set(
+      "C:\\tmp\\shipone-projects\\app-react\\package.json",
+      Buffer.from("{}", "utf8")
+    );
+    fixture.files.set(
+      "C:\\tmp\\shipone-projects\\app-react\\vite.config.ts",
+      Buffer.from("export default {}", "utf8")
+    );
+    fixture.files.set(
       "C:\\tmp\\shipone-projects\\app-existing\\package.json",
       Buffer.from("{}", "utf8")
     );
     fixture.dirs.add("C:\\tmp\\shipone-projects");
     fixture.dirs.add("C:\\tmp\\shipone-projects\\app-next");
     fixture.dirs.add("C:\\tmp\\shipone-projects\\app-python");
+    fixture.dirs.add("C:\\tmp\\shipone-projects\\app-react");
     fixture.dirs.add("C:\\tmp\\shipone-projects\\app-existing");
     fixture.dirs.add("C:\\tmp\\shipone-projects\\.git");
     fixture.dirs.add("C:\\tmp\\shipone-projects\\node_modules");
@@ -3863,6 +3872,7 @@ test("Scan projects root flow importa varias carpetas", async () => {
     fixture.directories.set("C:\\tmp\\shipone-projects", [
       ["app-next", fixture.vscode.FileType.Directory],
       ["app-python", fixture.vscode.FileType.Directory],
+      ["app-react", fixture.vscode.FileType.Directory],
       ["app-existing", fixture.vscode.FileType.Directory],
       [".git", fixture.vscode.FileType.Directory],
       ["node_modules", fixture.vscode.FileType.Directory],
@@ -3917,6 +3927,7 @@ test("Scan projects root flow importa varias carpetas", async () => {
       new GitHubService()
     );
 
+    fixture.enqueueQuickPick((items) => [items[0], items[1]]);
     fixture.enqueueInformationChoice((args) => args[1]);
     fixture.enqueueInformationChoice((args) => args[1]);
     const projects = await service.scanProjectsRoot(fixture.settings);
@@ -3933,6 +3944,11 @@ test("Scan projects root flow importa varias carpetas", async () => {
       fixture.projectStore.createdProjects.some(
         ({ project }) =>
           project.name === "app-python" && project.type === "python"
+      )
+    );
+    assert.ok(
+      !fixture.projectStore.createdProjects.some(
+        ({ project }) => project.name === "app-react"
       )
     );
     assert.ok(

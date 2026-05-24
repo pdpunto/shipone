@@ -12,4 +12,8 @@ test("README documenta el PAT de marketplace", () => {
 
   assert.ok(readme.includes("VSCE_PAT"));
   assert.ok(readme.includes("Publish Marketplace"));
+  assert.ok(readme.includes("creating new projects"));
+  assert.ok(readme.includes("adding existing ones"));
+  assert.ok(readme.includes("Scan projects root"));
+  assert.ok(readme.includes("without overwriting their files"));
 });
