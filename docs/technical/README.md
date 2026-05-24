@@ -4,6 +4,7 @@ Documentacion tecnica para contributors y mantenimiento.
 
 - `architecture.md`
 - `project-health.md`
+- `project-context.md`
 - `data-model.md`
 - `persistence.md`
 - `project-creation.md`
