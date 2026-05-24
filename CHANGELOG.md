@@ -25,4 +25,6 @@ All notable changes to ShipOne will be documented here.
 
 ## Unreleased
 
-- No changes yet.
+- Added automatic scanning of the configured projects root.
+- Added support for importing existing projects from disk.
+- Improved public docs for the import workflows.
