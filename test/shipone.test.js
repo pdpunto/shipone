@@ -2154,8 +2154,12 @@ test("TreeRendererService carga proyectos una sola vez por cache", async () => {
       return originalLoad.call(this, request, parent, isMain);
     };
 
-    delete require.cache[require.resolve("../out/providers/treeRendererService")];
-    const { TreeRendererService } = require("../out/providers/treeRendererService");
+    delete require.cache[
+      require.resolve("../out/providers/treeRendererService")
+    ];
+    const {
+      TreeRendererService,
+    } = require("../out/providers/treeRendererService");
 
     let loadCalls = 0;
     const service = new TreeRendererService(
@@ -3680,7 +3684,9 @@ test("Add existing project flow importa carpeta y genera archivos opcionales", a
   const fixture = createIntegrationFixture();
 
   try {
-    fixture.enqueueOpenDialog([fixture.vscode.Uri.file("C:\\tmp\\existing-app")]);
+    fixture.enqueueOpenDialog([
+      fixture.vscode.Uri.file("C:\\tmp\\existing-app"),
+    ]);
     fixture.enqueueInput("App de prueba");
     fixture.enqueueQuickPick((items) =>
       items.find((item) => item.value === "nextjs")
@@ -3699,7 +3705,9 @@ test("Add existing project flow importa carpeta y genera archivos opcionales", a
     delete require.cache[require.resolve("../out/services/gitService")];
     delete require.cache[require.resolve("../out/services/githubService")];
     delete require.cache[require.resolve("../out/services/statusFileService")];
-    delete require.cache[require.resolve("../out/services/projectContextService")];
+    delete require.cache[
+      require.resolve("../out/services/projectContextService")
+    ];
 
     const {
       ProjectCreationService,
@@ -3733,9 +3741,7 @@ test("Add existing project flow importa carpeta y genera archivos opcionales", a
     assert.equal(project.nextAction, "Crear login");
     assert.equal(fixture.projectStore.createdProjects.length, 1);
     assert.ok(fixture.files.has("C:\\tmp\\existing-app\\STATUS.md"));
-    assert.ok(
-      fixture.files.has("C:\\tmp\\existing-app\\PROJECT_CONTEXT.md")
-    );
+    assert.ok(fixture.files.has("C:\\tmp\\existing-app\\PROJECT_CONTEXT.md"));
     assert.ok(
       fixture.execCalls.some(
         (call) =>
@@ -3759,7 +3765,9 @@ test("Add existing project flow abre proyecto ya registrado", async () => {
   const fixture = createIntegrationFixture();
 
   try {
-    fixture.enqueueOpenDialog([fixture.vscode.Uri.file("C:\\tmp\\existing-app")]);
+    fixture.enqueueOpenDialog([
+      fixture.vscode.Uri.file("C:\\tmp\\existing-app"),
+    ]);
     fixture.projectStore.projects.push({
       id: "p1",
       name: "existing-app",
@@ -3769,7 +3777,10 @@ test("Add existing project flow abre proyecto ya registrado", async () => {
       path: "C:\\tmp\\existing-app",
       createdAt: "2026-05-15T00:00:00.000Z",
     });
-    fixture.projectStore.projectsById.set("p1", fixture.projectStore.projects[0]);
+    fixture.projectStore.projectsById.set(
+      "p1",
+      fixture.projectStore.projects[0]
+    );
     fixture.enqueueInformationChoice("Abrir proyecto");
 
     delete require.cache[
@@ -3779,7 +3790,9 @@ test("Add existing project flow abre proyecto ya registrado", async () => {
     delete require.cache[require.resolve("../out/services/gitService")];
     delete require.cache[require.resolve("../out/services/githubService")];
     delete require.cache[require.resolve("../out/services/statusFileService")];
-    delete require.cache[require.resolve("../out/services/projectContextService")];
+    delete require.cache[
+      require.resolve("../out/services/projectContextService")
+    ];
 
     const {
       ProjectCreationService,
@@ -3810,7 +3823,9 @@ test("Add existing project flow abre proyecto ya registrado", async () => {
     assert.equal(project.id, "p1");
     assert.equal(fixture.projectStore.createdProjects.length, 0);
     assert.ok(
-      fixture.commandExecCalls.some((call) => call.name === "shipone.openProject")
+      fixture.commandExecCalls.some(
+        (call) => call.name === "shipone.openProject"
+      )
     );
     assert.equal(fixture.messages.info.length, 1);
   } finally {
@@ -3875,7 +3890,9 @@ test("Scan projects root flow importa varias carpetas", async () => {
     delete require.cache[require.resolve("../out/services/gitService")];
     delete require.cache[require.resolve("../out/services/githubService")];
     delete require.cache[require.resolve("../out/services/statusFileService")];
-    delete require.cache[require.resolve("../out/services/projectContextService")];
+    delete require.cache[
+      require.resolve("../out/services/projectContextService")
+    ];
 
     const {
       ProjectCreationService,
@@ -3900,18 +3917,22 @@ test("Scan projects root flow importa varias carpetas", async () => {
       new GitHubService()
     );
 
+    fixture.enqueueInformationChoice((args) => args[1]);
+    fixture.enqueueInformationChoice((args) => args[1]);
     const projects = await service.scanProjectsRoot(fixture.settings);
 
     assert.equal(projects.length, 2);
     assert.equal(fixture.projectStore.createdProjects.length, 2);
     assert.ok(
       fixture.projectStore.createdProjects.some(
-        ({ project }) => project.name === "app-next" && project.type === "nextjs"
+        ({ project }) =>
+          project.name === "app-next" && project.type === "nextjs"
       )
     );
     assert.ok(
       fixture.projectStore.createdProjects.some(
-        ({ project }) => project.name === "app-python" && project.type === "python"
+        ({ project }) =>
+          project.name === "app-python" && project.type === "python"
       )
     );
     assert.ok(
@@ -3919,7 +3940,23 @@ test("Scan projects root flow importa varias carpetas", async () => {
         (call) => call.name === "shipone.refreshProjects"
       )
     );
-    assert.equal(fixture.messages.info.length, 1);
+    assert.ok(
+      fixture.files.has("C:\\tmp\\shipone-projects\\app-next\\STATUS.md")
+    );
+    assert.ok(
+      fixture.files.has(
+        "C:\\tmp\\shipone-projects\\app-next\\PROJECT_CONTEXT.md"
+      )
+    );
+    assert.ok(
+      fixture.files.has("C:\\tmp\\shipone-projects\\app-python\\STATUS.md")
+    );
+    assert.ok(
+      fixture.files.has(
+        "C:\\tmp\\shipone-projects\\app-python\\PROJECT_CONTEXT.md"
+      )
+    );
+    assert.equal(fixture.messages.info.length, 3);
   } finally {
     fixture.restoreLoad();
   }
@@ -4497,8 +4534,7 @@ test("Export weekly review summary crea el markdown", async () => {
 
     await fixture.commandHandlers.get("shipone.exportWeeklyReviewSummary")();
 
-    const summaryPath =
-      "C:\\tmp\\shipone-projects\\SHIPONE_WEEKLY_REVIEW.md";
+    const summaryPath = "C:\\tmp\\shipone-projects\\SHIPONE_WEEKLY_REVIEW.md";
     const summary = fixture.files.get(summaryPath)?.toString("utf8");
 
     assert.ok(summary);

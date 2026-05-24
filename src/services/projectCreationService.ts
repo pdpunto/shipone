@@ -74,6 +74,10 @@ type ExistingProjectImportDraft = {
   generateProjectContext: boolean;
   settings: ShipOneSettings;
 };
+type ImportedProjectFileOptions = {
+  createStatusFile: boolean;
+  generateProjectContext: boolean;
+};
 type ScannedProjectCandidate = {
   folderUri: vscode.Uri;
   name: string;
@@ -200,39 +204,27 @@ export class ProjectCreationService {
       settings.enforceOneActiveProject
     );
 
-    if (draft.createStatusFile) {
-      try {
-        await this.statusFileService.syncStatusFile(project);
-      } catch {
-        await vscode.window.showWarningMessage(
-          t("STATUS.md could not be created for the imported project.")
-        );
-      }
-    }
+    await this.applyImportedProjectFiles(project, {
+      createStatusFile: draft.createStatusFile,
+      generateProjectContext: draft.generateProjectContext,
+    });
 
     await vscode.commands.executeCommand("shipone.refreshProjects");
-
-    if (draft.generateProjectContext) {
-      try {
-        await this.projectContextService.generateAiContext(project);
-      } catch {
-        await vscode.window.showWarningMessage(
-          t("PROJECT_CONTEXT.md could not be created for the imported project.")
-        );
-      }
-    }
 
     await vscode.window.showInformationMessage(
       t("Existing project added: {0}.", project.name)
     );
-    await vscode.commands.executeCommand("shipone.refreshProjects");
 
     return project;
   }
 
   async scanProjectsRoot(
     settings: ShipOneSettings,
-    options: { silent?: boolean } = {}
+    options: {
+      silent?: boolean;
+      createStatusFile?: boolean;
+      generateProjectContext?: boolean;
+    } = {}
   ): Promise<ProjectMetadata[]> {
     const rootUri = vscode.Uri.file(settings.projectsRoot);
     const rootExists = await this.pathExists(rootUri);
@@ -256,6 +248,19 @@ export class ProjectCreationService {
       return [];
     }
 
+    const importedProjectFiles = {
+      createStatusFile: options.silent
+        ? false
+        : (options.createStatusFile ??
+          (await this.askYesNo(t("Create STATUS.md for imported projects?")))),
+      generateProjectContext: options.silent
+        ? false
+        : (options.generateProjectContext ??
+          (await this.askYesNo(
+            t("Generate PROJECT_CONTEXT.md for imported projects?")
+          ))),
+    };
+
     const addedProjects: ProjectMetadata[] = [];
     for (const choice of candidates) {
       const project = createProjectMetadata({
@@ -275,6 +280,7 @@ export class ProjectCreationService {
         settings.enforceOneActiveProject
       );
 
+      await this.applyImportedProjectFiles(project, importedProjectFiles);
       addedProjects.push(project);
     }
 
@@ -701,6 +707,31 @@ export class ProjectCreationService {
     );
 
     return choice === t(k.common.yes);
+  }
+
+  private async applyImportedProjectFiles(
+    project: ProjectMetadata,
+    options: ImportedProjectFileOptions
+  ): Promise<void> {
+    if (options.createStatusFile) {
+      try {
+        await this.statusFileService.syncStatusFile(project);
+      } catch {
+        await vscode.window.showWarningMessage(
+          t("STATUS.md could not be created for the imported project.")
+        );
+      }
+    }
+
+    if (options.generateProjectContext) {
+      try {
+        await this.projectContextService.generateAiContext(project);
+      } catch {
+        await vscode.window.showWarningMessage(
+          t("PROJECT_CONTEXT.md could not be created for the imported project.")
+        );
+      }
+    }
   }
 
   private async detectGitRemoteOrigin(
