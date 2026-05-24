@@ -8,6 +8,7 @@ Documentacion tecnica para contributors y mantenimiento.
 - `focus-mode.md`
 - `review-flow.md`
 - `development-setup.md`
+- `testing.md`
 - `data-model.md`
 - `persistence.md`
 - `project-creation.md`
