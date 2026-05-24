@@ -18,6 +18,7 @@ Main documentation index for ShipOne.
 - [Architecture](technical/architecture.md)
 - [Project health](technical/project-health.md)
 - [Project context](technical/project-context.md)
+- [Focus mode](technical/focus-mode.md)
 - [Data model](technical/data-model.md)
 - [Persistence](technical/persistence.md)
 - [Project creation](technical/project-creation.md)
