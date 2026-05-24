@@ -14,6 +14,34 @@
 10. Optionally create GitHub repo.
 11. Open the project if configured.
 
+## Import existing project
+
+ShipOne can also register a folder that already exists on disk.
+
+Import flow:
+
+1. Pick an existing folder.
+2. Infer the project name from the folder name.
+3. Ask for a short description.
+4. Choose project type and initial state.
+5. Detect Git remote origin if available.
+6. Optionally create `STATUS.md`.
+7. Optionally generate `PROJECT_CONTEXT.md`.
+8. Register the project without creating templates.
+
+## Scan projects root
+
+ShipOne can scan `shipone.projectsRoot` and add new folders automatically.
+
+Scan flow:
+
+1. Read the configured projects root.
+2. List direct child folders only.
+3. Ignore hidden and build folders.
+4. Exclude already tracked projects.
+5. Detect a likely project type.
+6. Add the new folders without overwriting files.
+
 ## Templates
 
 - `blank`
@@ -28,3 +56,4 @@
 - GitHub is optional.
 - Folder collisions should not overwrite existing projects.
 - Partial failures can leave temporary artifacts.
+- Imported folders keep their files.

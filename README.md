@@ -24,6 +24,7 @@ Many projects start fast and get abandoned just as fast.
 ShipOne keeps in one place what usually ends up spread across notes, loose folders, and memory:
 
 - a single `Active` project at a time;
+- new projects and existing folders under the same workflow;
 - synced `STATUS.md` and local metadata;
 - focus mode, review, and project health in one view;
 - optional Git and GitHub;
@@ -97,6 +98,8 @@ ShipOne works well with a simple, repeatable flow:
 - `ShipOne: Focus` - enter focus mode
 - `ShipOne: Weekly review` - review the weekly state
 - `ShipOne: Generate project context` - create a summary ready to resume work
+- `ShipOne: Add existing project` - import one folder you already have
+- `ShipOne: Scan projects root` - add every new project found in your projects folder
 - `ShipOne: Delete project` - delete a project with confirmation
 - `ShipOne: STATUS.md` - sync the status file
 - `ShipOne: Connect GitHub` - connect GitHub for remote repo publishing
