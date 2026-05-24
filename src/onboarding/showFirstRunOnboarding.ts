@@ -16,7 +16,7 @@ export async function showFirstRunOnboarding(
   const choice = await vscode.window.showInformationMessage(
     t(k.onboarding.ready, settings.projectsRoot),
     t(k.common.createProject),
-    t("Elegir carpeta base"),
+    t(k.common.chooseBaseFolder),
     t(k.common.openGuide),
     t(k.common.connectGitHub),
     t(k.common.openSettings),
@@ -34,7 +34,7 @@ export async function showFirstRunOnboarding(
     return;
   }
 
-  if (choice === t("Elegir carpeta base")) {
+  if (choice === t(k.common.chooseBaseFolder)) {
     await vscode.commands.executeCommand("shipone.setProjectsRoot");
     return;
   }

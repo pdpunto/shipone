@@ -104,6 +104,8 @@ test("package.nls.es.json traduce claves estructuradas de creacion", () => {
   );
   assert.equal(es["Git local"], "Git local");
   assert.equal(es["Carpeta destino"], "Carpeta destino");
+  assert.equal(es.chooseBaseFolder, "Elegir carpeta base");
+  assert.equal(es.createFile, "Crear archivo");
 });
 
 test("package.nls.es.json traduce estados de proyecto", () => {

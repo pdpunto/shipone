@@ -57,7 +57,7 @@ export function registerLaunchCommands(options: {
         canSelectFiles: false,
         canSelectMany: false,
         defaultUri: vscode.Uri.file(settings.projectsRoot),
-        title: t("Elegir carpeta base"),
+        title: t(k.common.chooseBaseFolder),
         openLabel: t(k.common.useFolder),
       });
 

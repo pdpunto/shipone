@@ -103,6 +103,8 @@ export const translationKeys = {
     connectGitHub: "Conectar GitHub",
     createProject: "Crear proyecto",
     useFolder: "Usar carpeta",
+    chooseBaseFolder: "Elegir carpeta base",
+    createFile: "Crear archivo",
     chooseProject: "Elige un proyecto",
     choosePausedProject: "Elige un proyecto pausado",
     openProject: "Abrir proyecto",

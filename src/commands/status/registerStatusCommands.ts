@@ -35,11 +35,11 @@ export function registerStatusCommands(options: {
       } catch {
         const choice = await vscode.window.showErrorMessage(
           t(k.status.openFailed),
-          t("Crear archivo"),
+          t(k.common.createFile),
           t(k.common.openFolder)
         );
 
-        if (choice === t("Crear archivo")) {
+        if (choice === t(k.common.createFile)) {
           await vscode.commands.executeCommand("shipone.syncStatusFile");
         } else if (choice === t(k.common.openFolder)) {
           await vscode.commands.executeCommand(
