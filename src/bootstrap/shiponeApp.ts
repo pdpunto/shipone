@@ -113,6 +113,12 @@ export class ShipOneApp {
       }
     );
 
+    void this.projectCreationService
+      .scanProjectsRoot(this.settingsService.getSettings(), { silent: true })
+      .catch((error) => {
+        this.logError("No se pudo escanear la carpeta de proyectos.", error);
+      });
+
     const projectCommands = registerProjectCommands({
       context: this.context,
       projectStore: this.projectStore,

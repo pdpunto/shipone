@@ -38,6 +38,7 @@
     "onCommand:shipone.showWelcome",
     "onCommand:shipone.quickCreateProject",
     "onCommand:shipone.addExistingProject",
+    "onCommand:shipone.scanProjectsRoot",
     "onCommand:shipone.searchProject",
     "onCommand:shipone.scanTodos",
     "onCommand:shipone.generateAiContext",
@@ -70,6 +71,12 @@
         "title": "%command.addExistingProject.title%",
         "category": "ShipOne",
         "icon": "$(folder-opened)"
+      },
+      {
+        "command": "shipone.scanProjectsRoot",
+        "title": "%command.scanProjectsRoot.title%",
+        "category": "ShipOne",
+        "icon": "$(search)"
       },
       {
         "command": "shipone.openProjectsRoot",
@@ -322,6 +329,9 @@
       "shipone.moreActions": [
         {
           "command": "shipone.addExistingProject"
+        },
+        {
+          "command": "shipone.scanProjectsRoot"
         },
         {
           "command": "shipone.openProjectsRoot"

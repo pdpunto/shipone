@@ -297,5 +297,15 @@
   "STATUS.md could not be created for the imported project.": "STATUS.md could not be created for the imported project.",
   "PROJECT_CONTEXT.md could not be created for the imported project.": "PROJECT_CONTEXT.md could not be created for the imported project.",
   "Existing project added: {0}.": "Existing project added: {0}.",
-  "command.addExistingProject.title": "Add existing project"
+  "No new projects were found in the projects root.": "No new projects were found in the projects root.",
+  "The projects root folder does not exist.": "The projects root folder does not exist.",
+  "Added {0} existing projects.": "Added {0} existing projects.",
+  "Create STATUS.md for scanned projects?": "Create STATUS.md for scanned projects?",
+  "Generate PROJECT_CONTEXT.md for scanned projects?": "Generate PROJECT_CONTEXT.md for scanned projects?",
+  "STATUS.md could not be created for the scanned project.": "STATUS.md could not be created for the scanned project.",
+  "PROJECT_CONTEXT.md could not be created for the scanned project.": "PROJECT_CONTEXT.md could not be created for the scanned project.",
+  "Scan projects root": "Scan projects root",
+  "Choose the folders to add": "Choose the folders to add",
+  "command.addExistingProject.title": "Add existing project",
+  "command.scanProjectsRoot.title": "Scan projects root"
 }

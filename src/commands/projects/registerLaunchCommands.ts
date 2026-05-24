@@ -14,6 +14,7 @@ import {
 const COMMAND_CREATE_PROJECT = "shipone.createProject";
 const COMMAND_QUICK_CREATE_PROJECT = "shipone.quickCreateProject";
 const COMMAND_ADD_EXISTING_PROJECT = "shipone.addExistingProject";
+const COMMAND_SCAN_PROJECTS_ROOT = "shipone.scanProjectsRoot";
 const COMMAND_SET_PROJECTS_ROOT = "shipone.setProjectsRoot";
 const COMMAND_OPEN_PROJECTS_ROOT = "shipone.openProjectsRoot";
 const COMMAND_CHOOSE_PROJECT = "shipone.chooseProject";
@@ -248,6 +249,18 @@ export function registerLaunchCommands(options: {
     }
   );
 
+  const scanProjectsRootCommand = vscode.commands.registerCommand(
+    COMMAND_SCAN_PROJECTS_ROOT,
+    async () => {
+      const settings = settingsService.getSettings();
+      const projects = await projectCreationService.scanProjectsRoot(settings);
+
+      if (projects.length > 0) {
+        treeRefresh();
+      }
+    }
+  );
+
   const chooseProjectCommand = vscode.commands.registerCommand(
     COMMAND_CHOOSE_PROJECT,
     async () => {
@@ -298,6 +311,7 @@ export function registerLaunchCommands(options: {
     createProjectCommand,
     quickCreateProjectCommand,
     addExistingProjectCommand,
+    scanProjectsRootCommand,
     chooseProjectCommand,
   ];
 }

@@ -74,6 +74,12 @@ type ExistingProjectImportDraft = {
   generateProjectContext: boolean;
   settings: ShipOneSettings;
 };
+type ScannedProjectCandidate = {
+  folderUri: vscode.Uri;
+  name: string;
+  type: ImportedProjectType;
+  detail: string;
+};
 
 const LAST_PROJECT_TYPE_KEY = "shipone.lastProjectType";
 const LAST_PACKAGE_MANAGER_KEY = "shipone.lastPackageManager";
@@ -222,6 +228,64 @@ export class ProjectCreationService {
     await vscode.commands.executeCommand("shipone.refreshProjects");
 
     return project;
+  }
+
+  async scanProjectsRoot(
+    settings: ShipOneSettings,
+    options: { silent?: boolean } = {}
+  ): Promise<ProjectMetadata[]> {
+    const rootUri = vscode.Uri.file(settings.projectsRoot);
+    const rootExists = await this.pathExists(rootUri);
+
+    if (!rootExists) {
+      if (!options.silent) {
+        await vscode.window.showErrorMessage(
+          t("The projects root folder does not exist.")
+        );
+      }
+      return [];
+    }
+
+    const candidates = await this.findScannableProjects(rootUri);
+    if (candidates.length === 0) {
+      if (!options.silent) {
+        await vscode.window.showInformationMessage(
+          t("No new projects were found in the projects root.")
+        );
+      }
+      return [];
+    }
+
+    const addedProjects: ProjectMetadata[] = [];
+    for (const choice of candidates) {
+      const project = createProjectMetadata({
+        id: randomUUID(),
+        name: choice.name,
+        description: "",
+        type: choice.type,
+        status: "idea",
+        path: choice.folderUri.fsPath,
+        repoUrl: await this.detectGitRemoteOrigin(choice.folderUri.fsPath),
+        createdAt: new Date().toISOString(),
+        lastOpenedAt: new Date().toISOString(),
+      });
+
+      await this.projectStore.createProject(
+        project,
+        settings.enforceOneActiveProject
+      );
+
+      addedProjects.push(project);
+    }
+
+    await vscode.commands.executeCommand("shipone.refreshProjects");
+    if (!options.silent) {
+      await vscode.window.showInformationMessage(
+        t("Added {0} existing projects.", addedProjects.length)
+      );
+    }
+
+    return addedProjects;
   }
 
   async createProject(
@@ -659,6 +723,110 @@ export class ProjectCreationService {
   private normalizePath(value: string): string {
     const normalized = path.resolve(value);
     return process.platform === "win32" ? normalized.toLowerCase() : normalized;
+  }
+
+  private async findScannableProjects(
+    rootUri: vscode.Uri
+  ): Promise<ScannedProjectCandidate[]> {
+    const entries = await vscode.workspace.fs.readDirectory(rootUri);
+    const existingProjects = await this.projectStore.loadProjects();
+    const existingPaths = new Set(
+      existingProjects.map((project) => this.normalizePath(project.path))
+    );
+
+    const candidates: ScannedProjectCandidate[] = [];
+    for (const [name, fileType] of entries) {
+      if (fileType !== vscode.FileType.Directory) {
+        continue;
+      }
+
+      if (this.shouldIgnoreScannedFolder(name)) {
+        continue;
+      }
+
+      const folderUri = vscode.Uri.joinPath(rootUri, name);
+      if (existingPaths.has(this.normalizePath(folderUri.fsPath))) {
+        continue;
+      }
+
+      candidates.push({
+        folderUri,
+        name,
+        type: await this.detectScannedProjectType(folderUri),
+        detail: folderUri.fsPath,
+      });
+    }
+
+    return candidates.sort((left, right) =>
+      left.name.localeCompare(right.name)
+    );
+  }
+
+  private shouldIgnoreScannedFolder(name: string): boolean {
+    if (name.startsWith(".")) {
+      return true;
+    }
+
+    return [
+      ".git",
+      "node_modules",
+      "dist",
+      "out",
+      "build",
+      ".venv",
+      "__pycache__",
+    ].includes(name);
+  }
+
+  private async detectScannedProjectType(
+    folderUri: vscode.Uri
+  ): Promise<ImportedProjectType> {
+    const hasPackageJson = await this.pathExists(
+      vscode.Uri.joinPath(folderUri, "package.json")
+    );
+
+    if (hasPackageJson) {
+      if (
+        (await this.pathExists(
+          vscode.Uri.joinPath(folderUri, "next.config.js")
+        )) ||
+        (await this.pathExists(
+          vscode.Uri.joinPath(folderUri, "next.config.mjs")
+        )) ||
+        (await this.pathExists(
+          vscode.Uri.joinPath(folderUri, "next.config.ts")
+        ))
+      ) {
+        return "nextjs";
+      }
+
+      if (
+        (await this.pathExists(
+          vscode.Uri.joinPath(folderUri, "vite.config.js")
+        )) ||
+        (await this.pathExists(
+          vscode.Uri.joinPath(folderUri, "vite.config.mjs")
+        )) ||
+        (await this.pathExists(
+          vscode.Uri.joinPath(folderUri, "vite.config.ts")
+        ))
+      ) {
+        return "react-vite";
+      }
+
+      return "node-api";
+    }
+
+    if (
+      (await this.pathExists(
+        vscode.Uri.joinPath(folderUri, "requirements.txt")
+      )) ||
+      (await this.pathExists(vscode.Uri.joinPath(folderUri, "pyproject.toml")))
+    ) {
+      return "python";
+    }
+
+    return "blank";
   }
 
   private async findAvailableFolderUri(

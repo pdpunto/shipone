@@ -297,5 +297,15 @@
   "STATUS.md could not be created for the imported project.": "No se pudo crear STATUS.md para el proyecto importado.",
   "PROJECT_CONTEXT.md could not be created for the imported project.": "No se pudo crear PROJECT_CONTEXT.md para el proyecto importado.",
   "Existing project added: {0}.": "Proyecto existente anadido: {0}.",
-  "command.addExistingProject.title": "Anadir proyecto existente"
+  "No new projects were found in the projects root.": "No se encontraron proyectos nuevos en la carpeta de proyectos.",
+  "The projects root folder does not exist.": "La carpeta base de proyectos no existe.",
+  "Added {0} existing projects.": "Anadidos {0} proyectos existentes.",
+  "Create STATUS.md for scanned projects?": "Crear STATUS.md para los proyectos escaneados?",
+  "Generate PROJECT_CONTEXT.md for scanned projects?": "Generar PROJECT_CONTEXT.md para los proyectos escaneados?",
+  "STATUS.md could not be created for the scanned project.": "No se pudo crear STATUS.md para el proyecto escaneado.",
+  "PROJECT_CONTEXT.md could not be created for the scanned project.": "No se pudo crear PROJECT_CONTEXT.md para el proyecto escaneado.",
+  "Scan projects root": "Escanear carpeta de proyectos",
+  "Choose the folders to add": "Elige las carpetas que quieres anadir",
+  "command.addExistingProject.title": "Anadir proyecto existente",
+  "command.scanProjectsRoot.title": "Escanear carpeta de proyectos"
 }

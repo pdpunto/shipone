@@ -3818,6 +3818,113 @@ test("Add existing project flow abre proyecto ya registrado", async () => {
   }
 });
 
+test("Scan projects root flow importa varias carpetas", async () => {
+  const fixture = createIntegrationFixture();
+
+  try {
+    fixture.files.set(
+      "C:\\tmp\\shipone-projects\\app-next\\package.json",
+      Buffer.from("{}", "utf8")
+    );
+    fixture.files.set(
+      "C:\\tmp\\shipone-projects\\app-next\\next.config.js",
+      Buffer.from("module.exports = {};", "utf8")
+    );
+    fixture.files.set(
+      "C:\\tmp\\shipone-projects\\app-python\\pyproject.toml",
+      Buffer.from("[project]", "utf8")
+    );
+    fixture.files.set(
+      "C:\\tmp\\shipone-projects\\app-existing\\package.json",
+      Buffer.from("{}", "utf8")
+    );
+    fixture.dirs.add("C:\\tmp\\shipone-projects");
+    fixture.dirs.add("C:\\tmp\\shipone-projects\\app-next");
+    fixture.dirs.add("C:\\tmp\\shipone-projects\\app-python");
+    fixture.dirs.add("C:\\tmp\\shipone-projects\\app-existing");
+    fixture.dirs.add("C:\\tmp\\shipone-projects\\.git");
+    fixture.dirs.add("C:\\tmp\\shipone-projects\\node_modules");
+    fixture.dirs.add("C:\\tmp\\shipone-projects\\.hidden");
+    fixture.directories.set("C:\\tmp\\shipone-projects", [
+      ["app-next", fixture.vscode.FileType.Directory],
+      ["app-python", fixture.vscode.FileType.Directory],
+      ["app-existing", fixture.vscode.FileType.Directory],
+      [".git", fixture.vscode.FileType.Directory],
+      ["node_modules", fixture.vscode.FileType.Directory],
+      [".hidden", fixture.vscode.FileType.Directory],
+      ["README.md", fixture.vscode.FileType.File],
+    ]);
+    fixture.projectStore.projects.push({
+      id: "existing-1",
+      name: "app-existing",
+      description: "Ya registrado",
+      type: "nextjs",
+      status: "idea",
+      path: "C:\\tmp\\shipone-projects\\app-existing",
+      createdAt: "2026-05-15T00:00:00.000Z",
+    });
+    fixture.projectStore.projectsById.set(
+      "existing-1",
+      fixture.projectStore.projects[0]
+    );
+
+    delete require.cache[
+      require.resolve("../out/services/projectCreationService")
+    ];
+    delete require.cache[require.resolve("../out/services/templateService")];
+    delete require.cache[require.resolve("../out/services/gitService")];
+    delete require.cache[require.resolve("../out/services/githubService")];
+    delete require.cache[require.resolve("../out/services/statusFileService")];
+    delete require.cache[require.resolve("../out/services/projectContextService")];
+
+    const {
+      ProjectCreationService,
+    } = require("../out/services/projectCreationService");
+    const { TemplateService } = require("../out/services/templateService");
+    const { GitService } = require("../out/services/gitService");
+    const { GitHubService } = require("../out/services/githubService");
+    const { StatusFileService } = require("../out/services/statusFileService");
+    const {
+      ProjectContextService,
+    } = require("../out/services/projectContextService");
+
+    const service = new ProjectCreationService(
+      fixture.context,
+      fixture.projectStore,
+      new StatusFileService(),
+      new ProjectContextService({
+        scanProjectTodoTasks: async () => [],
+      }),
+      new TemplateService(),
+      new GitService(),
+      new GitHubService()
+    );
+
+    const projects = await service.scanProjectsRoot(fixture.settings);
+
+    assert.equal(projects.length, 2);
+    assert.equal(fixture.projectStore.createdProjects.length, 2);
+    assert.ok(
+      fixture.projectStore.createdProjects.some(
+        ({ project }) => project.name === "app-next" && project.type === "nextjs"
+      )
+    );
+    assert.ok(
+      fixture.projectStore.createdProjects.some(
+        ({ project }) => project.name === "app-python" && project.type === "python"
+      )
+    );
+    assert.ok(
+      fixture.commandExecCalls.some(
+        (call) => call.name === "shipone.refreshProjects"
+      )
+    );
+    assert.equal(fixture.messages.info.length, 1);
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
 test("Open project flow abre la carpeta y marca acceso", async () => {
   const fixture = createIntegrationFixture();
 

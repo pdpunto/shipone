@@ -30,13 +30,26 @@ test("package.json publica metadatos para marketplace", () => {
     manifest.activationEvents.includes("onCommand:shipone.addExistingProject")
   );
   assert.ok(
+    manifest.activationEvents.includes("onCommand:shipone.scanProjectsRoot")
+  );
+  assert.ok(
     manifest.contributes.commands.some(
       (command) => command.command === "shipone.addExistingProject"
     )
   );
   assert.ok(
+    manifest.contributes.commands.some(
+      (command) => command.command === "shipone.scanProjectsRoot"
+    )
+  );
+  assert.ok(
     manifest.contributes.menus["shipone.moreActions"].some(
       (entry) => entry.command === "shipone.addExistingProject"
+    )
+  );
+  assert.ok(
+    manifest.contributes.menus["shipone.moreActions"].some(
+      (entry) => entry.command === "shipone.scanProjectsRoot"
     )
   );
 });
