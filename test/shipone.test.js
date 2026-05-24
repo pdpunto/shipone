@@ -2039,7 +2039,7 @@ test("getMetricsNodes muestra salud y resumen", async () => {
   }
 });
 
-test("ShipOneProjectsTreeDataProvider agrupa refresh seguidos", async () => {
+test("ShipOneProjectsTreeDataProvider refresca al instante", async () => {
   const originalLoad = Module._load;
 
   try {
@@ -2134,7 +2134,7 @@ test("ShipOneProjectsTreeDataProvider agrupa refresh seguidos", async () => {
 
     await Promise.resolve();
 
-    assert.equal(refreshCount, 1);
+    assert.equal(refreshCount, 3);
   } finally {
     Module._load = originalLoad;
   }
@@ -2766,7 +2766,9 @@ function createIntegrationFixtureWithOptions(options = {}) {
   const commandHandlers = new Map();
   const inputQueue = [];
   const quickPickQueue = [];
+  const openDialogQueue = [];
   const infoQueue = [];
+  const infoChoiceQueue = [];
   const warningQueue = [];
   const warningChoiceQueue = [];
   const errorQueue = [];
@@ -2849,7 +2851,8 @@ function createIntegrationFixtureWithOptions(options = {}) {
       },
       showInformationMessage: async (...args) => {
         infoQueue.push(args);
-        return undefined;
+        const next = infoChoiceQueue.shift();
+        return typeof next === "function" ? next(args) : next;
       },
       showWarningMessage: async (...args) => {
         warningQueue.push(args);
@@ -2861,7 +2864,10 @@ function createIntegrationFixtureWithOptions(options = {}) {
         return undefined;
       },
       withProgress: async (_options, task) => task({ report: () => {} }),
-      showOpenDialog: async () => undefined,
+      showOpenDialog: async () => {
+        const next = openDialogQueue.shift();
+        return typeof next === "function" ? next() : next;
+      },
       showTextDocument: async (document, options) => {
         calls.showTextDocument.push({ document, options });
         return undefined;
@@ -3071,6 +3077,8 @@ function createIntegrationFixtureWithOptions(options = {}) {
     calls,
     enqueueInput: (value) => inputQueue.push(value),
     enqueueQuickPick: (value) => quickPickQueue.push(value),
+    enqueueOpenDialog: (value) => openDialogQueue.push(value),
+    enqueueInformationChoice: (value) => infoChoiceQueue.push(value),
     enqueueWarningChoice: (value) => warningChoiceQueue.push(value),
     restoreLoad: () => {
       Module._load = originalLoad;
@@ -3663,6 +3671,148 @@ test("Create project flow con ruta unicode mantiene la carpeta", async () => {
           call.args[0]?.fsPath === "C:\\tmp\\proyectos-ñ\\ShipOne-App"
       )
     );
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
+test("Add existing project flow importa carpeta y genera archivos opcionales", async () => {
+  const fixture = createIntegrationFixture();
+
+  try {
+    fixture.enqueueOpenDialog([fixture.vscode.Uri.file("C:\\tmp\\existing-app")]);
+    fixture.enqueueInput("App de prueba");
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === "nextjs")
+    );
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === "active")
+    );
+    fixture.enqueueInput("Crear login");
+    fixture.enqueueInformationChoice("Si");
+    fixture.enqueueInformationChoice("Si");
+
+    delete require.cache[
+      require.resolve("../out/services/projectCreationService")
+    ];
+    delete require.cache[require.resolve("../out/services/templateService")];
+    delete require.cache[require.resolve("../out/services/gitService")];
+    delete require.cache[require.resolve("../out/services/githubService")];
+    delete require.cache[require.resolve("../out/services/statusFileService")];
+    delete require.cache[require.resolve("../out/services/projectContextService")];
+
+    const {
+      ProjectCreationService,
+    } = require("../out/services/projectCreationService");
+    const { TemplateService } = require("../out/services/templateService");
+    const { GitService } = require("../out/services/gitService");
+    const { GitHubService } = require("../out/services/githubService");
+    const { StatusFileService } = require("../out/services/statusFileService");
+    const {
+      ProjectContextService,
+    } = require("../out/services/projectContextService");
+
+    const service = new ProjectCreationService(
+      fixture.context,
+      fixture.projectStore,
+      new StatusFileService(),
+      new ProjectContextService({
+        scanProjectTodoTasks: async () => [],
+      }),
+      new TemplateService(),
+      new GitService(),
+      new GitHubService()
+    );
+
+    const project = await service.addExistingProject(fixture.settings);
+
+    assert.ok(project);
+    assert.equal(project.name, "existing-app");
+    assert.equal(project.type, "nextjs");
+    assert.equal(project.status, "active");
+    assert.equal(project.nextAction, "Crear login");
+    assert.equal(fixture.projectStore.createdProjects.length, 1);
+    assert.ok(fixture.files.has("C:\\tmp\\existing-app\\STATUS.md"));
+    assert.ok(
+      fixture.files.has("C:\\tmp\\existing-app\\PROJECT_CONTEXT.md")
+    );
+    assert.ok(
+      fixture.execCalls.some(
+        (call) =>
+          call.command === "git" &&
+          call.args[0] === "remote" &&
+          call.args[1] === "get-url"
+      )
+    );
+    assert.ok(
+      fixture.commandExecCalls.some(
+        (call) => call.name === "shipone.refreshProjects"
+      )
+    );
+    assert.equal(fixture.messages.info.length, 3);
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
+test("Add existing project flow abre proyecto ya registrado", async () => {
+  const fixture = createIntegrationFixture();
+
+  try {
+    fixture.enqueueOpenDialog([fixture.vscode.Uri.file("C:\\tmp\\existing-app")]);
+    fixture.projectStore.projects.push({
+      id: "p1",
+      name: "existing-app",
+      description: "Ya existe",
+      type: "nextjs",
+      status: "active",
+      path: "C:\\tmp\\existing-app",
+      createdAt: "2026-05-15T00:00:00.000Z",
+    });
+    fixture.projectStore.projectsById.set("p1", fixture.projectStore.projects[0]);
+    fixture.enqueueInformationChoice("Abrir proyecto");
+
+    delete require.cache[
+      require.resolve("../out/services/projectCreationService")
+    ];
+    delete require.cache[require.resolve("../out/services/templateService")];
+    delete require.cache[require.resolve("../out/services/gitService")];
+    delete require.cache[require.resolve("../out/services/githubService")];
+    delete require.cache[require.resolve("../out/services/statusFileService")];
+    delete require.cache[require.resolve("../out/services/projectContextService")];
+
+    const {
+      ProjectCreationService,
+    } = require("../out/services/projectCreationService");
+    const { TemplateService } = require("../out/services/templateService");
+    const { GitService } = require("../out/services/gitService");
+    const { GitHubService } = require("../out/services/githubService");
+    const { StatusFileService } = require("../out/services/statusFileService");
+    const {
+      ProjectContextService,
+    } = require("../out/services/projectContextService");
+
+    const service = new ProjectCreationService(
+      fixture.context,
+      fixture.projectStore,
+      new StatusFileService(),
+      new ProjectContextService({
+        scanProjectTodoTasks: async () => [],
+      }),
+      new TemplateService(),
+      new GitService(),
+      new GitHubService()
+    );
+
+    const project = await service.addExistingProject(fixture.settings);
+
+    assert.ok(project);
+    assert.equal(project.id, "p1");
+    assert.equal(fixture.projectStore.createdProjects.length, 0);
+    assert.ok(
+      fixture.commandExecCalls.some((call) => call.name === "shipone.openProject")
+    );
+    assert.equal(fixture.messages.info.length, 1);
   } finally {
     fixture.restoreLoad();
   }

@@ -280,5 +280,22 @@
   "- Mantener simple.": "- Mantener simple.",
   "sin tareas": "sin tareas",
   "si": "si",
-  "no": "no"
+  "no": "no",
+  "Select an existing project folder": "Selecciona una carpeta de proyecto existente",
+  "This project is already tracked by ShipOne.": "Este proyecto ya esta registrado en ShipOne.",
+  "Existing project description": "Descripcion del proyecto existente",
+  "Optional description": "Descripcion opcional",
+  "Describe this project in one line": "Describe este proyecto en una linea",
+  "Project type": "Tipo de proyecto",
+  "Choose the imported project type": "Elige el tipo del proyecto importado",
+  "Project status": "Estado del proyecto",
+  "Choose the imported project status": "Elige el estado del proyecto importado",
+  "Imported project next action": "Siguiente accion del proyecto importado",
+  "Optional next action": "Siguiente accion opcional",
+  "Create STATUS.md for imported project?": "Crear STATUS.md para el proyecto importado?",
+  "Generate PROJECT_CONTEXT.md for imported project?": "Generar PROJECT_CONTEXT.md para el proyecto importado?",
+  "STATUS.md could not be created for the imported project.": "No se pudo crear STATUS.md para el proyecto importado.",
+  "PROJECT_CONTEXT.md could not be created for the imported project.": "No se pudo crear PROJECT_CONTEXT.md para el proyecto importado.",
+  "Existing project added: {0}.": "Proyecto existente anadido: {0}.",
+  "command.addExistingProject.title": "Anadir proyecto existente"
 }

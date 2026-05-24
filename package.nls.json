@@ -280,5 +280,22 @@
   "- Mantener simple.": "- Keep it simple.",
   "sin tareas": "no tasks",
   "si": "yes",
-  "no": "no"
+  "no": "no",
+  "Select an existing project folder": "Select an existing project folder",
+  "This project is already tracked by ShipOne.": "This project is already tracked by ShipOne.",
+  "Existing project description": "Existing project description",
+  "Optional description": "Optional description",
+  "Describe this project in one line": "Describe this project in one line",
+  "Project type": "Project type",
+  "Choose the imported project type": "Choose the imported project type",
+  "Project status": "Project status",
+  "Choose the imported project status": "Choose the imported project status",
+  "Imported project next action": "Imported project next action",
+  "Optional next action": "Optional next action",
+  "Create STATUS.md for imported project?": "Create STATUS.md for imported project?",
+  "Generate PROJECT_CONTEXT.md for imported project?": "Generate PROJECT_CONTEXT.md for imported project?",
+  "STATUS.md could not be created for the imported project.": "STATUS.md could not be created for the imported project.",
+  "PROJECT_CONTEXT.md could not be created for the imported project.": "PROJECT_CONTEXT.md could not be created for the imported project.",
+  "Existing project added: {0}.": "Existing project added: {0}.",
+  "command.addExistingProject.title": "Add existing project"
 }

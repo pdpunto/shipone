@@ -26,6 +26,19 @@ test("package.json publica metadatos para marketplace", () => {
   assert.equal(manifest.engines.vscode, "^1.115.0");
   assert.equal(manifest.devDependencies["@types/node"], "25.7.0");
   assert.equal(manifest.devDependencies.typescript, "6.0.3");
+  assert.ok(
+    manifest.activationEvents.includes("onCommand:shipone.addExistingProject")
+  );
+  assert.ok(
+    manifest.contributes.commands.some(
+      (command) => command.command === "shipone.addExistingProject"
+    )
+  );
+  assert.ok(
+    manifest.contributes.menus["shipone.moreActions"].some(
+      (entry) => entry.command === "shipone.addExistingProject"
+    )
+  );
 });
 
 test("package.json configura prettier", () => {

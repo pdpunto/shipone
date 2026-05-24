@@ -1,5 +1,7 @@
 import * as vscode from "vscode";
 import { randomUUID } from "crypto";
+import { execFile } from "child_process";
+import { promisify } from "util";
 import { t } from "../localization";
 import { translationKeys as k } from "../localization/keys";
 import type { ProjectMetadata, ProjectStatus } from "../models/project";
@@ -11,6 +13,7 @@ import { GitHubService } from "./githubService";
 import { TemplateService } from "./templateService";
 import type { ProjectContextService } from "./projectContextService";
 import type { StatusFileService } from "./statusFileService";
+import * as path from "path";
 
 const PROJECT_TYPES = [
   {
@@ -45,8 +48,12 @@ const PROJECT_TYPES = [
   },
 ] as const;
 
+const execFileAsync = promisify(execFile);
+
 type GitChoice = { label: string; value: boolean; picked?: boolean };
 type GitHubChoice = { create: boolean; visibility: "private" | "public" };
+type ImportedProjectType = (typeof PROJECT_TYPES)[number]["value"];
+type ImportedProjectStatus = "idea" | "active" | "paused" | "finished";
 type ProjectCreationDraft = {
   name: string;
   description: string;
@@ -55,6 +62,17 @@ type ProjectCreationDraft = {
   packageManager: ShipOneSettings["defaultPackageManager"];
   gitChoice: GitChoice;
   githubChoice?: GitHubChoice;
+};
+type ExistingProjectImportDraft = {
+  folderUri: vscode.Uri;
+  name: string;
+  description: string;
+  type: ImportedProjectType;
+  status: ImportedProjectStatus;
+  nextAction: string | null;
+  createStatusFile: boolean;
+  generateProjectContext: boolean;
+  settings: ShipOneSettings;
 };
 
 const LAST_PROJECT_TYPE_KEY = "shipone.lastProjectType";
@@ -73,6 +91,137 @@ export class ProjectCreationService {
 
   async connectGitHub(): Promise<void> {
     await this.githubService.connectGitHub();
+  }
+
+  async addExistingProject(
+    settings: ShipOneSettings
+  ): Promise<ProjectMetadata | undefined> {
+    const folderUri = await vscode.window.showOpenDialog({
+      canSelectFolders: true,
+      canSelectFiles: false,
+      canSelectMany: false,
+      defaultUri: vscode.Uri.file(settings.projectsRoot),
+      title: t("Select an existing project folder"),
+      openLabel: t("Use folder"),
+    });
+
+    const selectedFolder = folderUri?.[0];
+    if (!selectedFolder) {
+      return undefined;
+    }
+
+    const existingProjects = await this.projectStore.loadProjects();
+    const selectedPath = this.normalizePath(selectedFolder.fsPath);
+    const alreadyTracked = existingProjects.find(
+      (project) => this.normalizePath(project.path) === selectedPath
+    );
+
+    if (alreadyTracked) {
+      const choice = await vscode.window.showInformationMessage(
+        t("This project is already tracked by ShipOne. Open it?"),
+        t(k.common.openProject)
+      );
+
+      if (choice === t(k.common.openProject)) {
+        await vscode.commands.executeCommand(
+          "shipone.openProject",
+          alreadyTracked.id
+        );
+        return alreadyTracked;
+      }
+
+      return undefined;
+    }
+
+    const folderName = path.win32.basename(selectedFolder.fsPath);
+    const description =
+      (await vscode.window.showInputBox({
+        title: t("Existing project description"),
+        prompt: t("Optional description"),
+        placeHolder: t("Describe this project in one line"),
+      })) ?? "";
+
+    const type = await this.pickImportedProjectType();
+    if (!type) {
+      return undefined;
+    }
+
+    const status = await this.pickImportedProjectStatus();
+    if (!status) {
+      return undefined;
+    }
+
+    const nextAction =
+      (await vscode.window.showInputBox({
+        title: t("Imported project next action"),
+        prompt: t("Optional next action"),
+        placeHolder: t("Create login"),
+      })) ?? "";
+
+    const repoUrl = await this.detectGitRemoteOrigin(selectedFolder.fsPath);
+
+    const draft: ExistingProjectImportDraft = {
+      folderUri: selectedFolder,
+      name: folderName,
+      description,
+      type,
+      status,
+      nextAction: nextAction.trim() || null,
+      createStatusFile: await this.askYesNo(
+        t("Create STATUS.md for imported project?")
+      ),
+      generateProjectContext: await this.askYesNo(
+        t("Generate PROJECT_CONTEXT.md for imported project?")
+      ),
+      settings,
+    };
+
+    const project = createProjectMetadata({
+      id: randomUUID(),
+      name: draft.name,
+      description: draft.description,
+      type: draft.type,
+      status: draft.status,
+      path: draft.folderUri.fsPath,
+      repoUrl,
+      createdAt: new Date().toISOString(),
+      lastOpenedAt: new Date().toISOString(),
+      nextAction: draft.nextAction,
+    });
+
+    await this.projectStore.createProject(
+      project,
+      settings.enforceOneActiveProject
+    );
+
+    if (draft.createStatusFile) {
+      try {
+        await this.statusFileService.syncStatusFile(project);
+      } catch {
+        await vscode.window.showWarningMessage(
+          t("STATUS.md could not be created for the imported project.")
+        );
+      }
+    }
+
+    await vscode.commands.executeCommand("shipone.refreshProjects");
+
+    if (draft.generateProjectContext) {
+      try {
+        await this.projectContextService.generateAiContext(project);
+      } catch {
+        await vscode.window.showWarningMessage(
+          t("PROJECT_CONTEXT.md could not be created for the imported project.")
+        );
+      }
+    }
+
+    await vscode.window.showInformationMessage(
+      t("Existing project added: {0}.", project.name)
+    );
+    await vscode.commands.executeCommand("shipone.refreshProjects");
+
+    return project;
   }
 
   async createProject(
@@ -440,6 +589,76 @@ export class ProjectCreationService {
       LAST_PACKAGE_MANAGER_KEY,
       packageManager
     );
+  }
+
+  private async pickImportedProjectType(): Promise<
+    ImportedProjectType | undefined
+  > {
+    const choice = await vscode.window.showQuickPick(
+      PROJECT_TYPES.map((item) => ({
+        label: item.label,
+        description: item.description,
+        value: item.value,
+        iconPath: new vscode.ThemeIcon(item.icon),
+      })),
+      {
+        title: t("Project type"),
+        placeHolder: t("Choose the imported project type"),
+      }
+    );
+
+    return choice?.value;
+  }
+
+  private async pickImportedProjectStatus(): Promise<
+    ImportedProjectStatus | undefined
+  > {
+    const choice = await vscode.window.showQuickPick(
+      [
+        { label: t(k.projectStatus.idea), value: "idea" as const },
+        { label: t(k.projectStatus.active), value: "active" as const },
+        { label: t(k.projectStatus.paused), value: "paused" as const },
+        { label: t(k.projectStatus.finished), value: "finished" as const },
+      ],
+      {
+        title: t("Project status"),
+        placeHolder: t("Choose the imported project status"),
+      }
+    );
+
+    return choice?.value;
+  }
+
+  private async askYesNo(message: string): Promise<boolean> {
+    const choice = await vscode.window.showInformationMessage(
+      message,
+      t(k.common.yes),
+      t(k.common.no)
+    );
+
+    return choice === t(k.common.yes);
+  }
+
+  private async detectGitRemoteOrigin(
+    folderPath: string
+  ): Promise<string | null> {
+    try {
+      const { stdout } = await execFileAsync(
+        "git",
+        ["remote", "get-url", "origin"],
+        { cwd: folderPath }
+      );
+
+      const remote = stdout.trim();
+      return remote || null;
+    } catch {
+      return null;
+    }
+  }
+
+  private normalizePath(value: string): string {
+    const normalized = path.resolve(value);
+    return process.platform === "win32" ? normalized.toLowerCase() : normalized;
   }
 
   private async findAvailableFolderUri(
