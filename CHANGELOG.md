@@ -20,11 +20,11 @@ All notable changes to ShipOne will be documented here.
 - Improved project context with Git summary.
 - Improved project health details with clearer issue summaries.
 - Improved weekly review with the active project's next action and a simpler footer.
+- Added support for adding existing projects without overwriting files.
+- Added projects root scanning to import multiple existing folders.
 - Aligned public docs and FAQ with the current workflows.
 - Updated release notes handling for versioned sections.
 
 ## Unreleased
 
-- Added automatic scanning of the configured projects root.
-- Added support for importing existing projects from disk.
-- Improved public docs for the import workflows.
+- No changes yet.

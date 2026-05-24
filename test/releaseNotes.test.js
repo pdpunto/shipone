@@ -12,12 +12,13 @@ function runReleaseNotes(args = []) {
 test("build-release-notes returns the unreleased block", () => {
   const notes = runReleaseNotes();
 
-  assert.ok(notes.includes("Added automatic scanning of the configured projects root."));
-  assert.ok(notes.includes("Added support for importing existing projects from disk."));
+  assert.ok(notes.includes("No changes yet."));
 });
 
 test("build-release-notes can read a specific section", () => {
   const notes = runReleaseNotes(["--section", "0.0.6"]);
 
   assert.ok(notes.includes("project context with Git summary"));
+  assert.ok(notes.includes("Added support for adding existing projects without overwriting files."));
+  assert.ok(notes.includes("Added projects root scanning to import multiple existing folders."));
 });
