@@ -20,6 +20,7 @@ Main documentation index for ShipOne.
 - [Project context](technical/project-context.md)
 - [Focus mode](technical/focus-mode.md)
 - [Review flow](technical/review-flow.md)
+- [Development setup](technical/development-setup.md)
 - [Data model](technical/data-model.md)
 - [Persistence](technical/persistence.md)
 - [Project creation](technical/project-creation.md)
