@@ -42,4 +42,3 @@ Open the project in VS Code and press `F5`.
 - make sure dependencies are installed
 - make sure the workspace is the ShipOne repo
 - make sure the TypeScript build is clean
-

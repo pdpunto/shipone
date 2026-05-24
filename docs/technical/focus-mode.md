@@ -42,4 +42,3 @@ A good focus mode view should:
 - be readable
 - show the next action first
 - keep warnings actionable
-

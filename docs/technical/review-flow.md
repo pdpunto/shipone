@@ -42,4 +42,3 @@ A good review should be:
 - repeatable
 - focused on the next step
 - useful enough to act on immediately
-

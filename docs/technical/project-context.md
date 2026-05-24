@@ -54,4 +54,3 @@ Use the export when:
 - you want to resume later
 - you want an AI to understand the project fast
 - you want a concise summary of status and Git state
-
