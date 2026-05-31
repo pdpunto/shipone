@@ -40,10 +40,10 @@ Yes, if you configure a compatible template folder.
 
 Yes, with `shipone.showFinishedProjects`.
 
-## What happens if GitHub CLI is not installed?
+## What happens if GitHub is not signed in to VS Code?
 
-ShipOne can still create GitHub repos if your GitHub account is signed in to VS Code.
-GitHub CLI is no longer required for the normal create-repo flow.
+ShipOne can still work locally, but GitHub repo creation needs a GitHub account signed in to VS Code.
+If you want remote publishing, sign in from the VS Code Accounts menu first.
 
 ## What happens if a project fails halfway through creation?
 

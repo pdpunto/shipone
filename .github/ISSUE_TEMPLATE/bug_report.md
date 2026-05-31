@@ -23,7 +23,7 @@ labels: bug
 - ShipOne:
 - Operating system:
 - Git:
-- GitHub CLI:
+- GitHub account in VS Code:
 - Extension Development Host or normal VS Code:
 
 ## Notes
