@@ -16,9 +16,9 @@ test("build-release-notes returns the unreleased block", () => {
 });
 
 test("build-release-notes can read a specific section", () => {
-  const notes = runReleaseNotes(["--section", "0.0.6"]);
+  const notes = runReleaseNotes(["--section", "0.0.7"]);
 
-  assert.ok(notes.includes("project context with Git summary"));
-  assert.ok(notes.includes("Added support for adding existing projects without overwriting files."));
-  assert.ok(notes.includes("Added projects root scanning to import multiple existing folders."));
+  assert.ok(notes.includes("Connected GitHub repo creation"));
+  assert.ok(notes.includes("Created GitHub repos through the GitHub API"));
+  assert.ok(notes.includes("Improved the create-project flow"));
 });
