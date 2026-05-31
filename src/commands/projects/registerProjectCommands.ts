@@ -226,6 +226,7 @@ export function registerProjectCommands(options: {
         return;
       }
 
+      await closeProjectFolderIfOpen(project.path);
       await projectStore.deleteProject(project.id);
 
       if (project.repoUrl && githubService) {
@@ -332,6 +333,24 @@ export function registerProjectCommands(options: {
   context.subscriptions.push(...projectCommands);
 
   return projectCommands;
+}
+
+async function closeProjectFolderIfOpen(projectPath: string): Promise<void> {
+  const workspaceFolders = vscode.workspace.workspaceFolders ?? [];
+  const workspaceIndex = workspaceFolders.findIndex(
+    (folder) => folder.uri.fsPath === projectPath
+  );
+
+  if (workspaceIndex < 0) {
+    return;
+  }
+
+  if (workspaceFolders.length > 1) {
+    vscode.workspace.updateWorkspaceFolders(workspaceIndex, 1);
+    return;
+  }
+
+  await vscode.commands.executeCommand("workbench.action.closeFolder");
 }
 
 async function markProjectStatus(

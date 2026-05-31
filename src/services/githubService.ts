@@ -7,6 +7,7 @@ import { translationKeys as k } from "../localization/keys";
 const execFileAsync = promisify(execFile);
 const GITHUB_PROVIDER_ID = "github";
 const GITHUB_SCOPES = ["repo"];
+const GITHUB_DELETE_SCOPES = ["repo", "delete_repo"];
 const GITHUB_API_VERSION = "2022-11-28";
 
 export class GitHubService {
@@ -68,7 +69,9 @@ export class GitHubService {
     }
 
     try {
-      const session = await this.getGitHubSession(false);
+      const session =
+        (await this.getGitHubSession(false, GITHUB_DELETE_SCOPES)) ??
+        (await this.getGitHubSession(true, GITHUB_DELETE_SCOPES));
       if (!session) {
         return false;
       }
@@ -91,12 +94,13 @@ export class GitHubService {
   }
 
   private async getGitHubSession(
-    allowInteractiveSession: boolean
+    allowInteractiveSession: boolean,
+    scopes: string[] = GITHUB_SCOPES
   ): Promise<vscode.AuthenticationSession | undefined> {
     try {
       return await vscode.authentication.getSession(
         GITHUB_PROVIDER_ID,
-        GITHUB_SCOPES,
+        scopes,
         {
           createIfNone: allowInteractiveSession
             ? {
@@ -177,8 +181,29 @@ export class GitHubService {
   }
 
   private parseRepoSlug(repoUrl: string): string | undefined {
+    const normalized = repoUrl.trim();
+
+    if (!normalized) {
+      return undefined;
+    }
+
+    const slugMatch = normalized.match(/^([^/\s]+)\/([^/\s]+?)(?:\.git)?$/i);
+    if (slugMatch) {
+      return `${slugMatch[1]}/${slugMatch[2]}`;
+    }
+
+    const sshMatch = normalized.match(
+      /^(?:git@|ssh:\/\/git@)?github\.com[:/](.+?)(?:\.git)?$/i
+    );
+    if (sshMatch) {
+      const [owner, repo] = sshMatch[1].split("/").filter(Boolean);
+      if (owner && repo) {
+        return `${owner}/${repo.replace(/\.git$/i, "")}`;
+      }
+    }
+
     try {
-      const parsed = new URL(repoUrl);
+      const parsed = new URL(normalized);
       const segments = parsed.pathname.split("/").filter(Boolean);
 
       if (segments.length < 2) {

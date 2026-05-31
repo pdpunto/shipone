@@ -2787,7 +2787,9 @@ function createIntegrationFixtureWithOptions(options = {}) {
     ghAuthenticated: options.ghAuthenticated ?? false,
     githubSessionToken: options.githubSessionToken,
   };
+  const sessionRequests = [];
   const originalFetch = globalThis.fetch;
+  const workspaceFolders = options.workspaceFolders ?? [];
 
   const uriApi = {
     file: (value) => ({
@@ -2901,6 +2903,11 @@ function createIntegrationFixtureWithOptions(options = {}) {
           return undefined;
         }
 
+        sessionRequests.push({
+          scopes,
+          createIfNone: sessionOptions?.createIfNone ?? false,
+        });
+
         if (!authState.githubSessionToken) {
           return undefined;
         }
@@ -2918,6 +2925,11 @@ function createIntegrationFixtureWithOptions(options = {}) {
       },
     },
     workspace: {
+      workspaceFolders,
+      updateWorkspaceFolders: (start, deleteCount) => {
+        workspaceFolders.splice(start, deleteCount);
+        return true;
+      },
       fs: {
         createDirectory: async (uri) => {
           fsState.dirs.add(uri.fsPath);
@@ -3278,6 +3290,7 @@ function createIntegrationFixtureWithOptions(options = {}) {
     enqueueInformationChoice: (value) => infoChoiceQueue.push(value),
     enqueueWarningChoice: (value) => warningChoiceQueue.push(value),
     authState,
+    sessionRequests,
     restoreLoad: () => {
       Module._load = originalLoad;
       globalThis.fetch = originalFetch;
@@ -3641,11 +3654,22 @@ test("GitHubService borra repo por slug o URL", async () => {
     const { GitHubService } = require("../out/services/githubService");
     const service = new GitHubService();
 
-    const deleted = await service.deleteGitHubRepo(
+    const deletedFromUrl = await service.deleteGitHubRepo(
       "https://github.com/pdpunto/shipone"
     );
+    const deletedFromSlug = await service.deleteGitHubRepo("pdpunto/shipone");
+    const deletedFromSsh = await service.deleteGitHubRepo(
+      "git@github.com:pdpunto/shipone.git"
+    );
 
-    assert.equal(deleted, true);
+    assert.equal(deletedFromUrl, true);
+    assert.equal(deletedFromSlug, true);
+    assert.equal(deletedFromSsh, true);
+    assert.ok(
+      fixture.sessionRequests.some((request) =>
+        request.scopes.includes("delete_repo")
+      )
+    );
     assert.ok(
       fixture.fetchCalls.some(
         (call) => call.method === "DELETE" && call.url.includes("/repos/")
@@ -4565,6 +4589,68 @@ test("Delete project flow confirma y borra local", async () => {
     assert.deepEqual(fixture.projectStore.deleteProjectCalls, ["p1"]);
     assert.equal(fixture.calls.refresh.length, 1);
     assert.equal(fixture.messages.info.length >= 1, true);
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
+test("Delete project flow cierra la carpeta abierta antes de borrar", async () => {
+  const fixture = createIntegrationFixtureWithOptions({
+    githubSessionToken: "gh-token-123",
+    workspaceFolders: [
+      {
+        uri: {
+          fsPath: "C:\\tmp\\shipone-projects\\ShipOne",
+        },
+      },
+    ],
+  });
+
+  try {
+    delete require.cache[
+      require.resolve("../out/commands/projects/registerProjectCommands")
+    ];
+    const {
+      registerProjectCommands,
+    } = require("../out/commands/projects/registerProjectCommands");
+    const { GitHubService } = require("../out/services/githubService");
+
+    fixture.projectStore.projectsById.set("p1", {
+      id: "p1",
+      name: "ShipOne",
+      description: "Test",
+      type: "blank",
+      status: "active",
+      path: "C:\\tmp\\shipone-projects\\ShipOne",
+      repoUrl: "https://github.com/pdpunto/shipone",
+      createdAt: "2026-05-15T00:00:00.000Z",
+    });
+
+    fixture.enqueueWarningChoice((args) => args[1]);
+    fixture.enqueueWarningChoice((args) => args[1]);
+
+    registerProjectCommands({
+      context: fixture.context,
+      projectStore: fixture.projectStore,
+      gitService: {
+        isGitRepository: async () => false,
+        initializeGit: async () => true,
+        createInitialCommit: async () => true,
+      },
+      githubService: new GitHubService(),
+      settingsService: { getSettings: () => fixture.settings },
+      treeDataProvider: { refresh: () => fixture.calls.refresh.push(true) },
+      getSelectedProjectId: () => undefined,
+    });
+
+    await fixture.commandHandlers.get("shipone.deleteProject")("p1");
+
+    assert.ok(
+      fixture.commandExecCalls.some(
+        (call) => call.name === "workbench.action.closeFolder"
+      )
+    );
+    assert.deepEqual(fixture.projectStore.deleteProjectCalls, ["p1"]);
   } finally {
     fixture.restoreLoad();
   }
