@@ -41,7 +41,7 @@ ShipOne uses a simple and consistent visual identity:
 
 ## Project Status
 
-- Current version: `0.0.7`
+- Current version: `0.0.8`
 - Status: `public beta`
 - Public: open repo, published extension, and docs ready for real use
 - Pace: small, versioned changes that are easy to follow

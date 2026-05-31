@@ -2788,6 +2788,7 @@ function createIntegrationFixtureWithOptions(options = {}) {
     githubSessionToken: options.githubSessionToken,
   };
   const sessionRequests = [];
+  const gitRemotes = new Map();
   const originalFetch = globalThis.fetch;
   const workspaceFolders = options.workspaceFolders ?? [];
 
@@ -3353,6 +3354,30 @@ function createGitHubCliFixture() {
             return;
           }
 
+          if (command === "git" && args[0] === "clone") {
+            const repoUrl = args[1];
+            const targetFolder = args[2];
+            if (repoUrl && targetFolder) {
+              fsState.dirs.add(targetFolder);
+              gitRemotes.set(targetFolder, repoUrl);
+            }
+
+            cb(null, "", "");
+            return;
+          }
+
+          if (
+            command === "git" &&
+            args[0] === "remote" &&
+            args[1] === "get-url" &&
+            args[2] === "origin"
+          ) {
+            const cwd = options?.cwd;
+            const remote = cwd ? gitRemotes.get(cwd) : undefined;
+            cb(null, remote ? `${remote}\n` : "", "");
+            return;
+          }
+
           cb(null, "", "");
         },
       };
@@ -3431,7 +3456,14 @@ test("Create project flow cubre status, git y GitHub", async () => {
       fixture.context,
       fixture.projectStore,
       new StatusFileService(),
-      {},
+      {
+        generateAiContext: async (project) => {
+          fixture.files.set(
+            `C:\\tmp\\shipone-projects\\${project.name}\\PROJECT_CONTEXT.md`,
+            Buffer.from("PROJECT CONTEXT", "utf8")
+          );
+        },
+      },
       new TemplateService(),
       new GitService(),
       new GitHubService()
@@ -4024,6 +4056,84 @@ test("Add existing project flow importa carpeta y genera archivos opcionales", a
       )
     );
     assert.equal(fixture.messages.info.length, 3);
+  } finally {
+    fixture.restoreLoad();
+  }
+});
+
+test("Add GitHub project flow clona y registra el repo", async () => {
+  const fixture = createIntegrationFixture();
+
+  try {
+    fixture.enqueueInput("https://github.com/pdpunto/existing-app");
+    fixture.enqueueInput("App de prueba");
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === "nextjs")
+    );
+    fixture.enqueueQuickPick((items) =>
+      items.find((item) => item.value === "active")
+    );
+    fixture.enqueueInput("Crear login");
+    fixture.enqueueInformationChoice((args) => args[1]);
+    fixture.enqueueInformationChoice((args) => args[1]);
+
+    delete require.cache[
+      require.resolve("../out/services/projectCreationService")
+    ];
+    delete require.cache[require.resolve("../out/services/templateService")];
+    delete require.cache[require.resolve("../out/services/gitService")];
+    delete require.cache[require.resolve("../out/services/githubService")];
+    delete require.cache[require.resolve("../out/services/statusFileService")];
+
+    const {
+      ProjectCreationService,
+    } = require("../out/services/projectCreationService");
+    const { TemplateService } = require("../out/services/templateService");
+    const { GitService } = require("../out/services/gitService");
+    const { GitHubService } = require("../out/services/githubService");
+    const { StatusFileService } = require("../out/services/statusFileService");
+
+    const service = new ProjectCreationService(
+      fixture.context,
+      fixture.projectStore,
+      new StatusFileService(),
+      {},
+      new TemplateService(),
+      new GitService(),
+      new GitHubService()
+    );
+
+    const project = await service.addGitHubProject(fixture.settings);
+
+    assert.ok(project);
+    assert.equal(project.name, "existing-app");
+    assert.equal(project.type, "nextjs");
+    assert.equal(project.status, "active");
+    assert.equal(project.nextAction, "Crear login");
+    assert.equal(fixture.projectStore.createdProjects.length, 1);
+    assert.equal(
+      project.repoUrl,
+      "https://github.com/pdpunto/existing-app.git"
+    );
+    assert.ok(
+      fixture.fetchCalls.some(
+        (call) => call.method === "POST" && call.url.includes("/user/repos")
+      ) === false
+    );
+    assert.ok(
+      fixture.execCalls.some(
+        (call) =>
+          call.command === "git" &&
+          call.args[0] === "clone" &&
+          call.args[1] === "https://github.com/pdpunto/existing-app.git"
+      )
+    );
+    assert.ok(fixture.files.has("C:\\tmp\\shipone-projects\\existing-app\\STATUS.md"));
+    assert.ok(
+      fixture.commandExecCalls.some(
+        (call) => call.name === "shipone.refreshProjects"
+      )
+    );
   } finally {
     fixture.restoreLoad();
   }

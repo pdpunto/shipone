@@ -145,79 +145,71 @@ export class ProjectCreationService {
       return undefined;
     }
 
-    const folderName = path.win32.basename(selectedFolder.fsPath);
-    const description =
-      (await vscode.window.showInputBox({
-        title: t("Existing project description"),
-        prompt: t("Optional description"),
-        placeHolder: t("Describe this project in one line"),
-      })) ?? "";
-
-    const type = await this.pickImportedProjectType();
-    if (!type) {
-      return undefined;
-    }
-
-    const status = await this.pickImportedProjectStatus();
-    if (!status) {
-      return undefined;
-    }
-
-    const nextAction =
-      (await vscode.window.showInputBox({
-        title: t("Imported project next action"),
-        prompt: t("Optional next action"),
-        placeHolder: t("Create login"),
-      })) ?? "";
-
     const repoUrl = await this.detectGitRemoteOrigin(selectedFolder.fsPath);
 
-    const draft: ExistingProjectImportDraft = {
+    return this.registerImportedProject(settings, {
       folderUri: selectedFolder,
-      name: folderName,
-      description,
-      type,
-      status,
-      nextAction: nextAction.trim() || null,
-      createStatusFile: await this.askYesNo(
-        t("Create STATUS.md for imported project?")
-      ),
-      generateProjectContext: await this.askYesNo(
-        t("Generate PROJECT_CONTEXT.md for imported project?")
-      ),
-      settings,
-    };
-
-    const project = createProjectMetadata({
-      id: randomUUID(),
-      name: draft.name,
-      description: draft.description,
-      type: draft.type,
-      status: draft.status,
-      path: draft.folderUri.fsPath,
+      name: path.win32.basename(selectedFolder.fsPath),
       repoUrl,
-      createdAt: new Date().toISOString(),
-      lastOpenedAt: new Date().toISOString(),
-      nextAction: draft.nextAction,
+      descriptionTitle: t("Existing project description"),
+      successMessage: t("Existing project added: {0}."),
     });
+  }
 
-    await this.projectStore.createProject(
-      project,
-      settings.enforceOneActiveProject
+  async addGitHubProject(
+    settings: ShipOneSettings
+  ): Promise<ProjectMetadata | undefined> {
+    const repoInput =
+      (await vscode.window.showInputBox({
+        title: t("Import project from GitHub"),
+        prompt: t("Paste the GitHub repo URL"),
+        placeHolder: "https://github.com/owner/repo",
+      })) ?? "";
+
+    const cloneUrl = this.normalizeGitHubCloneUrl(repoInput);
+    if (!cloneUrl) {
+      if (repoInput.trim()) {
+        await vscode.window.showWarningMessage(
+          t("Invalid GitHub repository URL.")
+        );
+      }
+      return undefined;
+    }
+
+    const repoSlug = this.extractGitHubRepoSlug(repoInput);
+    if (!repoSlug) {
+      await vscode.window.showWarningMessage(
+        t("Invalid GitHub repository URL.")
+      );
+      return undefined;
+    }
+
+    const projectName = repoSlug.split("/")[1] ?? repoSlug;
+    const folderUri = await this.findAvailableFolderUri(
+      vscode.Uri.file(settings.projectsRoot),
+      sanitizeFolderName(projectName)
     );
 
-    await this.applyImportedProjectFiles(project, {
-      createStatusFile: draft.createStatusFile,
-      generateProjectContext: draft.generateProjectContext,
+    try {
+      await this.cloneGitHubRepository(cloneUrl, folderUri.fsPath);
+    } catch {
+      await this.removeFolderIfExists(folderUri);
+      await vscode.window.showWarningMessage(
+        t("No se pudo clonar el repo de GitHub. Revisa la URL y permisos.")
+      );
+      return undefined;
+    }
+
+    const repoUrl =
+      (await this.detectGitRemoteOrigin(folderUri.fsPath)) ?? cloneUrl;
+
+    return this.registerImportedProject(settings, {
+      folderUri,
+      name: projectName,
+      repoUrl,
+      descriptionTitle: t("GitHub project description"),
+      successMessage: t("GitHub project imported: {0}."),
     });
-
-    await vscode.commands.executeCommand("shipone.refreshProjects");
-
-    await vscode.window.showInformationMessage(
-      t("Existing project added: {0}.", project.name)
-    );
-
-    return project;
   }
 
   async scanProjectsRoot(
@@ -694,6 +686,77 @@ export class ProjectCreationService {
     return choice === t(k.common.yes);
   }
 
+  private async registerImportedProject(
+    settings: ShipOneSettings,
+    options: {
+      folderUri: vscode.Uri;
+      name: string;
+      repoUrl: string | null;
+      descriptionTitle: string;
+      successMessage: string;
+    }
+  ): Promise<ProjectMetadata | undefined> {
+    const description =
+      (await vscode.window.showInputBox({
+        title: options.descriptionTitle,
+        prompt: t("Optional description"),
+        placeHolder: t("Describe this project in one line"),
+      })) ?? "";
+
+    const type = await this.pickImportedProjectType();
+    if (!type) {
+      return undefined;
+    }
+
+    const status = await this.pickImportedProjectStatus();
+    if (!status) {
+      return undefined;
+    }
+
+    const nextAction =
+      (await vscode.window.showInputBox({
+        title: t("Imported project next action"),
+        prompt: t("Optional next action"),
+        placeHolder: t("Create login"),
+      })) ?? "";
+
+    const project = createProjectMetadata({
+      id: randomUUID(),
+      name: options.name,
+      description,
+      type,
+      status,
+      path: options.folderUri.fsPath,
+      repoUrl: options.repoUrl,
+      createdAt: new Date().toISOString(),
+      lastOpenedAt: new Date().toISOString(),
+      nextAction: nextAction.trim() || null,
+    });
+
+    await this.projectStore.createProject(
+      project,
+      settings.enforceOneActiveProject
+    );
+
+    await this.applyImportedProjectFiles(project, {
+      createStatusFile: await this.askYesNo(
+        t("Create STATUS.md for imported project?")
+      ),
+      generateProjectContext: await this.askYesNo(
+        t("Generate PROJECT_CONTEXT.md for imported project?")
+      ),
+    });
+
+    await vscode.commands.executeCommand("shipone.refreshProjects");
+
+    await vscode.window.showInformationMessage(
+      options.successMessage,
+      project.name
+    );
+
+    return project;
+  }
+
   private async pickScannedProjects(
     candidates: ScannedProjectCandidate[]
   ): Promise<ScannedProjectCandidate[] | undefined> {
@@ -755,9 +818,80 @@ export class ProjectCreationService {
     }
   }
 
+  private async cloneGitHubRepository(
+    repoUrl: string,
+    folderPath: string
+  ): Promise<void> {
+    await execFileAsync("git", ["clone", repoUrl, folderPath]);
+  }
+
+  private async removeFolderIfExists(folderUri: vscode.Uri): Promise<void> {
+    try {
+      await vscode.workspace.fs.delete(folderUri, { recursive: true });
+    } catch {
+      // Best effort cleanup.
+    }
+  }
+
   private normalizePath(value: string): string {
     const normalized = path.resolve(value);
     return process.platform === "win32" ? normalized.toLowerCase() : normalized;
+  }
+
+  private normalizeGitHubCloneUrl(input: string): string | undefined {
+    const trimmed = input.trim();
+    if (!trimmed) {
+      return undefined;
+    }
+
+    if (/^(git@|ssh:\/\/)/i.test(trimmed)) {
+      return trimmed;
+    }
+
+    const repoSlug = this.extractGitHubRepoSlug(trimmed);
+    if (!repoSlug) {
+      return undefined;
+    }
+
+    return `https://github.com/${repoSlug}.git`;
+  }
+
+  private extractGitHubRepoSlug(input: string): string | undefined {
+    const trimmed = input.trim();
+    if (!trimmed) {
+      return undefined;
+    }
+
+    const slugMatch = trimmed.match(/^([^/\s]+)\/([^/\s]+?)(?:\.git)?$/i);
+    if (slugMatch) {
+      return `${slugMatch[1]}/${slugMatch[2]}`;
+    }
+
+    const sshMatch = trimmed.match(
+      /^(?:git@|ssh:\/\/git@)?github\.com[:/](.+?)(?:\.git)?$/i
+    );
+    if (sshMatch) {
+      const [owner, repo] = sshMatch[1].split("/").filter(Boolean);
+      if (owner && repo) {
+        return `${owner}/${repo.replace(/\.git$/i, "")}`;
+      }
+    }
+
+    try {
+      const parsed = new URL(trimmed);
+      if (!/github\.com$/i.test(parsed.hostname)) {
+        return undefined;
+      }
+
+      const segments = parsed.pathname.split("/").filter(Boolean);
+      if (segments.length < 2) {
+        return undefined;
+      }
+
+      return `${segments[0]}/${segments[1].replace(/\.git$/i, "")}`;
+    } catch {
+      return undefined;
+    }
   }
 
   private async findScannableProjects(

@@ -16,9 +16,9 @@ test("build-release-notes returns the unreleased block", () => {
 });
 
 test("build-release-notes can read a specific section", () => {
-  const notes = runReleaseNotes(["--section", "0.0.7"]);
+  const notes = runReleaseNotes(["--section", "0.0.8"]);
 
-  assert.ok(notes.includes("Connected GitHub repo creation"));
-  assert.ok(notes.includes("Created GitHub repos through the GitHub API"));
-  assert.ok(notes.includes("Improved the create-project flow"));
+  assert.ok(notes.includes("Added a GitHub import flow"));
+  assert.ok(notes.includes("Fixed project deletion"));
+  assert.ok(notes.includes("Improved GitHub repo deletion"));
 });

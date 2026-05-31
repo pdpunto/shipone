@@ -16,7 +16,7 @@
     "roadmap",
     "ship"
   ],
-  "version": "0.0.7",
+  "version": "0.0.8",
   "engines": {
     "vscode": "^1.115.0"
   },
@@ -38,6 +38,7 @@
     "onCommand:shipone.showWelcome",
     "onCommand:shipone.quickCreateProject",
     "onCommand:shipone.addExistingProject",
+    "onCommand:shipone.addGitHubProject",
     "onCommand:shipone.scanProjectsRoot",
     "onCommand:shipone.searchProject",
     "onCommand:shipone.scanTodos",
@@ -71,6 +72,12 @@
         "title": "%command.addExistingProject.title%",
         "category": "ShipOne",
         "icon": "$(folder-opened)"
+      },
+      {
+        "command": "shipone.addGitHubProject",
+        "title": "%command.addGitHubProject.title%",
+        "category": "ShipOne",
+        "icon": "$(cloud-download)"
       },
       {
         "command": "shipone.scanProjectsRoot",
@@ -329,6 +336,9 @@
       "shipone.moreActions": [
         {
           "command": "shipone.addExistingProject"
+        },
+        {
+          "command": "shipone.addGitHubProject"
         },
         {
           "command": "shipone.scanProjectsRoot"

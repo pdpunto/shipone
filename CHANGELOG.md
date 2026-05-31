@@ -2,6 +2,12 @@
 
 All notable changes to ShipOne will be documented here.
 
+## 0.0.8 - 2026-05-31
+
+- Added a GitHub import flow so existing repos can be cloned into ShipOne from a URL.
+- Fixed project deletion so open folders close before removing local files.
+- Improved GitHub repo deletion to handle more repo URL formats and auth scopes.
+
 ## 0.0.7 - 2026-05-31
 
 - Connected GitHub repo creation to the GitHub session already signed in VS Code.

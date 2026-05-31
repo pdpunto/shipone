@@ -307,6 +307,13 @@
   "PROJECT_CONTEXT.md could not be created for the scanned project.": "No se pudo crear PROJECT_CONTEXT.md para el proyecto escaneado.",
   "Scan projects root": "Escanear carpeta de proyectos",
   "Choose the folders to add": "Elige las carpetas que quieres anadir",
+  "Import project from GitHub": "Importar proyecto desde GitHub",
+  "Paste the GitHub repo URL": "Pega la URL del repo de GitHub",
+  "GitHub project description": "Descripcion del proyecto de GitHub",
+  "Invalid GitHub repository URL.": "URL del repo de GitHub invalida.",
+  "GitHub project imported: {0}.": "Proyecto de GitHub importado: {0}.",
+  "No se pudo clonar el repo de GitHub. Revisa la URL y permisos.": "No se pudo clonar el repo de GitHub. Revisa la URL y permisos.",
   "command.addExistingProject.title": "Anadir proyecto existente",
+  "command.addGitHubProject.title": "Anadir proyecto desde GitHub",
   "command.scanProjectsRoot.title": "Escanear carpeta de proyectos"
 }

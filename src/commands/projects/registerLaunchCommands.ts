@@ -14,6 +14,7 @@ import {
 const COMMAND_CREATE_PROJECT = "shipone.createProject";
 const COMMAND_QUICK_CREATE_PROJECT = "shipone.quickCreateProject";
 const COMMAND_ADD_EXISTING_PROJECT = "shipone.addExistingProject";
+const COMMAND_ADD_GITHUB_PROJECT = "shipone.addGitHubProject";
 const COMMAND_SCAN_PROJECTS_ROOT = "shipone.scanProjectsRoot";
 const COMMAND_SET_PROJECTS_ROOT = "shipone.setProjectsRoot";
 const COMMAND_OPEN_PROJECTS_ROOT = "shipone.openProjectsRoot";
@@ -249,6 +250,27 @@ export function registerLaunchCommands(options: {
     }
   );
 
+  const addGitHubProjectCommand = vscode.commands.registerCommand(
+    COMMAND_ADD_GITHUB_PROJECT,
+    async () => {
+      const project = await vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Notification,
+          title: t("ShipOne: importando proyecto desde GitHub"),
+          cancellable: false,
+        },
+        async () => {
+          const settings = settingsService.getSettings();
+          return projectCreationService.addGitHubProject(settings);
+        }
+      );
+
+      if (project) {
+        treeRefresh();
+      }
+    }
+  );
+
   const scanProjectsRootCommand = vscode.commands.registerCommand(
     COMMAND_SCAN_PROJECTS_ROOT,
     async () => {
@@ -311,6 +333,7 @@ export function registerLaunchCommands(options: {
     createProjectCommand,
     quickCreateProjectCommand,
     addExistingProjectCommand,
+    addGitHubProjectCommand,
     scanProjectsRootCommand,
     chooseProjectCommand,
   ];

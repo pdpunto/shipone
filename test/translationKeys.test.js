@@ -92,6 +92,7 @@ test("package.nls.es.json traduce claves estructuradas de creacion", () => {
   assert.equal(es["command.createProject.title"], "Crear avanzado");
   assert.equal(es["Nombre del proyecto"], "Nombre del proyecto");
   assert.equal(es["command.quickCreateProject.title"], "Crear rapido");
+  assert.equal(es["command.addGitHubProject.title"], "Anadir proyecto desde GitHub");
   assert.equal(es["command.chooseProject.title"], "Elegir proyecto");
   assert.equal(es["Starting point for any project."], "Punto de partida para cualquier proyecto.");
   assert.equal(es["Frontend app with Vite."], "Aplicacion frontend con Vite.");
