@@ -20,10 +20,11 @@ The screenshots in the [main README](../../README.md) show a real view before yo
 1. Set your base folder in `shipone.projectsRoot`.
 2. Create a new project.
 3. Add an existing project if you want to bring a real folder into ShipOne.
-4. Scan the projects root to import several folders at once.
-5. Review the `idea`, `active`, `paused`, or `finished` state.
-6. Write a clear `nextAction`.
-7. Use `Focus` to stay on one project.
+4. Import a project from GitHub if you want ShipOne to clone an existing repo for you.
+5. Scan the projects root to import several folders at once.
+6. Review the `idea`, `active`, `paused`, or `finished` state.
+7. Write a clear `nextAction`.
+8. Use `Focus` to stay on one project.
 
 ## What to look at first
 

@@ -64,7 +64,7 @@ These images show the real ShipOne flow inside VS Code:
 
 ## What it does
 
-- Creates new projects or imports existing folders from a dedicated view.
+- Creates new projects, imports existing folders, or clones GitHub repos from a dedicated view.
 - Stores local metadata for each project.
 - Keeps only one `Active` project if that rule is enabled.
 - Shows `nextAction`, favorites, health, pauses, and metrics.
@@ -100,6 +100,7 @@ ShipOne works well with a simple, repeatable flow:
 - `ShipOne: Weekly review` - review the weekly state
 - `ShipOne: Generate project context` - create a summary ready to resume work
 - `ShipOne: Add existing project` - import one folder you already have
+- `ShipOne: Add project from GitHub` - clone a GitHub repo into ShipOne
 - `ShipOne: Scan projects root` - add every new project found in your projects folder
 - `ShipOne: Delete project` - delete a project with confirmation
 - `ShipOne: STATUS.md` - sync the status file

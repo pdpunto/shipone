@@ -29,6 +29,21 @@ Import flow:
 7. Optionally generate `PROJECT_CONTEXT.md`.
 8. Register the project without creating templates.
 
+## Import from GitHub
+
+ShipOne can also clone a GitHub repo into `shipone.projectsRoot` and register it as a project.
+
+Import flow:
+
+1. Paste the GitHub repo URL.
+2. Resolve the repo slug and build a clone URL.
+3. Pick the destination folder under the projects root.
+4. Clone the repo into that folder.
+5. Ask for description, type, status, and next action.
+6. Optionally create `STATUS.md`.
+7. Optionally generate `PROJECT_CONTEXT.md`.
+8. Register the project in ShipOne.
+
 ## Scan projects root
 
 ShipOne can scan `shipone.projectsRoot` and add new folders automatically.
@@ -57,6 +72,7 @@ When ShipOne scans the projects root during startup, it can refresh the view sil
 
 - Git is optional.
 - GitHub is optional.
+- GitHub import depends on the GitHub account signed in to VS Code and a valid repo URL.
 - Folder collisions should not overwrite existing projects.
 - Partial failures can leave temporary artifacts.
 - Imported folders keep their files.
