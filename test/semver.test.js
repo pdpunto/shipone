@@ -10,21 +10,21 @@ function runSemver(args = []) {
 }
 
 test("semver current devuelve la version del paquete", () => {
-  assert.equal(runSemver(["current"]), "0.0.6");
+  assert.equal(runSemver(["current"]), "0.0.7");
 });
 
 test("semver tag devuelve la release tag", () => {
-  assert.equal(runSemver(["tag"]), "v0.0.6");
+  assert.equal(runSemver(["tag"]), "v0.0.7");
 });
 
 test("semver validate-tag acepta el tag actual", () => {
-  assert.equal(runSemver(["validate-tag", "v0.0.6"]), "v0.0.6");
+  assert.equal(runSemver(["validate-tag", "v0.0.7"]), "v0.0.7");
 });
 
 test("semver beta-tag genera un prerelease", () => {
-  assert.equal(runSemver(["create-beta-tag", "2"]), "v0.0.6-beta.2");
+  assert.equal(runSemver(["create-beta-tag", "2"]), "v0.0.7-beta.2");
 });
 
 test("semver validate-beta-tag acepta un prerelease", () => {
-  assert.equal(runSemver(["validate-beta-tag", "v0.0.6-beta.1"]), "v0.0.6-beta.1");
+  assert.equal(runSemver(["validate-beta-tag", "v0.0.7-beta.1"]), "v0.0.7-beta.1");
 });

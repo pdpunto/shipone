@@ -26,11 +26,11 @@
 
 ## GitHub does not connect
 
-- Check `gh auth status`.
-- Verify that GitHub CLI is installed.
+- Check that your GitHub account is signed in to VS Code.
+- Verify that the signed-in account has repo permissions.
 - Check `VSCE_PAT` if you are publishing.
 - To create remote repos, confirm that local Git already exists.
-- Check that the authenticated account has enough permissions.
+- If the repo still fails, try signing out and back in to the GitHub account in VS Code.
 
 ## The folder already exists
 
@@ -52,6 +52,7 @@ ShipOne tries to avoid collisions by using an alternate name.
 - Check whether the chosen template exists.
 - Verify that the toolchain package is installed correctly.
 - If the failure was in GitHub, try creating only the local project first.
+- Confirm that VS Code is signed in to GitHub before retrying.
 
 ## How to report the issue
 

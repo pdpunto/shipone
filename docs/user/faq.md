@@ -42,7 +42,8 @@ Yes, with `shipone.showFinishedProjects`.
 
 ## What happens if GitHub CLI is not installed?
 
-ShipOne still works for local use, but it cannot create GitHub repos from the extension.
+ShipOne can still create GitHub repos if your GitHub account is signed in to VS Code.
+GitHub CLI is no longer required for the normal create-repo flow.
 
 ## What happens if a project fails halfway through creation?
 

@@ -41,7 +41,7 @@ ShipOne uses a simple and consistent visual identity:
 
 ## Project Status
 
-- Current version: `0.0.6`
+- Current version: `0.0.7`
 - Status: `public beta`
 - Public: open repo, published extension, and docs ready for real use
 - Pace: small, versioned changes that are easy to follow
@@ -140,7 +140,6 @@ The most useful settings are:
 - VS Code
 - Node.js and npm for local development
 - Git for local repo workflows
-- GitHub CLI for creating GitHub repos from the extension
 - `VSCE_PAT` for Marketplace publishing
 
 ## Tested Platforms
@@ -163,7 +162,7 @@ npm.cmd run compile
 
 - If `npm.cmd run compile` fails, check that Node and TypeScript are installed.
 - If `F5` does not open the extension, verify that the workspace is this repo and that there are no compile errors.
-- If GitHub does not connect, check `gh auth status` and the `VSCE_PAT` secret.
+- If GitHub does not connect, confirm that your GitHub account is signed in to VS Code and that the account has repo permissions.
 - If a folder already exists, ShipOne uses an alternate name to avoid collisions.
 
 ## FAQ

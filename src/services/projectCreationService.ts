@@ -338,36 +338,14 @@ export class ProjectCreationService {
     }
 
     let githubChoice: GitHubChoice | undefined;
-    // GitHub solo tiene sentido si Git local va a existir y el usuario ya esta autenticado.
     if (gitChoice.value) {
-      let githubReady = await this.githubService.isGitHubAuthenticated();
+      githubChoice = await this.pickGitHubChoice(
+        settings.createGitHubRepoByDefault,
+        settings.defaultVisibility
+      );
 
-      if (!githubReady) {
-        const choice = await vscode.window.showWarningMessage(
-          t(k.github.notAuthenticated),
-          t(k.common.connectGitHub),
-          t(k.common.followWithoutGitHub)
-        );
-
-        if (choice === t(k.common.connectGitHub)) {
-          await this.githubService.connectGitHub();
-          githubReady = await this.githubService.isGitHubAuthenticated();
-        }
-      }
-
-      if (githubReady) {
-        githubChoice = await this.pickGitHubChoice(
-          settings.createGitHubRepoByDefault,
-          settings.defaultVisibility
-        );
-
-        if (githubChoice === undefined) {
-          return undefined;
-        }
-      } else {
-        vscode.window.showInformationMessage(
-          t(k.github.notAuthenticatedSkipped)
-        );
+      if (githubChoice === undefined) {
+        return undefined;
       }
     }
 
@@ -403,13 +381,10 @@ export class ProjectCreationService {
 
     let githubChoice: GitHubChoice | undefined;
     if (gitChoice.value) {
-      const githubReady = await this.githubService.isGitHubAuthenticated();
-      if (githubReady) {
-        githubChoice = {
-          create: settings.createGitHubRepoByDefault,
-          visibility: settings.defaultVisibility,
-        };
-      }
+      githubChoice = {
+        create: settings.createGitHubRepoByDefault,
+        visibility: settings.defaultVisibility,
+      };
     }
 
     return this.createProjectFromDraft(settings, {

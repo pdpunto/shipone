@@ -2,6 +2,13 @@
 
 All notable changes to ShipOne will be documented here.
 
+## 0.0.7 - 2026-05-31
+
+- Connected GitHub repo creation to the GitHub session already signed in VS Code.
+- Created GitHub repos through the GitHub API instead of depending on GitHub CLI.
+- Improved the create-project flow so local projects keep moving even when GitHub needs a fresh session.
+- Updated docs and release notes for the new GitHub connection flow.
+
 ## 0.0.4 - 2026-05-22
 
 - Fixed the `node-api` template so it runs with plain Node.js.

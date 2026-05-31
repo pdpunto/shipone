@@ -5,12 +5,12 @@
 - VS Code is required.
 - Node.js and npm are required for local development.
 - Git is required for local repo workflows.
-- GitHub CLI is required only for GitHub repo creation and publishing flows.
+- GitHub access comes from the account signed in to VS Code.
 - `VSCE_PAT` is required only for Marketplace publishing.
 
 ## Current limits
 
-- GitHub depends on GitHub CLI.
+- GitHub repo creation depends on the GitHub account signed in to VS Code.
 - Some checks depend on Git being installed.
 - Project creation can leave partial leftovers if it fails halfway through.
 - The extension does not replace a full task manager.
